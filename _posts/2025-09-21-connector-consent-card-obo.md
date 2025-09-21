@@ -5,12 +5,17 @@ date: 2025-09-21
 categories: [copilot-studio, connectors, authentication]
 tags: [obo, consent, connectors, agents-sdk, adaptive-cards]
 description: Detect a connector consent (OBO) Adaptive Card, summarize it, and submit Allow or Cancel.
-image: /assets/posts/connector-consent-card-obo/consent.png
+#image: /assets/posts/connector-consent-card-obo/consent.png
+author: adilei
 ---
 
 When a conversational agent invokes a connector that is configured with [end user authentication](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-enduser-authentication), the runtime surfaces a **consent card** asking the end user to grant permission for the agent to create a connection on their behalf.
 
 This experience is only available for connectors that natively support Entra ID authentication (excluding custom connectors). Other connectors trigger the (more disruptive) [connection manager experience](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-connections#view-connections-on-the-connection-settings-page).
+
+
+![Consent Card](/assets/posts/connector-consent-card-obo/consent.png){: .shadow w="700" h="400"}
+_The Consent Card Experience_
 
 
 ## Why Intercept the Card via the M365 Agents SDK?
