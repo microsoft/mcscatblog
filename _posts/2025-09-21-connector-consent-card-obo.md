@@ -127,10 +127,10 @@ static bool IsConsentCard(JToken card)
         actionTitles.Any(t => t.Equals("Allow", StringComparison.OrdinalIgnoreCase)) &&
         actionTitles.Any(t => t.Equals("Cancel", StringComparison.OrdinalIgnoreCase));
 
-    return hasConnectPhrase && hasAllowCancel;  // Changed from || to &&
+    return hasConnectPhrase && hasAllowCancel;  
 }
 
-// Normalizes attachment content to JToken (unchanged from earlier).
+// Normalizes attachment content to JToken
 static bool TryParseAdaptiveCard(object content, out JToken json)
 {
     try
