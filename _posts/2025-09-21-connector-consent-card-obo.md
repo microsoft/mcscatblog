@@ -8,9 +8,9 @@ description: Detect a connector consent (OBO) Adaptive Card, summarize it, and s
 image: /assets/posts/connector-consent-card-obo/consent.png
 ---
 
-When a conversational agent invokes a connector that uses [end user authentication](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-enduser-authentication), the runtime surfaces a **consent card** asking the end user to grant permission for the agent to create a connection on their behalf.
+When a conversational agent invokes a connector that is configured with [end user authentication](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-enduser-authentication), the runtime surfaces a **consent card** asking the end user to grant permission for the agent to create a connection on their behalf.
 
-This experience is only for connectors that natively support Entra ID authentication (excluding custom connectors). Others trigger the (more disruptive) [connection manager experience](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-connections#view-connections-on-the-connection-settings-page).
+This experience is only available for connectors that natively support Entra ID authentication (excluding custom connectors). Other connectors trigger the (more disruptive) [connection manager experience](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-connections#view-connections-on-the-connection-settings-page).
 
 
 ## Why Intercept the Card via the M365 Agents SDK?
@@ -84,7 +84,7 @@ This implementation walkthrough extends the [Agents SDK C# console app sample](h
 
 ### Detect the consent card in PrintActivity
 
-We start by logic that would detect the consent adaptive card to `PrintActivity` in `ChatConsoleService.cs`. The `IsConsentCard` helper functions assumes that a card is a consent card if it says **Connect to continue** and has `Allow` and `Cancel` buttons.
+We start by defining the logic that would detect the consent adaptive card to `PrintActivity` in `ChatConsoleService.cs`. The `IsConsentCard` helper function assumes that a card is a consent card if it has the textBlock **Connect to continue** and has `Allow` and `Cancel` buttons. You can create your own logic as long as it successfully captures the consent card payload.
 
 <details markdown="1">
 <summary><strong>Message handling in PrintActivity</strong></summary>
@@ -155,7 +155,9 @@ static bool TryParseAdaptiveCard(object content, out JToken json)
 
 ### Respond to the consent card
 
-Once the user chooses Allow or Cancel, send a Message Activity that emulates the Adaptive Card button click.
+Once the user chooses Allow or Cancel, you should send a Message Activity that emulates the Adaptive Card button click. `AskQuestionAsync` has an overload that takes a raw activity object; this allows sending any activity back to the agent.
+
+To send the user's choice back to Copilot Studio, create a message activity object: 
 
 - Set `channelData.postBack = true` (marks it as a button action)
 - Build the `value` payload with the user's choice ("Allow" or "Cancel")
@@ -184,6 +186,3 @@ await foreach (var response in copilotClient.AskQuestionAsync(consentActivity, c
 }
 ```
 
-Example payloads:
-- Allow: `{ "action": "Allow", "id": "submit", "shouldAwaitUserInput": true }`
-- Cancel: `{ "action": "Cancel", "id": "submit", "shouldAwaitUserInput": true }`
