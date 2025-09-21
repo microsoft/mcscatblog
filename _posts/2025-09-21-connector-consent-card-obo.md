@@ -84,7 +84,7 @@ This implementation walkthrough extends the [Agents SDK C# console app sample](h
 
 ### Detect the consent card in PrintActivity
 
-We start by defining the logic that would detect the consent adaptive card to `PrintActivity` in `ChatConsoleService.cs`. The `IsConsentCard` helper function assumes that a card is a consent card if it has the textBlock **Connect to continue** and has `Allow` and `Cancel` buttons. You can create your own logic as long as it successfully captures the consent card payload.
+We'll start by adding the logic that detects the consent adaptive card to  `PrintActivity` in `ChatConsoleService.cs`. The `IsConsentCard` helper function assumes that a card is a consent card if it has the textBlock **Connect to continue** and has `Allow` and `Cancel` buttons. You can create your own logic as long as it successfully captures the consent card payload.
 
 <details markdown="1">
 <summary><strong>Message handling in PrintActivity</strong></summary>
