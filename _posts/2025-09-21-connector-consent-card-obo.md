@@ -155,19 +155,26 @@ static bool TryParseAdaptiveCard(object content, out JToken json)
 
 ### Respond to the consent card
 
-Once the user chooses Allow or Cancel, send an Activity that emulates the Adaptive Card button click.
+Once the user chooses Allow or Cancel, send a Message Activity that emulates the Adaptive Card button click.
 
-Key requirements:
 - Set `channelData.postBack = true` (marks it as a button action)
-- Copy the exact `data` object from the chosen Action.Submit button
-
+- Build the `value` payload with the user's choice ("Allow" or "Cancel")
 
 ```csharp
+// Assume userChoice is "Allow" or "Cancel" from user input
 var consentActivity = new Activity
 {
     Type = ActivityTypes.Message,
-    ChannelData = new { postBack = true },  // Required: tells service this is a button click
-    Value = buttonData                       // e.g. { action: "Allow", id: "submit", shouldAwaitUserInput: true }
+    ChannelData = new
+    {
+        postBack = true          // Required: tells service this is a button click
+    },
+    Value = new
+    {
+        action = userChoice,     // "Allow" or "Cancel"
+        id = "submit",
+        shouldAwaitUserInput = true
+    }
 };
 
 // Send the consent response
@@ -177,13 +184,6 @@ await foreach (var response in copilotClient.AskQuestionAsync(consentActivity, c
 }
 ```
 
-
-
-> It's safer to have the **Value** property match exactly what was in the card's **Action.Submit.data**. While the minimum requirement is typically just the **action** field, passing through all original fields ensures forward compatibility.
-{: .prompt-info }
-
-
-
 Example payloads:
-- Allow button: `{ "action": "Allow" }` (minimum) or `{ "action": "Allow", "id": "submit", "shouldAwaitUserInput": true }` (complete)
-- Cancel button: `{ "action": "Cancel" }` (minimum) or `{ "action": "Cancel", "id": "submit", "shouldAwaitUserInput": true }` (complete)
+- Allow: `{ "action": "Allow", "id": "submit", "shouldAwaitUserInput": true }`
+- Cancel: `{ "action": "Cancel", "id": "submit", "shouldAwaitUserInput": true }`
