@@ -155,9 +155,9 @@ static bool TryParseAdaptiveCard(object content, out JToken json)
 
 ### Respond to the consent card
 
-Once the user chooses Allow or Cancel, you should send a Message Activity that emulates the Adaptive Card button click. `AskQuestionAsync` has an overload that takes a raw activity object; this allows sending any activity back to the agent.
+Once the user chooses Allow or Cancel, we send a Message Activity that emulates the Adaptive Card button click. `AskQuestionAsync` has an overload that takes a raw activity object; this allows sending any activity back to the agent.
 
-To send the user's choice back to Copilot Studio, create a message activity object: 
+To send the user's choice back to Copilot Studio, we create a message activity object:
 
 - Set `channelData.postBack = true` (marks it as a button action)
 - Build the `value` payload with the user's choice ("Allow" or "Cancel")
