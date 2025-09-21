@@ -111,7 +111,7 @@ if (act.Type == "message")
     }
 }
 
-// Heuristic: headline OR both Allow + Cancel buttons.
+// Heuristic: headline AND both Allow + Cancel buttons.
 static bool IsConsentCard(JToken card)
 {
     bool hasConnectPhrase = card
@@ -127,7 +127,7 @@ static bool IsConsentCard(JToken card)
         actionTitles.Any(t => t.Equals("Allow", StringComparison.OrdinalIgnoreCase)) &&
         actionTitles.Any(t => t.Equals("Cancel", StringComparison.OrdinalIgnoreCase));
 
-    return hasConnectPhrase || hasAllowCancel;
+    return hasConnectPhrase && hasAllowCancel;  // Changed from || to &&
 }
 
 // Normalizes attachment content to JToken (unchanged from earlier).
