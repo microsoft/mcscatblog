@@ -4,6 +4,7 @@ title: "Using Inputs and Outputs in Child and Connected Agents"
 date: 2025-09-20
 categories: [copilot-studio, tutorial, multi-agent]
 tags: [child-agents, connected-agents, orchestration, inputs, outputs]
+author: adilei
 ---
 
 # Connected and child agents
