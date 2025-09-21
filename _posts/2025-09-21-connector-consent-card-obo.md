@@ -170,7 +170,7 @@ var consentActivity = new Activity
     Value = buttonData                       // e.g. { action: "Allow", id: "submit", shouldAwaitUserInput: true }
 };
 
-// Send the consent response (using whatever streaming method your SDK provides)
+// Send the consent response
 await foreach (var response in copilotClient.AskQuestionAsync(consentActivity, cancellationToken))
 {
     // Handle response
