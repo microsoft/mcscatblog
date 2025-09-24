@@ -1,0 +1,693 @@
+/* Lighten the hover state so the gradient ring is the only strong color.
+   (Only touches the post list cards; leaves tags & other UI untouched.) */
+
+:root {
+  --post-frame-radius: 14px;
+  --post-frame-thickness: 2px;
+  --post-frame-gradient: linear-gradient(90deg,
+    #0078D4 0%,
+    #5B8DEF 18%,
+    #7F39FB 36%,
+    #C26CF3 54%,
+    #D83B73 72%,
+    #FF8C00 100%);
+}
+
+/* Wrapper hosts gradient ring */
+#post-list .card-wrapper {
+  position: relative;
+  border-radius: var(--post-frame-radius);
+}
+
+/* Override Chirpy's post-preview to remove its hover overlay */
+#post-list .post-preview {
+  position: relative;
+  
+  /* Disable Chirpy's dark overlay on hover */
+  &::before {
+    display: none !important;
+  }
+  
+  /* Keep the card white, with very subtle gray on hover */
+  background: #ffffff !important;
+  transition: background-color .25s ease, box-shadow .25s ease, transform .25s ease;
+  
+  &:hover {
+    background: #fafafa !important; /* Very subtle gray */
+    box-shadow: 0 8px 20px rgba(0,0,0,.10) !important;
+    transform: translateY(-2px) !important;
+  }
+}
+
+/* Base card surface */
+#post-list .card-wrapper > .card {
+  border: none;
+  border-radius: var(--post-frame-radius);
+  position: relative;
+  z-index: 0;
+  background: #ffffff !important;
+  transition: background-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+
+/* Gradient ring only on hover/focus */
+#post-list .card-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--post-frame-thickness);
+  border-radius: inherit;
+  background: var(--post-frame-gradient);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: 1;
+}
+
+/* Show ring */
+#post-list .card-wrapper:hover::before,
+#post-list .card-wrapper:focus-within::before {
+  opacity: 1;
+}
+
+/* Force subtle gray hover surface */
+#post-list .card-wrapper:hover > .card,
+#post-list .card-wrapper:focus-within > .card,
+#post-list .card-wrapper:hover > .post-preview,
+#post-list .card-wrapper:focus-within > .post-preview {
+  background: #fafafa !important; /* Very subtle gray */
+  box-shadow: 0 8px 20px rgba(0,0,0,.10) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Override Chirpy's potential hover styles */
+#post-list .card:hover,
+#post-list .post-preview:hover {
+  background-color: transparent !important; /* Let parent control bg */
+}
+
+/* Dark mode: keep a subtle contrast (slightly lighter hover) */
+html[data-mode="dark"] {
+  --post-frame-gradient: linear-gradient(90deg,
+    #58B2FF 0%,
+    #5B8DEF 18%,
+    #9F63FF 36%,
+    #C26CF3 54%,
+    #FF6794 72%,
+    #FFB347 100%);
+}
+
+html[data-mode="dark"] #post-list .post-preview {
+  background: #1f1f20 !important;
+  
+  &:hover {
+    background: #282829 !important;
+  }
+}
+
+html[data-mode="dark"] #post-list .card-wrapper > .card,
+html[data-mode="dark"] #post-list .card-wrapper > .post-preview {
+  background: #1f1f20 !important;
+}
+
+html[data-mode="dark"] #post-list .card-wrapper:hover > .card,
+html[data-mode="dark"] #post-list .card-wrapper:focus-within > .card,
+html[data-mode="dark"] #post-list .card-wrapper:hover > .post-preview,
+html[data-mode="dark"] #post-list .card-wrapper:focus-within > .post-preview {
+  background: #282829 !important;
+  box-shadow: 0 6px 22px rgba(0,0,0,.55) !important;
+}
+
+/* === Apply gradient frame to Further Reading cards === */
+
+/* Further Reading section cards */
+#related-posts .card,
+.post-related .card,
+.related-posts .card {
+  position: relative;
+  border-radius: var(--post-frame-radius);
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,.08) !important;
+  transition: transform .25s ease, box-shadow .25s ease !important;
+  overflow: visible;
+}
+
+/* Gradient frame for Further Reading cards */
+#related-posts .card::before,
+.post-related .card::before,
+.related-posts .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--post-frame-thickness);
+  border-radius: inherit;
+  background: var(--post-frame-gradient);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: -1;
+}
+
+/* Show gradient on hover */
+#related-posts .card:hover::before,
+.post-related .card:hover::before,
+.related-posts .card:hover::before {
+  opacity: 1;
+}
+
+/* Hover effects for Further Reading cards */
+#related-posts .card:hover,
+.post-related .card:hover,
+.related-posts .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.10) !important;
+  background: #fafafa !important;
+}
+
+/* Dark mode for Further Reading cards */
+html[data-mode="dark"] #related-posts .card,
+html[data-mode="dark"] .post-related .card,
+html[data-mode="dark"] .related-posts .card {
+  background: #1f1f20 !important;
+}
+
+html[data-mode="dark"] #related-posts .card:hover,
+html[data-mode="dark"] .post-related .card:hover,
+html[data-mode="dark"] .related-posts .card:hover {
+  background: #282829 !important;
+  box-shadow: 0 6px 22px rgba(0,0,0,.55) !important;
+}
+
+/* If the Further Reading uses a different structure with wrappers */
+.further-reading .card-wrapper,
+#further-reading .card-wrapper {
+  position: relative;
+  border-radius: var(--post-frame-radius);
+}
+
+.further-reading .card-wrapper::before,
+#further-reading .card-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--post-frame-thickness);
+  border-radius: inherit;
+  background: var(--post-frame-gradient);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: 1;
+}
+
+.further-reading .card-wrapper:hover::before,
+#further-reading .card-wrapper:hover::before {
+  opacity: 1;
+}
+
+.further-reading .card-wrapper > .card,
+#further-reading .card-wrapper > .card {
+  position: relative;
+  z-index: 0;
+}
+
+/* === Microsoft Copilot Studio Sidebar Theme === */
+
+/* Sidebar base styling */
+#sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid #e1dfdd !important;
+  box-shadow: none !important;
+  
+  /* Remove the dark theme */
+  .sidebar-bottom {
+    background: transparent !important;
+    border-top: 1px solid #e1dfdd !important;
+    padding: 0.75rem 1rem !important;
+  }
+}
+
+/* Site title/brand area */
+#sidebar .site-title {
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  color: #323130 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 2rem !important;
+  
+  a {
+    color: #323130 !important;
+    text-decoration: none !important;
+    
+    &:hover {
+      color: #0078d4 !important;
+    }
+  }
+}
+
+/* Site subtitle */
+#sidebar .site-subtitle {
+  color: #605e5c !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  margin-top: 0.25rem !important;
+  opacity: 1 !important;
+}
+
+/* Avatar styling - make it smaller and square with rounded corners */
+#sidebar .avatar-container {
+  width: 48px !important;
+  height: 48px !important;
+  margin: 1.5rem auto 1rem !important;
+  
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 8px !important;
+    border: 2px solid #e1dfdd !important;
+  }
+}
+
+/* Navigation menu items */
+#sidebar .nav-item {
+  margin: 0.125rem 0.5rem !important;
+  
+  .nav-link {
+    color: #323130 !important;
+    background: transparent !important;
+    border-radius: 6px !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    transition: all 0.15s ease !important;
+    border: none !important;
+    
+    i {
+      color: #605e5c !important;
+      font-size: 1rem !important;
+      width: 1.25rem !important;
+      margin-right: 0.625rem !important;
+      transition: color 0.15s ease !important;
+    }
+    
+    &:hover {
+      background: #f3f2f1 !important;
+      color: #323130 !important;
+      
+      i {
+        color: #323130 !important;
+      }
+    }
+    
+    &.active {
+      background: #e1dfdd !important;
+      color: #0078d4 !important;
+      font-weight: 500 !important;
+      
+      i {
+        color: #0078d4 !important;
+      }
+    }
+  }
+}
+
+/* Remove the active indicator line */
+#sidebar ul > li.active::after,
+#sidebar ul > li:hover::after {
+  display: none !important;
+}
+
+/* Bottom icons styling */
+#sidebar .sidebar-bottom {
+  a, button {
+    color: #605e5c !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0.375rem !important;
+    margin: 0 0.25rem !important;
+    border-radius: 4px !important;
+    transition: all 0.15s ease !important;
+    
+    i {
+      font-size: 1.125rem !important;
+    }
+    
+    &:hover {
+      background: #f3f2f1 !important;
+      color: #323130 !important;
+    }
+  }
+}
+
+/* Dark mode adjustments */
+html[data-mode="dark"] {
+  #sidebar {
+    background: #1f1f1f !important;
+    border-right-color: #323130 !important;
+    
+    /* Site title - force light text */
+    .site-title {
+      color: #f3f2f1 !important;
+      
+      a {
+        color: #f3f2f1 !important;
+        
+        &:hover {
+          color: #40a9ff !important;
+        }
+      }
+    }
+    
+    /* Also target the wrapper if it exists */
+    .profile-wrapper {
+      .site-title {
+        color: #f3f2f1 !important;
+        
+        a {
+          color: #f3f2f1 !important;
+        }
+      }
+      
+      .site-subtitle {
+        color: #a19f9d !important;
+      }
+    }
+    
+    /* Site subtitle */
+    .site-subtitle {
+      color: #a19f9d !important;
+    }
+    
+    /* Avatar with white background for visibility */
+    .avatar-container {
+      img {
+        border-color: #323130 !important;
+        background: #ffffff !important;
+        padding: 4px !important;
+      }
+    }
+    
+    /* Navigation items */
+    .nav-item .nav-link {
+      color: #f3f2f1 !important;
+      
+      i {
+        color: #a19f9d !important;
+      }
+      
+      &:hover {
+        background: #292929 !important;
+        color: #ffffff !important;
+        
+        i {
+          color: #f3f2f1 !important;
+        }
+      }
+      
+      &.active {
+        background: #323130 !important;
+        color: #40a9ff !important;
+        
+        i {
+          color: #40a9ff !important;
+        }
+      }
+    }
+    
+    /* Bottom bar */
+    .sidebar-bottom {
+      border-top-color: #323130 !important;
+      
+      a, button {
+        color: #a19f9d !important;
+        
+        &:hover {
+          background: #292929 !important;
+          color: #f3f2f1 !important;
+        }
+      }
+    }
+  }
+  
+  /* Extra specificity - target all possible title containers */
+  #sidebar #avatar > a,
+  #sidebar .profile-wrapper > a,
+  #sidebar .site-title > a,
+  #sidebar h1 a,
+  #sidebar h1.site-title a {
+    color: #f3f2f1 !important;
+  }
+}
+
+/* If the above still doesn't work, use this nuclear option */
+body[data-mode="dark"] #sidebar .site-title,
+body[data-mode="dark"] #sidebar .site-title a,
+html[data-mode="dark"] body #sidebar .site-title,
+html[data-mode="dark"] body #sidebar .site-title a {
+  color: #f3f2f1 !important;
+}
+
+/* Add subtle separator between nav sections if needed */
+#sidebar .nav-wrapper {
+  padding: 1rem 0 !important;
+}
+
+/* Ensure proper spacing for the entire sidebar */
+#sidebar {
+  padding: 1.5rem 0 !important;
+}
+
+/* Style the collapse button like Copilot Studio */
+#sidebar-trigger {
+  display: none; /* Hide on desktop, show on mobile if needed */
+}
+
+@media (max-width: 991px) {
+  #sidebar-trigger {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: #ffffff;
+    border: 1px solid #e1dfdd;
+    border-radius: 6px;
+    padding: 0.5rem;
+    color: #323130;
+    
+    &:hover {
+      background: #f3f2f1;
+    }
+  }
+  
+  html[data-mode="dark"] #sidebar-trigger {
+    background: #1f1f1f;
+    border-color: #323130;
+    color: #f3f2f1;
+    
+    &:hover {
+      background: #292929;
+    }
+  }
+}
+
+/* === Override Sidebar Icons === */
+
+/* Change icon styles for all sidebar nav icons */
+#sidebar .nav-item .nav-link i {
+  font-size: 1.125rem !important;
+  width: 1.5rem !important;
+  text-align: center !important;
+  display: inline-block !important;
+}
+
+/* Give each icon a unique color that complements the paw avatar gradient */
+/* Home icon - Purple (matches avatar) */
+#sidebar .nav-link[href="/"] i,
+#sidebar .nav-link[href="/mcscatblog/"] i,
+#sidebar .nav-link[href$="mcscatblog/"] i {
+  color: #7F39FB !important; /* Purple from gradient */
+  
+  &::before {
+    content: "\f1b0" !important; /* Paw icon */
+  }
+}
+
+/* Categories icon - Blue (complements purple) */
+#sidebar .nav-link[href*="categories"] i {
+  color: #5B8DEF !important; /* Blue from gradient */
+  
+  &::before {
+    content: "\f49e" !important; /* Boxes icon for categories */
+  }
+}
+
+/* Tags icon - Pink/Magenta */
+#sidebar .nav-link[href*="tags"] i {
+  color: #C26CF3 !important; /* Pink from gradient */
+  
+  &::before {
+    content: "\f02c" !important; /* Tags icon */
+  }
+}
+
+/* Archives icon - Orange */
+#sidebar .nav-link[href*="archives"] i {
+  color: #FF8C00 !important; /* Orange from gradient */
+  
+  &::before {
+    content: "\f073" !important; /* Calendar icon */
+  }
+}
+
+/* About icon - Rose/Red */
+#sidebar .nav-link[href*="about"] i {
+  color: #D83B73 !important; /* Rose from gradient */
+  
+  &::before {
+    content: "\f6be" !important; /* Cat icon for about */
+  }
+}
+
+/* Hover state - make icons slightly brighter */
+#sidebar .nav-item .nav-link:hover {
+  i {
+    filter: brightness(1.2) !important;
+    transform: scale(1.1) !important;
+    transition: all 0.2s ease !important;
+  }
+}
+
+/* Active state - keep the color but add glow */
+#sidebar .nav-item .nav-link.active {
+  i {
+    filter: brightness(1.3) drop-shadow(0 0 8px currentColor) !important;
+  }
+}
+
+/* Dark mode adjustments - make colors pop even more */
+html[data-mode="dark"] {
+  /* Home - Brighter purple */
+  #sidebar .nav-link[href="/"] i,
+  #sidebar .nav-link[href="/mcscatblog/"] i,
+  #sidebar .nav-link[href$="mcscatblog/"] i {
+    color: #9F63FF !important;
+  }
+  
+  /* Categories - Brighter blue */
+  #sidebar .nav-link[href*="categories"] i {
+    color: #58B2FF !important;
+  }
+  
+  /* Tags - Brighter pink */
+  #sidebar .nav-link[href*="tags"] i {
+    color: #FF6FCF !important;
+  }
+  
+  /* Archives - Brighter orange */
+  #sidebar .nav-link[href*="archives"] i {
+    color: #FFB347 !important;
+  }
+  
+  /* About - Brighter rose */
+  #sidebar .nav-link[href*="about"] i {
+    color: #FF6794 !important;
+  }
+}
+
+/* Bottom bar icons - MORE SUBDUED COLORS */
+/* Remove the purple color and use subtle grays */
+#sidebar .sidebar-bottom {
+  a, button {
+    i {
+      color: #a19f9d !important; /* Subtle gray - not purple */
+      transition: all 0.2s ease !important;
+    }
+    
+    &:hover i {
+      color: #605e5c !important; /* Darker gray on hover - not pink */
+      transform: scale(1.05) !important;
+    }
+  }
+}
+
+/* Dark mode - bottom bar icons */
+html[data-mode="dark"] #sidebar .sidebar-bottom {
+  a, button {
+    i {
+      color: #605e5c !important; /* Medium gray in dark mode */
+    }
+    
+    &:hover i {
+      color: #a19f9d !important; /* Lighter gray on hover */
+    }
+  }
+}
+
+/* Override specific icons using Font Awesome */
+/* Home icon - change to PAW */
+#sidebar .nav-link[href="/"] i::before,
+#sidebar .nav-link[href="/mcscatblog/"] i::before,
+#sidebar .nav-link[href$="mcscatblog/"] i::before {
+  content: "\f1b0" !important; /* Paw icon */
+}
+
+/* Categories icon - change to grid/list */
+#sidebar .nav-link[href*="categories"] i::before {
+  content: "\f5c0" !important; /* Grid icon - or use \f03a for list */
+}
+
+/* Tags icon */
+#sidebar .nav-link[href*="tags"] i::before {
+  content: "\f02b" !important; /* Tags icon */
+}
+
+/* Archives icon - change to calendar/history */
+#sidebar .nav-link[href*="archives"] i::before {
+  content: "\f02d" !important; /* Calendar icon - or use \f1da for history */
+}
+
+/* About icon - change to info circle */
+#sidebar .nav-link[href*="about"] i::before {
+  content: "\f6be" !important; /* Info circle */
+}
+
+/* Bottom bar icons */
+/* Theme toggle - sun/moon */
+#sidebar .sidebar-bottom #mode-toggle i.fa-sun::before {
+  content: "\f185" !important; /* Sun icon */
+}
+
+#sidebar .sidebar-bottom #mode-toggle i.fa-moon::before {
+  content: "\f186" !important; /* Moon icon */
+}
+
+/* Search icon */
+#sidebar .sidebar-bottom [id*="search"] i::before,
+#sidebar .sidebar-bottom .fa-search::before,
+#sidebar .sidebar-bottom .fa-magnifying-glass::before {
+  content: "\f002" !important; /* Search/magnifying glass */
+}
+
+/* Settings/RSS/External links */
+#sidebar .sidebar-bottom .fa-rss::before {
+  content: "\f09e" !important; /* RSS icon */
+}
+
+#sidebar .sidebar-bottom .fa-github::before {
+  content: "\f09b" !important; /* GitHub icon */
+}
