@@ -26,7 +26,7 @@ This blog should not be used to compensate for missing or inaccurate documentati
 
 ## What are the guidelines for contributing to the blog?
 
-The blog is hosted on GitHub Pages under the https://github.com/microsoft/mcscatblog/. It uses Jekyll for static site generation and Chirpy as the theme.
+The blog is hosted on GitHub Pages under the https://github.com/microsoft/mcscatblog. It uses Jekyll for static site generation and Chirpy as the theme.
 
 How to contribute:
 1. Join the repo: Share your GitHub username with Adi to be added as a contributor.
