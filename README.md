@@ -32,9 +32,9 @@ How to contribute:
 1. Join the repo: Share your GitHub username with Adi to be added as a contributor.
 2. Clone the repo and create a new branch.
 3. Write your post in Markdown (.md) format under the _posts folder.
-  - Follow naming conventions: include the date and post name.
-  - Include metadata (front matter): title, date, categories, tags, author info.
-  - You can embed images, videos, and other static files.
+    - Follow naming conventions: include the date and post name.
+    - Include metadata (front matter): title, date, categories, tags, author info.
+    - You can embed images, videos, and other static files.
 4. Test locally using: bundle exec jekyll serve --livereload --baseurl /mcscatblog.
 5. Submit a pull request and notify Adi for merging.
 
