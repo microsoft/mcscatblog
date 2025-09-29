@@ -3,3 +3,8 @@ adilei:
   url: https://github.com/microsoft/CopilotStudioSamples  # Personal website or GitHub profile
   email: adileibowitz@microsoft.com  # Optional
   avatar: https://github.com/adilei.png  # Optional: path to avatar image
+
+roels:
+  name: Roel Schenk
+  email: roelschenk@microsoft.com  # Optional
+  avatar: https://github.com/roelzz.png  # Optional: path to avatar image
