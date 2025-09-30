@@ -1,10 +1,15 @@
 adilei:
   name: Adi Leibowitz
-  url: https://github.com/microsoft/CopilotStudioSamples  # Personal website or GitHub profile
-  email: adileibowitz@microsoft.com  # Optional
-  avatar: https://github.com/adilei.png  # Optional: path to avatar image
+  url: https://github.com/microsoft/CopilotStudioSamples # Personal website or GitHub profile
+  email: adileibowitz@microsoft.com # Optional
+  avatar: https://github.com/adilei.png # Optional: path to avatar image
 
 roels:
   name: Roel Schenk
-  email: roelschenk@microsoft.com  # Optional
-  avatar: https://github.com/roelzz.png  # Optional: path to avatar image
+  email: roelschenk@microsoft.com # Optional
+  avatar: https://github.com/roelzz.png # Optional: path to avatar image
+
+raemone:
+  name: Remi Dyon
+  email: remidyon@microsoft.com # Optional
+  avatar: https://github.com/raemone.png # Optional: path to avatar image
