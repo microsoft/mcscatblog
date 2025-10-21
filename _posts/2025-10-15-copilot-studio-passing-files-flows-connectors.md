@@ -34,7 +34,7 @@ _Make sure to check "Include file metadata"_
 
 You can use `First(System.Activity.Attachments)` to check if a file is already attached (e.g., from a Teams conversation). If not, prompt the user to upload a file as described above.
 
-![alternative approach](/assets/posts/copilot-studio-passing-files-flows-connectors/include-file-metadata.png){: .shadow w="700" h="400"}
+![alternative approach](/assets/posts/copilot-studio-passing-files-flows-connectors/alternative.png){: .shadow w="700" h="400"}
 _Another way to capture a file without prompting the user with a question node_
 
 The Power FX to capture the file from the Activity.Attachments is:
