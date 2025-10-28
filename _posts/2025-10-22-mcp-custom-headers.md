@@ -205,4 +205,19 @@ Input values can either be hardcoded or set dynamically using system variables a
 
 ---
 
-*Have you implemented custom headers in your MCP connectors? What use cases are you solving? May your MCP code compile and your quests succeed! share your adventures in the comments below!*
+## Update: Full Hands-On Lab Available!
+
+Want to build this yourself? Check out the complete **Adventurer's Guild Lab** that walks through implementing custom headers and OAuth 2.0 authentication for MCP servers:
+
+**[🎲 Guildhall Custom MCP Lab](https://microsoft.github.io/mcs-labs/labs/guildhall-custom-mcp/?event=azure-ai-workshop#why-this-quest-matters)**
+
+The lab includes:
+- Complete working MCP server sample (TypeScript)
+- Step-by-step guide for custom headers and bearer token authentication
+- Microsoft Entra ID app registration configuration
+- OpenAPI specification examples
+- End-to-end Copilot Studio integration
+
+---
+
+*Have you implemented custom headers in your MCP connectors? What use cases are you solving? May your MCP code compile and your quests succeed! Share your adventures in the comments below!*
