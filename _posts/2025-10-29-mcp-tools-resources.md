@@ -31,7 +31,7 @@ This design enables scalability—imagine a documentation system with 10,000 art
 
 ## The Biological Species Sample
 
-The new [search-species-resources](https://github.com/microsoft/CopilotStudioSamples/tree/main/MCP/search-species-resources) demonstrates this pattern with a practical example. It provides information about animal species through search-based discovery.
+The new [search-species-resources-typescript](https://github.com/microsoft/CopilotStudioSamples/tree/main/MCPSamples/search-species-resources-typescript) sample demonstrates this pattern with a practical example. It provides information about animal species through search-based discovery.
 
 **What's in the sample:**
 - 5 species (African Elephant, Monarch Butterfly, Great White Shark, Red Panda, Blue Whale)
@@ -170,7 +170,7 @@ To get started quickly:
 1. **Clone the repository**
    ```bash
    git clone https://github.com/microsoft/CopilotStudioSamples.git
-   cd CopilotStudioSamples/MCP/search-species-resources
+   cd CopilotStudioSamples/MCPSamples/search-species-resources-typescript
    ```
 
 2. **Install dependencies**
@@ -242,6 +242,10 @@ This means you can:
 - Generate resource URIs dynamically based on search results
 - Return links to resources that don't exist until they're requested
 - Scale to large numbers of potential resources without listing them all
+
+## Try It Yourself
+
+Clone the [search-species-resources-typescript sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/MCPSamples/search-species-resources-typescript) and experiment with your Copilot Studio agent. Try:
 
 ---
 
