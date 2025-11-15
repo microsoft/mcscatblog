@@ -40,14 +40,14 @@
       display: none !important;
     }
     
-    /* Keep the card white, with very subtle gray on hover */
-    background: #ffffff !important;
+    /* Keep the card white in light mode, with very subtle gray on hover */
+    background: #ffffff;
     transition: background-color .25s ease, box-shadow .25s ease, transform .25s ease;
     
     &:hover {
-      background: #fafafa !important; /* Very subtle gray */
-      box-shadow: 0 8px 20px rgba(0,0,0,.10) !important;
-      transform: translateY(-2px) !important;
+      background: #fafafa; /* Very subtle gray */
+      box-shadow: 0 8px 20px rgba(0,0,0,.10);
+      transform: translateY(-2px);
     }
   }
   
@@ -57,7 +57,7 @@
     border-radius: var(--post-frame-radius);
     position: relative;
     z-index: 0;
-    background: #ffffff !important;
+    background: #ffffff;
     transition: background-color .25s ease, box-shadow .25s ease, transform .25s ease;
   }
   
@@ -91,18 +91,53 @@
   #post-list .card-wrapper:focus-within > .card,
   #post-list .card-wrapper:hover > .post-preview,
   #post-list .card-wrapper:focus-within > .post-preview {
-    background: #fafafa !important; /* Very subtle gray */
-    box-shadow: 0 8px 20px rgba(0,0,0,.10) !important;
-    transform: translateY(-2px) !important;
+    background: #fafafa; /* Very subtle gray */
+    box-shadow: 0 8px 20px rgba(0,0,0,.10);
+    transform: translateY(-2px);
   }
   
   /* Override Chirpy's potential hover styles */
   #post-list .card:hover,
   #post-list .post-preview:hover {
-    background-color: transparent !important; /* Let parent control bg */
+    background-color: transparent; /* Let parent control bg */
   }
   
   /* Dark mode: keep a subtle contrast (slightly lighter hover) */
+  /* Support system preference dark mode */
+  @media (prefers-color-scheme: dark) {
+    html:not([data-mode="light"]) {
+      --post-frame-gradient: linear-gradient(90deg,
+        #58B2FF 0%,
+        #5B8DEF 18%,
+        #9F63FF 36%,
+        #C26CF3 54%,
+        #FF6794 72%,
+        #FFB347 100%);
+      
+      #post-list .post-preview {
+        background: #1f1f20;
+        
+        &:hover {
+          background: #282829;
+        }
+      }
+      
+      #post-list .card-wrapper > .card,
+      #post-list .card-wrapper > .post-preview {
+        background: #1f1f20;
+      }
+      
+      #post-list .card-wrapper:hover > .card,
+      #post-list .card-wrapper:focus-within > .card,
+      #post-list .card-wrapper:hover > .post-preview,
+      #post-list .card-wrapper:focus-within > .post-preview {
+        background: #282829;
+        box-shadow: 0 6px 22px rgba(0,0,0,.55);
+      }
+    }
+  }
+  
+  /* Manual dark mode toggle */
   html[data-mode="dark"] {
     --post-frame-gradient: linear-gradient(90deg,
       #58B2FF 0%,
@@ -111,27 +146,27 @@
       #C26CF3 54%,
       #FF6794 72%,
       #FFB347 100%);
-  }
-  
-  html[data-mode="dark"] #post-list .post-preview {
-    background: #1f1f20 !important;
     
-    &:hover {
-      background: #282829 !important;
+    #post-list .post-preview {
+      background: #1f1f20;
+      
+      &:hover {
+        background: #282829;
+      }
     }
-  }
-  
-  html[data-mode="dark"] #post-list .card-wrapper > .card,
-  html[data-mode="dark"] #post-list .card-wrapper > .post-preview {
-    background: #1f1f20 !important;
-  }
-  
-  html[data-mode="dark"] #post-list .card-wrapper:hover > .card,
-  html[data-mode="dark"] #post-list .card-wrapper:focus-within > .card,
-  html[data-mode="dark"] #post-list .card-wrapper:hover > .post-preview,
-  html[data-mode="dark"] #post-list .card-wrapper:focus-within > .post-preview {
-    background: #282829 !important;
-    box-shadow: 0 6px 22px rgba(0,0,0,.55) !important;
+    
+    #post-list .card-wrapper > .card,
+    #post-list .card-wrapper > .post-preview {
+      background: #1f1f20;
+    }
+    
+    #post-list .card-wrapper:hover > .card,
+    #post-list .card-wrapper:focus-within > .card,
+    #post-list .card-wrapper:hover > .post-preview,
+    #post-list .card-wrapper:focus-within > .post-preview {
+      background: #282829;
+      box-shadow: 0 6px 22px rgba(0,0,0,.55);
+    }
   }
   
   /* === Apply gradient frame to Further Reading cards === */
@@ -198,6 +233,22 @@
   html[data-mode="dark"] .related-posts .card:hover {
     background: #282829 !important;
     box-shadow: 0 6px 22px rgba(0,0,0,.55) !important;
+  }
+  
+  /* System dark mode for Further Reading cards */
+  @media (prefers-color-scheme: dark) {
+    html:not([data-mode="light"]) #related-posts .card,
+    html:not([data-mode="light"]) .post-related .card,
+    html:not([data-mode="light"]) .related-posts .card {
+      background: #1f1f20 !important;
+    }
+    
+    html:not([data-mode="light"]) #related-posts .card:hover,
+    html:not([data-mode="light"]) .post-related .card:hover,
+    html:not([data-mode="light"]) .related-posts .card:hover {
+      background: #282829 !important;
+      box-shadow: 0 6px 22px rgba(0,0,0,.55) !important;
+    }
   }
   
   /* If the Further Reading uses a different structure with wrappers */
@@ -463,14 +514,155 @@
     #sidebar h1.site-title a {
       color: #f3f2f1 !important;
     }
+    
+    /* Home - Brighter purple */
+    #sidebar .nav-link[href="/"] i,
+    #sidebar .nav-link[href="/mcscatblog/"] i,
+    #sidebar .nav-link[href$="mcscatblog/"] i {
+      color: #9F63FF !important;
+    }
+    
+    /* Categories - Brighter blue */
+    #sidebar .nav-link[href*="categories"] i {
+      color: #58B2FF !important;
+    }
+    
+    /* Tags - Brighter pink */
+    #sidebar .nav-link[href*="tags"] i {
+      color: #FF6FCF !important;
+    }
+    
+    /* Archives - Brighter orange */
+    #sidebar .nav-link[href*="archives"] i {
+      color: #FFB347 !important;
+    }
+    
+    /* About - Brighter rose */
+    #sidebar .nav-link[href*="about"] i {
+      color: #FF6794 !important;
+    }
   }
   
-  /* If the above still doesn't work, use this nuclear option */
-  body[data-mode="dark"] #sidebar .site-title,
-  body[data-mode="dark"] #sidebar .site-title a,
-  html[data-mode="dark"] body #sidebar .site-title,
-  html[data-mode="dark"] body #sidebar .site-title a {
-    color: #f3f2f1 !important;
+  /* System dark mode support for sidebar */
+  @media (prefers-color-scheme: dark) {
+    html:not([data-mode="light"]) {
+      #sidebar {
+        background: #1f1f1f !important;
+        border-right-color: #323130 !important;
+        
+        .site-title {
+          color: #f3f2f1 !important;
+          
+          a {
+            color: #f3f2f1 !important;
+            
+            &:hover {
+              color: #40a9ff !important;
+            }
+          }
+        }
+        
+        .profile-wrapper {
+          .site-title {
+            color: #f3f2f1 !important;
+            
+            a {
+              color: #f3f2f1 !important;
+            }
+          }
+          
+          .site-subtitle {
+            color: #a19f9d !important;
+          }
+        }
+        
+        .site-subtitle {
+          color: #a19f9d !important;
+        }
+        
+        .avatar-container {
+          img {
+            border-color: #323130 !important;
+            background: #ffffff !important;
+            padding: 4px !important;
+          }
+        }
+        
+        .nav-item .nav-link {
+          color: #f3f2f1 !important;
+          
+          i {
+            color: #a19f9d !important;
+          }
+          
+          &:hover {
+            background: #292929 !important;
+            color: #ffffff !important;
+            
+            i {
+              color: #f3f2f1 !important;
+            }
+          }
+          
+          &.active {
+            background: #323130 !important;
+            color: #40a9ff !important;
+            
+            i {
+              color: #40a9ff !important;
+            }
+          }
+        }
+        
+        .sidebar-bottom {
+          border-top-color: #323130 !important;
+          
+          a, button {
+            color: #a19f9d !important;
+            
+            &:hover {
+              background: #292929 !important;
+              color: #f3f2f1 !important;
+            }
+          }
+        }
+      }
+      
+      #sidebar #avatar > a,
+      #sidebar .profile-wrapper > a,
+      #sidebar .site-title > a,
+      #sidebar h1 a,
+      #sidebar h1.site-title a {
+        color: #f3f2f1 !important;
+      }
+      
+      /* Home - Brighter purple */
+      #sidebar .nav-link[href="/"] i,
+      #sidebar .nav-link[href="/mcscatblog/"] i,
+      #sidebar .nav-link[href$="mcscatblog/"] i {
+        color: #9F63FF !important;
+      }
+      
+      /* Categories - Brighter blue */
+      #sidebar .nav-link[href*="categories"] i {
+        color: #58B2FF !important;
+      }
+      
+      /* Tags - Brighter pink */
+      #sidebar .nav-link[href*="tags"] i {
+        color: #FF6FCF !important;
+      }
+      
+      /* Archives - Brighter orange */
+      #sidebar .nav-link[href*="archives"] i {
+        color: #FFB347 !important;
+      }
+      
+      /* About - Brighter rose */
+      #sidebar .nav-link[href*="about"] i {
+        color: #FF6794 !important;
+      }
+    }
   }
   
   /* Add subtle separator between nav sections if needed */
@@ -618,6 +810,38 @@
     /* About - Brighter rose */
     #sidebar .nav-link[href*="about"] i {
       color: #FF6794 !important;
+    }
+  }
+  
+  /* System dark mode - colorful icons */
+  @media (prefers-color-scheme: dark) {
+    html:not([data-mode="light"]) {
+      /* Home - Brighter purple */
+      #sidebar .nav-link[href="/"] i,
+      #sidebar .nav-link[href="/mcscatblog/"] i,
+      #sidebar .nav-link[href$="mcscatblog/"] i {
+        color: #9F63FF !important;
+      }
+      
+      /* Categories - Brighter blue */
+      #sidebar .nav-link[href*="categories"] i {
+        color: #58B2FF !important;
+      }
+      
+      /* Tags - Brighter pink */
+      #sidebar .nav-link[href*="tags"] i {
+        color: #FF6FCF !important;
+      }
+      
+      /* Archives - Brighter orange */
+      #sidebar .nav-link[href*="archives"] i {
+        color: #FFB347 !important;
+      }
+      
+      /* About - Brighter rose */
+      #sidebar .nav-link[href*="about"] i {
+        color: #FF6794 !important;
+      }
     }
   }
   
