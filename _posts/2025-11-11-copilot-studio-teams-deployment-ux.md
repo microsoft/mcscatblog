@@ -4,15 +4,19 @@ title: "Best Practices for Deploying Copilot Studio Agents in Microsoft Teams"
 date: 2025-11-14 17:30:00 +0100
 categories: [copilot-studio, teams, deployment]
 tags: [teams-integration, session-management, state-management, troubleshooting]
-description: Essential techniques for managing session state, handling updates, and ensuring reliable performance when deploying Copilot Studio agents to Microsoft Teams.
+description: Essential techniques for managing session state, handling updates, and ensuring reliable performance when deploying Copilot Studio Agents to Microsoft Teams.
 author: raemone
+image:
+  path: /assets/posts/teams-deployment/header.jpeg
+  alt: "A sleek gradient in Microsoft Teams brand colors (purple and blue) with subtle circuit patterns to suggest technology"
+  no_bg: true
 ---  
 
-Deploying a Copilot Studio agent to Microsoft Teams introduces unique challenges that don't exist in web chat deployments. Sessions persist indefinitely, conversation start events don't fire automatically, and updates can be cached. Understanding these nuances is critical for delivering a reliable user experience.
+Deploying a Copilot Studio Agent to Microsoft Teams introduces unique challenges that don't exist in web chat deployments. Sessions persist indefinitely, conversation start events don't fire automatically, and updates can be cached (meaning end-users might not always interact with the latest version). Understanding these nuances is critical for delivering a reliable user experience.
 
 ## Why Teams Deployment is Different
 
-- Sessions persist across days or weeks without automatic reset
+- Conversation persist across days without automatic reset, this is different from sessions which are an analytical concept and are calculated each time inactivity is triggered
 - Conversation Start events don't trigger on initial load
 - Stale context and expired tokens can cause unexpected behavior
 - Updates may not propagate immediately due to caching
@@ -22,9 +26,9 @@ Deploying a Copilot Studio agent to Microsoft Teams introduces unique challenges
 
 ## The Session State Challenge
 
-Unlike web chat where each session starts fresh, Teams conversations maintain state indefinitely. This persistence is powerful for continuity but creates problems:
+Unlike [WebChat](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-connect-bot-to-web-channels?tabs=preview#add-your-agent-to-your-website) where each session starts fresh, Teams maintain state through a single conversation. This persistence is powerful for continuity but creates problems:
 
-- **Stale Context**: Old conversation data can confuse the AI
+- **Stale Context**: Conversation history is not cleared automatically and can confuse the LLM (we use the last 10 turns unless we clear the history)
 - **Token Expiration**: Connector authentication expires during long sessions
 - **Context Limits**: Accumulated history can hit token limits
 - **Update Delays**: Users continue running old bot logic after updates
@@ -80,7 +84,7 @@ This special command forces a complete conversation reset:
 - Clears all conversation state
 - Removes cached connector information
 - Re-authenticates connectors
-- Loads latest agent version
+- Loads latest Agent version
 
 **When to use:**
 - Bot seems "stuck" with outdated information
@@ -94,7 +98,7 @@ This special command forces a complete conversation reset:
 
 **Query rewrite** is a key step in the knowledge pipeline of Copilot Studio. When a user asks a question, the system doesn’t send the raw text directly to the search indexes. Instead, it rewrites the query to optimize it for retrieval across multiple knowledge sources (lexical and semantic). This process ensures better relevance and accuracy of search results.
 
-Enable the **OnKnowledgeRequested** trigger to reveal what the agent is actually searching for:
+Enable the **OnKnowledgeRequested** trigger to reveal what the Agent is actually searching for:
 
 **Implementation:**
 1. Enable OnKnowledgeRequested trigger (via YAML as this is not yet in the UI)
@@ -115,7 +119,7 @@ This provides read-only access to the refined search query (query rewrite) that 
 Example: User asks "How do I reset my password?" and bot displays "(debug) Searching HR FAQ for 'reset password'".
 
 ![Knowledge Requested Trigger](/assets/posts/teams-deployment/query-rewrite.png)
-_You can see both keyword search or semantic search, notice how the second question was rewritten by the agent before search._
+_You can see both keyword search or semantic search, notice how the second question was rewritten by the Agent before search._
 
 > Use OnKnowledgeRequested during development to verify query rewrites, then decide whether to keep it visible in production.
 {: .prompt-tip }
@@ -124,7 +128,7 @@ _You can see both keyword search or semantic search, notice how the second quest
 
 ### Surface Bot Version to Users
 
-Always include a version identifier in your agent responses using the "Greeting" topic or a dedicated "Version" topic:
+Always include a version identifier in your Agent responses using the "Greeting" topic or a dedicated "Version" topic:
 
 ```
 "Contoso Helpdesk Bot – Version 1.3 (Nov 2025)"
@@ -173,7 +177,7 @@ Since ConversationStart won't auto-fire:
 
 Teams users interact conversationally, so:
 
-- Cover common greeting variants in trigger phrases
+- Cover common greeting variants in topic description
 - Include farewell handling
 - Provide multiple example utterances
 - Make fallback behavior user-friendly
@@ -186,12 +190,12 @@ Teams users interact conversationally, so:
 
 ### Manage Connector Authentication
 
-If using connectors (Power Automate, Graph API, etc.):
+If using connectors (ServiceNow, Office, Outlook, etc.):
 
 **Test the authentication flow:**
 - Verify login card appears first time
-- Ensure token refresh during long conversations
-- Plan for connector failures mid-conversation
+- Wait for the token to timeout (usually one hour) and try again to verify that connector re-auth automatically
+- Modify flow to invalidate the connection and test that it triggers a new consent card in the conversation
 
 **Known issue:** Connectors may not refresh tokens during extended sessions.
 
