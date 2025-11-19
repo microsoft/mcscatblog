@@ -57,7 +57,10 @@ Before you even look for A365 in Copilot Studio, make sure these boxes are check
 2. **Admin consent is in place** (depending on your tenant policies)    
    - Your IT admins might have to allow:  
      - The Frontier features (Microsoft Admin Center -> Copilot -> Settings -> Copilot Frontier -> Turn on).
-     - Wait a few minutes after you turn on those features and you'll see a new "Agents" section in the MAC. Access to the A365 serverswill be available as soon as you see the "Agents" submenu after turning on Frontier Tooling.  
+     - Wait a few minutes after you turn on those features and you'll see a new "Agents" section in the MAC. Access to the A365 servers will be available as soon as you see the "Agents" submenu, after turning on Frontier Tooling.  
+
+![Image 3: MAC after having enabled the Frontier features](/assets/posts/a365-mcp-frontier/img3-mac-enablement.jpg){: .shadow w="972" h="589" }
+_Here's the section you'll be able to see within a few minutes of turning on the Frontier features_
   
 ## Meet the Agent 365 tooling servers  
   
