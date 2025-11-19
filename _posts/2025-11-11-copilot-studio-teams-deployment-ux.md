@@ -108,6 +108,13 @@ Enable the **OnKnowledgeRequested** trigger to reveal what the Agent is actually
 ![Knowledge Requested Trigger](/assets/posts/teams-deployment/yaml-code-onknowledgerequested.png)
 _This trigger is only available via YAML for now._
 
+```
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnKnowledgeRequested
+  id: main
+```
+
 ![Knowledge Requested Trigger](/assets/posts/teams-deployment/knowledge-trigger.png)
 _OnKnowledgeRequested reveals the search query after rewrite for transparency._
 
