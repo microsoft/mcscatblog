@@ -105,8 +105,11 @@ Enable the **OnKnowledgeRequested** trigger to reveal what the Agent is actually
 2. Add Message node to display search query
 3. Show users: "Searching knowledge base for: {keywords}"
 
+![Knowledge Requested Trigger](/assets/posts/teams-deployment/yaml-code-onknowledgerequested.png)
+_This trigger is only available via YAML for now._
+
 ![Knowledge Requested Trigger](/assets/posts/teams-deployment/knowledge-trigger.png)
-_OnKnowledgeRequested reveals the query rewrite for transparency._
+_OnKnowledgeRequested reveals the search query after rewrite for transparency._
 
 This provides read-only access to the refined search query (query rewrite) that the orchestrator generated from the user's question.
 
