@@ -25,69 +25,64 @@ This blog post provides a **step-by-step guide** to:
 Connections are the backbone of Copilot Studio agents. If users lack permissions, agents cannot function properly. By aligning **Entra ID groups**, **Dataverse teams**, and **security roles**, you ensure a smooth experience for every user.
 
 ---
+> [!NOTE] 
+> You can create a mock security group to test the tutorial end-to-end. We will explaining how to do so below.
 
 ## Step 1: Verify Entra ID Security Group Membership
-1. Go to **Microsoft Entra admin center**.
+1. Go to **Microsoft Entra admin center** (**https://entra.microsoft.com/**).
 2. Navigate to **Groups → Security Groups**.
 3. Confirm that all intended users are members of the relevant security group.
+
+
 
 ---
 
 ## Step 2: Create Corresponding Security Teams in Dataverse
-1. Open **Power Platform Admin Center (PPAC)**.
+1. Open **Power Platform Admin Center (PPAC)** (**https://admin.powerplatform.microsoft.com/**).
 2. Select the environment where your Copilot Studio agent resides.
 3. Go to **Settings → Users + Permissions → Teams**.
 4. Click **New Team**:
-    - **Team Type**: *Azure AD Security Group*.
-    - **Name**: Match the Entra ID group name for clarity.
-    - **Azure AD Group ID**: Paste the Object ID of the Entra ID security group.
+    
 5. Assign appropriate **security roles** to this team (e.g., *Environment Maker*, *Basic User*, or custom roles granting connection creation).
 
 ---
 
 ##  Step 3: Force Sync Users into Dataverse
-By default, sync happens periodically, but you can force it:
+By default, sync happens periodically. In order to make sure the latest changes regarding additions/removals of users are reflected immediately you need to force sync:
 
-### Option A: Power Platform Admin Center
-- Navigate to **Users** in the environment.
+### Option A (manual): Power Platform Admin Center
+- Navigate to **Users** in the environment (**Manage → Environment → RespectiveEnvironment → User - See all**).
 - Click **Refresh** for the affected user(s).
 
-### Option B: PowerShell (Single Environment)
-```powershell
-# Connect to Dataverse
-Add-PowerAppsAccount
+### Option B (automated): Triggered Power Automate Flow(s) that force syncs users (addition/removal)
 
-# Force user sync for one environment
+* Go to **https://make.powerautomate.com/**
 
-```
-### Option C: Bulk Sync for All Environments
-```powershell
-# Connect to Dataverse
-Add-PowerAppsAccount
+* Create a new **Automated cloud flow** and use the trigger  
+   **Office 365 Groups – When a group member is added or removed**.
 
-# Get all environments and sync users
-Get-AdminPowerGet-AdminPowerAppEnvironment | ForEach-Object {
-    Sync-AdminUser -EnvironmentName $_.EnvironmentName
-```
+* Choose the Entra Security Group you want to monitor.
 
-## ✅ Step 4: Validate Access
-1. In PPAC, confirm that users appear under **Users** and are associated with the correct team.
-2. Check that the team has the required security roles.
-3. Test by having a user create a **connection reference** in a solution.
 
----
+* Add **Power Platform for Admins – Force Sync User**  
+    - **Environment:** select the target environment  
+    - **ObjectId:** use the trigger’s `User Id` dynamic value
 
-## ✅ Step 5: Confirm Agent Connection Usage
+* Then add **Dataverse – Perform a bound action**:
+   - **Table:** `teams`
+   - **Action:** `SyncGroupMembersToTeam`
+   - **Row ID:** the GUID of the Dataverse Team linked to your security group
+
+   You can find it here: 
+
+* Save and enable the flow.
+
+And that's it. Now whenever you add/remove a user from the Entra ID security group, the automated cloud flow will be triggered, syncing the latest changes to the connected Dataverse security team.
+
+## Step 5: Confirm Agent Connection Usage
 - In **Copilot Studio**, open the agent.
 - Verify that the agent uses the correct **connection reference**.
 - Ensure the user can run the agent without permission errors.
-
----
-
-## Troubleshooting Tips
-- **Missing Users**: Ensure the Entra ID group Object ID is correct and the team type is set to *Azure AD Security Group*.
-- **Stale Roles**: Reassign roles to the team and refresh user access.
-- **Connection Errors**: Validate that the connection reference is mapped correctly in the solution.
 
 ---
 
@@ -101,7 +96,8 @@ Get-AdminPowerGet-AdminPowerAppEnvironment | ForEach-Object {
 
 ## Outcome
 Following these steps ensures that:
-- Users added- Users added to Entra ID security groups are synced into Dataverse.
+- Users added to Entra ID security groups are synced into Dataverse.
+- Users removed to Entra ID security groups are also removed from linked Dataverse security teams
 - They inherit the correct permissions via security teams.
 - They can create and use connections required by Copilot Studio agents.
 
