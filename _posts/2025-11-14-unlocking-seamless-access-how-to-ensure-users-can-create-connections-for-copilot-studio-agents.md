@@ -26,13 +26,13 @@ Connections are the backbone of Copilot Studio agents. If users lack permissions
 
 ---
 > [!NOTE] 
-> You can create a mock security group to test the tutorial end-to-end. We will explaining how to do so below.
+> You can create a mock security group to test the tutorial end-to-end. We will be explaining how to do so below.
 
 ## Step 1: Verify Entra ID Security Group Membership
 1. Go to **Microsoft Entra admin center** (**https://entra.microsoft.com/**).
 2. Navigate to **Groups → Security Groups**.
-3. Confirm that all intended users are members of the relevant security group.
-
+3. Create a new group and give it a distinctive name.
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot1.png)
 
 
 ---
@@ -42,8 +42,11 @@ Connections are the backbone of Copilot Studio agents. If users lack permissions
 2. Select the environment where your Copilot Studio agent resides.
 3. Go to **Settings → Users + Permissions → Teams**.
 4. Click **New Team**:
+
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot2.png)
     
 5. Assign appropriate **security roles** to this team (e.g., *Environment Maker*, *Basic User*, or custom roles granting connection creation).
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot3.png)
 
 ---
 
@@ -60,24 +63,46 @@ By default, sync happens periodically. In order to make sure the latest changes 
 
 * Create a new **Automated cloud flow** and use the trigger  
    **Office 365 Groups – When a group member is added or removed**.
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot4.png)
 
 * Choose the Entra Security Group you want to monitor.
-
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot5.png)
 
 * Add **Power Platform for Admins – Force Sync User**  
     - **Environment:** select the target environment  
     - **ObjectId:** use the trigger’s `User Id` dynamic value
 
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot6.png)
+
 * Then add **Dataverse – Perform a bound action**:
    - **Table:** `teams`
    - **Action:** `SyncGroupMembersToTeam`
    - **Row ID:** the GUID of the Dataverse Team linked to your security group
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot7.png)
 
-   You can find it here: 
-
+   You can find it in the Dataverse team's URL (highlighted here): 
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot8.png)
 * Save and enable the flow.
 
+* Final flow should look like this:
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot9.png)
+
 And that's it. Now whenever you add/remove a user from the Entra ID security group, the automated cloud flow will be triggered, syncing the latest changes to the connected Dataverse security team.
+
+### Testing the flow
+
+* Adding a new user to the Entra Security Group:
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot10.png)
+
+* This will trigger our automated flow.
+* The **Force Sync user** action will get the newly added user's details and push them to the respective Dataverse Security Team.
+* Finally the **Perform a bound action** will update the Teams table by syncing the latest changes based on the Team ID provided.
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot11.png)
+
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/Screenshot12.png)
+
+
+
 
 ## Step 5: Confirm Agent Connection Usage
 - In **Copilot Studio**, open the agent.
