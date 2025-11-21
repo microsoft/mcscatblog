@@ -1,10 +1,14 @@
 ---
 layout: post
 title: "Unlocking Seamless Access: How to Ensure Users Can Create Connections for Copilot Studio Agents"
-date: 2025-11-14
-categories: [copilot-studio, tutorial, governance]
+date: 2025-11-21
+categories: [copilot-studio, tutorial, governance, dataverse, security]
 tags: [power-platform, agents, connection-references, connections, dataverse]
+description: Learn how to automatically sync users added/removed from Entra Security Groups to Dataverse Teams
 author: jpapadimitriou
+image:
+  path: /assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/header.jpg
+  alt: "Entra ID and Dataverse"
 ---
 
 
