@@ -44,9 +44,7 @@ You can apply the following approach across all Dev-Test-Prod environments in Po
 > [IMPORTANT]
 > * The respective environment **must be Dataverse enabled**.
 > * These steps **do not** apply to Teams environments.
----
-> [NOTE] 
-> You can create a mock security group to test the tutorial end-to-end. We will be explaining how to do so below.
+
 
 ## Step 1: Verify Entra ID Security Group Membership
 1. Go to **Microsoft Entra admin center** (**https://entra.microsoft.com/**).
@@ -58,7 +56,7 @@ You can apply the following approach across all Dev-Test-Prod environments in Po
 ---
 
 ## Step 2: Create Corresponding Security Teams in Dataverse
-1. Open **Power Platform Admin Center (PPAC)** (**https://admin.powerplatform.microsoft.com/**).
+1. Open [**Power Platform Admin Center (PPAC)**](https://admin.powerplatform.microsoft.com/).
 2. Select the environment where your Copilot Studio agent resides.
 3. Go to **Settings → Users + Permissions → Teams**.
 4. Click **New Team**:
@@ -77,9 +75,9 @@ By default, sync happens periodically. In order to make sure the latest changes 
 - Navigate to **Users** in the environment (**Manage → Environment → RespectiveEnvironment → User - See all**).
 - Click **Refresh** for the affected user(s).
 
-### Option B (automated): Triggered Power Automate Flow(s) that force syncs users (addition/removal)
+### Option B (automated): Triggered Power Automate Flow that force syncs users (addition/removal)
 
-* Go to **https://make.powerautomate.com/**
+* Go to [Power Automate portal](https://make.powerautomate.com/)
 
 * Create a new **Automated cloud flow** and use the trigger  
    **Office 365 Groups – When a group member is added or removed**.
