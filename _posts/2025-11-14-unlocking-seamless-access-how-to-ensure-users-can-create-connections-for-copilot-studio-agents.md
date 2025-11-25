@@ -7,7 +7,7 @@ tags: [power-platform, agents, connection-references, connections, dataverse]
 description: Learn how to automatically sync users added/removed from Entra Security Groups to Dataverse Teams
 author: jpapadimitriou
 image:
-  path: /assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/header.jpg
+  path: /assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/diagram.png
   alt: "Entra ID and Dataverse"
 ---
 
@@ -22,14 +22,30 @@ This blog post provides a **step-by-step guide** to:
 - Create and configure **Dataverse security teams**.
 - Assign the right roles so users can create and use connections for Copilot Studio agents.
 - Troubleshoot common issues and automate sync for large environments.
-
+> ![img](/assets/posts/unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents/diagram.png)
 ---
 
 ## Why This Matters
 Connections are the backbone of Copilot Studio agents. If users lack permissions, agents cannot function properly. By aligning **Entra ID groups**, **Dataverse teams**, and **security roles**, you ensure a smooth experience for every user.
 
+### Things to keep in mind
+You can apply the following approach across all Dev-Test-Prod environments in Power Platform:
+
+
+* Create an Entra Security Group for each Dataverse Security Team in every environment.
+* Assign a specific user role to each team. When a user is added to the corresponding Dataverse team, the role is automatically applied, ensuring consistent permissions and avoiding hidden conflicts.
+* This setup guarantees that makers have the appropriate access level in each environment:
+
+   * Dev: Developers creating agents can be assigned the Environment Maker role or a custom role.
+   * Test: Developers and testers can share similar elevated permissions.
+   * Prod: All users can be included but assigned a more restricted role, such as Basic User, to maintain security.
+
+
+> [IMPORTANT]
+> * The respective environment **must be Dataverse enabled**.
+> * These steps **do not** apply to Teams environments.
 ---
-> [!NOTE] 
+> [NOTE] 
 > You can create a mock security group to test the tutorial end-to-end. We will be explaining how to do so below.
 
 ## Step 1: Verify Entra ID Security Group Membership
