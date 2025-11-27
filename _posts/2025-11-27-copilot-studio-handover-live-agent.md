@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Handing Over Copilot Studio Agent Conversations to Live Agents"
-date: 2025-11-13
+date: 2025-11-27
 categories: [copilot-studio, tutorial, integration]
 tags: [handover, escalation, live-chat, skills, proactive-messaging, microsoft-teams]
 description: Build a seamless handover from Copilot Studio agents to external live chat systems using skills and MS Teams proactive messaging.
