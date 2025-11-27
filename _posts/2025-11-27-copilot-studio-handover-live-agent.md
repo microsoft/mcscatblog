@@ -62,25 +62,11 @@ The mock app provides:
 - Webhook sender for outgoing agent responses
 - Simple web UI for live agents to view and respond to conversations
 
-<!-- IMAGE PLACEHOLDER: Screenshot of ContosoLiveChatApp web interface
-Shows: Live chat UI with conversation list on left, active chat window on right
-Example conversation displayed showing messages from both user and agent
-Highlighting the "Send" button and message input field
-File path suggestion: /assets/posts/copilot-studio-handover-live-agent/contoso-livechat-ui.png
--->
-
 ### 3. HandoverAgentSample.zip (Copilot Studio Solution)
 
 Pre-built Copilot Studio agent with customized topics:
 - **"Escalate to Live Chat"**: Triggers the handover using `startConversation` and `sendMessage` skills
 - **"Goodbye Live Chat"**: Ends the handover session and returns control to the agent
-
-<!-- IMAGE PLACEHOLDER: Screenshot of Copilot Studio authoring canvas
-Shows: The "Escalate to Live Chat" topic with nodes visible
-Highlighting: Call an action node invoking the handover skill
-Show the topic trigger phrases like "talk to a person", "human agent"
-File path suggestion: /assets/posts/copilot-studio-handover-live-agent/copilot-studio-topic.png
--->
 
 ## How It Works
 
@@ -143,12 +129,6 @@ devtunnel host <YOUR-NAME>
 
 Note the generated URL—you'll need it in later configuration steps.
 
-<!-- IMAGE PLACEHOLDER: Terminal screenshot showing dev tunnel commands
-Shows: Successful devtunnel creation with output showing the tunnel URL
-Highlighting: The HTTPS URL format like "https://xyz-5001.euw.devtunnels.ms"
-File path suggestion: /assets/posts/copilot-studio-handover-live-agent/devtunnel-setup.png
--->
-
 ### Step 2: Run the Applications
 
 Open two terminal windows and run both applications:
@@ -171,35 +151,40 @@ Available at: `http://localhost:5000`
 2. Navigate to your Copilot Studio environment
 3. Import the solution and configure environment variables:
    - `[Contoso Agent] Handoff Skill endpointUrl`: `https://<YOUR-TUNNEL>-5001.euw.devtunnels.ms/api/messages`
-   - `[Contoso Agent] Handoff Skill msAppId`: (will be updated after App Registration)
+   - `[Contoso Agent] Handoff Skill msAppId`: (use your new `LiveChatSample` app registration AppID explained in the step below)
 
-<!-- IMAGE PLACEHOLDER: Screenshot of Copilot Studio solution import screen
-Shows: Environment variables configuration panel
-Highlighting: The two environment variables mentioned above with sample values
-File path suggestion: /assets/posts/copilot-studio-handover-live-agent/environment-variables.png
--->
+### Step 4: Configure App Registrations
 
-### Step 4: Configure App Registration
+This sample uses **two separate service principals (SPNs)** for enhanced security and proper service URL routing. You'll need to configure both:
 
-After importing the solution, Copilot Studio creates an Azure AD App Registration for your agent:
+#### App Registration 1: CopilotStudioBot (Auto-created by Copilot Studio)
 
-1. Find the App Registration with Client ID matching your Agent App ID
-2. Set "Home page URL" to your dev tunnel endpoint: `https://<YOUR-TUNNEL>-5001.euw.devtunnels.ms/api/messages`
-3. Navigate to "Certificates & secrets"
-4. Create a new client secret and copy its value immediately
+After importing the solution, Copilot Studio automatically creates an Azure AD App Registration for your agent:
 
-> Store the client secret securely—you won't be able to view it again. For production, use Azure Key Vault.
+1. Find the App Registration with Client ID matching your Agent App ID (found in Copilot Studio > Settings > Advanced > Metadata)
+2. Navigate to "Certificates & secrets"
+3. Create a new client secret and copy its value
+4. Note the **Client ID** and **Client Secret** for later use
+
+#### App Registration 2: LiveChatSample (Custom Service Principal)
+
+Create a second App Registration for the live chat integration:
+
+1. In Azure Portal, go to **Entra ID** > **App registrations** > **New registration**
+2. Name it `LiveChatSample`
+3. Select "Accounts in this organizational directory only"
+4. Click **Register**
+5. Navigate to "Branding & properties" and set "Home page URL" to: `https://<YOUR-TUNNEL>-5001.euw.devtunnels.ms/api/messages`
+6. Navigate to "Certificates & secrets"
+7. Create a new client secret and copy its value
+8. Note the **Client ID** (Application ID) and **Client Secret**
+
+> Store both client secrets securely—you won't be able to view them again. For production, use Azure Key Vault.
 {: .prompt-danger }
-
-<!-- IMAGE PLACEHOLDER: Screenshot of Azure Portal App Registration page
-Shows: The "Certificates & secrets" blade with a client secret created
-Highlighting: The "Copy" button for the secret value and expiration date
-File path suggestion: /assets/posts/copilot-studio-handover-live-agent/app-registration-secret.png
--->
 
 ### Step 5: Update Configuration Files
 
-Now configure the skill with authentication details:
+Now configure the skill with authentication details for **both service principals**:
 
 **appsettings.json** (in HandoverToLiveAgentSample project):
 ```json
@@ -208,6 +193,15 @@ Now configure the skill with authentication details:
     "BaseUrl": "http://localhost:5000"
   },
   "Connections": {
+    "LiveChat": {
+      "ConnectionType": "AzureAD",
+      "Settings": {
+        "TenantId": "your-tenant-id",
+        "ClientId": "your-livechat-app-id",
+        "ClientSecret": "your-livechat-client-secret",
+        "Scopes": ["https://api.botframework.com/.default"]
+      }
+    },
     "CopilotStudioBot": {
       "ConnectionType": "AzureAD",
       "Settings": {
@@ -222,20 +216,36 @@ Now configure the skill with authentication details:
     {
       "ServiceUrl": "https://smba*",
       "Connection": "CopilotStudioBot"
+    },
+    {
+      "ServiceUrl": "https://pvaruntime*",
+      "Connection": "LiveChat"
     }
   ]
 }
 ```
 
-The `ConnectionsMap` section is critical—it tells the skill which credentials to use when sending proactive messages based on the service URL pattern.
+**Understanding the Two-SPN Pattern:**
+
+The `ConnectionsMap` section is critical—it maps service URL patterns to specific credentials:
+
+- **SMBA URLs** (`https://smba*`): MS Teams proactive messaging uses the **CopilotStudioBot** SPN (Copilot Studio's app registration)
+- **PVA Runtime URLs** (`https://pvaruntime*`): Direct Copilot Studio runtime uses the **LiveChat** SPN (your custom app registration)
+
+This dual-SPN approach provides:
+1. **Security isolation**: Separate credentials for different runtime contexts
+2. **Proper authentication**: Each service URL gets the correct App ID for proactive messaging
+3. **Flexibility**: Easy to add more service URL patterns as needed
 
 **skill-manifest.json** (in HandoverToLiveAgentSample/wwwroot):
 ```json
 {
   "endpointUrl": "https://<YOUR-TUNNEL>-5001.euw.devtunnels.ms/api/messages",
-  "msAppId": "your-bot-app-id"
+  "msAppId": "your-livechat-app-id"
 }
 ```
+
+Use the **LiveChatSample** App ID here (not the CopilotStudioBot App ID). This determines which credentials the skill uses when Copilot Studio initially invokes it.
 
 > If you modify skill-manifest.json after initial setup, refresh the skill in Copilot Studio for changes to take effect.
 {: .prompt-tip }
@@ -248,13 +258,6 @@ The `ConnectionsMap` section is critical—it tells the skill which credentials 
 4. Trigger the escalation by saying "I need to talk to a person"
 5. Open the Contoso Live Chat app at `http://localhost:5000`
 6. Respond as a live agent and watch messages flow bidirectionally
-
-<!-- IMAGE PLACEHOLDER: Screenshot of Microsoft Teams showing active conversation
-Shows: User message "I need to talk to a person"
-Agent response: "Connecting you to a live agent..."
-Then live agent response appearing in the chat
-File path suggestion: /assets/posts/copilot-studio-handover-live-agent/teams-conversation.png
--->
 
 ## Key Implementation Details
 
@@ -352,6 +355,48 @@ public async Task<ActionResult> ReceiveMessageAsync([FromBody] MessageRequest re
 ```
 
 The webhook pattern decouples the live chat system from the skill—the live chat system just needs to POST to this endpoint when agents send messages.
+
+### Service Principal Routing
+
+The skill uses different service principals depending on the runtime context. The `ResolveAppIdForServiceUrl` method in `MsTeamsProactiveMessage.cs` dynamically selects credentials:
+
+```csharp
+// HandoverToLiveAgentSample/CopilotStudio/MsTeamsProactiveMessage.cs
+
+private string? ResolveAppIdForServiceUrl(string serviceUrl)
+{
+    if (_configuration is null) return null;
+    var map = _configuration.GetSection("ConnectionsMap");
+    if (!map.Exists()) return null;
+    
+    // Iterate through ConnectionsMap entries
+    foreach (var entry in map.GetChildren())
+    {
+        var pattern = entry.GetValue<string>("ServiceUrl");
+        var connectionName = entry.GetValue<string>("Connection");
+        
+        // Check if service URL matches the pattern (supports wildcards)
+        if (WildcardMatch(serviceUrl, pattern))
+        {
+            // Retrieve the ClientId from the matched connection
+            var conn = _configuration.GetSection("Connections").GetSection(connectionName);
+            var clientId = conn.GetSection("Settings").GetValue<string>("ClientId");
+            return clientId;
+        }
+    }
+    return null;
+}
+```
+
+**Why Two SPNs?**
+
+1. **Different runtime contexts**: MS Teams uses SMBA (Service Manager Bot API) URLs, while direct Copilot Studio calls use PVA runtime URLs
+2. **Authentication requirements**: Each runtime expects specific App IDs for token validation
+3. **Security best practices**: Separate credentials for different service boundaries
+
+**Service URL Patterns:**
+- `https://smba.trafficmanager.net/...`: MS Teams conversations (uses CopilotStudioBot SPN)
+- `https://pvaruntime.microsoft.com/...`: Copilot Studio runtime (uses LiveChat SPN)
 
 ### Proactive Messaging to Teams
 
@@ -617,7 +662,7 @@ When implementing live agent handover:
 
 Ready to implement live agent handover? Clone the complete sample:
 
-**Repository**: [HandoverToLiveAgent Sample](https://github.com/mawasile/CopilotStudioSamples/tree/main/HandoverToLiveAgent)
+**Repository**: [HandoverToLiveAgent Sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/HandoverToLiveAgent)
 
 1. Clone the repository
 2. Follow the setup steps above
