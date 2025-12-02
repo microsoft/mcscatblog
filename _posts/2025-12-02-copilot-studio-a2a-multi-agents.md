@@ -166,7 +166,7 @@ Dev Tunnels will give you a public URL, e.g.:
   
 - `https://xyz123-9000.dev.tunnels.ms/`  
   
-This is the URL you'll use in Copilot Studio as the A2A endpoint.  
+This is the base URL you'll use in Copilot Studio as the A2A endpoint.  
   
 > For real-world scenarios, you'll likely deploy this agent as a web app or container with proper auth. Dev Tunnels are great for demos and development.  
 {: .prompt-info }  
@@ -182,7 +182,7 @@ Now that your A2A agent is reachable, let's plug it into a Copilot Studio agent.
 3. Choose to add a new **A2A agent**.    
 4. Fill in the details:    
    - Name: `Simple A2A Agent` (or similar)    
-   - Endpoint URL: the Dev Tunnel URL, e.g. `https://xyz123-5073.dev.tunnels.ms/`    
+   - Endpoint URL: the Dev Tunnel URL followed by the A2A endpoint, e.g. `https://xyz123-5073.dev.tunnels.ms/a2a/botanical/v1/message:stream`  
    - Auth: for the sample, you can typically leave it as "none" (the repo doesn't enforce auth by default).    
 5. Save and continue
   
