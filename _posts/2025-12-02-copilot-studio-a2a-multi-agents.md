@@ -20,13 +20,14 @@ About two weeks ago at Microsoft Ignite, Copilot Studio gained several new ways 
 - Connect Microsoft 365 agents via SDK    
 - Connect any agent that speaks the new A2A (Agent-to-Agent) protocol    
   
-In this quickstart we’ll focus on the last one: **connecting an A2A-enabled agent to Copilot Studio**.  
+In this quickstart we'll focus on the last one: **connecting an A2A-enabled agent to Copilot Studio**.  
   
-To keep things concrete, we’ll use as connected agent a sample that I built with the [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview) that exposes A2A. Don't be scared, Agent Framework is not a prerequisite for A2A, but simply a choice that I made in order to have something that exposes A2A ready to be plugged in Copilot Studio. You can use any A2A enabled agent that you already have.  
+To keep things concrete, we'll use as connected agent a sample that I built with the [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview) that exposes A2A. Don't be scared, Agent Framework is not a prerequisite for A2A, but simply a choice that I made in order to have something that exposes A2A ready to be plugged in Copilot Studio. You can use any A2A enabled agent that you already have.  
   
-If you don't have any A2A agent, you can clone my GitHub repo for the sample agent: [Microsoft Copilot Studio A2A Samples | GitHub](https://github.com/microsoft/CopilotStudioSamples/tree/main/A2ASamples/Simple-A2A-Sample)
+If you don't have any A2A agent, you can clone my GitHub repo for the sample agent.
+[Microsoft Copilot Studio A2A Samples | GitHub](https://github.com/microsoft/CopilotStudioSamples/tree/main/A2ASamples/Simple-A2A-Sample)
   
-We’ll go end-to-end:  
+We'll go end-to-end:  
   
 1. Configure and run the sample A2A agent    
 2. Expose it via a public endpoint (Dev Tunnels or similar)    
@@ -53,22 +54,22 @@ Compared to traditional HTTP connectors or tools, A2A is:
 - More interoperable: different agent frameworks can participate as long as they implement A2A    
 - Richer in context: the payload carries extra metadata your agent can use for routing, personalization, logging, and more    
   
-In other words, instead of “calling an API”, you’re “delegating a task to another agent”.  
+In other words, instead of "calling an API", you're "delegating a task to another agent".  
   
 ---  
   
-## What you’ll build  
+## What you'll build  
   
-By the end of this quickstart you’ll have:  
+By the end of this quickstart you'll have:  
 - A simple A2A agent running locally via the Microsoft Agent Framework (or you can use your already made A2A agent if you have one) 
 - Exposed it over HTTPS using Dev Tunnels (or any other hosting you like)    
 - Wired it into a Copilot Studio agent as an A2A connection    
 - Successfully invoked from Copilot Studio with a natural language task:    
-  > “Which plant needs more light: a tomato plant or a strawberry plant?”    
+  > "Which plant needs more light: a tomato plant or a strawberry plant?"    
   
-And you’ll see:  
+And you'll see:  
 - A successful A2A connection from Copilot Studio    
-- The agent’s activity log confirming it received and processed the task    
+- The agent's activity log confirming it received and processed the task    
 - The full A2A payload, including the extra metadata Copilot Studio sends    
   
 ---  
@@ -78,7 +79,7 @@ And you’ll see:
 > If you already have an agent exposing A2A you can skip this section  
 {: .prompt-tip }  
   
-If you want to copy my A2A agent, you’ll need:  
+If you want to copy my A2A agent, you'll need:  
 - An Azure OpenAI resource with:    
   - An endpoint URL    
   - A deployed model (deployment name)    
@@ -165,16 +166,16 @@ Dev Tunnels will give you a public URL, e.g.:
   
 - `https://xyz123-9000.dev.tunnels.ms/`  
   
-This is the URL you’ll use in Copilot Studio as the A2A endpoint.  
+This is the URL you'll use in Copilot Studio as the A2A endpoint.  
   
-> For real-world scenarios, you’ll likely deploy this agent as a web app or container with proper auth. Dev Tunnels are great for demos and development.  
+> For real-world scenarios, you'll likely deploy this agent as a web app or container with proper auth. Dev Tunnels are great for demos and development.  
 {: .prompt-info }  
   
 ---  
   
 ## Step 3 – Create the A2A connection in Copilot Studio  
   
-Now that your A2A agent is reachable, let’s plug it into a Copilot Studio agent.  
+Now that your A2A agent is reachable, let's plug it into a Copilot Studio agent.  
   
 1. Open Copilot Studio and select the agent you want to extend.    
 2. Go to the Agents section, where you manage connected agents for the agent
@@ -182,7 +183,7 @@ Now that your A2A agent is reachable, let’s plug it into a Copilot Studio agen
 4. Fill in the details:    
    - Name: `Simple A2A Agent` (or similar)    
    - Endpoint URL: the Dev Tunnel URL, e.g. `https://xyz123-5073.dev.tunnels.ms/`    
-   - Auth: for the sample, you can typically leave it as “none” (the repo doesn’t enforce auth by default).    
+   - Auth: for the sample, you can typically leave it as "none" (the repo doesn't enforce auth by default).    
 5. Save and continue
   
 If everything is configured correctly, Copilot Studio should report a **successful connection** to the A2A agent.  
@@ -210,10 +211,10 @@ On the A2A agent side, you should see logs confirming:
 - The prompt contained the plant question    
 - The agent produced a response, which was then returned to Copilot Studio    
   
-![Image 2: The A2A agent’s activity log, showing the task and the generated response about tomato vs strawberry plants](/assets/posts/copilot-studio-a2a-multi-agents/a2a-response.png){: .shadow w="972" h="589" }  
-_The sample A2A agent log showing it was invoked with the “Which plant needs more light…?” task and responded successfully._  
+![Image 2: The A2A agent's activity log, showing the task and the generated response about tomato vs strawberry plants](/assets/posts/copilot-studio-a2a-multi-agents/a2a-response.png){: .shadow w="972" h="589" }  
+_The sample A2A agent log showing it was invoked with the "Which plant needs more light…?" task and responded successfully._  
   
-If you see this, you’ve completed the basic loop: **Copilot Studio → A2A protocol → external agent → back to Copilot Studio**.  
+If you see this, you've completed the basic loop: **Copilot Studio → A2A protocol → external agent → back to Copilot Studio**.  
   
 ---  
   
@@ -221,7 +222,7 @@ If you see this, you’ve completed the basic loop: **Copilot Studio → A2A pro
   
 One cool advantages of using the A2A protocol is that Copilot Studio sends a **rich payload** to your agent.  
   
-In the sample, if you inspect the request body the agent receives, you’ll see more than just the user question. You’ll typically see metadata such as the complete chat history as well as the locale used, etc.
+In the sample, if you inspect the request body the agent receives, you'll see more than just the user question. You'll typically see metadata such as the complete chat history as well as the locale used, etc.
 
 The sample log output will show the full JSON payload as it arrives at the A2A endpoint.  
   
@@ -239,7 +240,7 @@ A2A is especially useful when you already have agents built on another framework
 You would still use:  
 - Traditional connectors / HTTP tools for plain APIs and services    
 - MCP servers for tool/resource-style integrations in the MCP ecosystem    
-- Activity Protocol when what you’re calling is itself an agent built with Microsoft Technology (such as Microsoft 365 Agents SDK)  
+- Activity Protocol when what you're calling is itself an agent built with Microsoft Technology (such as Microsoft 365 Agents SDK)  
   
 All three patterns can coexist in the same Copilot Studio agent.  
   
@@ -260,6 +261,6 @@ Once you have this basic A2A connection working, you can:
   
 - Copilot Studio can now connect to external agents via the **A2A protocol**, alongside Fabric agents, Foundry agents and Microsoft 365 SDK agents.    
 - With the **Simple A2A Agent** sample, you can quickly see the full round-trip: Copilot Studio → A2A → agent → Copilot Studio.    
-- The A2A payload includes **rich chat history**, not just the last user’s message, which you can exploit for routing, logging, and governance. 
+- The A2A payload includes **rich chat history**, not just the last user's message, which you can exploit for routing, logging, and governance. 
   
-If you’re investing in agents beyond Copilot Studio, A2A gives you a clean way to bring them in and orchestrate them together.
+If you're investing in agents beyond Copilot Studio, A2A gives you a clean way to bring them in and orchestrate them together.
