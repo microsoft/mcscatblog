@@ -39,7 +39,7 @@ layout: null
 
   <!-- Pages -->
   {% for page in site.pages %}
-    {% unless page.sitemap.exclude or page.url contains '/assets/' or page.url == '/404.html' or page.url == '/sitemap.xml' %}
+    {% unless page.sitemap.exclude or page.url contains '/assets/' or page.url == '/404.html' or page.url == '/sitemap.xml' or page.url == '/' %}
     <url>
       <loc>{{ site.url }}{{ site.baseurl }}{{ page.url }}</loc>
       {% if page.lastmod %}
