@@ -23,3 +23,8 @@ jpapadimitriou:
   name: James Papadimitriou
   email: james.papadimitriou@microsoft.com # Optional
   avatar: https://github.com/jpapadimitriou.png # Optional: path to avater image
+
+daveburman-msft:
+  name: Dave Burman
+  email: dave.burman@microsoft.com # Optional
+  avatar: https://github.com/daveburman-msft.png # Optional: path to avater image
