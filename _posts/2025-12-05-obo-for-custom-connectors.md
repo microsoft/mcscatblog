@@ -50,8 +50,10 @@ Note, as a maker, some of the crucial steps around connection creation happen in
 
 ## MCP Tools ##
 
-MCP tools create a Custom Connector in the background when added to an agent, so all of the above applies.  However, you'll need to go through the initial auth process within Copilot Studio's New Tool wizard first, and then go back and alter the Custom Connector's security information.
+MCP tools use Custom Connectors under the hood, so all of the above applies equally in MCP scenarios.  One point of caution though; if you add an MCP tool using the [MCP Onboarding Wizard](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#option-1-use-the-mcp-onboarding-wizard-recommended), it will create a Custom Connector in the background, so you'll need to go through the initial auth process within the wizard first, and then go back and alter the Custom Connector's security information.
 
 ## The Result ##
 
 With correct configuration, users are prompted for consent when the tool is invoked, and after consent is provided, a connection is created and authenticated in the background.  The tool executes and returns a response, all without a single mention of the phrase "connection manager". Wonderful!
+
+Special thanks Adi for delegating permissions to OBO write a blog post on SSO for Custom Connectors, as promised in [this post](https://microsoft.github.io/mcscatblog/posts/you-dont-need-manual-auth/).
