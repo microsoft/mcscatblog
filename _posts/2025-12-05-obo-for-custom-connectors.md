@@ -14,7 +14,7 @@ image:
 
 Agents are great at bringing together information from multiple sources to provide intelligent insights to users.  The tools available within Microsoft Copilot Studio provide a vast array of options for interacting with external sources.  Often those external sources need to be able to authenticate the user, and so agents need to be able to act on behalf of the user.  Ideally all of this needs to happen without the user needing to enter credentials, to provide a seamless conversation experience.
 
-If you've tried to incorporate a Microsoft Entra ID OAuth secured custom API or MCP server into an agent, you may have been disappointed to find users being prompted for credentials during the chat.  Single Sign-On can be achieved in this scenario, and today we've released [new  guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-custom-connector-on-behalf-of) which details everything required to ensure this works perfect.
+If you've tried to incorporate a Microsoft Entra ID OAuth secured custom API or MCP server into an agent, you may have been disappointed to find users being prompted for credentials during the chat.  Single Sign-On can be achieved in this scenario, and today we've released [new  guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-custom-connector-on-behalf-of) which details everything required to ensure this works perfectly.
 
 ## Challenges ##
 
