@@ -52,7 +52,7 @@ This is probably the biggest myth keeping people from the simpler path.
 
 **Reality**: Nope! You can absolutely use "Authenticate with Microsoft" with web chat.
 
-We (Microsoft) provides official samples showing exactly how to do this:
+We (Microsoft) provide official samples showing exactly how to do this:
 
 - [**React Web Chat Sample**](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webchat-react) - Full React implementation with Entra ID authentication
 - [**Web Client Sample**](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webclient) - Vanilla JavaScript approach
@@ -90,7 +90,9 @@ Here's what most people don't know: custom connectors can use the same seamless 
 ![Consent Card](/assets/posts/custom-connector-sso/custom-connector-todos.png){: .shadow w="700" h="400"}
 _The consent card experience - also available for your custom connectors_
 
-For a deep dive into setting this up, stay tuned for an upcoming post on enabling SSO for custom connectors in Copilot Studio. (Yes, I just did the "stay tuned" thing. I'm sorry. But it's actually coming soon, I promise!)
+**Update**: The post is now live! Check out [Seamless SSO with Custom Connectors]({% post_url 2025-12-05-obo-for-custom-connectors %}) for Dave's announcement.
+
+I'll admit that configuring SSO/OBO for custom connectors is a little involved, but you only do it once per connector, and then it works seamlessly for any agent that uses it.
 
 ### Why Custom Connectors Beat Manual Auth
 
