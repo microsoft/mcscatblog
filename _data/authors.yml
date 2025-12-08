@@ -28,3 +28,9 @@ daveburman-msft:
   name: Dave Burman
   email: dave.burman@microsoft.com # Optional
   avatar: https://github.com/daveburman-msft.png # Optional: path to avater image
+
+ericsche:
+  name: Eric Scherlinger
+  email: ericsche@microsoft.com
+  avatar: https://github.com/ericsche.png
+      
