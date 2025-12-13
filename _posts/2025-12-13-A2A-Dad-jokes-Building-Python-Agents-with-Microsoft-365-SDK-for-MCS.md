@@ -8,9 +8,9 @@
 
 Ever watched [YMAD's hilarious dad joke videos](https://www.youtube.com/@YMAD) and thought, "I need an agent that can do that"? Well, you're in luck! I recently built a Dad Joke Agent that not only delivers quality groan-worthy humor but also demonstrates something pretty cool: how to build a Python agent that speaks *both* the Activity Protocol and the Agent-to-Agent (A2A) protocol.
 
-**🚨 Important Disclaimer**: This is a learning project built with preview features. The code is for educational purposes—if you decide to put any of this in production, that's on you, dad! (See what I did there?) No code of mine should be deployed to production anywhere without proper testing, security reviews, and a healthy dose of caution.
+**🚨 Important Disclaimer**: This is a learning project built with current MCS preview features. The code is for educational purposes—if you decide to put any of this in production, that's on you, dad! (See what I did there?) No code of mine should be deployed to production anywhere without proper testing, security reviews, and a healthy dose of caution.
 
-That said, this project was a fantastic learning experience for me as part of the Copilot Studio Customer Advisory Team (CAT). I wanted to understand how to connect custom Python agents to Copilot Studio using the newly released Microsoft 365 Agents SDK. The result? A fully functional dual-protocol agent that you can fork, run, and learn from.
+That said, this project was a fantastic learning experience for me. I wanted to understand how to connect custom Python agents to Copilot Studio using the newly released Microsoft 365 Agents SDK. The result? A fully functional dual-protocol agent that you can fork, run, and learn from.
 
 **What you'll learn:**
 - How to build agents using the Microsoft 365 Agents SDK in Python
@@ -20,7 +20,7 @@ That said, this project was a fantastic learning experience for me as part of th
 - Some quirks and gotchas I discovered along the way
 - How to use extensive logging to understand what's happening under the hood
 
-**Repository**: [GitHub - Dad Joke Agent](https://github.com/YOUR-USERNAME/dad-joke-agent) *(placeholder - add your actual repo link)*
+**Repository**: [GitHub - Dad Joke Agent]([https://github.com/Roelzz/dad-joke-a2a-agent](https://github.com/Roelzz/dad-joke-a2a-agent)) 
 
 Let's dive in! 🤣
 
@@ -427,14 +427,7 @@ curl https://your-tunnel-url/health
    https://your-tunnel-url/.well-known/agent-card.json
    ```
 
-4. **Configure messaging endpoint** (if asked separately)
-
-   Some configurations may ask for a base URL or messaging endpoint:
-   ```
-   https://your-tunnel-url/api/messages
-   ```
-
-5. **Test the connection**
+4. **Test the connection**
    - Copilot Studio will fetch your agent card
    - Verify it shows "Dad Joke Agent" with your description
 
