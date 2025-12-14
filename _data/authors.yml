@@ -28,3 +28,8 @@ daveburman-msft:
   name: Dave Burman
   email: dave.burman@microsoft.com # Optional
   avatar: https://github.com/daveburman-msft.png # Optional: path to avater image
+
+mawasile:
+  name: Mateusz Wasilewski
+  email: mateusz.wasilewski@microsoft.com # Optional
+  avatar: https://github.com/mawasile.png # Optional: path to avatar image
