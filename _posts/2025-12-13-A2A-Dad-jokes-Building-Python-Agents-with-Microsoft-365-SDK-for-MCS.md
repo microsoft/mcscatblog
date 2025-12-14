@@ -6,8 +6,12 @@ categories: [copilot-studio, a2a, agents-sdk]
 tags: [copilot-studio, python, a2a, activity-protocol, agents-sdk, multi-agent, tutorial]
 description: "Learn how to extend Copilot Studio with Python agents using the Microsoft 365 Agents SDK and both Activity Protocol and Agent-to-Agent (A2A) communication"
 author: roels
+image:  
+  path: /assets/posts/dad-jokes-a2a/A2A.png  
+  alt: "Cover image for the Dad Jokes to A2A post"  
+  no_bg: true  
 mermaid: true
-published: false
+published: true
 ---
 
 # From Dad Jokes to A2A: Building Python Agents That Talk to Copilot Studio
@@ -20,7 +24,7 @@ published: false
 
 Ever watched [YMAD's hilarious dad joke videos](https://www.youtube.com/@YMAD) and thought, "I need an agent that can do that"? Well, you're in luck! I built a Dad Joke Agent that delivers quality groan-worthy humor—but more importantly, it demonstrates something powerful: **how to extend Copilot Studio with external agents**.
 
-![A cartoon showing a "Joke Agent" detective surrounded by smaller child agents, holding an "A2A: Adult-to-Agent" device while thinking about cookies](placeholder-hero-image.png)
+![A cartoon showing a "Joke Agent" detective surrounded by smaller child agents, holding an "A2A: Adult-to-Agent" device while thinking about cookies](/assets/posts/dad-jokes-a2a/Dad-agent.png)
 
 *A2A: Adult-to-Agent protocol. Because when you've got child agents and connected agents, sometimes you need the grown-up in the room to handle the heavy lifting! 🕵️*
 
