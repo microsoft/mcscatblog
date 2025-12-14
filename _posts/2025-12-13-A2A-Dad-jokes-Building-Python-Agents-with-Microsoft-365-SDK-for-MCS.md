@@ -1,3 +1,15 @@
+---
+layout: post
+title: "From Dad Jokes to A2A: Building Python Agents with Microsoft 365 SDK"
+date: 2025-12-13
+categories: [copilot-studio, a2a, agents-sdk]
+tags: [a2a-protocol, python, agents, multi-agent, tutorial]
+description: Learn how to build a Python agent that speaks both Activity Protocol and A2A/JSON-RPC for seamless Copilot Studio integration.
+author: roels
+mermaid: true
+published: false
+---
+
 # From Dad Jokes to A2A: Building Python Agents with Microsoft 365 SDK for MCS
 
 **Two Ways of Connecting Your Agents to Copilot Studio**
