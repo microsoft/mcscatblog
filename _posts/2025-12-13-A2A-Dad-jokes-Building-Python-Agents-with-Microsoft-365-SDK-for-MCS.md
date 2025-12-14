@@ -347,19 +347,19 @@ curl https://your-tunnel-url/health
 ### Step 2: Configure Copilot Studio
 
 1. **Open Copilot Studio** and create or edit an agent
-2. **Navigate to Settings → Agent capabilities**
-3. **Enable "Agent-to-Agent" (A2A)**
+2. **Navigate to Agents** and select add an agent and then select add an **External agent**
+3. select either **Microsoft 365 Agent SDK or Agent2Agent** depending on the implementation you choose
 4. **Enter your agent card URL**:
    ```
    https://your-tunnel-url/.well-known/agent-card.json
    ```
-5. **Verify** Copilot Studio shows "Dad Joke Agent"
+5. **Enter** Name and description, Write a good description for the connected agent (e.g., "Tells funny dad jokes and puns on request")
+6. Don't forget to setup the connection
+7. **Verify** Copilot Studio shows your agent
 
-### Step 3: Set Up Handoff
+### Step 3: Call the agent
 
-1. **Create a topic** with trigger phrases like "Tell me a dad joke"
-2. **Add a "Transfer conversation" action** pointing to your Dad Joke Agent
-3. **Test it!** Type "Tell me a dad joke" and watch the handoff happen
+That's it, no need to setup anything, ask the agent for a good Dad joke about a category and it will use the connected agent based on the description.
 
 ### Step 4: Watch the Logs
 
