@@ -5,7 +5,7 @@ date: 2025-12-15
 categories: [copilot-studio, generative-ai]
 tags: [knowledge, citations, formatting, power-fx, pro-code]
 description: When citations get in the way of the experience, here is how to remove them from Copilot Studio answers.
-author: henryjammes
+author: cat-team
 image:
   path: /assets/posts/kill-the-citation/header.png
   alt: "A broom sweeping away bracketed numbers"
