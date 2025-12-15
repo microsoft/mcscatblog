@@ -5,9 +5,9 @@ date: 2025-12-15
 categories: [copilot-studio, generative-ai]
 tags: [knowledge, citations, formatting, power-fx, pro-code]
 description: Because sometimes "[1]" is the loneliest number, and you just want a clean answer without the footnotes.
-author: cat-team
+author: henryjammes
 image:
-  path: /assets/posts/kill-the-citation/header.png
+  path: assets/posts/remove-citations-in-copilot-studio-answer/header.png
   alt: "A broom sweeping away bracketed numbers"
   no_bg: true
 ---
