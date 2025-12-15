@@ -32,7 +32,7 @@ Depending on how your agent is set up, there are two ways to do this.
 
 If you are using the modern **Generative** orchestration mode, the agent decides when to trigger the answer. You can intercept the response before it reaches the user.
 
-> **The Low-Code Alternative**
+> **The No-Code Alternative**
 > In generative orchestration, you can also use instructions to influence the presence of citations.
 > E.g., `Never include any citation in your knowledge answers. These should be removed before an answer is sent.`
 >
