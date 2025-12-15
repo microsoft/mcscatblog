@@ -8,7 +8,7 @@ description: When citations get in the way of the experience, here is how to rem
 author: cat-team
 image:
   path: /assets/posts/kill-the-citation/header.png
-  alt: "A broom sweeping away bracketed numbers"
+  alt: "A smart tabby cat wearing round glasses and a tweed suit sitting at a desk, using a glowing tool to zap bracketed citation numbers like [1] and [2] off a holographic text display, leaving the answer clean."
   no_bg: true
 ---
 
