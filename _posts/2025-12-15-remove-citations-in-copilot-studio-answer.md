@@ -7,7 +7,7 @@ tags: [knowledge, citations, formatting, power-fx, pro-code]
 description: When citations get in the way of the experience, here is how to remove them from Copilot Studio answers.
 author: henryjammes
 image:
-  path: /assets/posts/kill-the-citation/header.png
+  path: /assets/posts/remove-citations-in-copilot-studio-answer/header.png
   alt: "A smart tabby cat wearing round glasses and a tweed suit sitting at a desk, using a glowing tool to zap bracketed citation numbers like [1] and [2] off a holographic text display, leaving the answer clean."
   no_bg: true
 ---
