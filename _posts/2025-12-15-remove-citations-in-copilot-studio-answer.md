@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Kill the [1]: How to Banish Citations from Copilot Studio Answers"
+title: "Kill the [1]: How to Remove Citations from Copilot Studio Answers"
 date: 2025-12-15
 categories: [copilot-studio, generative-ai]
 tags: [knowledge, citations, formatting, power-fx, pro-code]
-description: Because sometimes "[1]" is the loneliest number, and you just want a clean answer without the footnotes.
+description: When citations get in the way of the experience, here is how to remove them from Copilot Studio answers.
 author: cat-team
 image:
   path: /assets/posts/kill-the-citation/header.png
@@ -92,9 +92,9 @@ beginDialog:
 
 ### What is actually happening here?
 
-We are using the `OnGeneratedResponse` event. This is a special trigger that fires after the LLM has generated an answer, but before it is shown to the user.
+We are using the `OnGeneratedResponse` event. This is a special trigger that fires after the orchestrator has generated an answer, but before it is shown to the user.
 
-**System.ContinueResponse = false**: This is the "Stop the Presses!" command. It tells Copilot Studio not to send the default message it just generated.
+**System.ContinueResponse = false**: This is the "Stop the Presses!" command. It tells Copilot Studio not to send the message it just generated.
 
 **The Power Fx Processing**: The original text (`System.Response.FormattedText`) is processed through Power Fx functions:
 
