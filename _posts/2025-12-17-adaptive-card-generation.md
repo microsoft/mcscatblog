@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Top Tip - Adaptive Card Generation"
-date: 2025-12-15
+date: 2025-12-17
 categories: [copilot-studio, authentication]
 tags: [adaptive-cards, best-practices, tips]
 description:  Using the test pane to ease Adaptive Card creation.
