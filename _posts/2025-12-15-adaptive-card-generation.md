@@ -89,6 +89,10 @@ There are also fields for trip start and end date, and with all of this informat
 
 ![Tourist profile](/assets/posts/adaptive-card-generation/sanmarino-profile.png){: .shadow w="443" h="710"}
 
+That information can be used to generate a tailored itinerary based on the user's preferences:
+
+![Itnierary](/assets/posts/adaptive-card-generation/itinerary.png){: .shadow w="462" h="694"}
+
 Cool huh?!
 
 ## That's A Lot Of Copy/Paste ##
@@ -122,11 +126,11 @@ This is all fairly straight forward except for the dynamic nature of the adaptiv
 
 ...I was able to then set a single variable representing the entire response, passed into the prompt to generate a tourist profile...
 
-![Changes to topic YAML](/assets/posts/adaptive-card-generation/call-tourist-profile.png){: .shadow w="732" h="524"}
+![Constructing a variable for the prompt](/assets/posts/adaptive-card-generation/call-tourist-profile.png){: .shadow w="732" h="524"}
 
 ...and after that, it was simply a case of passing the profile into a generative answers node to generate the final itinerary:
 
-![Changes to topic YAML](/assets/posts/adaptive-card-generation/itinerary.png){: .shadow w="708" h="740"}
+![Generative answer node for itinerary](/assets/posts/adaptive-card-generation/itinerary-node.png){: .shadow w="708" h="740"}
 
 ## Summary ##
 
