@@ -4,11 +4,11 @@ title: "Top Tip - Adaptive Card Generation"
 date: 2025-12-15
 categories: [copilot-studio, authentication]
 tags: [adaptive-cards, best-practices, tips]
-description:  Using the test pane to ease adaptive card creation.
+description:  Using the test pane to ease Adaptive Card creation.
 author: daveburman-msft
 image:
   path: /assets/posts/adaptive-card-generation/header.png
-  alt: "A developer who's happily creating adaptive cards"
+  alt: "A developer who's happily creating Adaptive Cards"
   no_bg: true
 ---
 
@@ -23,7 +23,7 @@ The answer to my JSON woes was literally right in front of me the whole time; th
 As an example, let's see what the test pane makes of the following:
 
 ```
-Write JSON for an adaptive card which prompts the user to enter dietary preferences.
+Write JSON for an Adaptive Card which prompts the user to enter dietary preferences.
 
 Place each section in containers.
 
@@ -63,7 +63,7 @@ Anyone that's worked with digital forms knows dynamic forms are almost always a 
 
 The reality is users ~~want~~ expect smart solutions which are targetted towards their needs, and if you're putting a form in front of a user to collect information, you **need** to do so in an intelligent way.
 
-So what's that got to do with adaptive cards?  Well in a situation where you're collecting and validating multiple pieces of information from a user, it needs to be targetted.  It needs to make sense to the user, and needs to be friction free.
+So what's that got to do with Adaptive Cards?  Well in a situation where you're collecting and validating multiple pieces of information from a user, it needs to be targetted.  It needs to make sense to the user, and needs to be friction free.
 
 ## Country Specific Adaptive Cards ##
 
@@ -103,11 +103,11 @@ Is it?
 
 I started this post talking about how LLMs are quite adept at writing code for Adaptive Cards, and it's actually quite straight forward to do this on the fly.
 
-First I dropped my instructions into a custom prompt given the responsibility of creating the adaptive card JSON, which just takes the country as an input:
+First I dropped my instructions into a custom prompt given the responsibility of creating the Adaptive Card JSON, which just takes the country as an input:
 
 ![Generate card prompt](/assets/posts/adaptive-card-generation/prompt-generatecard.png){: .shadow w="1867" h="923"}
 
-Secondly, I created another prompt to create the tourist profile.  This one takes inputs for the country, the original adaptive card, and the user's response to the submission.  I passed the original card JSON in as I wanted to ensure the prompt could infer dislikes aswell as likes, and the country to ensure the prompt had as much information available as possible to make decisions about the user's needs.
+Secondly, I created another prompt to create the tourist profile.  This one takes inputs for the country, the original Adaptive Card, and the user's response to the submission.  I passed the original card JSON in as I wanted to ensure the prompt could infer dislikes aswell as likes, and the country to ensure the prompt had as much information available as possible to make decisions about the user's needs.
 
 ![Generate tourist profile prompt](/assets/posts/adaptive-card-generation/prompt-generateprofile.png){: .shadow w="1880" h="927"}
 
@@ -116,11 +116,11 @@ I wrapped each of these in Agent flows so I had full control of the variables be
 The topic required a little manipulation.  Essentially the flow was:
   - Call the card generation flow
   - Push the output of that into an Adaptive Card node
-  - Take the output of the Adaptive Care node and push it into the profile generation flow
+  - Take the output of the Adaptive Card node and push it into the profile generation flow
   - Output the profile to the user
   - Use a Generative Answers node to generate and output an itinerary
 
-This is all fairly straight forward except for the dynamic nature of the adaptive card.  I cheated a little and made sure I had a fixed number of questions (look back at the card generation prompt), which meant I could rely on a fixed number of outputs from the card.  Manipulating the topic YAML a little...
+This is all fairly straight forward except for the dynamic nature of the Adaptive Card.  I cheated a little and made sure I had a fixed number of questions (look back at the card generation prompt), which meant I could rely on a fixed number of outputs from the card.  Manipulating the topic YAML a little...
 
 ![Changes to topic YAML](/assets/posts/adaptive-card-generation/topic-yaml.png){: .shadow w="286" h="657"}
 
@@ -134,4 +134,4 @@ This is all fairly straight forward except for the dynamic nature of the adaptiv
 
 ## Summary ##
 
-So there we go, dynamically intelligent forms driving conversational intelligence without a single line of JSON.  Adaptive cards are great in certain situations, and creating them is very straightforward when Copilot's around!
+So there we go, dynamically intelligent forms driving conversational intelligence without a single line of JSON.  Adaptive Cards are great in certain situations, and creating them is very straightforward when Copilot's around!
