@@ -1,4 +1,4 @@
----  
+---
 layout: post
 title: "Connecting Snowflake to Copilot Studio: Step-by-Step Guide"
 date: 2025-11-15 17:30:00 +0100
@@ -10,7 +10,7 @@ image:
   path: assets/posts/SNFL-MCS/SNFL-MCS.jpg
   alt: "Connect Snowflake to Copilot Studio"
   no_bg: true
----  
+---
 # Connecting Snowflake to Copilot Studio: Step-by-Step Guide
 
 ![Better Together - Copilot and Snowflake](/assets/posts/SNFL-MCS/SNFL-MCS.jpg)
@@ -31,6 +31,7 @@ The choice depends largely on your agent's objectives and design.
 ### Focus of This Guide
 
 This blog post provides a comprehensive setup guide, with a **primary focus on using Snowflake as a knowledge source**. It covers:
+
 - Configuring Snowflake
 - Registering an app in Azure
 - Enabling the Copilot Studio connector
@@ -76,6 +77,7 @@ You must have access to the [Azure admin portal](https://portal.azure.com) to co
 3. Collect Azure metadata: token endpoint, jwks URI
 
 Once complete, you should have:
+
 - **Tenant ID** `<TENANT_ID>` (A)
 - **OAuth Client ID** (B)
 - **Client Secret** (C)
@@ -85,19 +87,22 @@ Once complete, you should have:
 
 1. Go to **Azure Portal → App registrations → New registration**
 2. Name it something like **'Snowflake OAuth Resource'**
+
    - Use **"Single-tenant"** (or as appropriate)
 3. After clicking **"Register"**, go to **Expose an API**
 4. Click **"Add"** next to **Application ID URI**
+
    - An Application ID URI will be created for you (e.g., `api://<GUID>`)
    - Click **Save** and copy this URI
    - This becomes the **"Resource URL"** `<SNOWFLAKE_APPLICATION_ID_URI>` **(D)**
-
 5. Access the **"App Roles"** section from the left navigation bar
+
    - Define an application role that aligns with the Snowflake **"ANALYST"** role
    - When a user signs in, their access token includes their assigned role
    - Snowflake checks this role to determine data access (e.g., scope `session:role:ANALYST`)
 
 **App Role Configuration:**
+
 ```
 Display name: Analyst
 Allowed member types: Applications
@@ -114,21 +119,22 @@ Do you want to enable this app role? ✓ Yes
 ### 1.2 Register "Snowflake OAuth Client" in Azure/Entra ID
 
 1. Go to **Azure App registrations → New registration**
+
    - Name: e.g., **'Snowflake OAuth Client'**
-
 2. **Copy the Client ID**
+
    - This is **Client ID** `<OAUTH_CLIENT_ID>` **(B)**
-
 3. Under **Certificates & secrets → Create a Client secret**
-   - Save this as **Client secret** `<OAUTH_CLIENT_SECRET>` **(C)**
 
+   - Save this as **Client secret** `<OAUTH_CLIENT_SECRET>` **(C)**
 4. Under **API permissions → Add permission → "APIs my organization uses"**
+
    - Type/select the **"Snowflake OAuth Resource"** you created
    - Choose permissions
    - For service-principal (app-only) flow, set as **Application permissions**
    - Then **grant admin consent**
-
 5. Navigate to the **Overview** page of App registration
+
    - Copy the **"Directory (tenant) ID"**
    - This is the **Tenant ID** `<TENANT_ID>` **(A)**
 
@@ -165,6 +171,7 @@ $TokenResponse | Format-List
 If successful, a long token should appear in your command shell window.
 
 **Decode the Token:**
+
 1. Copy the token
 2. Visit [https://jwt.ms](https://jwt.ms)
 3. Paste it and click **"Decode Token"**
@@ -177,11 +184,11 @@ If successful, a long token should appear in your command shell window.
 
 Here's a template for the IDs you should have captured:
 
-| Key Name | Description | Where Used in Snowflake | Actual Value |
-|----------|-------------|------------------------|--------------|
-| `<TENANT_ID>` | Azure Tenant ID | Referenced across various configuration parameters in Snowflake | |
-| `<AZURE_Sub>` | Sub ID extracted from JWT token | Login name for the new Snowflake Copilot user | |
-| `<SNOWFLAKE_APPLICATION_ID_URI>` | Azure resource ID | Provided as one of the entries in the Snowflake External OAuth Audience List | |
+| Key Name                           | Description                     | Where Used in Snowflake                                                      | Actual Value |
+| ---------------------------------- | ------------------------------- | ---------------------------------------------------------------------------- | ------------ |
+| `<TENANT_ID>`                    | Azure Tenant ID                 | Referenced across various configuration parameters in Snowflake              |              |
+| `<AZURE_Sub>`                    | Sub ID extracted from JWT token | Login name for the new Snowflake Copilot user                                |              |
+| `<SNOWFLAKE_APPLICATION_ID_URI>` | Azure resource ID               | Provided as one of the entries in the Snowflake External OAuth Audience List |              |
 
 ---
 
@@ -192,25 +199,26 @@ Login to your Snowflake with your admin account or with a user that has admin pr
 ### Retrieve Snowflake Configuration Parameters
 
 1. **Snowflake SaaS URL**
+
    - Select **"Account Admin"** icon from the left control pane
    - Click on your username at the bottom left corner
    - Choose **"Connect a tool to Snowflake"**
    - Select **"Account/Server URL"**
    - Copy the Account/Server URL
-
 2. **Database Name**
+
    - Navigate to left pane → **"Catalog" → "Databases"**
    - Copy the name of your desired database
-
 3. **Warehouse Name**
+
    - Go to left pane → **"Compute" → "Warehouses"**
    - Copy the appropriate warehouse name
-
 4. **Schema Name**
+
    - Use left pane → **Catalog** → Select your database
    - Identify and copy the required schema name where tables reside
-
 5. **Role**
+
    - You must assign an existing role or create a new role
    - The role must have necessary access rights to warehouse, database, and schema
    - In this guide, we'll create a new role named **"ANALYST"**
@@ -266,19 +274,19 @@ Set up security integration with Copilot Studio by activating external OAuth int
 CREATE OR REPLACE SECURITY INTEGRATION COPILOT_EXTERNAL_OAUTH_AZURE 
     TYPE = EXTERNAL_OAUTH 
     ENABLED = TRUE
-    
+  
     -- IdP / Azure AD specifics 
     EXTERNAL_OAUTH_TYPE = AZURE 
     EXTERNAL_OAUTH_ISSUER = 'https://sts.windows.net/<TENANT_ID>/' 
     EXTERNAL_OAUTH_JWS_KEYS_URL = 'https://login.microsoftonline.com/<TENANT_ID>/discovery/v2.0/keys'
-    
+  
     -- Audience (the "api://" application ID URI that tokens are issued for) 
     EXTERNAL_OAUTH_AUDIENCE_LIST = ('api://<SNOWFLAKE_APPLICATION_ID_URI>')
-    
+  
     -- How Snowflake finds the user in the token
     EXTERNAL_OAUTH_TOKEN_USER_MAPPING_CLAIM = 'sub' 
     EXTERNAL_OAUTH_SNOWFLAKE_USER_MAPPING_ATTRIBUTE = 'LOGIN_NAME'
-    
+  
     -- Role behavior: allow any role requested in the token
     -- (you can tighten this later if needed)
     EXTERNAL_OAUTH_ANY_ROLE_MODE = 'ENABLE';
@@ -293,11 +301,11 @@ Once Snowflake + Azure side is configured and tested, you can integrate with Cop
 ### Configuration Steps:
 
 1. **Open Copilot Studio**, sign in, and go to create or edit your agent
-
 2. Under the agent's settings, choose **"Add knowledge source / connection"**
-   - Select **Snowflake**
 
+   - Select **Snowflake**
 3. When prompted, supply all the connection details you previously prepared:
+
    - **Tenant ID** (A)
    - **Client ID** (B)
    - **Client Secret** (C)
@@ -307,8 +315,8 @@ Once Snowflake + Azure side is configured and tested, you can integrate with Cop
    - Warehouse name
    - Schema name
    - Role
-
 4. **Save the connection**
+
    - Copilot Studio will use this connection to query Snowflake tables in real-time
    - You can choose the dataset and table names to add as knowledge sources
 
@@ -319,6 +327,7 @@ When Snowflake is initially utilized as a Knowledge source, users will be prompt
 ### Using the Connection
 
 At this point, you can add tools or knowledge-based prompts to your agent so it can read from Snowflake — for example:
+
 - Answering natural-language queries
 - Generating reports
 - Combining data with other sources
@@ -328,17 +337,21 @@ At this point, you can add tools or knowledge-based prompts to your agent so it 
 ## Troubleshooting & Common Pitfalls
 
 ### 1. Warehouse Status
-While it's not strictly required, if your Snowflake data warehouse instance is **suspended** when you attempt to create the connection for the first time, it might not automatically restart. 
+
+While it's not strictly required, if your Snowflake data warehouse instance is **suspended** when you attempt to create the connection for the first time, it might not automatically restart.
 
 **Solution**: Make sure your configured warehouse instance is **running** before creating the initial connection.
 
 ### 2. User Login Name Mismatch
+
 Make sure that the Snowflake user you map (via `login_name`) matches exactly the **Sub claim** from the JWT.
 
 **Example**: Your Snowflake user must have `LOGIN_NAME = <sub value>`
 
 ### 3. Role Privileges
+
 The Snowflake role assigned to the user should have proper privileges:
+
 - Warehouse access
 - Database access
 - Schema access
@@ -348,7 +361,9 @@ The Snowflake role assigned to the user should have proper privileges:
 **Without these, even a valid connection may fail.**
 
 ### 4. Verification Queries
+
 A variety of helpful Snowflake queries are available under the **"SQL Commands"** tab when you select **"Connect a tool to Snowflake"**. These queries can verify:
+
 - Created/existing users
 - Roles
 - Security integration links
@@ -367,5 +382,3 @@ By following this comprehensive guide, you've successfully connected Snowflake t
 - ✅ Generate reports and analytics through conversational AI
 
 The connection can be used both as a **knowledge source** (for seamless grounding) and as a **tool** (for explicit orchestration).
-
-
