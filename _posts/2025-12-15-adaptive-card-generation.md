@@ -120,7 +120,7 @@ The topic required a little manipulation.  Essentially the flow was:
   - Output the profile to the user
   - Use a Generative Answers node to generate and output an itinerary
 
-This is all fairly straight forward except for the dynamic nature of the adaptive card.  I cheated a little and made sure I had a fixed number of questions (look back at the card generation prompt), which meant I could rely on a fixed number of outputs from the card.  Maniulating the topic YAML a little...
+This is all fairly straight forward except for the dynamic nature of the adaptive card.  I cheated a little and made sure I had a fixed number of questions (look back at the card generation prompt), which meant I could rely on a fixed number of outputs from the card.  Manipulating the topic YAML a little...
 
 ![Changes to topic YAML](/assets/posts/adaptive-card-generation/topic-yaml.png){: .shadow w="286" h="657"}
 
