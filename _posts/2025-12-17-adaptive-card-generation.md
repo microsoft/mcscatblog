@@ -61,7 +61,7 @@ Anyone that's worked with digital forms knows dynamic forms are almost always a 
   - "Why do I need to fill out the female health section when I've already told you I'm male"
   - "Why are there so many county/region options when I've told you which country I'm in"
 
-The reality is users ~~want~~ expect smart solutions which are targetted towards their needs, and if you're putting a form in front of a user to collect information, you **need** to do so in an intelligent way.
+The reality is users ~~want~~ **expect** smart solutions which are targetted towards their needs, and if you're putting a form in front of a user to collect information, you **need** to do so in an intelligent way.
 
 So what's that got to do with Adaptive Cards?  Well in a situation where you're collecting and validating multiple pieces of information from a user, it needs to be targetted.  It needs to make sense to the user, and needs to be friction free.
 
@@ -69,7 +69,7 @@ So what's that got to do with Adaptive Cards?  Well in a situation where you're 
 
 For the next section, I'll consider a specific example; a digital travel agent who's purpose is to help user design a travel itinerary for a trip to a specific country.
 
-What does the user want from this experience?  They want suggestions related to the things they enjoy doing as a tourist.  They want the agent to understand their intent, and provide an itinerary that more than just a search engine research of "cool things to do in this country".  They want ideas that'll work within the scope of their intended trip dates, and suggestions that are meaningful based upon the country they're going to, and most importantly, things they'll enjoy based on their individual interests.
+What does the user want from this experience?  They want suggestions related to the things they enjoy doing as a tourist.  They want the agent to understand their intent, and provide an itinerary that's more than just a search engine research of "cool things to do in this country".  They want ideas that'll work within the scope of their intended trip dates, and suggestions that are meaningful based upon the country they're going to, and most importantly, things they'll enjoy based on their individual interests.
 
 Whilst this can be achieved conversationally, the back-and-forth conversation to ensure the agent knows what's needed could easily become arduous.  A form with a few targetted suggestions, designed to obtain user intent, could be just the ticket to generating a tailored tourism profile, which in turn can be used to generate a meaningful and specific intinerary.
 
