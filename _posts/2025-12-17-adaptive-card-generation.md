@@ -91,7 +91,7 @@ There are also fields for trip start and end date, and with all of this informat
 
 That information can be used to generate a tailored itinerary based on the user's preferences:
 
-![Itnierary](/assets/posts/adaptive-card-generation/itinerary.png){: .shadow w="462" h="694"}
+![Itnierary](/assets/posts/adaptive-card-generation/itinerary.png){: .shadow w="457" h="622"}
 
 Cool huh?!
 
@@ -130,7 +130,7 @@ This is all fairly straight forward except for the dynamic nature of the Adaptiv
 
 ...and after that, it was simply a case of passing the profile into a generative answers node to generate the final itinerary:
 
-![Generative answer node for itinerary](/assets/posts/adaptive-card-generation/itinerary-node.png){: .shadow w="708" h="740"}
+![Generative answer node for itinerary](/assets/posts/adaptive-card-generation/itinerary-node.png){: .shadow w="655" h="802"}
 
 ## Summary ##
 
