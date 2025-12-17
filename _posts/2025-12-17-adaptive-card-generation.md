@@ -65,7 +65,7 @@ The reality is users ~~want~~ **expect** smart solutions which are targetted tow
 
 So what's that got to do with Adaptive Cards?  Well in a situation where you're collecting and validating multiple pieces of information from a user, it needs to be targetted.  It needs to make sense to the user, and needs to be friction free.
 
-## Country Specific Adaptive Cards ##
+## Context Specific Adaptive Cards ##
 
 For the next section, I'll consider a specific example; a digital travel agent who's purpose is to help user design a travel itinerary for a trip to a specific country.
 
@@ -95,7 +95,7 @@ That information can be used to generate a tailored itinerary based on the user'
 
 Cool huh?!
 
-## That's A Lot Of Copy/Paste ##
+## 195 Countries in the World - That's A Lot Of Copy/Paste ##
 
 Is it?
 
