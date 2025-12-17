@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Connecting Snowflake to Copilot Studio: Step-by-Step Guide"
-date: 2025-11-15 17:30:00 +0100
+date: 2025-12-15 17:30:00 +0100
 categories: [copilot-studio, knowledge sources, tools]
 tags: [Knowledge, Snowflake, connectors, MCS tools, MCS Knowledge]
 description: By following this comprehensive guide, you've successfully connected Snowflake to Copilot Studio, enabling your agents to query live data through natural language.
