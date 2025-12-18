@@ -12,9 +12,9 @@ image:
   no_bg: true
 ---
 
-Conversational interfaces are great, but sometimes you just can't be an old fashioned form.  If you need to collect and validate multiple pieces of information at the same time, there's a lot to be said for putting an Adaptive Card in front of a user.
+Conversational interfaces are great, but sometimes you just can't beat an old fashioned form.  If you need to collect and validate multiple pieces of information at the same time, there's a lot to be said for putting an Adaptive Card in front of a user.
 
-But if you're anything like me, a lot of what's said at that point can't be repeated.  Constructing the JSON required for an Adaptive Card by hand is fiddly and often frustrating.  I love Copilot Studio's Adaptive Card Designer for it's WYSIWYG approach, but it can quickly become unwieldy for all but the most simple of cards.
+But if you're anything like me, a lot of what's said at that point can't be repeated.  Constructing the JSON required for an Adaptive Card by hand is fiddly and often frustrating.  I love Copilot Studio's Adaptive Card Designer for its WYSIWYG approach, but it can quickly become unwieldy for all but the most simple of cards.
 
 ## A Better Way ##
 
@@ -61,17 +61,17 @@ Anyone that's worked with digital forms knows dynamic forms are almost always a 
   - "Why do I need to fill out the female health section when I've already told you I'm male"
   - "Why are there so many county/region options when I've told you which country I'm in"
 
-The reality is users ~~want~~ **expect** smart solutions which are targetted towards their needs, and if you're putting a form in front of a user to collect information, you **need** to do so in an intelligent way.
+The reality is users ~~want~~ **expect** smart solutions which are targeted towards their needs, and if you're putting a form in front of a user to collect information, you **need** to do so in an intelligent way.
 
-So what's that got to do with Adaptive Cards?  Well in a situation where you're collecting and validating multiple pieces of information from a user, it needs to be targetted.  It needs to make sense to the user, and needs to be friction free.
+So what's that got to do with Adaptive Cards?  Well in a situation where you're collecting and validating multiple pieces of information from a user, it needs to be targeted.  It needs to make sense to the user, and needs to be friction free.
 
 ## Context Specific Adaptive Cards ##
 
-For the next section, I'll consider a specific example; a digital travel agent who's purpose is to help user design a travel itinerary for a trip to a specific country.
+For the next section, I'll consider a specific example; a digital travel agent whose purpose is to help user design a travel itinerary for a trip to a specific country.
 
 What does the user want from this experience?  They want suggestions related to the things they enjoy doing as a tourist.  They want the agent to understand their intent, and provide an itinerary that's more than just a search engine research of "cool things to do in this country".  They want ideas that'll work within the scope of their intended trip dates, and suggestions that are meaningful based upon the country they're going to, and most importantly, things they'll enjoy based on their individual interests.
 
-Whilst this can be achieved conversationally, the back-and-forth conversation to ensure the agent knows what's needed could easily become arduous.  A form with a few targetted suggestions, designed to obtain user intent, could be just the ticket to generating a tailored tourism profile, which in turn can be used to generate a meaningful and specific intinerary.
+Whilst this can be achieved conversationally, the back-and-forth conversation to ensure the agent knows what's needed could easily become arduous.  A form with a few targeted suggestions, designed to obtain user intent, could be just the ticket to generating a tailored tourism profile, which in turn can be used to generate a meaningful and specific intinerary.
 
 Let's have a look at my Travel Agent's response to a request from a user looking to plan a trip to Spain:
 
@@ -91,7 +91,7 @@ There are also fields for trip start and end date, and with all of this informat
 
 That information can be used to generate a tailored itinerary based on the user's preferences:
 
-![Itnierary](/assets/posts/adaptive-card-generation/itinerary.png){: .shadow w="457" h="622"}
+![Itinerary](/assets/posts/adaptive-card-generation/itinerary.png){: .shadow w="457" h="622"}
 
 Cool huh?!
 
@@ -107,7 +107,7 @@ First I dropped my instructions into a custom prompt given the responsibility of
 
 ![Generate card prompt](/assets/posts/adaptive-card-generation/prompt-generatecard.png){: .shadow w="1867" h="923"}
 
-Secondly, I created another prompt to create the tourist profile.  This one takes inputs for the country, the original Adaptive Card, and the user's response to the submission.  I passed the original card JSON in as I wanted to ensure the prompt could infer dislikes aswell as likes, and the country to ensure the prompt had as much information available as possible to make decisions about the user's needs.
+Secondly, I created another prompt to create the tourist profile.  This one takes inputs for the country, the original Adaptive Card, and the user's response to the submission.  I passed the original card JSON in as I wanted to ensure the prompt could infer dislikes as well as likes, and the country to ensure the prompt had as much information available as possible to make decisions about the user's needs.
 
 ![Generate tourist profile prompt](/assets/posts/adaptive-card-generation/prompt-generateprofile.png){: .shadow w="1880" h="927"}
 
