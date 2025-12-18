@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Top Tip - Adaptive Card Generation"
-date: 2025-12-17
+date: 2025-12-18
 categories: [copilot-studio, user-experience]
 tags: [adaptive-cards, best-practices, tips]
 description:  Using the test pane to ease Adaptive Card creation, and beyond!
@@ -71,7 +71,7 @@ For the next section, I'll consider a specific example; a digital travel agent w
 
 What does the user want from this experience?  They want suggestions related to the things they enjoy doing as a tourist.  They want the agent to understand their intent, and provide an itinerary that's more than just a search engine research of "cool things to do in this country".  They want ideas that'll work within the scope of their intended trip dates, and suggestions that are meaningful based upon the country they're going to, and most importantly, things they'll enjoy based on their individual interests.
 
-Whilst this can be achieved conversationally, the back-and-forth conversation to ensure the agent knows what's needed could easily become arduous.  A form with a few targeted suggestions, designed to obtain user intent, could be just the ticket to generating a tailored tourism profile, which in turn can be used to generate a meaningful and specific intinerary.
+Whilst this can be achieved conversationally, the back-and-forth conversation to ensure the agent knows what's needed could easily become arduous.  A form with a few targeted suggestions, designed to obtain user intent, could be just the ticket to generating a tailored tourism profile, which in turn can be used to generate a meaningful and specific itinerary.
 
 Let's have a look at my Travel Agent's response to a request from a user looking to plan a trip to Spain:
 
