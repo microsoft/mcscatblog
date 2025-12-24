@@ -32,6 +32,13 @@ Depending on how your agent is set up, there are two ways to do this.
 
 If you are using the modern **Generative** orchestration mode, the agent decides when to trigger the answer. You can intercept the response before it reaches the user.
 
+> **The No-Code Alternative**
+> In generative orchestration, you can also use instructions to influence the presence of citations.
+> E.g., `Never include any citation in your knowledge answers. These should be removed before an answer is sent.`
+>
+> **Note:** This generally works well, however, instructions are *probabilistic* (the AI handles them), while the code method below is *deterministic* (math handles it). If you need a 100% guarantee, use the code below.
+{: .prompt-tip }
+
 ### The Fix
 
 1.  Create a **new Topic** from blank.
