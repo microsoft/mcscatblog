@@ -50,7 +50,7 @@ Note, as a maker, some of the crucial steps around connection creation happen in
 
 ## MCP Tools ##
 
-MCP tools use Custom Connectors under the hood, so all of the above applies equally in MCP scenarios.  One point of caution though; if you add an MCP tool using the [MCP Onboarding Wizard](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#option-1-use-the-mcp-onboarding-wizard-recommended), it will create a Custom Connector in the background, so you'll need to go through the initial auth process within the wizard first, and then go back and alter the Custom Connector's security information.
+MCP integration in Microsoft Copilot Studio uses the Power Platform connector framework under the hood, so all of the above applies equally in MCP scenarios using first-party or custom connectors Entra ID backed OAuth.  One point of caution though; if you add an MCP tool using the [MCP Onboarding Wizard](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#option-1-use-the-mcp-onboarding-wizard-recommended), it will create a Custom Connector in the background, so you'll need to go through the initial auth process within the wizard first, and then go back and alter the Custom Connector's security information.
 
 ## The Result ##
 
