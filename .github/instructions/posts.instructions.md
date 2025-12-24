@@ -1,6 +1,5 @@
 ---
-applyTo:
-  - _posts/*.md
+applyTo: _posts/*.md
 ---
 
 # Blog Post Review
