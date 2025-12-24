@@ -33,4 +33,8 @@ The blog uses US American language throughout, although it's consumed by readers
 - Ensure scores are output for each section of the quality review
 - If any mandatory post information is found to be missing in the Techincal Review, endure this is made clear to the user, using error message-like styling.
 
+<<<<<<< HEAD
 Close the review with an overly uplifting quote to inspire the author to keep going!
+=======
+Close the review with an overly uplifting quote to inspire the author to keep going!
+>>>>>>> 7e772f909a60cb871e717b916e0a665e5493cc4c
