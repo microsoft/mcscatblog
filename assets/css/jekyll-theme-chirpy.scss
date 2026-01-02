@@ -932,3 +932,13 @@
 .preview-img img {
     object-fit: initial;
 }
+
+/* === CAT Customization - Plaintext format override 
+  Hides line numbers and enables word wrap in code blocks
+=== */
+.wrapcodeblocktext pre {
+  white-space : pre-wrap !important;
+}
+.wrapcodeblocktext pre.lineno {
+  display: none !important;
+}
