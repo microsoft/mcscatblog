@@ -31,7 +31,7 @@ But if you're anything like me, a lot of what's said at that point can't be repe
 
 ## A Better Way ##
 
-The answer to my JSON woes has literally been there right in front of me the whole time; the Test Pane.  Perhaps I'm a little late to the party with this, but I've recently realised how good Copilot Studio itself is at providing a starting point.
+The answer to my JSON woes has literally been there right in front of me the whole time; the Test Pane.  Perhaps I'm a little late to the party with this, but I've recently realized how good Copilot Studio itself is at providing a starting point.
 
 As an example, let's see what the Test Pane makes of the following: 
 
