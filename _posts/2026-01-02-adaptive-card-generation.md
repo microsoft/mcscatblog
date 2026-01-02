@@ -12,7 +12,7 @@ image:
   no_bg: true
 ---
 
-I've been on a bit of a journey with Adaptive Cards recently. Apart from creating a few basic forms, and a few tweaks to existing cards here and there, I've not really had a need to get too deep into them. They do seem to be quite a hit with users though; anyone who's attended one of our [bootcamp events](https://microsoft.github.io/powercat/programs/architecture-bootcamp.html) will have seen the signup form we use to provision environments on the first day, and there's generally a lot of positive comments about the experience.
+I've been on a bit of a journey with Adaptive Cards recently. Apart from creating a few basic forms, and a few tweaks to existing cards here and there, I've not really had a need to get too deep into them. They do seem to be quite a hit with users though; anyone who's attended one of our [bootcamp events](https://microsoft.github.io/powercat/programs/architecture-bootcamp.html) will have seen the signup form we use to provision environments on the first day, and there's generally a lot of positive comments about the experience. 
 
 Having taken the plunge though, I quickly went from:
 - building cards with the WYSIWYG editor, to
