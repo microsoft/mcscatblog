@@ -2,6 +2,8 @@
 applyTo: _posts/*.md
 ---
 
+When creating pull request descriptions or reviewing PRs:
+
 # Blog Post Review
 
 ## Purpose and scope
