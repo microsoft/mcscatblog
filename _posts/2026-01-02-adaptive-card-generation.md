@@ -83,7 +83,7 @@ The agent also has a tool to retrieve weather information at a particular locati
 
 Notice the journey info and the weather info have all been combined into a single digestible card which looks attractive and displays all of the pertinent information.
 
-However, if I ask for a different route, I get different information.  This time the route information tool has decided a train journey is more appropriate, and as such, the agent has displayed multiple legs of a complete train journey, including changes and stops.  The weather information previously displayed is not present, even though the orchestrator did query the weather information:
+However, if I ask for a different route, I get different information.  This time the route information tool has decided a train journey is more appropriate, and as such, the agent has displayed multiple legs of a complete train journey, including changes and stops.
 
 ![Train Journey](/assets/posts/adaptive-card-generation/train-journey.png){: .shadow w="487" h="764"}
 
