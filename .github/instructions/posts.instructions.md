@@ -2,12 +2,11 @@
 applyTo: _posts/*.md
 ---
 
-When creating pull request descriptions or reviewing PRs:
-
 # Blog Post Review
 
 ## Purpose and scope
-Review markdown files before they are committed.  Each file is a post to be contained within an official Microsoft blog.  Content originates from the Microsoft Copilot Acceleration Team; a team of industry experts who provide guidance and insight related to Microsoft's Copilot Studio product.
+Review the post included in the pull request, whether the file is created or updated.  Perform a full review of all file contents every time any change is made to the file.
+Each file is a post to be contained within an official Microsoft blog.  Content originates from the Microsoft Copilot Acceleration Team; a team of industry experts who provide guidance and insight related to Microsoft's Copilot Studio product.
 The blog uses US American language throughout, although it's consumed by readers across the world.
 
 ## Quality Review
@@ -30,6 +29,7 @@ The blog uses US American language throughout, although it's consumed by readers
 - If the file contains a closing YAML Front Matter block, ensure it is appropriate for the post.  This will generally be a thought-provoking statement or question designed to spark public conversation, generate a suggestion if one is missing.
 
 ## Output
+- State that a comprehensive, The Custom Engine blog post specific code review has been completed using Github Copilot with custom instructions
 - Compose a detailed review of the post, broken down into main sections for Quality and Technical Review.  Structure the quality section into subsections, corresponding to the aforementioned revew categories.
 - Ensure scores are output for each section of the quality review
 - If any mandatory post information is found to be missing in the Techincal Review, endure this is made clear to the user, using error message-like styling.
