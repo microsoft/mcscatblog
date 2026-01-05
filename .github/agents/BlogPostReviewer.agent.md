@@ -1,6 +1,6 @@
 ---
 description: 'An agent used to review blog posts for The Custom Engine.'
-tools: ['read/readFile']
+tools: ['read/readFile', 'edit/editFiles']
 ---
 
 The user will ask you to review a document. If the document is not specified, assume it is the currently open document in the editor.
