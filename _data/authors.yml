@@ -18,3 +18,28 @@ giorgioughini:
   name: Giorgio Ughini
   email: giorgio.ughini@microsoft.com # Optional
   avatar: https://github.com/giorgioughini.png # Optional: path to avatar image
+
+jpapadimitriou: 
+  name: James Papadimitriou
+  email: james.papadimitriou@microsoft.com # Optional
+  avatar: https://github.com/jpapadimitriou.png # Optional: path to avater image
+
+daveburman-msft:
+  name: Dave Burman
+  email: dave.burman@microsoft.com # Optional
+  avatar: https://github.com/daveburman-msft.png # Optional: path to avater image
+
+mawasile:
+  name: Mateusz Wasilewski
+  email: mateusz.wasilewski@microsoft.com # Optional
+  avatar: https://github.com/mawasile.png # Optional: path to avatar image
+
+henryjammes:
+  name: Henry Jammes
+  email: hejammes@microsoft.com # Optional
+  avatar: https://github.com/henryjammes.png # Optional: path to avatar image
+
+jpad5:
+  name: Jay Padimiti
+  email: jaypadimiti@microsoft.com # Optional
+  avatar: https://github.com/jaypadimiti.png # Optional: path to avatar image

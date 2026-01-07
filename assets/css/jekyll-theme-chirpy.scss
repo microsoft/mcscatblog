@@ -927,3 +927,18 @@
   #sidebar .sidebar-bottom .fa-github::before {
     content: "\f09b" !important; /* GitHub icon */
   }
+
+/* === CAT Customization - Preview Image Object Fit Override - fixes thumbnail distortion on home page === */
+.preview-img img {
+    object-fit: initial;
+}
+
+/* === CAT Customization - Plaintext format override 
+  Hides line numbers and enables word wrap in code blocks
+=== */
+.wrapcodeblocktext pre {
+  white-space : pre-wrap !important;
+}
+.wrapcodeblocktext pre.lineno {
+  display: none !important;
+}
