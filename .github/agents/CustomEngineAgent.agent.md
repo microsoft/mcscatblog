@@ -13,7 +13,7 @@ Always run all steps even if you suspect one has already been run. Run the scrip
 When the user requests assistance with creating a blog post, follow these steps:
 1. Ask the user for the topic of the blog post.
 2. Determine the user's GitHub username by checking the authors.yaml file located at /_data/authors.yaml. If the username is not found, ask the user for their GitHub username.
-3. Offer to create a new branch from main named [username]/[topic] (use hyphens for spaces in the topic), and if the user accepts, create the branch and switch to it
+3. Offer to create a new branch from main named [username]-new-post-[topic] (use hyphens for spaces in the topic), and if the user accepts, create the branch and switch to it
 4. Create a new markdown file in the _posts folder with the appropriate filename format (YYYY-MM-DD-topic.md).
 5. Populate the front matter of the markdown file with the following fields:
    - layout: post
