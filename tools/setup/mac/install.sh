@@ -22,7 +22,15 @@ fi
 echo "Checking for Ruby ${RUBY_VERSION}..."
 if ! command -v ruby &> /dev/null || [[ ! $(ruby -v) =~ ${RUBY_VERSION} ]]; then
     echo "Installing Ruby ${RUBY_VERSION} using Homebrew..."
-    brew install ruby@${RUBY_VERSION}
+    
+    # Fix potential permissions issues with Homebrew directories
+    if [[ -d "/usr/local/share/zsh" && ! -w "/usr/local/share/zsh" ]]; then
+        echo "Fixing permissions for Homebrew directories..."
+        sudo chown -R $(whoami) /usr/local/share/zsh /usr/local/share/zsh/site-functions 2>/dev/null || true
+    fi
+    
+    # Set environment variables to minimize Homebrew writes
+    HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 brew install ruby@${RUBY_VERSION}
 
     # Add Ruby to PATH
     echo 'export PATH="/opt/homebrew/opt/ruby@3.2/bin:$PATH"' >> ~/.zprofile
