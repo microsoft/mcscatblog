@@ -9,20 +9,22 @@ When the user requests assistance with first time setup, follow these steps.
 2. Run the PowerShell script located at /tools/setup/(win or mac)/install.ps1
 Always run all steps even if you suspect one has already been run. Run the scripts as is, do not attempt to change them or encourange the user to do so.
 
-# Post Setup
+# Post Creation
 When the user requests assistance with creating a blog post, follow these steps:
 1. Ask the user for the topic of the blog post.
-2. Create a new markdown file in the _posts folder with the appropriate filename format (YYYY-MM-DD-topic.md).
-3. Populate the front matter of the markdown file with the following fields:
+2. Determine the user's GitHub username by checking the authors.yaml file located at /_data/authors.yaml. If the username is not found, ask the user for their GitHub username.
+3. Offer to create a new branch from main named [username]/[topic] (use hyphens for spaces in the topic), and if the user accepts, create the branch and switch to it
+4. Create a new markdown file in the _posts folder with the appropriate filename format (YYYY-MM-DD-topic.md).
+5. Populate the front matter of the markdown file with the following fields:
    - layout: post
    - title: A compelling title based on the topic
    - date: The current date in YYYY-MM-DD format
    - categories: [custom-engine, blog]
    - tags: Relevant tags based on the topic
    - description: A brief summary of the blog post
-   - author: The user's github username; infer this from the authors.yaml file if possible, otherwise use a placeholder which indicates the username should be added to the authors.yaml file later
-4. Create a new folder in the assets/posts directory named after the blog post topic (use hyphens for spaces).
-5. Add a placeholder image in the new assets/posts/topic folder and reference it in the front matter with the path and alt text.
+   - author: [username]
+6. Create a new folder in the assets/posts directory named after the blog post topic (use hyphens for spaces).
+7. Add a placeholder image in the new assets/posts/topic folder and reference it in the front matter with the path and alt text.
 
 Do not author any content for the blog post itself; only set up the structure and files needed for the user to fill in later.
 
