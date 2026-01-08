@@ -2,7 +2,7 @@
 description: 'An agent used to help author blog posts for The Custom Engine.'
 tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/readFile', 'edit/createDirectory', 'edit/createFile', 'edit/editFiles']
 ---
-
+ 
 # First Time Setup
 When the user requests assistance with first time setup, follow these steps.  
 1. Determine the user's operating system (Windows or Mac).
@@ -38,3 +38,4 @@ Read the file at /.github/instructions/posts.instructions.md and use it to execu
 # Launch
 When the user requests to launch the blog locally, follow these steps:
 1. execute the command `bundle exec jekyll serve` in the terminal at the root of the repository.
+2. Wait for the server to start and then provide the user with the local URL to view the blog.  This takes a little while to execute, do not ask the user to run any commands while waiting. Monitor the terminal output for the 'server running' message or any fatal error output.

@@ -9,7 +9,7 @@ echo "Checking for Homebrew..."
 if ! command -v brew &> /dev/null; then
     echo "Homebrew not found. Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    
+
     # Add Homebrew to PATH for Apple Silicon Macs
     if [[ $(uname -m) == 'arm64' ]]; then
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
@@ -18,23 +18,31 @@ if ! command -v brew &> /dev/null; then
 else
     echo "Homebrew is already installed."
 fi
-
+ 
 echo "Checking for Ruby ${RUBY_VERSION}..."
 if ! command -v ruby &> /dev/null || [[ ! $(ruby -v) =~ ${RUBY_VERSION} ]]; then
     echo "Installing Ruby ${RUBY_VERSION} using Homebrew..."
-    brew install ruby@${RUBY_VERSION}
     
+    # Fix potential permissions issues with Homebrew directories
+    if [[ -d "/usr/local/share/zsh" && ! -w "/usr/local/share/zsh" ]]; then
+        echo "Fixing permissions for Homebrew directories..."
+        sudo chown -R $(whoami) /usr/local/share/zsh /usr/local/share/zsh/site-functions 2>/dev/null || true
+    fi
+    
+    # Set environment variables to minimize Homebrew writes
+    HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 brew install ruby@${RUBY_VERSION}
+
     # Add Ruby to PATH
     echo 'export PATH="/opt/homebrew/opt/ruby@3.2/bin:$PATH"' >> ~/.zprofile
     echo 'export PATH="/usr/local/opt/ruby@3.2/bin:$PATH"' >> ~/.zprofile
-    
+
     # Update PATH for current session
     if [[ -d "/opt/homebrew/opt/ruby@${RUBY_VERSION}/bin" ]]; then
         export PATH="/opt/homebrew/opt/ruby@${RUBY_VERSION}/bin:$PATH"
     elif [[ -d "/usr/local/opt/ruby@${RUBY_VERSION}/bin" ]]; then
         export PATH="/usr/local/opt/ruby@${RUBY_VERSION}/bin:$PATH"
     fi
-    
+
     echo "Ruby installed."
 else
     echo "Validated Ruby installation."
