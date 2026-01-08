@@ -18,7 +18,7 @@ if ! command -v brew &> /dev/null; then
 else
     echo "Homebrew is already installed."
 fi
-
+ 
 echo "Checking for Ruby ${RUBY_VERSION}..."
 if ! command -v ruby &> /dev/null || [[ ! $(ruby -v) =~ ${RUBY_VERSION} ]]; then
     echo "Installing Ruby ${RUBY_VERSION} using Homebrew..."
