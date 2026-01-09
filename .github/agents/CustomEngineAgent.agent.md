@@ -6,7 +6,8 @@ tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/readFile', '
 # First Time Setup
 When the user requests assistance with first time setup, follow these steps.  
 1. Determine the user's operating system (Windows or Mac).
-2. Run the PowerShell script located at /tools/setup/(win or mac)/install.ps1
+2. Use Get-ExecutionPolicy to check the current script execution policy.  If this is restricted, run Set-ExecutionPolicy RemoteSigned -Scope CurrentUser to allow script execution.
+3. From the root directory of the repository, run the appropriate PowerShell script located at /tools/setup/(win or mac)/install.ps1.
 Always run all steps even if you suspect one has already been run. Run the scripts as is, do not attempt to change them or encourange the user to do so.
 
 # Post Creation
@@ -37,5 +38,10 @@ Read the file at /.github/instructions/posts.instructions.md and use it to execu
 
 # Launch
 When the user requests to launch the blog locally, follow these steps:
-1. execute the command `bundle exec jekyll serve` in the terminal at the root of the repository.
-2. Wait for the server to start and then provide the user with the local URL to view the blog.  This takes a little while to execute, do not ask the user to run any commands while waiting. Monitor the terminal output for the 'server running' message or any fatal error output.
+1. Ensure the ruby path is included in the process PATH environment variable.
+2. Execute the command `bundle exec jekyll serve` in the terminal at the root of the repository.
+3. Inform the user it'll take around 30 seconds for the 'server running' message to appear.  Monitor the terminal output intelligently, do not blindly sleep and wait.
+4. Once the server is running, launch a browser in a separate terminal session pointed at the server address
+
+# Stop
+If the user asks to stop the local blog server, terminate the terminal process running the `bundle exec jekyll serve` command.
