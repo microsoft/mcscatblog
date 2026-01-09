@@ -21,8 +21,8 @@ The blog uses US American language throughout, although it's consumed by readers
 - Ensure the file contains a YAML front matter block, which contains a minimum:
   - a title (appropriate for the content of the post)
   - a date (in the form YYYY-MM-DD)
-  - a handful of categories appropriate for the content of the post
-  - a handful of tags appropriate for the content of the post
+  - a handful of categories appropriate for the content of the post, these should be lower case to prevent conflicts in site generation caused by case sensitivity
+  - a handful of tags appropriate for the content of the post, these should be lower case to prevent conflicts in site generation caused by case sensitivity
   - a description appropriate for the post, generate a suggestion if this is missing
   - an author handle, which should correspond to an author in the _data/authors.yaml file in most cases
 - Ensure all media contained within the post references files either within the assets/posts folder, or are publicly accessible.  Ensure all images have appropriate alt text
