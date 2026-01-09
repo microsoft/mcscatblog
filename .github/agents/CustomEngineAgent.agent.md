@@ -42,7 +42,7 @@ When the user requests to launch the blog locally, follow these steps:
 2. Execute the command `bundle exec jekyll serve` at the root of the repository using `isBackground=true`. This returns a terminal ID.
 3. Store the terminal ID returned from step 2. Use ONLY `get_terminal_output` with this terminal ID to monitor the server's progress.
 4. Inform the user it'll take around 30 seconds for the 'server running' message to appear. Poll the terminal output intelligently using get_terminal_output, do not blindly sleep and wait.
-5. Once the server is running, use `start http://127.0.0.1:4000/mcscatblog/` in a new, completely independent terminal session to launch the browser. This command spawns a new independent process that will not affect the Jekyll server running in the background terminal.
+5. Once the server is running, execute `start http://127.0.0.1:4000/mcscatblog/` to launch the browser. **CRITICAL: This command MUST be run using run_in_terminal with isBackground=true in a COMPLETELY NEW AND SEPARATE terminal session. Do NOT pass the Jekyll server's terminal ID from step 2. Let the system automatically create a fresh terminal by not specifying any terminal ID parameter. Never run this in the same terminal as the Jekyll server.**
 
 # Stop
 If the user asks to stop the local blog server, terminate the terminal process running the `bundle exec jekyll serve` command.
