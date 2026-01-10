@@ -183,7 +183,7 @@ sass:
 compress_html:
   clippings: all
   comments: all
-  endings: all
+  endings: []  # Don't remove closing tags - breaks script execution
   profile: false
   blanklines: false
   ignore:
