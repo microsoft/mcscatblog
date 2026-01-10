@@ -7,15 +7,24 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Debug: Log Algolia configuration
+  const appId = '{{ site.algolia.application_id }}';
+  const apiKey = '{{ site.algolia.search_only_api_key }}';
+  const indexName = '{{ site.algolia.index_name }}';
+  
+  console.log('Algolia Config:', {
+    application_id: appId,
+    search_only_api_key: apiKey,
+    index_name: indexName,
+    appId_length: appId.length,
+    apiKey_length: apiKey.length
+  });
+  
   // Initialize Algolia search client
-  const searchClient = algoliasearch(
-    '{{ site.algolia.application_id }}',
-    '{{ site.algolia.search_only_api_key }}'
-  );
+  const searchClient = algoliasearch(appId, apiKey);
 
   const search = instantsearch({
-    indexName: '{{ site.algolia.index_name }}',
-    searchClient,
+    indexName: indexName,
   });
 
   // Custom search box connector - binds to existing #search-input
