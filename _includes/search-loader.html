@@ -1,0 +1,79 @@
+<!--
+  Algolia InstantSearch loader
+  Replaces Simple Jekyll Search with Algolia-powered search
+-->
+
+{% capture not_found %}<p class="mt-5">{{ site.data.locales[include.lang].search.no_results }}</p>{% endcapture %}
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Algolia search client
+  const searchClient = algoliasearch(
+    '{{ site.algolia.application_id }}',
+    '{{ site.algolia.search_only_api_key }}'
+  );
+
+  const search = instantsearch({
+    indexName: '{{ site.algolia.index_name }}',
+    searchClient,
+  });
+
+  // Custom search box connector - binds to existing #search-input
+  const renderSearchBox = (renderOptions, isFirstRender) => {
+    const { refine } = renderOptions;
+    if (isFirstRender) {
+      const input = document.getElementById('search-input');
+      if (input) {
+        input.addEventListener('input', (e) => refine(e.target.value));
+      }
+    }
+  };
+  const customSearchBox = instantsearch.connectors.connectSearchBox(renderSearchBox);
+
+  // Custom hits connector - renders to existing #search-results
+  const renderHits = (renderOptions) => {
+    const { hits } = renderOptions;
+    const container = document.getElementById('search-results');
+    if (!container) return;
+
+    container.innerHTML = hits.length
+      ? hits.map(hit => `
+          <article class="px-1 px-sm-2 px-lg-4 px-xl-0">
+            <header>
+              <h2><a href="${hit.url}">${instantsearch.highlight({ hit, attribute: 'title' })}</a></h2>
+              <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">
+                ${hit.categories && hit.categories.length ? `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${Array.isArray(hit.categories) ? hit.categories.join(', ') : hit.categories}</div>` : ''}
+                ${hit.tags && hit.tags.length ? `<div><i class="fa fa-tag fa-fw"></i>${Array.isArray(hit.tags) ? hit.tags.join(', ') : hit.tags}</div>` : ''}
+              </div>
+            </header>
+            <p>${hit.content || hit.excerpt || ''}</p>
+          </article>
+        `).join('')
+      : '{{ not_found | strip_newlines }}';
+  };
+  const customHits = instantsearch.connectors.connectHits(renderHits);
+
+  // Add widgets
+  search.addWidgets([
+    customSearchBox({}),
+    customHits({}),
+    instantsearch.widgets.poweredBy({
+      container: '#algolia-poweredby',
+      theme: document.documentElement.getAttribute('data-mode') === 'dark' ? 'dark' : 'light'
+    })
+  ]);
+
+  search.start();
+
+  // Update powered-by theme when dark/light mode changes
+  const observer = new MutationObserver(() => {
+    const poweredBy = document.querySelector('#algolia-poweredby .ais-PoweredBy');
+    if (poweredBy) {
+      const isDark = document.documentElement.getAttribute('data-mode') === 'dark';
+      // Reinitialize would be heavy, so we just toggle a class for CSS styling
+      document.getElementById('algolia-poweredby').classList.toggle('dark-theme', isDark);
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
+});
+</script>
