@@ -29,11 +29,21 @@
   #post-list .card-wrapper {
     position: relative;
     border-radius: var(--post-frame-radius);
+    padding: var(--post-frame-thickness);
+    transition: transform .25s ease;
+  }
+  
+  #post-list .card-wrapper:hover,
+  #post-list .card-wrapper:focus-within {
+    transform: translateY(-2px);
   }
   
   /* Override Chirpy's post-preview to remove its hover overlay */
   #post-list .post-preview {
     position: relative;
+    border-radius: var(--post-frame-radius);
+    overflow: hidden;
+    height: 100%;
     
     /* Disable Chirpy's dark overlay on hover */
     &::before {
@@ -42,12 +52,11 @@
     
     /* Keep the card white in light mode, with very subtle gray on hover */
     background: #ffffff;
-    transition: background-color .25s ease, box-shadow .25s ease, transform .25s ease;
+    transition: background-color .25s ease, box-shadow .25s ease;
     
     &:hover {
       background: #fafafa; /* Very subtle gray */
       box-shadow: 0 8px 20px rgba(0,0,0,.10);
-      transform: translateY(-2px);
     }
   }
   
@@ -76,7 +85,10 @@
       linear-gradient(#000 0 0) content-box,
       linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
-            mask-composite: exclude;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
     z-index: 1;
   }
   
@@ -93,7 +105,6 @@
   #post-list .card-wrapper:focus-within > .post-preview {
     background: #fafafa; /* Very subtle gray */
     box-shadow: 0 8px 20px rgba(0,0,0,.10);
-    transform: translateY(-2px);
   }
   
   /* Override Chirpy's potential hover styles */

@@ -212,3 +212,10 @@ jekyll-archives:
 
 plugins:
   - jekyll-target-blank
+algolia:
+  application_id: 'BI7UJK9MV3'
+  index_name: 'microsoft_github_io_bi7ujk9mv3_pages'
+  search_only_api_key: 'a88dc8ca907a61be8c799e0b686574a5'
+
+search:
+  provider: algolia

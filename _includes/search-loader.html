@@ -1,0 +1,137 @@
+<!-- Algolia Search Integration -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8.1.0/themes/algolia-min.css" />
+<link rel="stylesheet" href="/mcscatblog/assets/css/algolia-search.css">
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.23.3/dist/algoliasearch-lite.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.65.0/dist/instantsearch.production.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchClient = algoliasearch(
+      '{{ site.algolia.application_id }}',
+      '{{ site.algolia.search_only_api_key }}'
+    );
+
+    const search = instantsearch({
+      indexName: '{{ site.algolia.index_name }}',
+      searchClient,
+      routing: false,
+    });
+
+    // Custom searchBox that works with existing input
+    const customSearchBox = instantsearch.connectors.connectSearchBox(
+      (renderOptions, isFirstRender) => {
+        const { query, refine } = renderOptions;
+        const input = document.getElementById('search-input');
+        
+        if (isFirstRender) {
+          input.addEventListener('input', (event) => {
+            refine(event.currentTarget.value);
+          });
+        }
+        
+        input.value = query;
+      }
+    );
+
+    // Custom hits connector to render as divs instead of ol/li
+    const customHits = instantsearch.connectors.connectHits(
+      (renderOptions, isFirstRender) => {
+        const { hits, widgetParams } = renderOptions;
+        const container = document.querySelector(widgetParams.container);
+        
+        if (hits.length === 0) {
+          container.innerHTML = `<p class="mt-5">No results found</p>`;
+          return;
+        }
+        
+        const baseurl = '{{ site.baseurl }}';
+        
+        // Helper function to ensure proper URL construction
+        const buildUrl = (path) => {
+          if (!path) return '';
+          if (path.startsWith('http')) return path;
+          const cleanPath = path.startsWith('/') ? path : `/${path}`;
+          return `${baseurl}${cleanPath}`;
+        };
+        
+        container.innerHTML = hits.map(hit => {
+          const url = buildUrl(hit.url);
+          const imagePath = hit.image ? (hit.image.path || hit.image) : null;
+          const imageUrl = imagePath ? buildUrl(imagePath) : null;
+          
+          return `
+            <article class="card-wrapper card ais-Hits-item">
+              <a href="${url}" class="post-preview row g-0 flex-md-row-reverse">
+                ${imageUrl ? `
+                  <div class="col-md-5">
+                    <div class="preview-img shimmer">
+                      <img src="${imageUrl}" alt="${hit.image?.alt || hit.title}" loading="lazy">
+                    </div>
+                  </div>
+                ` : ''}
+                
+                <div class="${imageUrl ? 'col-md-7' : 'col-md-12'}">
+                  <div class="card-body d-flex flex-column">
+                    <h1 class="card-title my-2 mt-md-0">${instantsearch.highlight({ attribute: 'title', hit }) || hit.title}</h1>
+
+                    <div class="card-text content mt-0 mb-3">
+                      <p>${instantsearch.snippet({ attribute: 'content', hit }) || (hit.content ? hit.content.substring(0, 200) + '...' : '')}</p>
+                    </div>
+
+                    <div class="post-meta flex-grow-1 d-flex align-items-end">
+                      <div class="me-auto">
+                        ${(hit.date || hit.timestamp) ? `
+                          <i class="far fa-calendar fa-fw me-1"></i>
+                          <time data-ts="${hit.date || hit.timestamp}" data-df="ll">
+                            ${new Date((hit.date || hit.timestamp) * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                          </time>
+                        ` : ''}
+                        ${(hit.date || hit.timestamp) && hit.categories ? `
+                          <i class="far fa-folder-open fa-fw me-1 ms-sm-3"></i>
+                        ` : hit.categories ? `
+                          <i class="far fa-folder-open fa-fw me-1"></i>
+                        ` : ''}
+                        ${hit.categories ? `
+                          <span class="categories">${Array.isArray(hit.categories) ? hit.categories.join(', ') : hit.categories}</span>
+                        ` : ''}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </article>
+          `;
+        }).join('');
+      }
+    );
+
+    search.addWidgets([
+      customSearchBox(),
+
+      customHits({
+        container: '#search-results'
+      }),
+
+      instantsearch.widgets.configure({
+        hitsPerPage: 10,
+      }),
+    ]);
+
+    // Add Algolia logo after search results
+    const resultsContainer = document.getElementById('search-results');
+    if (resultsContainer && !document.getElementById('algolia-attribution')) {
+      const attribution = document.createElement('div');
+      attribution.id = 'algolia-attribution';
+      attribution.className = 'text-center mt-4 mb-3';
+      attribution.innerHTML = `
+        <a href="https://www.algolia.com/" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center text-muted text-decoration-none">
+          <span class="me-2">Search by</span>
+          <img src="{{ site.baseurl }}/assets/img/algolia-logo.svg" alt="Algolia" style="height: 20px;" />
+        </a>
+      `;
+      resultsContainer.parentNode.insertBefore(attribution, resultsContainer.nextSibling);
+    }
+
+    search.start();
+  });
+</script>

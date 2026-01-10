@@ -49,6 +49,7 @@ jobs:
         run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: "production"
+
       - name: Index to Algolia
         run: bundle exec jekyll algolia
         env:
