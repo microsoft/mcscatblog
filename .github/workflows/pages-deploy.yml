@@ -55,6 +55,11 @@ jobs:
           bundle exec htmlproofer _site \
             \-\-disable-external \
             \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
+      
+      - name: Index site to Algolia
+        run: bundle exec jekyll algolia
+        env:
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY_PROD }}
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
