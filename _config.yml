@@ -215,9 +215,9 @@ plugins:
   - jekyll-algolia
 
 algolia:
-  application_id: 'BI7UJK9MV3'
+  application_id: '6INL5I8FSG'
   index_name: 'mcscatblog'
-  search_only_api_key: 'a88dc8ca907a61be8c799e0b686574a5'
+  search_only_api_key: '7eacb960a6aba8133b45f6e4f5433335'
 
 search:
   provider: algolia
