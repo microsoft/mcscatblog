@@ -6,38 +6,149 @@
 {% capture not_found %}<p class="mt-5">{{ site.data.locales[include.lang].search.no_results }}</p>{% endcapture %}
 
 <script>
+// Network debugging - intercept fetch/XHR to track Algolia requests
+(function() {
+  console.log('[Algolia Network Debug] Initializing network monitoring...');
+  
+  // Monitor fetch
+  const originalFetch = window.fetch;
+  window.fetch = function(...args) {
+    const url = args[0];
+    if (typeof url === 'string' && url.includes('algolia')) {
+      console.log('[Algolia Network Debug] Fetch request to:', url);
+      console.log('[Algolia Network Debug] Fetch options:', args[1]);
+    }
+    return originalFetch.apply(this, args)
+      .then(response => {
+        if (typeof url === 'string' && url.includes('algolia')) {
+          console.log('[Algolia Network Debug] Fetch response:', {
+            status: response.status,
+            ok: response.ok,
+            url: response.url
+          });
+        }
+        return response;
+      })
+      .catch(error => {
+        if (typeof url === 'string' && url.includes('algolia')) {
+          console.error('[Algolia Network Debug] Fetch error:', error);
+        }
+        throw error;
+      });
+  };
+  
+  // Monitor XMLHttpRequest
+  const originalXHROpen = XMLHttpRequest.prototype.open;
+  const originalXHRSend = XMLHttpRequest.prototype.send;
+  
+  XMLHttpRequest.prototype.open = function(method, url, ...args) {
+    this._url = url;
+    if (typeof url === 'string' && url.includes('algolia')) {
+      console.log('[Algolia Network Debug] XHR opening:', method, url);
+    }
+    return originalXHROpen.apply(this, [method, url, ...args]);
+  };
+  
+  XMLHttpRequest.prototype.send = function(...args) {
+    if (this._url && typeof this._url === 'string' && this._url.includes('algolia')) {
+      console.log('[Algolia Network Debug] XHR sending to:', this._url);
+      
+      this.addEventListener('load', function() {
+        console.log('[Algolia Network Debug] XHR response:', {
+          status: this.status,
+          statusText: this.statusText,
+          response: this.responseText ? this.responseText.substring(0, 200) + '...' : null
+        });
+      });
+      
+      this.addEventListener('error', function() {
+        console.error('[Algolia Network Debug] XHR error for:', this._url);
+      });
+    }
+    return originalXHRSend.apply(this, args);
+  };
+  
+  console.log('[Algolia Network Debug] Network monitoring active');
+})();
+</script>
+
+<script>
 // Function to initialize search once libraries are loaded
 function initializeAlgoliaSearch() {
+  console.log('[Algolia Debug] Initialization started');
+  console.log('[Algolia Debug] Document ready state:', document.readyState);
+  
   const appId = '{{ site.algolia.application_id }}';
   const apiKey = '{{ site.algolia.search_only_api_key }}';
   const indexName = '{{ site.algolia.index_name }}';
   
+  console.log('[Algolia Debug] Configuration:', {
+    appId: appId,
+    apiKey: apiKey ? '***' + apiKey.slice(-4) : 'MISSING',
+    indexName: indexName,
+    hasAppId: !!appId,
+    hasApiKey: !!apiKey,
+    hasIndexName: !!indexName
+  });
+  
   // Check if libraries are loaded
   if (typeof algoliasearch === 'undefined' || typeof instantsearch === 'undefined') {
+    console.warn('[Algolia Debug] Libraries not loaded yet, retrying...', {
+      algoliasearch: typeof algoliasearch,
+      instantsearch: typeof instantsearch
+    });
     setTimeout(initializeAlgoliaSearch, 100);
     return;
   }
   
+  console.log('[Algolia Debug] Libraries loaded successfully:', {
+    algoliasearch: typeof algoliasearch,
+    instantsearch: typeof instantsearch
+  });
+  
   // Validate credentials
   if (!appId || !apiKey || !indexName) {
+    console.error('[Algolia Debug] Missing required credentials:', {
+      appId: !!appId,
+      apiKey: !!apiKey,
+      indexName: !!indexName
+    });
     return;
   }
   
+  console.log('[Algolia Debug] Creating search client...');
+  
   // Initialize Algolia search client
   const searchClient = algoliasearch(appId, apiKey);
+  
+  console.log('[Algolia Debug] Search client created successfully');
+
+  console.log('[Algolia Debug] Search client created successfully');
+
+  console.log('[Algolia Debug] Creating InstantSearch instance...');
 
   const search = instantsearch({
     indexName: indexName,
     searchClient: searchClient,
   });
+  
+  console.log('[Algolia Debug] InstantSearch instance created');
 
   // Custom search box connector - binds to existing #search-input
   const renderSearchBox = (renderOptions, isFirstRender) => {
     const { refine } = renderOptions;
     if (isFirstRender) {
+      console.log('[Algolia Debug] Search box first render');
       const input = document.getElementById('search-input');
+      console.log('[Algolia Debug] Search input element:', input);
       if (input) {
-        input.addEventListener('input', (e) => refine(e.target.value));
+        input.addEventListener('input', (e) => {
+          console.log('[Algolia Debug] Search query:', e.target.value);
+          refine(e.target.value);
+        });
+        console.log('[Algolia Debug] Event listener attached to search input');
+      } else {
+        console.error('[Algolia Debug] Search input element not found!');
       }
     }
   };
@@ -46,8 +157,16 @@ function initializeAlgoliaSearch() {
   // Custom hits connector - renders to existing #search-results
   const renderHits = (renderOptions) => {
     const { hits } = renderOptions;
+    console.log('[Algolia Debug] Rendering hits:', {
+      count: hits.length,
+      hits: hits.map(h => ({ title: h.title, url: h.url }))
+    });
     const container = document.getElementById('search-results');
-    if (!container) return;
+    console.log('[Algolia Debug] Search results container:', container);
+    if (!container) {
+      console.error('[Algolia Debug] Search results container not found!');
+      return;
+    }
 
     container.innerHTML = hits.length
       ? hits.map(hit => `
@@ -66,6 +185,8 @@ function initializeAlgoliaSearch() {
   };
   const customHits = instantsearch.connectors.connectHits(renderHits);
 
+  console.log('[Algolia Debug] Adding widgets...');
+
   // Add widgets
   search.addWidgets([
     customSearchBox({}),
@@ -75,8 +196,12 @@ function initializeAlgoliaSearch() {
       theme: document.documentElement.getAttribute('data-mode') === 'dark' ? 'dark' : 'light'
     })
   ]);
+  
+  console.log('[Algolia Debug] Widgets added, starting search...');
 
   search.start();
+  
+  console.log('[Algolia Debug] Search started successfully!');
 
   // Update powered-by theme when dark/light mode changes
   const observer = new MutationObserver(() => {
@@ -88,12 +213,17 @@ function initializeAlgoliaSearch() {
     }
   });
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
+  
+  console.log('[Algolia Debug] Theme observer initialized');
 }
 
 // Start initialization when DOM is ready
+console.log('[Algolia Debug] Script loaded, waiting for DOM...');
 if (document.readyState === 'loading') {
+  console.log('[Algolia Debug] DOM loading, adding event listener');
   document.addEventListener('DOMContentLoaded', initializeAlgoliaSearch);
 } else {
+  console.log('[Algolia Debug] DOM already ready, initializing now');
   initializeAlgoliaSearch();
 }
 </script>
