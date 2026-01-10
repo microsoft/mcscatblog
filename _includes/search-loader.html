@@ -6,11 +6,12 @@
 {% capture not_found %}<p class="mt-5">{{ site.data.locales[include.lang].search.no_results }}</p>{% endcapture %}
 
 <script>
-// Network debugging - intercept fetch/XHR to track Algolia requests
+
+/* Network debugging - intercept fetch/XHR to track Algolia requests */
 (function() {
   console.log('[Algolia Network Debug] Initializing network monitoring...');
   
-  // Monitor fetch
+  /* Monitor fetch */
   const originalFetch = window.fetch;
   window.fetch = function(...args) {
     const url = args[0];
@@ -37,7 +38,7 @@
       });
   };
   
-  // Monitor XMLHttpRequest
+  /* Monitor XMLHttpRequest */
   const originalXHROpen = XMLHttpRequest.prototype.open;
   const originalXHRSend = XMLHttpRequest.prototype.send;
   
@@ -73,7 +74,8 @@
 </script>
 
 <script>
-// Function to initialize search once libraries are loaded
+
+/* Function to initialize search once libraries are loaded */
 function initializeAlgoliaSearch() {
   console.log('[Algolia Debug] Initialization started');
   console.log('[Algolia Debug] Document ready state:', document.readyState);
@@ -91,7 +93,7 @@ function initializeAlgoliaSearch() {
     hasIndexName: !!indexName
   });
   
-  // Check if libraries are loaded
+  /* Check if libraries are loaded */
   if (typeof algoliasearch === 'undefined' || typeof instantsearch === 'undefined') {
     console.warn('[Algolia Debug] Libraries not loaded yet, retrying...', {
       algoliasearch: typeof algoliasearch,
@@ -106,7 +108,7 @@ function initializeAlgoliaSearch() {
     instantsearch: typeof instantsearch
   });
   
-  // Validate credentials
+  /* Validate credentials */
   if (!appId || !apiKey || !indexName) {
     console.error('[Algolia Debug] Missing required credentials:', {
       appId: !!appId,
@@ -118,7 +120,7 @@ function initializeAlgoliaSearch() {
   
   console.log('[Algolia Debug] Creating search client...');
   
-  // Initialize Algolia search client
+  /* Initialize Algolia search client */
   const searchClient = algoliasearch(appId, apiKey);
   
   console.log('[Algolia Debug] Search client created successfully');
@@ -134,7 +136,7 @@ function initializeAlgoliaSearch() {
   
   console.log('[Algolia Debug] InstantSearch instance created');
 
-  // Custom search box connector - binds to existing #search-input
+  /* Custom search box connector - binds to existing #search-input */
   const renderSearchBox = (renderOptions, isFirstRender) => {
     const { refine } = renderOptions;
     if (isFirstRender) {
@@ -154,7 +156,7 @@ function initializeAlgoliaSearch() {
   };
   const customSearchBox = instantsearch.connectors.connectSearchBox(renderSearchBox);
 
-  // Custom hits connector - renders to existing #search-results
+  /* Custom hits connector - renders to existing #search-results */
   const renderHits = (renderOptions) => {
     const { hits } = renderOptions;
     console.log('[Algolia Debug] Rendering hits:', {
@@ -187,7 +189,7 @@ function initializeAlgoliaSearch() {
 
   console.log('[Algolia Debug] Adding widgets...');
 
-  // Add widgets
+  /* Add widgets */
   search.addWidgets([
     customSearchBox({}),
     customHits({}),
@@ -203,12 +205,12 @@ function initializeAlgoliaSearch() {
   
   console.log('[Algolia Debug] Search started successfully!');
 
-  // Update powered-by theme when dark/light mode changes
+  /* Update powered-by theme when dark/light mode changes */
   const observer = new MutationObserver(() => {
     const poweredBy = document.querySelector('#algolia-poweredby .ais-PoweredBy');
     if (poweredBy) {
       const isDark = document.documentElement.getAttribute('data-mode') === 'dark';
-      // Reinitialize would be heavy, so we just toggle a class for CSS styling
+      /* Reinitialize would be heavy, so we just toggle a class for CSS styling */
       document.getElementById('algolia-poweredby').classList.toggle('dark-theme', isDark);
     }
   });
@@ -217,7 +219,7 @@ function initializeAlgoliaSearch() {
   console.log('[Algolia Debug] Theme observer initialized');
 }
 
-// Start initialization when DOM is ready
+/* Start initialization when DOM is ready */
 console.log('[Algolia Debug] Script loaded, waiting for DOM...');
 if (document.readyState === 'loading') {
   console.log('[Algolia Debug] DOM loading, adding event listener');
