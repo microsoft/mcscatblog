@@ -2,7 +2,7 @@
 layout: post    
 title: "Free Up Your Context Window: Pass MCP Resources, Not Raw Data"    
 date: 2025-11-24 23:50:00 +0100    
-categories: [copilot-studio, mcp, patterns]    
+categories: [copilot-studio, mcp, patterns]
 tags: [context-window, resources, mcp-server, tooling, scalability]    
 description: How to avoid context window saturation in Copilot Studio by passing MCP resources between tools when the tool output is too huge to fit into an agent context window.    
 author: giorgioughini    
