@@ -1,14 +1,5 @@
 name: "Build and Deploy - Copy to debug secret setting"
 on:
-  push:
-    branches:
-      - main
-      - master
-    paths-ignore:
-      - .gitignore
-      - README.md
-      - LICENSE
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -45,12 +36,6 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
 
-      - name: Substitute environment variables
-        run: envsubst < _config.yml > _config.tmp && mv _config.tmp _config.yml
-        env:
-          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-          ALGOLIA_SEARCH_KEY: ${{ secrets.ALGOLIA_SEARCH_KEY }}
-
       - name: Create production config
         run: |
           cat << EOF > _config.prod.yml
@@ -58,6 +43,18 @@ jobs:
             application_id: '${{ secrets.ALGOLIA_APP_ID }}'
             search_only_api_key: '${{ secrets.ALGOLIA_SEARCH_KEY }}'
           EOF
+          
+      - name: Debug - Show prod config file
+        run: |
+          echo "=== Contents of _config.prod.yml ==="
+          cat _config.prod.yml
+          echo "=== End of _config.prod.yml ==="
+          echo ""
+          echo "=== Line count ==="
+          wc -l _config.prod.yml
+          echo ""
+          echo "=== File size ==="
+          ls -lh _config.prod.yml
           
       - name: Build site
         run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}" --config _config.yml,_config.prod.yml

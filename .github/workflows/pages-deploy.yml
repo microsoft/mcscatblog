@@ -8,6 +8,7 @@ on:
       - .gitignore
       - README.md
       - LICENSE
+      - .github/**
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -45,22 +46,22 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
 
-      - name: Check secrets
-        run: |
-          echo appid: ${{secrets.ALGOLIA_API_APPLICATIONID_PROD}}
-          echo readkey: ${{secrets.ALGOLIA_API_SEARCHONLYKEY_PROD}}
-          echo adminkey: ${{secrets.ALGOLIA_API_KEY_PROD}}
+      - name: Substitute environment variables
+        run: envsubst < _config.yml > _config.tmp && mv _config.tmp _config.yml
+        env:
+          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+          ALGOLIA_SEARCH_KEY: ${{ secrets.ALGOLIA_SEARCH_KEY }}
 
-      - name: Set Algolia production credentials
+      - name: Create production config
         run: |
-          sed -i "s/application_id: '[^']*'/application_id: '${{ secrets.ALGOLIA_API_APPLICATIONID_PROD }}'/" _config.yml
-          sed -i "s/search_only_api_key: '[^']*'/search_only_api_key: '${{ secrets.ALGOLIA_API_SEARCHONLYKEY_PROD }}'/" _config.yml
-      
-      - name: Output config
-        run: cat _config.yml
-
+          cat << EOF > _config.prod.yml
+          algolia:
+            application_id: '${{ secrets.ALGOLIA_APP_ID }}'
+            search_only_api_key: '${{ secrets.ALGOLIA_SEARCH_KEY }}'
+          EOF
+          
       - name: Build site
-        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
+        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}" --config _config.yml,_config.prod.yml
         env:
           JEKYLL_ENV: "production"
 
