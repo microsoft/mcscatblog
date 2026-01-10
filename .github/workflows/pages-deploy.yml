@@ -46,8 +46,16 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
 
+      - name: Create production config
+        run: |
+          cat << EOF > _config.prod.yml
+          algolia:
+            application_id: '${{ secrets.ALGOLIA_APP_ID }}'
+            search_only_api_key: '${{ secrets.ALGOLIA_SEARCH_KEY }}'
+          EOF
+          
       - name: Build site
-        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
+        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}" --config _config.yml,_config.prod.yml
         env:
           JEKYLL_ENV: "production"
 
@@ -57,6 +65,11 @@ jobs:
             \-\-disable-external \
             \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
       
+      - name: Index site to Algolia
+        run: bundle exec jekyll algolia
+        env:
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY_PROD }}
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
