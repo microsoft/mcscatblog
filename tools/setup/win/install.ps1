@@ -2,13 +2,12 @@ $rubyPackageName = "RubyInstallerTeam.RubyWithDevKit.3.2";
 $rubyPath = (get-location).Drive.Name + ":\Ruby32-x64\bin"
 
 Write-Host "Checking for Microsoft.WinGet.Client module..."
-$wingetInstalled = winget --version | Out-Null
-
-if (-not $wingetInstalled) {
-    Write-ErrorAction "WinGet is not installed. Please install WinGet from https://aka.ms/getwinget and re-run this script."
+try {
+    $wingetVersion = winget --version
+    Write-Host "Validated WinGet installation. Version: $wingetVersion"
+} catch {
+    Write-Error "WinGet is not installed. Please install WinGet from https://aka.ms/getwinget and re-run this script."
     Exit 1
-} else {
-    Write-Host "Validated WinGet installation."
 }
 
 $rubyInstalled = winget list --id $rubyPackageName | Select-Object -First 1

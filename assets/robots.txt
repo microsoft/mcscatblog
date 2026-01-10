@@ -8,5 +8,3 @@ User-agent: *
 Disallow: /norobots/
 
 Sitemap: {{ '/sitemap.xml' | absolute_url }}
-
-# Algolia-Crawler-Verif: AF2A4B4D48339891
