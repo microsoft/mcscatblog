@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${hit.tags && hit.tags.length ? `<div><i class="fa fa-tag fa-fw"></i>${Array.isArray(hit.tags) ? hit.tags.join(', ') : hit.tags}</div>` : ''}
               </div>
             </header>
-            <p>${hit.content || hit.excerpt || ''}</p>
+            <p>${instantsearch.snippet({ hit, attribute: 'content' }) || instantsearch.snippet({ hit, attribute: 'excerpt' }) || hit.content || hit.excerpt || ''}</p>
           </article>
         `).join('')
       : '{{ not_found | strip_newlines }}';
