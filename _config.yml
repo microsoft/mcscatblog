@@ -211,3 +211,9 @@ jekyll-archives:
 
 plugins:
   - jekyll-target-blank
+  - jekyll-algolia
+
+algolia:
+  application_id: 'BI7UJK9MV3'
+  index_name: 'mcscatblog'
+  search_only_api_key: 'a88dc8ca907a61be8c799e0b686574a5'
