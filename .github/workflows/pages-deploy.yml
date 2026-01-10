@@ -50,8 +50,8 @@ jobs:
         run: |
           cat << EOF > _config.prod.yml
           algolia:
-            application_id: '${{ secrets.ALGOLIA_APP_ID }}'
-            search_only_api_key: '${{ secrets.ALGOLIA_SEARCH_KEY }}'
+            application_id: '${{ secrets.ALGOLIA_API_APPLICATIONID_PROD }}'
+            search_only_api_key: '${{ secrets.ALGOLIA_API_SEARCHONLYKEY_PROD }}'
           EOF
           
       - name: Build site
