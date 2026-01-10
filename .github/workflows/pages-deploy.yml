@@ -68,6 +68,7 @@ jobs:
       - name: Index site to Algolia
         run: bundle exec jekyll algolia
         env:
+          ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_API_APPLICATIONID_PROD }}
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY_PROD }}
 
       - name: Upload site artifact
