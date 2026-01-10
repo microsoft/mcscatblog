@@ -7,7 +7,7 @@ tags: [knowledge, snowflake, connectors, mcs-tools, mcs-knowledge]
 description: By following this comprehensive guide, you've successfully connected Snowflake to Copilot Studio, enabling your agents to query live data through natural language.
 author: hasharaf
 image:
-  path: assets/posts/SNFL-MCS/SNFL-MCS.jpg
+  path: /assets/posts/SNFL-MCS/SNFL-MCS.jpg
   alt: "Connect Snowflake to Copilot Studio"
   no_bg: true
 ---
