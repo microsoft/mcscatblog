@@ -44,7 +44,11 @@ jobs:
         with:
           ruby-version: 3.3
           bundler-cache: true
-
+      - name: Set Algolia production credentials
+        run: |
+          sed -i "s/application_id: '[^']*'/application_id: '${{ secrets.ALGOLIA_API_APPLICATIONID_PROD }}'/" _config.yml
+          sed -i "s/search_only_api_key: '[^']*'/search_only_api_key: '${{ secrets.ALGOLIA_API_SEARCHONLYKEY_PROD }}'/" _config.yml
+      
       - name: Build site
         run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
         env:
