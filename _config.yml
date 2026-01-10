@@ -182,7 +182,7 @@ sass:
 
 compress_html:
   clippings: all
-  comments: all
+  comments: ["<!--", "-->"]  # Only remove HTML comments, not JS comments
   endings: []  # Don't remove closing tags - breaks script execution
   profile: false
   blanklines: false
