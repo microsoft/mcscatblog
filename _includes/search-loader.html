@@ -6,25 +6,29 @@
 {% capture not_found %}<p class="mt-5">{{ site.data.locales[include.lang].search.no_results }}</p>{% endcapture %}
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Debug: Log Algolia configuration
+// Function to initialize search once libraries are loaded
+function initializeAlgoliaSearch() {
   const appId = '{{ site.algolia.application_id }}';
   const apiKey = '{{ site.algolia.search_only_api_key }}';
   const indexName = '{{ site.algolia.index_name }}';
   
-  console.log('Algolia Config:', {
-    application_id: appId,
-    search_only_api_key: apiKey,
-    index_name: indexName,
-    appId_length: appId.length,
-    apiKey_length: apiKey.length
-  });
+  // Check if libraries are loaded
+  if (typeof algoliasearch === 'undefined' || typeof instantsearch === 'undefined') {
+    setTimeout(initializeAlgoliaSearch, 100);
+    return;
+  }
+  
+  // Validate credentials
+  if (!appId || !apiKey || !indexName) {
+    return;
+  }
   
   // Initialize Algolia search client
   const searchClient = algoliasearch(appId, apiKey);
 
   const search = instantsearch({
     indexName: indexName,
+    searchClient: searchClient,
   });
 
   // Custom search box connector - binds to existing #search-input
@@ -84,5 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
-});
+}
+
+// Start initialization when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeAlgoliaSearch);
+} else {
+  initializeAlgoliaSearch();
+}
 </script>
