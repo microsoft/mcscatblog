@@ -942,3 +942,74 @@
 .wrapcodeblocktext pre.lineno {
   display: none !important;
 }
+
+/* === CAT Customization - Modern Search Result Highlighting === */
+/* Algolia InstantSearch highlight styling for light and dark modes */
+
+/* Light mode highlighting */
+html:not([data-mode]),
+html[data-mode="light"] {
+  /* Highlighted text in search results */
+  .ais-Highlight-highlighted,
+  .ais-Snippet-highlighted,
+  mark {
+    background-color: rgba(255, 235, 59, 0.3) !important; /* Warm yellow with transparency */
+    color: inherit !important;
+    font-weight: 500 !important;
+    padding: 0.1em 0.1em;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(255, 235, 59, 0.15);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  /* Hover state for interactive elements */
+  a:hover .ais-Highlight-highlighted,
+  a:hover .ais-Snippet-highlighted {
+    background-color: rgba(255, 235, 59, 0.45) !important;
+    box-shadow: 0 0 0 1px rgba(255, 235, 59, 0.3);
+  }
+}
+
+/* Dark mode highlighting */
+html[data-mode="dark"] {
+  .ais-Highlight-highlighted,
+  .ais-Snippet-highlighted,
+  mark {
+    background-color: rgba(255, 193, 7, 0.25) !important; /* Amber with transparency */
+    color: inherit !important;
+    font-weight: 500 !important;
+    padding: 0.1em 0.1em;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.15);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  a:hover .ais-Highlight-highlighted,
+  a:hover .ais-Snippet-highlighted {
+    background-color: rgba(255, 193, 7, 0.35) !important;
+    box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.25);
+  }
+}
+
+/* System preference dark mode */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode="light"]) {
+    .ais-Highlight-highlighted,
+    .ais-Snippet-highlighted,
+    mark {
+      background-color: rgba(255, 193, 7, 0.25) !important;
+      color: inherit !important;
+      font-weight: 500 !important;
+      padding: 0.1em 0.1em;
+      border-radius: 3px;
+      box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.15);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    a:hover .ais-Highlight-highlighted,
+    a:hover .ais-Snippet-highlighted {
+      background-color: rgba(255, 193, 7, 0.35) !important;
+      box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.25);
+    }
+  }
+}
