@@ -57,7 +57,7 @@ The demo explores how to implement Cloud PC pool as the runtime for Computer Use
 ## Watch the Demo    
   
 <iframe width="760" height="515" 
-        src="https://www.youtube.com/embed/pjAvoRcX40k" 
+        src="https://www.youtube.com/embed/XKctbmyUb7Q" 
         title="Video: Implement Cloud PC pool for Computer Use in Copilot Studio"
         frameborder="0"
         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
