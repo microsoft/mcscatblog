@@ -142,7 +142,6 @@ Honest comparison and decision framework.
 |----------|----------|
 | WebChat samples | [BotFramework-WebChat/samples](https://github.com/microsoft/BotFramework-WebChat/tree/main/samples) |
 | Assistant UI sample | [CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/AssistantUICopilotStudioClient) |
-| WebChat hooks docs | `~/.claude/docs/webchat-react-hooks.md` |
 
 ## Notes
 
