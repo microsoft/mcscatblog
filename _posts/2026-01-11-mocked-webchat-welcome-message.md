@@ -3,18 +3,18 @@ layout: post
 title: "The Welcome Message That Never Was: Mocking Agent Greetings in WebChat"
 date: 2026-01-11
 categories: [copilot-studio, webchat]
-tags: [webchat, directline, welcome-message, redux, javascript, embedding, conversation-start]
+tags: [webchat, directline, welcome-message, redux, javascript]
 description: "Show a welcome message in WebChat without triggering your agent—because sometimes the best conversation is the one that never started."
 author: adilei
 image:
   path: /assets/posts/mocked-welcome/header.png
-  alt: "A mocked welcome message in WebChat"
+  alt: "A somewhat forced welcome message"
   no_bg: true
 ---
 
-Here's a scenario that might sound familiar: You've built a beautiful Copilot Studio agent for your company's public website. It greets visitors with a friendly welcome message, ready to answer questions about your products, services, or that one FAQ nobody ever reads.
+Here's a scenario that might sound familiar: You've built a beautiful Copilot Studio Agent for your company's public website. It greets visitors with a friendly welcome message, ready to answer questions about your products, services, or that one FAQ nobody ever reads.
 
-The problem? Every single visitor who loads your page triggers that welcome message. And every welcome message is a conversation. And every conversation... well, let's just say your finance team has started asking pointed questions about "message consumption."
+The problem? Every single visitor who loads your page triggers that welcome message. And every welcome message counts. And when they start adding up… well, let's just say someone eventually notices.
 
 ## The Economics of Saying Hello
 
@@ -24,20 +24,20 @@ When you embed a Copilot Studio agent on a public website, the typical flow goes
 2. WebChat connects to Direct Line
 3. Agent sends welcome message (Conversation Start topic fires)
 4. Visitor reads "Hi! How can I help you today?"
-5. Visitor closes tab without ever typing anything
-6. You get charged for that conversation
+5. Visitor often closes tab without ever typing anything
+6. You get charged for that welcome message
 
-Now, I'm not here to make any grand promises about cost savings or Copilot credits—your mileage will vary depending on your traffic patterns, licensing model, and how aggressively your marketing team promotes that "Chat with us!" button. But if you're seeing thousands of welcome messages going out to visitors who never engage, you might start wondering: *Is there a way to show a greeting without actually bothering the agent?*
+Now, I'm not here to make any grand promises about cost savings or Copilot credits. Your mileage will vary depending on your traffic patterns, licensing model, and how aggressively your marketing team promotes that "Chat with us!" button. But if you're seeing thousands of welcome messages going out to visitors who never engage, you might start wondering: *Is there a way to show a greeting without actually bothering the agent?*
 
 Turns out, there is.
 
 ## The Trick: Fake It Till They Type It
 
-The idea is simple: instead of letting the agent send the welcome message, we inject a fake one directly into WebChat's UI. The visitor sees exactly what they'd normally see—a friendly greeting from the agent—but no actual activity reaches your agent. No topic fires. No conversation starts. No message is consumed.
+The idea is simple: instead of letting the agent send the welcome message, we inject a fake one directly into WebChat's UI. The visitor sees exactly what they'd normally see: a friendly greeting from the agent, but no actual activity reaches your agent. No topic fires. No conversation starts. No message is consumed.
 
 The real conversation only begins when the user actually types something.
 
-> This approach uses WebChat's Redux store middleware to intercept connection events and inject a synthetic message. It's entirely client-side—no traffic to your agent.
+> This approach uses WebChat's Redux store middleware to intercept connection events and inject a synthetic message. It's entirely client-side, no traffic to your agent.
 {: .prompt-info}
 
 ## How It Works
@@ -65,7 +65,7 @@ const store = window.WebChat.createStore({}, ({ dispatch }) => next => action =>
 });
 ```
 
-The key here is `DIRECT_LINE/INCOMING_ACTIVITY`. This is the Redux action type for messages *coming from* the agent. By dispatching it ourselves, we're telling WebChat "hey, the agent just said this"—except the agent never actually said anything. It's like a tree falling in a forest with no one around, except the tree is an AI agent and the forest is your message consumption report.
+The key here is that we're *not* sending anything to the agent, which would trigger the Conversation Start topic. Instead, we wait until Direct Line connectivity is established (`CONNECT_FULFILLED`), then dispatch our own `INCOMING_ACTIVITY` directly into WebChat's message stream. A conversation exists (Direct Line gave us a conversation ID), but we haven't triggered any topics yet. The UI displays a greeting as if the agent said it, but the agent hasn't done any work. It's like a tree falling in a forest with no one around, except the tree is an AI agent and the forest is your message consumption report.
 
 ## Complete Working Example
 
@@ -149,7 +149,7 @@ Before you rush off to implement this, let's be honest about what you're giving 
 
 **What you lose:**
 - **Conversation analytics for the welcome** — Since no real activity happens, you won't see welcome message metrics in your Copilot Studio analytics
-- **Dynamic welcome content** — Your agent's Conversation Start topic might do personalization, A/B testing, or other clever things. The mocked message is static
+- **Dynamic welcome content** — Your agent's Conversation Start topic might do personalization, A/B testing, or other clever things. You *could* make the mocked message dynamic with JavaScript, but that would defeat the purpose of low-code
 - **Adaptive Cards in the greeting** — You *can* inject them (the activity payload supports attachments), but you'll need to construct the JSON yourself
 
 **What you keep:**
@@ -160,26 +160,10 @@ Before you rush off to implement this, let's be honest about what you're giving 
 > If your Conversation Start topic does important work (setting context, checking user state, personalization), this approach might not be right for you.
 {: .prompt-warning}
 
-## When to Use This
-
-This technique makes the most sense when:
-
-- You have high-traffic public pages with low engagement rates
-- Your welcome message is purely cosmetic ("Hi! Ask me anything!")
-- You want users to see something friendly without starting a billable conversation
-- You're embedding the agent in a context where most visitors won't interact
-
-It makes less sense when:
-
-- Your Conversation Start topic sets up important conversation context
-- You need analytics on welcome message reach
-- You're doing personalization in the greeting
-- Your traffic is low enough that this isn't a concern
-
 ## Key Takeaways
 
-- **Mocked welcome messages inject directly into WebChat's Redux store** — No activity reaches your agent
-- **Use `DIRECT_LINE/INCOMING_ACTIVITY`** — This is the "message from agent" action, not the "message to agent" action
+- **Mocked welcome messages inject client-side into WebChat's Redux store** — No messages go out to the agent
+- **`DIRECT_LINE/INCOMING_ACTIVITY` simulates a message arriving from the agent** — We're injecting into the incoming stream, not sending anything outbound
 - **Real conversations start normally** — Once the user types, everything works as expected
 - **Consider the trade-offs** — You lose greeting analytics and dynamic content capabilities
 
