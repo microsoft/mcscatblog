@@ -182,8 +182,8 @@ sass:
 
 compress_html:
   clippings: all
-  comments: all
-  endings: all
+  comments: ["<!--", "-->"]  # Only remove HTML comments, not JS comments
+  endings: []  # Don't remove closing tags - breaks script execution
   profile: false
   blanklines: false
   ignore:
@@ -199,6 +199,7 @@ exclude:
   - purgecss.js
   - "*.config.js"
   - "package*.json"
+  - "robots.txt"
 
 jekyll-archives:
   enabled: [categories, tags]
@@ -211,3 +212,12 @@ jekyll-archives:
 
 plugins:
   - jekyll-target-blank
+  - jekyll-algolia
+
+algolia:
+  application_id: '6INL5I8FSG'
+  index_name: 'mcscatblog'
+  search_only_api_key: '7eacb960a6aba8133b45f6e4f5433335'
+
+search:
+  provider: algolia
