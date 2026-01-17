@@ -2,8 +2,8 @@
 layout: post
 title: "Agentic Report: Visualizing Copilot custom agent behavior."
 date: 2026-01-16
-categories: []
-tags: []
+categories: [generative-ai, tutorial, custom-engine, blog, development, copilot-studio]
+tags: [pro-code, tutorial, api-integration, planing, orchestration, performance-monitoring]
 description: "Leverage Agent SDK and pro code to visualize Copilot agent behavior during development."
 author: kaul-vineet
 mermaid: true
@@ -13,7 +13,7 @@ image:
   no_bg: true
 ---
 
-## Because without agent analysis, your mission really is impossible.
+## Because without agent analysis, your mission really is impossible
 
 Developers building Copilot Agents face challenges in visualize agent performance and behavior during development. While functional correctness is important, understanding response-time behavior and planner step execution is critical for creating efficient and reliable agents. Without proper visibility, developers struggle to:
 
@@ -25,7 +25,7 @@ Developers building Copilot Agents face challenges in visualize agent performanc
 
 Manual tracking of these metrics is time-consuming, error-prone, and lacks scalability, making it difficult to ensure consistent performance and transparency in agent behavior during development.
 
-## Diving into the Agent’s Subconscious
+## 🧠 Inception: Diving into the Agent’s Subconscious
 
 The Agent SDK, powered by Python DataFrames and Gradio, can be used to build a lightweight observability tool to monitor Microsoft Copilot Studio agent responses. It serves as a comprehensive "black-box" debugger, transforming raw agent responses into structured data for architectural clarity.
 Performance Analytics & Benchmarking
@@ -40,10 +40,10 @@ Performance Analytics & Benchmarking
 
   - **LLM Planner Traceability**: A "look under the hood" at the orchestrator’s decision-making process. The tool captures the model’s internal reasoning (Thoughts), the specific Tools invoked, and the exact Arguments passed between systems.
 
-!["Copilot Studio Response Analysis Atchitecture"](/assets/posts/response-analysis-tool/architecture.png)
+!["Copilot Studio Response Analysis Architecture"](/assets/posts/response-analysis-tool/architecture.png)
 
 
-## How To Code? - Decoding the tool
+## 🕵️ How To Code: Decoding the Tool
 
 The system initiates a secure session via Microsoft MSAL and the Agent SDK to establish a direct communication line with the Copilot orchestrator. It then executes batch queries from a local source, using asynchronous loops to capture both the final text and the hidden trace events containing the agent's internal reasoning. Finally, the tool processes these raw activities through Python DataFrames and streams real-time performance metrics and architectural logs directly to a Gradio dashboard.
 
@@ -127,7 +127,7 @@ if retry_interactive:
   return copilot_client
 ```
 
-🖥️ ***"The Observation Deck": The "Calm Seafoam" Dashboard (Gradio UI)*** - Gradio creats a professional, multi-tabbed interface. It uses a custom theme and organizes the dashboard into two primary views:
+🖥️ ***"The Observation Deck": The "Calm Seafoam" Dashboard (Gradio UI)*** - Gradio creates a professional, multi-tabbed interface. It uses a custom theme and organizes the dashboard into two primary views:
 - *Statistics*: Tab: Contains numerical summaries (Mean, Median, Standard Deviation) and visual plots.
 - *Data Tab*: Features advanced search-enabled DataFrames to inspect the raw "Planner" logic and response strings.
 
@@ -219,39 +219,35 @@ yield (
 )
 ```
 
-## Complete Working Tool
+## 🎬 The Feature Presentation: Complete Working Tool
 
 A fully functional version of this tool is available in the publicly available [ResponseAnalysisAgentsSDK](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK) repository. 
-The codebase is ready for use and includes comprehensive instructions on initial environment setup, execution of tests, and the technical interpretation of the resultss. 
+The codebase is ready for use and includes comprehensive instructions on initial environment setup, execution of tests, and the technical interpretation of the results. 
 
 !["Copilot Studio Response Analysis Screen Stats"](/assets/posts/response-analysis-tool/Screen-Statistics.png)
 
 !["Copilot Studio Response Analysis Planner"](/assets/posts/response-analysis-tool/Screen-Data-Planner.png)
 
-## Considerations
+## ⚠️ The Cautionary Tale: Important Considerations
 
-Before you rush off to implement this, let's be honest about what you're giving up:
+Before you rush off to try and implement this, let's be honest about a few things:
 
-**What you lose:**
-- **Conversation analytics for the welcome** — Since no real activity happens, you won't see welcome message metrics in your Copilot Studio analytics
-- **Dynamic welcome content** — Your agent's Conversation Start topic might do personalization, A/B testing, or other clever things. You *could* make the mocked message dynamic with JavaScript, but that would defeat the purpose of low-code
-- **Adaptive Cards in the greeting** — You *can* inject them (the activity payload supports attachments), but you'll need to construct the JSON yourself
-
-**What you keep:**
-- **Normal conversation flow** — Once the user sends a message, everything works exactly as before
-- **All agent capabilities** — Topics, knowledge, plugins, orchestration—none of that changes
-- **The user experience** — Visitors see a friendly greeting and can chat when ready
-
-> If your Conversation Start topic does important work (setting context, checking user state, personalization), this approach might not be right for you.
+> The current implementation is designed exclusively for single-session analysis.
 {: .prompt-warning}
 
-## Key Takeaways
+> Before deploying the tool, review the [requirements](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK#prerequisite) to ensure your environment is compatible, then execute the [setup steps](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK#step-1-create-an-agent-in-copilot-studio) to configure the tool.
+{: .prompt-warning}
 
-- **Mocked welcome messages inject client-side into WebChat's Redux store** — No messages go out to the agent
-- **`DIRECT_LINE/INCOMING_ACTIVITY` simulates a message arriving from the agent** — We're injecting into the incoming stream, not sending anything outbound
-- **Real conversations start normally** — Once the user types, everything works as expected
-- **Consider the trade-offs** — You lose greeting analytics and dynamic content capabilities
+## 💡 The Director’s Cut: Key Takeaways
+
+- **Custom Tooling via Agent SDK**: Use the Agent SDK as a foundational interface to develop bespoke engineering tools and diagnostic utilities tailored to your specific Copilot Studio environment.
+
+- **Glass-Box Observability**: Intercept `Activity` trace to expose Planner Metadata, allowing audit of specific tool-calls and internal processing logic behind every agent response. 
+
+- **Data-Driven Validation**: Leverage Python data libraries to transition from anecdotal testing to formal validation. By automating batch runs, you can calculate rigorous statistical measures such as Mean, Variance, and Correlation metrics.
+
+- **Logic Isolation**: Maintain a single-conversation focus to eliminate concurrency noise. This isolation ensures the telemetry you collect is "clean," allowing for the precise refinement of system instructions and agent state-machine transitions.
 
 ---
 
-*Have you tried this approach on your public-facing agents? Or maybe you've found a more elegant solution to the "welcome message problem"? Drop a comment below—I promise it won't trigger a welcome message.*
+*Have you tried this approach on your agents? Or maybe you've found a more elegant solution? Drop a comment below.*
