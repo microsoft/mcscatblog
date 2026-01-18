@@ -4,7 +4,7 @@ title: "Agentic Tooling: Making Agent Performance Transparent and Measurable"
 date: 2026-01-16
 categories: [generative-ai, tutorial, custom-engine, blog, development, copilot-studio]
 tags: [pro-code, tutorial, api-integration, planning, orchestration, performance-monitoring]
-description: "A Tutorial for buidling tool to visualize Copilot custom agent behavior during development."
+description: "A Tutorial for buidling a tool to visualize Copilot custom agent behavior during development."
 author: kaul-vineet
 mermaid: true
 image:
@@ -28,17 +28,11 @@ Manual tracking of these metrics is time-consuming, error-prone, and lacks scala
 
 ## 🧠 Inception: Diving into the Agent’s Subconscious
 
-<span style="color:magenta">
-The Agent SDK, powered by Python DataFrames, can be used to record and calculate agent response time. Python DataFrames enable the transformation of raw timestamps into a real-time telemetry stream that calculates incremental metrics such as Mean, Median, and Standard Deviation after every message. By aggregating these values across a full conversation, the system can derive higher-order insights.
-</span>
+The Agent SDK with Python DataFrames can be used to record and calculate agent response time. Python DataFrames enable the transformation of raw timestamps into a real-time telemetry stream that calculates incremental metrics such as Mean, Median, and Standard Deviation after every message. By aggregating these values across a full conversation, the system can derive higher-order insights.
 
-<span style="color:magenta">
 Beyond standard message response, Copilot Studio emits `Activity` logs containing metadata for every response generated. By intercepting and recording these trace activities developers can extract additional data on agent's internal reasoning and tool selection. This granular data allows architects to visualize the exact sequence of events.
-</span>
 
-<span style="color:magenta">
 A Gradio UI can provide teams with a real-time graphical interface to visualize insights through interactive and dashboards powered by streaming response data.
-</span>
 
 !["Copilot Studio Response Analysis Architecture"](/assets/posts/response-analysis-tool/architecture.png)
 
