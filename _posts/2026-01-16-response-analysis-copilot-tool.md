@@ -4,7 +4,7 @@ title: "Agentic Tooling: Making Agent Performance Transparent and Measurable"
 date: 2026-01-16
 categories: [generative-ai, custom-engine, blog, copilot-studio]
 tags: [pro-code, tutorial, api-integration, planning, orchestration, performance-monitoring]
-description: "Build a tool for Copilot Studio agents that provides real-time performance metrics and agent execution insights during development using Agent SDK."
+description: "Build a tool for Copilot Studio agents that provides real-time performance metrics and agent execution insights during development using M 365 Agent SDK."
 author: kaul-vineet
 mermaid: true
 image:
@@ -28,30 +28,101 @@ Manual tracking of these metrics is time-consuming, error-prone, and lacks scala
 
 ## 🧠 Inception: Diving into the Agent’s Subconscious
 
-The Agent SDK with Python DataFrames can be used to record and calculate agent response time. Python DataFrames enable the transformation of raw timestamps into a real-time telemetry stream that calculates incremental metrics such as Mean, Median, and Standard Deviation after every message. By aggregating these values across a full conversation, the system can derive higher-order insights.
+M365 Agents SDK paired with Python DataFrames can transform raw response times into a real-time telemetry stream that calculates incremental metrics such as Mean, Median, and Standard Deviation after every message. By aggregating these values over a full conversation, the system can derives higher-order insights.
 
-Beyond standard message response, Copilot Studio emits `Activity` logs containing metadata for every response generated. By intercepting and recording these trace activities developers can extract data on agent's internal reasoning and tool selection. This granular data allows architects to visualize the exact sequence of events.
+The underlying API for the M365 Agents SDK uses the bot framework Activity protocol that emits information on how messages, events and interactions flow. By intercepting and recording `Activity` types (messages & events), developers can extract additional data e.g. agent's plan, internal reasoning and tool selection. This granular data allows architects to visualize the exact sequence of agent behavior.
 
 A Gradio UI can provide teams with a real-time graphical interface to visualize insights through interactive dashboards powered by streaming response data.
 
 !["Copilot Studio Response Analysis Architecture"](/assets/posts/response-analysis-tool/architecture.png)
 
 
-### 🕵️ Decoding the Tool:
+## 🕵️ Decoding the Tool: How to code?
 
-- ***Secure Communication***: Initiates a secure session via Microsoft MSAL (Microsoft Authentication Library) and the Agent SDK to establish a direct communication line with the Copilot orchestrator. 
+- 📡 ***Secure Communication*** -  
 
-- ***Structured Message Dispatch***: Reads utterances from a local input.txt file and utilizes the Agent SDK to send them as a programmatic sequence to the Copilot.
+Initiate a secure session via Microsoft MSAL (Microsoft Authentication Library) to create an authenticated session. 
 
-- ***Asynchronous Response Handling***: Initiates a secure client session handshake and listens for incoming Activity packets in an asynchronous loop until response is received.
+```python
+# Uses MSAL to get an access token for Power Platform APIs
+pca = PublicClientApplication(client_id=app_client_id, ...)
 
-- ***Incremental Latency Computation***: Python DataFrames capture raw timestamps for each message, enabling the live calculation of Mean, Median, and Standard Deviation over the full conversation.
+# Try to get token from cache first
+response = pca.acquire_token_silent(token_request["scopes"], account=accounts[0])
 
-- ***Activity Trace Interception***: Filter for `activity` types emitted by Copilot Studio to extract metadata.
+# Fallback to interactive login if silent fails
+if retry_interactive:
+    response = pca.acquire_token_interactive(**token_request)
+```
 
-- ***Agent Reasoning Extraction***: Parses the information within the metadata to record the agent's reasoning, specific tool-calls, and logical plan execution.
+M365 Agents SDK Copilot Studio Client establishes a direct communication with the Copilot Studio using the session authentication token. 
 
-- ***Real-Time Visualization***: Stream real-time performance metrics and activity directly to a Gradio dashboard.
+```python
+  settings = ConnectionSettings(
+      environment_id=environ.get("COPILOTSTUDIOAGENT__ENVIRONMENTID"),
+      agent_identifier=environ.get("COPILOTSTUDIOAGENT__SCHEMANAME"),
+  )
+  # Generates the client used to send/receive messages
+  copilot_client = CopilotClient(settings, token)
+  return copilot_client
+```
+
+⚙️ ***"The Trigger Action"*** -
+
+The code uses a listener `btn.click` to connect the UI button to the backend logic. When user starts tests, the `ask_question_file` method processes the Copilot responses and pushes the results back to the various UI components (charts, numbers, and tables) simultaneously.
+
+```python
+btn.click(
+    fn=proc.ask_question_file, # The backend processing function
+    inputs=[],
+    outputs=[btn, tb, process_status, mean_output, lineplot_output, frame_output, ...] 
+)
+```
+
+🔄 - ***Automated Message Dispatch / Asynchronous Response Handling*** -
+
+Each line in an input file `input.txt` is treated as a unique user utterance and the session remains active while code loops through the queries, providing a hands-free way to test the agent. M365 Agents SDK Copilot Studio Client to send them in conversation sequence to the Copilot. M365 Agents SDK Copilot Studio Client listens for incoming `Activity` in an asynchronous loop until response is received.
+
+```python
+# Iterates through each line in the file as a new query
+with open('./data/input.txt', 'r', encoding='utf-8') as file:
+    for line in file:
+        query = line.strip()
+        # Signals the connection to start a dialogue
+        replies = self.connection.ask_question(query, conversation_id)
+
+⏱️ - ***Incremental Latency Computation*** -
+
+Capture response timestamps for `Activity` type=message to calculate the exact duration from the moment the query is sent to the moment the final response to the utterance is received recording the latency and time related statistics.  
+
+```python
+elif reply.type == ActivityTypes.message:
+  start_time = time.perf_counter()
+  # ... wait for agent response ...
+  elapsed_time = time.perf_counter() - start_time
+  resultsdf.loc[len(resultsdf)] = [querycounter, query, reply.text, elapsed_time, len(reply.text)]
+```
+
+Python DataFrames/Pands maintain an in-memory state of the current test run enabling the live calculation of Mean, Median, and Standard Deviation over the full conversation. Instead of post-processing, the engine performs incremental aggregation of performance metrics on every event loop. 
+
+```python
+# Real-time yield of calculated series for Gradio UI components
+yield (
+    # Arithmetic Mean & Median for central tendency
+    resultsdf['Time'].mean().round(2),   
+    resultsdf['Time'].median().round(2), 
+
+    # Dispersion Metrics: Standard Deviation (Sigma) indicates system jitter
+    resultsdf['Time'].std().round(2),    
+    resultsdf['Time'].max().round(2),    
+    
+    # Statistical Correlation: Pearson coefficient between character length and latency
+    resultsdf['Char-Len'].corr(resultsdf['Time']) if len(resultsdf) > 1 else 0,
+    
+    # Dynamic Box-and-Whisker Plot for outlier visualization
+    self.generate_boxplot(resultsdf['Time']) 
+)
+```
 
 ```mermaid
 graph TD
@@ -75,7 +146,7 @@ graph TD
         
         subgraph Analysis [Activity Analysis]
             G --> H{Activity Type?}
-            H -- "Activity" --> I[🧠 Extract Planner Steps]
+            H -- "Event" --> I[🧠 Extract Planner Steps]
             H -- "Message" --> J[💬 Capture Final Text]
         end
         
@@ -107,35 +178,23 @@ graph TD
     style H fill:#E1F5FE,stroke:#01579B
 ```
 
-### 💻 How to code?
+🕵️ - ***Agent Plan Extraction*** -
 
-🎬 ***"The Access Key": Secure Authentication (MSAL Integration)*** - MSAL integration manages identity handshake with Microsoft Entra ID. It attempts a "silent" login first (using cached credentials) to avoid bothering the user. If that fails, it triggers an "Interactive" login.
-
-```python
-# Uses MSAL to get an access token for Power Platform APIs
-pca = PublicClientApplication(client_id=app_client_id, ...)
-
-# Try to get token from cache first
-response = pca.acquire_token_silent(token_request["scopes"], account=accounts[0])
-
-# Fallback to interactive login if silent fails
-if retry_interactive:
-    response = pca.acquire_token_interactive(**token_request)
-```
-
-📡 ***"The Agent Protocol": Copilot Client Initialization*** - Agent SDK acts as the bridge and pulls configuration (e.g. Environment ID and Bot Schema Name) from environment variables and pairs them with the generated token to create an authenticated session.
+Parse the information within `Activity` type=event to record the agent's reasoning, tool-calls, and plan execution.The M365 Agent SDK listens for specific events and captures the agent "Chain Of Thoughts" (reasoning, tool-calls, and plan execution etc.) that explains why the agent chose a specific path.
 
 ```python
-  settings = ConnectionSettings(
-      environment_id=environ.get("COPILOTSTUDIOAGENT__ENVIRONMENTID"),
-      agent_identifier=environ.get("COPILOTSTUDIOAGENT__SCHEMANAME"),
-  )
-  # Generates the client used to send/receive messages
-  copilot_client = CopilotClient(settings, token)
-  return copilot_client
+async for reply in replies:
+    if reply.type == ActivityTypes.event:
+        # Records the hidden "thoughts" of the LLM planner
+        resultsaidf.loc[len(resultsaidf)] = [
+            querycounter, query, reply.value_type, reply.value['thought'], ...
+        ]
 ```
 
-🖥️ ***"The Observation Deck": The "Calm Seafoam" Dashboard (Gradio UI)*** - Gradio creates a multi-tabbed dashboard interface. It uses a custom theme and organizes the dashboard into two primary views:
+📊 - ***Real-Time Visualization*** -
+
+Stream real-time performance metrics and plan data to a multi-tabbed dashboard interface. UX frameworks like Gradio can use custom themes and organizes the dashboard into two functional views:
+
 - *Statistics*: Tab: Contains numerical summaries (Mean, Median, Standard Deviation) and visual plots.
 - *Data Tab*: Features advanced search-enabled DataFrames to inspect the raw "Planner" logic and response strings.
 
@@ -151,70 +210,7 @@ with gr.Blocks(theme='shivi/calm_seafoam') as demo:
         frame_output = gr.DataFrame(label="Query Response / Time Data")
         frameai_output = gr.DataFrame(label="LLM Planner Steps Data")
 ```
-
-⚙️ ***"The Action Trigger": Event Orchestration*** - The code uses a listener `btn.click` to connect the UI button to the backend logic. When user starts tests, the `ask_question_file` method processes the Copilot responses and pushes the results back to the various UI components (charts, numbers, and tables) simultaneously.
-
-```python
-btn.click(
-    fn=proc.ask_question_file, # The backend processing function
-    inputs=[],
-    outputs=[btn, tb, process_status, mean_output, lineplot_output, frame_output, ...] 
-)
-```
-
-🔄 ***Automated Batch Processing*** - Each line in `input.txt` is treated as a unique user utterance and the session remains active while code loops through the queries, providing a hands-free way to test the agent.
-
-```python
-# Iterates through each line in the file as a new query
-with open('./data/input.txt', 'r', encoding='utf-8') as file:
-    for line in file:
-        query = line.strip()
-        # Signals the connection to start a dialogue
-        replies = self.connection.ask_question(query, conversation_id)
-```
-
-🕵️ ***Deep Trace*** - As the Copilot agent processes a query, it emits various `Activities`. Agent SDK listens for specific event types e.g. `DynamicPlanReceived` or `DynamicPlanStepTriggered`. Instead of just capturing the final text, it harvests the agent Chain Of Thoughts (Internal Thoughts, Tool Arguments etc.) that explain why the agent chose a specific path.
-
-```python
-async for reply in replies:
-    if reply.type == ActivityTypes.event:
-        # Records the hidden "thoughts" of the LLM planner
-        resultsaidf.loc[len(resultsaidf)] = [
-            querycounter, query, reply.value_type, reply.value['thought'], ...
-        ]
-```
-
-⏱️ ***Performance Tracking: Real-Time Statistical Engine*** - For every query, code triggers `timer time.perf_counter()`. It calculates the exact duration from the moment the query is sent to the moment the final message is received recording the latency and time related statistics.  
-
-```python
-start_time = time.perf_counter()
-# ... wait for agent response ...
-elapsed_time = time.perf_counter() - start_time
-resultsdf.loc[len(resultsdf)] = [querycounter, query, reply.text, elapsed_time, len(reply.text)]
-```
-
-The backend utilizes Pandas to maintain an in-memory state of the current test run. Instead of post-processing, the engine performs incremental aggregation of performance metrics on every event loop. Pandas DataFrames serve as the "Source of Truth" for the application state.
-
-```python
-# Real-time yield of calculated series for Gradio UI components
-yield (
-    # Arithmetic Mean & Median for central tendency
-    resultsdf['Time'].mean().round(2),   
-    resultsdf['Time'].median().round(2), 
-
-    # Dispersion Metrics: Standard Deviation (Sigma) indicates system jitter
-    resultsdf['Time'].std().round(2),    
-    resultsdf['Time'].max().round(2),    
-    
-    # Statistical Correlation: Pearson coefficient between character length and latency
-    resultsdf['Char-Len'].corr(resultsdf['Time']) if len(resultsdf) > 1 else 0,
-    
-    # Dynamic Box-and-Whisker Plot for outlier visualization
-    self.generate_boxplot(resultsdf['Time']) 
-)
-```
-
-📊 ***Dashboard Streaming*** - Using `yield keyword`, code streams data back to the Gradio UI in real-time. This allows the **"Statistics"** and **"Data"** tabs to update dynamically after every single query, providing immediate feedback without waiting for the entire batch to finish.
+Using `yield keyword`, code streams data back to the Gradio UI in real-time. This allows the **"Statistics"** and **"Data"** tabs to update dynamically after every single query, providing immediate feedback without waiting for the entire batch to finish.
 
 ```python
 # Updates the UI components (Mean, Median, Charts) after each response
@@ -251,9 +247,9 @@ Before you rush off to try and implement this, let's be honest about a few thing
 
 ## 💡 The Director’s Cut: Key Takeaways
 
-- **Custom Tooling via Agent SDK**: Use the Agent SDK as a foundational interface to develop bespoke engineering tools and diagnostic utilities tailored to your specific Copilot Studio environment.
+- **Custom Tooling via M365 Agent SDK**: Use the M365 Agent SDK as a foundational interface to develop bespoke engineering tools and diagnostic utilities tailored to your specific Copilot Studio environment.
 
-- **Glass-Box Observability**: Intercept `Activity` trace to expose agent planner Metadata, allowing audit of specific tool-calls and internal processing logic behind every agent response. 
+- **Glass-Box Observability**: Intercept agent `Activity` to expose agent planner Metadata, allowing audit of specific tool-calls and internal processing logic behind every agent response. 
 
 - **Data-Driven Validation**: Leverage Python data libraries to transition from anecdotal testing to formal validation. By automating batch runs, you can calculate rigorous statistical measures such as Mean, Variance, and Correlation metrics.
 
