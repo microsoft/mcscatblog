@@ -17,7 +17,7 @@ image:
 
 Architects and developers building Copilot Agents frequently encounter a "black box" problem during the development lifecycle. While verifying functional correctness, there is very limited granular visibility into response-time distributions and planner step execution. 
 
-Without such visibility, developers struggle to identify systemic inefficiencies and are unable to ....
+Without such visibility, developers struggle to identify systemic inefficiencies and are unable to accomplish the following:
 
 1. Correlate response-time performance with knowledge source and output size.
 2. Identify variability and trends in response times across different queries.
