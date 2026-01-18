@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Agentic Report: Visualizing Copilot custom agent behavior."
+title: "Agentic Tooling: Tutorial for Visualizing Copilot Custom Agent Behavior"
 date: 2026-01-16
 categories: [generative-ai, tutorial, custom-engine, blog, development, copilot-studio]
-tags: [pro-code, tutorial, api-integration, planing, orchestration, performance-monitoring]
+tags: [pro-code, tutorial, api-integration, planning, orchestration, performance-monitoring]
 description: "Leverage Agent SDK and pro code to visualize Copilot agent behavior during development."
 author: kaul-vineet
 mermaid: true
@@ -15,37 +15,49 @@ image:
 
 ## Because without agent analysis, your mission really is impossible
 
-Developers building Copilot Agents face challenges in visualize agent performance and behavior during development. While functional correctness is important, understanding response-time behavior and planner step execution is critical for creating efficient and reliable agents. Without proper visibility, developers struggle to:
+Architects and developers building Copilot Agents frequently encounter a "black box" problem during the development lifecycle. While verifying functional correctness, there is very limited granular visibility into response-time distributions and planner step execution. 
 
-1. Measure response-time performance and correlate it with output size.
+Without such visibility, developers struggle to identify systemic inefficiencies and are unable to ....
+
+1. Correlate response-time performance with knowledge source and output size.
 2. Identify variability and trends in response times across different queries.
-3. Spot anomalies such as spikes, drift, or outliers during a single conversation.
-4. Trace dynamic planning logic, including tool invocations and arguments, to validate reasoning and execution paths.
-5. Aggregate and analyze data for continuous improvement and optimization.
+3. Trace dynamic planning logic, including tool invocations and arguments, to validate reasoning and execution paths.
+4. Aggregate and analyze data for continuous improvement and optimization.
 
 Manual tracking of these metrics is time-consuming, error-prone, and lacks scalability, making it difficult to ensure consistent performance and transparency in agent behavior during development.
 
 ## 🧠 Inception: Diving into the Agent’s Subconscious
 
-The Agent SDK, powered by Python DataFrames and Gradio, can be used to build a lightweight observability tool to monitor Microsoft Copilot Studio agent responses. It serves as a comprehensive "black-box" debugger, transforming raw agent responses into structured data for architectural clarity.
-Performance Analytics & Benchmarking
+<span style="color:magenta">
+The Agent SDK, powered by Python DataFrames, can be used to record and calculate agent response time. Python DataFrames enable the transformation of raw timestamps into a real-time telemetry stream that calculates incremental metrics such as Mean, Median, and Standard Deviation after every message. By aggregating these values across a full conversation, the system can derive higher-order insights.
+</span>
 
-- **Statistical Insights**: By using Python DataFrames to calculate the Mean, Median, and Standard Deviation of response times, developers can easily distinguish between consistent performance and high-jitter scenarios.
+<span style="color:magenta">
+Beyond standard message response, Copilot Studio emits `Activity` logs containing metadata for every response generated. By intercepting and recording these trace activities developers can extract additional data on agent's internal reasoning and tool selection. This granular data allows architects to visualize the exact sequence of events.
+</span>
 
-- **Visual Bottleneck Detection**: The Gradio UI provides teams with a real-time graphical interface to identify efficiency bottlenecks. These insights are visualized through interactive Line Charts for trend monitoring and Box Plots for benchmarking statistical outliers and "worst-case" latency scenarios.
-
-- **Internal Ledger**: Response data from the Copilot agent is deciphered by the Agent SDK to provide a transparent ledger of the agent’s inner workings. Instead of seeing only the final output, developers gain access to a per-query audit trail that includes:
-
-  - **Query-Response Mapping**: A direct link between user prompts, agent replies, and precise character/token counts to diagnose output quality.
-
-  - **LLM Planner Traceability**: A "look under the hood" at the orchestrator’s decision-making process. The tool captures the model’s internal reasoning (Thoughts), the specific Tools invoked, and the exact Arguments passed between systems.
+<span style="color:magenta">
+A Gradio UI can provide teams with a real-time graphical interface to visualize insights through interactive and dashboards powered by streaming response data.
+</span>
 
 !["Copilot Studio Response Analysis Architecture"](/assets/posts/response-analysis-tool/architecture.png)
 
 
-## 🕵️ How To Code: Decoding the Tool
+### 🕵️ Decoding the Tool:
 
-The system initiates a secure session via Microsoft MSAL and the Agent SDK to establish a direct communication line with the Copilot orchestrator. It then executes batch queries from a local source, using asynchronous loops to capture both the final text and the hidden trace events containing the agent's internal reasoning. Finally, the tool processes these raw activities through Python DataFrames and streams real-time performance metrics and architectural logs directly to a Gradio dashboard.
+- ***Secure Communication***: initiates a secure session via Microsoft MSAL (Microsoft Authentication Library) and the Agent SDK to establish a direct communication line with the Copilot orchestrator. 
+
+- ***Structured Message Dispatch***: Read utterances from a local input.txt file and utilizes the Agent SDK to send them as a programmatic sequence to the Copilot.
+
+- ***Asynchronous Response Handling***: Initiate a secure client session handshake and listens for incoming Activity packets in an asynchronous loop until response is received.
+
+- ***Incremental Latency Computation***: Python DataFrames capture raw timestamps for each message, enabling the live calculation of Mean, Median, and Standard Deviation over the full conversation.
+
+- ***Activity Trace Interception***: Filter for `activity` types emitted by Copilot Studio to extract metadata.
+
+- ***Agent Reasoning Extraction***: Parses the information within the metadata to record the agent's reasoning, specific tool-calls, and logical plan execution.
+
+- ***Real-Time Visualization***: Stream real-time performance metrics and activity directly to a Gradio dashboard.
 
 ```mermaid
 graph TD
@@ -81,7 +93,7 @@ graph TD
         K --> L[📡 Stream Data to UI]
         
         L --> M[📊 Update Stats]
-        L --> O[📋 Refresh COT]
+        L --> O[📋 Chain of Thought]
 
         M -- "Set Complete" --> Q([💾 Final Export: Save CSV])
         O -- "Set Complete" --> Q([💾 Final Export: Save CSV])
@@ -101,7 +113,9 @@ graph TD
     style H fill:#E1F5FE,stroke:#01579B
 ```
 
-🎬 ***"The Access Key": Secure Authentication (MSAL Integration)*** - MSAL integration manages identity handshake with Microsoft Entra ID. It attempts a "Silent" login first (using cached credentials) to avoid bothering the user. If that fails, it triggers an "Interactive" login.
+### 💻 How to code?
+
+🎬 ***"The Access Key": Secure Authentication (MSAL Integration)*** - MSAL integration manages identity handshake with Microsoft Entra ID. It attempts a "silent" login first (using cached credentials) to avoid bothering the user. If that fails, it triggers an "Interactive" login.
 
 ```python
 # Uses MSAL to get an access token for Power Platform APIs
@@ -127,7 +141,7 @@ if retry_interactive:
   return copilot_client
 ```
 
-🖥️ ***"The Observation Deck": The "Calm Seafoam" Dashboard (Gradio UI)*** - Gradio creates a professional, multi-tabbed interface. It uses a custom theme and organizes the dashboard into two primary views:
+🖥️ ***"The Observation Deck": The "Calm Seafoam" Dashboard (Gradio UI)*** - Gradio creates a multi-tabbed dashboard interface. It uses a custom theme and organizes the dashboard into two primary views:
 - *Statistics*: Tab: Contains numerical summaries (Mean, Median, Standard Deviation) and visual plots.
 - *Data Tab*: Features advanced search-enabled DataFrames to inspect the raw "Planner" logic and response strings.
 
@@ -165,7 +179,7 @@ with open('./data/input.txt', 'r', encoding='utf-8') as file:
         replies = self.connection.ask_question(query, conversation_id)
 ```
 
-🕵️ ***Deep Trace*** - As the Copilot agent processes a query, it emits various `Activities`. Agent SDK listens for specific event types like `DynamicPlanReceived` or `DynamicPlanStepTriggered`. Instead of just capturing the final text, it harvests the agent Chain Of Thoughts (Internal Thoughts, Tool Arguments etc.) that explain why the agent chose a specific path.
+🕵️ ***Deep Trace*** - As the Copilot agent processes a query, it emits various `Activities`. Agent SDK listens for specific event types e.g. `DynamicPlanReceived` or `DynamicPlanStepTriggered`. Instead of just capturing the final text, it harvests the agent Chain Of Thoughts (Internal Thoughts, Tool Arguments etc.) that explain why the agent chose a specific path.
 
 ```python
 async for reply in replies:
@@ -238,11 +252,14 @@ Before you rush off to try and implement this, let's be honest about a few thing
 > Before deploying the tool, review the [requirements](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK#prerequisite) to ensure your environment is compatible, then execute the [setup steps](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK#step-1-create-an-agent-in-copilot-studio) to configure the tool.
 {: .prompt-warning}
 
+> Never commit access tokens or credentials to source control. Always use environment variables or secure credential stores, and implement proper token refresh logic.
+{: .prompt-danger}
+
 ## 💡 The Director’s Cut: Key Takeaways
 
 - **Custom Tooling via Agent SDK**: Use the Agent SDK as a foundational interface to develop bespoke engineering tools and diagnostic utilities tailored to your specific Copilot Studio environment.
 
-- **Glass-Box Observability**: Intercept `Activity` trace to expose Planner Metadata, allowing audit of specific tool-calls and internal processing logic behind every agent response. 
+- **Glass-Box Observability**: Intercept `Activity` trace to expose agent planner Metadata, allowing audit of specific tool-calls and internal processing logic behind every agent response. 
 
 - **Data-Driven Validation**: Leverage Python data libraries to transition from anecdotal testing to formal validation. By automating batch runs, you can calculate rigorous statistical measures such as Mean, Variance, and Correlation metrics.
 
