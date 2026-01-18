@@ -32,7 +32,7 @@ The Agent SDK with Python DataFrames can be used to record and calculate agent r
 
 Beyond standard message response, Copilot Studio emits `Activity` logs containing metadata for every response generated. By intercepting and recording these trace activities developers can extract data on agent's internal reasoning and tool selection. This granular data allows architects to visualize the exact sequence of events.
 
-A Gradio UI can provide teams with a real-time graphical interface to visualize insights through interactive and dashboards powered by streaming response data.
+A Gradio UI can provide teams with a real-time graphical interface to visualize insights through interactive dashboards powered by streaming response data.
 
 !["Copilot Studio Response Analysis Architecture"](/assets/posts/response-analysis-tool/architecture.png)
 
