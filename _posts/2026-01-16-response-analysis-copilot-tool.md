@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Agentic Tooling: Tutorial for Visualizing Copilot Custom Agent Behavior"
+title: "Agentic Tooling: Making Agent Performance Transparent and Measurable"
 date: 2026-01-16
 categories: [generative-ai, tutorial, custom-engine, blog, development, copilot-studio]
 tags: [pro-code, tutorial, api-integration, planning, orchestration, performance-monitoring]
-description: "Leverage Agent SDK and pro code to visualize Copilot agent behavior during development."
+description: "A Tutorial for buidling tool to visualize Copilot custom agent behavior during development."
 author: kaul-vineet
 mermaid: true
 image:
