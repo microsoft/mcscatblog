@@ -39,11 +39,11 @@ A Gradio UI can provide teams with a real-time graphical interface to visualize 
 
 ### 🕵️ Decoding the Tool:
 
-- ***Secure Communication***: initiates a secure session via Microsoft MSAL (Microsoft Authentication Library) and the Agent SDK to establish a direct communication line with the Copilot orchestrator. 
+- ***Secure Communication***: Initiates a secure session via Microsoft MSAL (Microsoft Authentication Library) and the Agent SDK to establish a direct communication line with the Copilot orchestrator. 
 
-- ***Structured Message Dispatch***: Read utterances from a local input.txt file and utilizes the Agent SDK to send them as a programmatic sequence to the Copilot.
+- ***Structured Message Dispatch***: Reads utterances from a local input.txt file and utilizes the Agent SDK to send them as a programmatic sequence to the Copilot.
 
-- ***Asynchronous Response Handling***: Initiate a secure client session handshake and listens for incoming Activity packets in an asynchronous loop until response is received.
+- ***Asynchronous Response Handling***: Initiates a secure client session handshake and listens for incoming Activity packets in an asynchronous loop until response is received.
 
 - ***Incremental Latency Computation***: Python DataFrames capture raw timestamps for each message, enabling the live calculation of Mean, Median, and Standard Deviation over the full conversation.
 
