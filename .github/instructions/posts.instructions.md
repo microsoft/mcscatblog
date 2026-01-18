@@ -12,6 +12,7 @@ The blog uses US American language throughout, although it's consumed by readers
 ## Quality Review
 - Ensure there are no spelling mistakes
 - Assess the content across the following categories, and provide scores for each: Structure and Clarity, Technical Accuracy and Rigor, Audience Fit IT Pros, Tone and Voice, Depth and Practicality, Accessibility Compliance, Visuals and Media Quality, Grammar Spelling and Style, SEO and Metadata, Originality and Insight, Security and Safety Considerations, Consistency and Terminology, and Internationalization and Global Audience
+- **Problem-Solution Framing**: Every post must clearly articulate an issue, gap, problem, or need that readers face, and provide a clear path to address it. Posts should not document technical patterns simply because something is possible—they must demonstrate why the reader should care and how it solves a real-world challenge. Deduct points if the post lacks a clear problem statement or if the "why" is missing
 - Provide an overall score for the post
 - Make a handful of recommendations for improvements which would increase the overall score.  Recommend actions which will have the biggest possible impact on the score
 - Recommend whether the post is ready to publish, based on an overall score of 80% or greater
@@ -35,3 +36,77 @@ The blog uses US American language throughout, although it's consumed by readers
 - If any mandatory post information is found to be missing in the Techincal Review, endure this is made clear to the user, using error message-like styling.
 
 Close the review with an overly uplifting quote to inspire the author to keep going!
+
+## Chirpy Markdown Reference
+
+Validate markdown syntax against these Chirpy theme conventions:
+
+### Front Matter
+```yaml
+---
+title: TITLE
+date: YYYY-MM-DD HH:MM:SS +/-TTTT
+categories: [TOP_CATEGORY, SUB_CATEGORY]  # Max 2, lowercase
+tags: [tag1, tag2]  # Unlimited, lowercase
+description: Custom summary for SEO
+author: author_id  # Must match _data/authors.yml
+image:
+  path: /assets/posts/slug/header.png
+  alt: Descriptive alt text
+math: true  # Enable MathJax if needed
+mermaid: true  # Enable diagrams if needed
+pin: true  # Pin to homepage if needed
+---
+```
+
+### Images
+```markdown
+![alt-text](/path/to/image){: w="700" h="400" }  # With dimensions
+![alt-text](/path/to/image){: .shadow }  # Screenshot styling
+![alt-text](/path/to/image){: .left }  # Position: .normal, .left, .right
+![alt-text](/path/to/image){: .light }  # Theme: .light or .dark
+```
+*Caption text in italics immediately after image*
+
+### Prompts/Callouts
+```markdown
+> Content here
+{: .prompt-tip }
+```
+Types: `prompt-tip`, `prompt-info`, `prompt-warning`, `prompt-danger`
+
+### Code Blocks
+````markdown
+```language
+code here
+```
+````
+Options:
+- `{: file="path/to/file" }` - Show filename
+- `{: .nolineno }` - Hide line numbers
+
+### File Paths
+```markdown
+`/path/to/file.ext`{: .filepath}
+```
+
+### Mermaid Diagrams
+Requires `mermaid: true` in front matter:
+````markdown
+```mermaid
+graph LR
+    A --> B
+```
+````
+
+### Video/Audio Embeds
+```liquid
+{% include embed/video.html src='/path/video.mp4' %}
+{% include embed/audio.html src='/path/audio.mp3' %}
+{% include embed/youtube.html id='VIDEO_ID' %}
+```
+
+### Mathematics
+Requires `math: true` in front matter:
+- Block: `$$ equation $$` with blank lines before/after
+- Inline: `$$ equation $$` without blank lines
