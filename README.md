@@ -44,6 +44,7 @@ How to contribute:
 - Use https://chirpy.cotes.page/posts/write-a-new-post/ for formatting and embedding media.
 - You can link your author profile to social accounts like Twitter/X, LinkedIn.
 - GitHub Copilot (especially with the Opus model) can assist with writing posts, but it may miss some conventions, so review the guide manually.
+- Learn how to use callout boxes: [Callout Boxes Guide](docs/CALLOUT-BOXES.md)
 
 Learn about writing new posts in Chirpy: [Writing a New Post](https://chirpy.cotes.page/posts/write-a-new-post/)
 
