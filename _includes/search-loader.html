@@ -3,9 +3,50 @@
   Replaces Simple Jekyll Search with Algolia-powered search
 -->
 
+{% capture result_elem %}
+  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">
+    <header>
+      <h2><a href="{url}">{title}</a></h2>
+      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">
+        {categories}
+        {tags}
+      </div>
+    </header>
+    <p>{content}</p>
+  </article>
+{% endcapture %}
+
 {% capture not_found %}<p class="mt-5">{{ site.data.locales[include.lang].search.no_results }}</p>{% endcapture %}
 
 <script>
+let useFallback = false;
+
+function initDefaultSearch() {
+  console.log('Falling back to default Chirpy search');
+  
+  // Remove Algolia-specific elements
+  const algoliaLogo = document.getElementById('algolia-poweredby');
+  if (algoliaLogo) algoliaLogo.style.display = 'none';
+  
+  // Initialize Simple Jekyll Search (library is loaded from CDN)
+  SimpleJekyllSearch({
+    searchInput: document.getElementById('search-input'),
+    resultsContainer: document.getElementById('search-results'),
+    json: '{{ '/assets/js/data/search.json' | relative_url }}',
+    searchResultTemplate: '{{ result_elem | strip_newlines }}',
+    noResultsText: '{{ not_found }}',
+    templateMiddleware: function(prop, value, template) {
+      if (prop === 'categories') {
+        return value === '' ? value : `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+      }
+      if (prop === 'tags') {
+        return value === '' ? value : `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+      }
+    }
+  });
+  
+  console.log('SimpleJekyllSearch initialized');
+}
 
 function initializeAlgoliaSearch() {
   const appId = '{{ site.algolia.application_id }}';
@@ -26,6 +67,23 @@ function initializeAlgoliaSearch() {
   const searchClient = {
     ...baseSearchClient,
     search(requests) {
+      // If fallback is active, don't make Algolia requests
+      if (useFallback) {
+        return Promise.resolve({
+          results: requests.map(() => ({
+            hits: [],
+            nbHits: 0,
+            nbPages: 0,
+            page: 0,
+            processingTimeMS: 0,
+            hitsPerPage: 0,
+            exhaustiveNbHits: false,
+            query: '',
+            params: ''
+          }))
+        });
+      }
+      
       if (requests.every(({ params }) => !params.query || !params.query.trim())) {
         return Promise.resolve({
           results: requests.map(() => ({
@@ -41,7 +99,24 @@ function initializeAlgoliaSearch() {
           }))
         });
       }
-      return baseSearchClient.search(requests);
+      return baseSearchClient.search(requests).catch(err => {
+        console.error('Algolia search failed:', err);
+        useFallback = true;
+        initDefaultSearch();
+        return Promise.resolve({
+          results: requests.map(() => ({
+            hits: [],
+            nbHits: 0,
+            nbPages: 0,
+            page: 0,
+            processingTimeMS: 0,
+            hitsPerPage: 0,
+            exhaustiveNbHits: false,
+            query: '',
+            params: ''
+          }))
+        });
+      });
     }
   };
   
