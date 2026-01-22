@@ -22,7 +22,29 @@ function initializeAlgoliaSearch() {
     return;
   }
   
-  const searchClient = algoliasearch(appId, apiKey);
+  const baseSearchClient = algoliasearch(appId, apiKey);
+  const searchClient = {
+    ...baseSearchClient,
+    search(requests) {
+      if (requests.every(({ params }) => !params.query || !params.query.trim())) {
+        return Promise.resolve({
+          results: requests.map(() => ({
+            hits: [],
+            nbHits: 0,
+            nbPages: 0,
+            page: 0,
+            processingTimeMS: 0,
+            hitsPerPage: 0,
+            exhaustiveNbHits: false,
+            query: '',
+            params: ''
+          }))
+        });
+      }
+      return baseSearchClient.search(requests);
+    }
+  };
+  
   const search = instantsearch({
     indexName: indexName,
     searchClient: searchClient,
