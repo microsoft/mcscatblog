@@ -1,0 +1,32 @@
+<!--
+  Algolia InstantSearch loader
+  Replaces Simple Jekyll Search with Algolia-powered search
+-->
+
+{% capture result_elem %}
+  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">
+    <header>
+      <h2><a href="{url}">{title}</a></h2>
+      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">
+        {categories}
+        {tags}
+      </div>
+    </header>
+    <p>{content}</p>
+  </article>
+{% endcapture %}
+
+{% capture not_found %}<p class="mt-5">{{ site.data.locales[include.lang].search.no_results }}</p>{% endcapture %}
+
+<script>
+window.searchConfig = {
+  appId: '{{ site.algolia.application_id }}',
+  apiKey: '{{ site.algolia.search_only_api_key }}',
+  indexName: '{{ site.algolia.index_name }}',
+  baseUrl: '{{ site.baseurl }}',
+  jsonUrl: "{{ '/assets/js/data/search.json' | relative_url }}",
+  resultTemplate: '{{ result_elem | strip_newlines }}',
+  noResultsText: '{{ not_found | strip_newlines }}'
+};
+</script>
+<script defer src="{{ '/assets/js/search-loader.js' | relative_url }}"></script>
