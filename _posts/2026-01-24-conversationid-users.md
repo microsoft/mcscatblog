@@ -42,15 +42,15 @@ In the Copilot Studio and Microsoft 365 Copilot ecosystem, there are two types o
 3. The agent will show Conversation ID in the chat
 
 #### M365 Copilot chat
-![Custom agent in M365 Copilot chat displaying a Conversation ID](/assets/posts/conversationID-users/m365-copilot-debug-conversationid.png)
+![Custom agent in M365 Copilot chat displaying a Conversation ID](/assets/posts/conversationID-users/m365-copilot-debug-conversationid.png){: .shadow w="700" h="400"}
 _Custom agent in M365 Copilot chat displaying a Conversation ID_
 
 #### Teams chat
-![Custom agent in Teams chat displaying a Conversation ID](/assets/posts/conversationID-users/microsoft-teams-debug-conversationid.png)
+![Custom agent in Teams chat displaying a Conversation ID](/assets/posts/conversationID-users/microsoft-teams-debug-conversationid.png){: .shadow w="700" h="400"}
 _Custom agent in Teams chat displaying a Conversation ID_
 
 #### Custom web chat
-![Custom agent in custom webchat displaying a Conversation ID](/assets/posts/conversationID-users/custom-webchat-debug-conversationid.png)
+![Custom agent in custom webchat displaying a Conversation ID](/assets/posts/conversationID-users/custom-webchat-debug-conversationid.png){: .shadow w="700" h="400"}
 _Custom agent in custom webchat displaying a Conversation ID_
 
 ### Declarative agents 
@@ -60,7 +60,7 @@ _Custom agent in custom webchat displaying a Conversation ID_
 3. The agent will show a debugging card that includes the **Conversation ID**
 
 #### M365 Copilot chat with declarative agent
-![Declarative agent in M365 Copilot chat displaying a Conversation ID](/assets/posts/conversationID-users/declarative-agent-debug-conversationid.png)
+![Declarative agent in M365 Copilot chat displaying a Conversation ID](/assets/posts/conversationID-users/declarative-agent-debug-conversationid.png){: .shadow w="700" h="400"}
 _Declarative agent in M365 Copilot chat displaying a Conversation ID_
 
 ## What to send to your maker/admin (copy/paste)
