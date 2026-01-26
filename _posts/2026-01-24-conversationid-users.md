@@ -60,7 +60,7 @@ _Custom agent in custom webchat displaying a Conversation ID_
 3. The agent will show a debugging card that includes the **Conversation ID**
 
 #### M365 Copilot chat with declarative agent
-![Declarative agent in M365 Copilot chat displaying a Conversation ID](/assets/posts/conversationID-users/declarative-agent-debug-conversationid.png)
+![Declarative agent in M365 Copilot chat displaying a Conversation ID](/assets/posts/conversationID-users/declarative-agent-debug-conversationid.png){: .shadow w="700" h="400"}
 _Declarative agent in M365 Copilot chat displaying a Conversation ID_
 
 ## What to send to your maker/admin (copy/paste)
