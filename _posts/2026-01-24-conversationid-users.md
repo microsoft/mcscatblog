@@ -1,14 +1,14 @@
 ---
 layout: post
 title: "How to Get Your Conversation ID When Chatting with Agents"
-date: 2026-01-24
+date: 2026-01-24 00:00:00 +0000
 categories: [copilot-studio, generative-ai]
 tags: [conversationid, troubleshooting, support, debugging]
 description: A guide for end-users about how to get a Conversation ID to get help quickly with Copilot Studio agents in Microsoft 365 Copilot, Microsoft Teams, web chat, and other chat surfaces
 author: chrisgarty
 image:
   path: /assets/posts/conversationID-users/conversation-id-cat-user.jpg
-  alt: “An agent using cat holds a receipt showing their conversation id”
+  alt: "An end user with a cat avatar holds a receipt showing their Conversation ID"
   no_bg: true
 ---
 
