@@ -23,7 +23,7 @@ Before we dive into how to get exact unsummarized excerpts from agent knowledge,
 
 In the Information Retrieval step (step 3), the user's optimized query is used to find matching information within the Knowledge available to the agent. This information is processed in the Summarization step (step 4) to synthesize the information across potentially many knowledge sources into a concise and legible answer to the user's query. This includes ensuring the response adheres agent instructions including those regarding response formatting, tone, emojis etc...
 
-Since we can't just delete the Summarization step (Step 4) out of the RAG pattern in Copilot Studio I'll show you 3 methods that use specific instructions / prompt verbiage that @Adi graciously shared with me to achieve our goal of getting verbatim details out of Copilot Studio knowledge.
+Since we can't just delete the Summarization step (Step 4) out of the RAG pattern in Copilot Studio I'll show you 3 methods that use specific instructions / prompt verbiage that @Adi Liebowitz graciously shared with me to achieve our goal of getting verbatim details out of Copilot Studio knowledge.
 
 ## Three Methods to Defeat OverSummarization
 
