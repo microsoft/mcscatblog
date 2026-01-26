@@ -137,7 +137,7 @@ This is where things get fun. Remember all that state management, lazy loading, 
 | `data-webchat-send-start-event` | `true` | Trigger the Conversation Start topic on load |
 | `data-webchat-mock-welcome` | `false` | Show a client-side welcome message instead of calling the agent |
 
-That last one is my favorite. Want to display a friendly greeting without actually triggering the agent? Just flip a boolean. No Redux middleware, no activity injection, no timing hacks. I wrote a [whole post about mocked welcome messages](/posts/mocked-webchat-welcome-message/) explaining why this matters, and here it's just... an attribute.
+That last one is my favorite. Want to display a friendly greeting without actually triggering the agent? Just flip a boolean. No Redux middleware, no activity injection, no timing hacks. I wrote a [whole post about mocked welcome messages]({% post_url 2026-01-11-mocked-webchat-welcome-message %}) explaining why this matters, and here it's just... an attribute.
 
 ## A Complete Example
 
