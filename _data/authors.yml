@@ -44,6 +44,15 @@ jpad5:
   email: jaypadimiti@microsoft.com # Optional
   avatar: https://github.com/jaypadimiti.png # Optional: path to avatar image
 
+hasharaf: 
+  name: Hazim SharafelDin
+  email: Hazim.SharafelDin@microsoft.com # Optional
+  avatar: https://github.com/hasharaf.png # Optional: path to avatar image
+
+chrisgarty:
+  name: Chris Garty
+  email: chris.garty@microsoft.com # Optional
+  avatar: https://github.com/chrisgarty.png # Optional: path to avatar image
 kaul-vineet:
   name: Vineet Kaul
   email: vineetkaul@microsoft.com # Optional
