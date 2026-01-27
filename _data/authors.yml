@@ -1,3 +1,4 @@
+
 adilei:
   name: Adi Leibowitz
   url: https://github.com/microsoft/CopilotStudioSamples # Personal website or GitHub profile
@@ -48,3 +49,8 @@ kaul-vineet:
   name: Vineet Kaul
   email: vineetkaul@microsoft.com # Optional
   avatar: https://github.com/kaul-vineet.png # Optional: path to avatar image
+
+dbellingeri:
+  name: Doug Bellingeri
+  email: dbellingeri@microsoft.com # Optional
+  avatar: https://github.com/CATDAB.png
