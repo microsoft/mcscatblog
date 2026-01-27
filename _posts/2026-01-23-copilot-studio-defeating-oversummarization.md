@@ -31,11 +31,11 @@ Since we can't just delete the Summarization step (Step 4) out of the RAG patter
 2. Purely using Agent Instructions
 3. Using Agent Instructions + AI Prompt
 
-In all three of these methods I'm using Generative Mode, Claude Sonnet 4.5 as the agent model, web search is turned off, and general knowledge is turned off. All three agents are have the same three benefits policy knowledge sources on SharePoint loaded using the unstructured data (Dataverse Sync) SharePoint Knowledge method.
+In all three of these methods I'm using Generative Mode, Claude Sonnet 4.5 as the agent model, web search is turned off, and general knowledge is turned off. All three agents have the same three benefits policy knowledge sources on SharePoint loaded using the unstructured data (Dataverse Sync) SharePoint Knowledge method.
 
 ## Method 1: Using Custom Search over Knowledge within a Topic with an AI Prompt
 
-This method follows a three-step flow: rewrite the user’s query with conversation context (Generate a Search Query), retrieve knowledge via custom search (Perform a Custom Search), and use an AI prompt to process the results and return an unsummarized response.
+This method follows a three-step flow: retrieve knowledge via custom search (Perform a Custom Search), rewrite the user’s query with conversation context (Generate a Search Query) to pass to an AI prompt to process the results and return an unsummarized response. The inputs we will pass to the AI Prompt will be a context aware query asked by the end user as well as the details returned from the custom search. 
 
 ### Agent Setup
 
@@ -44,16 +44,7 @@ _Overview of the prompt in topic approach_
 
 The first step in building this method is to create a custom topic. I left the trigger as-is and added a clear description to help the agent understand when to call the topic. This is still useful even though I’m directly calling the topic in my agent instructions.
 
-Because we want to incorporate information from the conversation history into the user’s query for knowledge retrieval, I start with the Generate a Search Query node. This is a topic-only tool that rewrites the user’s query by incorporating relevant conversation context to make the query more specific.
-
-For example, if the user was discussing parental leave with the agent and then followed up with “Who is eligible for leave?”, the Generate a Search Query node would rewrite the query to include “parental” before it is sent into the RAG pattern. Since the agent has the prior conversation context, it can infer what type of leave the user means. Without that context, the agent might respond with information about multiple types of leave, which may not be relevant. Use the Activity.Text variable if you do not want the system to add any conversation context to the user's query before performing the knowledge search. 
-
-More information about this node can be found here: https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-search-query.
-
-![Generate a Search Query](/assets/posts/defeat-over-summarization/custom_summarization_generate_search_query.png){: .shadow w="700" h="400"}
-_Adding the Generate a Search Query node_
-
-Next, I pass the output from the “Generate a Search Query” node into the “Perform a Custom Search” action node to search specific knowledge sources. More information about the Custom Search node in topics can be found here: https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-custom-search.
+Next, I pass the Activity.Text variable into the "Perform a Custom Search" action node to search specific knowledge sources. Perform a custom Search will automatically add conversation context before performing the knowledge search. More information about the Custom Search node in topics can be found here: https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-custom-search.
 
 ![Custom Search Setup](/assets/posts/defeat-over-summarization/custom_search_setup.png){: .shadow w="700" h="400"}
 _Setting up a custom search topic_
@@ -62,6 +53,17 @@ _Setting up a custom search topic_
 _Configure the custom search properties_
 
 Then, I take the Custom Search output (which contains the raw knowledge results) and transform the text output into a table using a “Set variable value” node. This produces the structured input required for the AI prompt.
+
+Because we want to incorporate information from the conversation history into the query we send into the AI prompt, I will use the Generate a Search Query node. This is a topic-only tool that rewrites the user’s query by incorporating relevant conversation context to make the query more specific.
+
+For example, if the user was discussing parental leave with the agent and then followed up with “Who is eligible for leave?”, the Generate a Search Query node would rewrite the query to include “parental” before it is sent into the RAG pattern. Since the agent has the prior conversation context, it can infer what type of leave the user means. Without that context, the agent might respond with information about multiple types of leave, which may not be relevant. Use the Activity.Text variable if you do not want the system to add any conversation context to the user's query before passing the information to the AI Prompt
+
+![Generate a Search Query](/assets/posts/defeat-over-summarization/custom_summarization_generate_search_query.png){: .shadow w="700" h="400"}
+_Adding the Generate a Search Query node_
+
+More information about this node can be found here: https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-search-query.
+
+With these two steps completed we now have the two inputs we need to pass into the AI Prompt. 
 
 ![Custom Summarization Prompt in Topic](/assets/posts/defeat-over-summarization/custom_summarization_prompt_in_topic.png){: .shadow w="700" h="400"}
 _AI Prompt configured to process search results_
@@ -92,11 +94,6 @@ beginDialog:
   id: main
   intent: {}
   actions:
-    - kind: CreateSearchQuery
-      id: createSearchQuery_wgVXZ8
-      userInput: =System.Activity.Text
-      result: Topic.SearchQuery
-
     - kind: SearchKnowledgeSources
       id: searchKnowledgeSources_6OjHDa
       fileSearchDataSource:
@@ -106,17 +103,22 @@ beginDialog:
       knowledgeSources:
         kind: SearchSpecificKnowledgeSources
         knowledgeSources:
-          - copilots_header_catdab_CustomSummarization.topic.HR_Leave_Policiesdocx_qcetvrjil6L33_EqPpixl
-          - copilots_header_catdab_CustomSummarization.topic.ContosoHRpoliciesdocx_bnliFX_ntlqYReELDdHO_
+          - copilots_header_catdab_CustomSummarization.topic.HR_Leave_Policiesdocx_BC5vo6ZvRpToLvp39eERs
           - copilots_header_catdab_CustomSummarization.topic.ContosoBenefitsdocx_B2trrvYgmHXRy33bvECmH
+          - copilots_header_catdab_CustomSummarization.topic.ContosoHRpoliciesdocx_bnliFX_ntlqYReELDdHO_
 
       result: Topic.searchResults
-      userInput: =Topic.SearchQuery.SearchQuery
+      userInput: =System.Activity.Text
 
     - kind: SetTextVariable
       id: myNode
       variable: Topic.txtSearchResults
       value: "{Topic.searchResults}"
+
+    - kind: CreateSearchQuery
+      id: createSearchQuery_yPikXR
+      userInput: =System.Activity.Text
+      result: Topic.SearchQuery
 
     - kind: InvokeAIBuilderModelAction
       id: invokeAIBuilderModelAction_Q0KiHA
@@ -147,7 +149,7 @@ Success! The agent consistently extracts the exact wording from the knowledge so
 _Test results showing exact content extraction_
 
 ## Method 2: Instructions Only
-In this method relies on the power of Copilot Studio's [Generative Orchestration](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration) functionality to return exact content without summarization. The only setup we need to do for this method is to add our knowledge sources and add the key prompt instructions from Method 1 as our overall agent instructions.
+This method relies on the power of Copilot Studio's [Generative Orchestration](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration) functionality to return exact content without summarization. The only setup we need to do for this method is to add our knowledge sources and add the key prompt instructions from Method 1 as our overall agent instructions.
 
 ### Agent Setup
 
@@ -156,16 +158,16 @@ _Agent instructions without custom topics_
 
 ### Results
 
-Success! (usually). This method was less consistent than the other two and your mileage may vary with different agent model settings. I had some really good results like the one below, and others where it did mmostly as it was asked, but also included a summary of the parental leave policies below the exact text from knowledge.
+Success! (usually). This method was less consistent than the other two and your mileage may vary with different agent model settings. I had some really good results like the one below, and others where it did mostly as it was asked, but also included a summary of the parental leave policies below the exact text from knowledge. 
 
 ![Instructions Only Test Pane](/assets/posts/defeat-over-summarization/instructionsonly_testpane.png){: .shadow w="700" h="400"}
 _Test results using instructions only_
 
-## Method 3: Instructions with Prompt in Instructions
+## Method 3: Instructions with AI Prompt Tool
 
-This method combines the first two methods using instructions along with an AI prompt (no topics) to achieve the same goal. In the agent instructions I'm telling the agent what to use as inputs for the AI Prompt
+This method combines the first two methods using Instructions along with an AI prompt (no topics) to achieve the same goal. In the agent instructions I'm telling the agent what to use as inputs for the AI Prompt
 
-### Agent setup
+### Agent Setup
 
 ![Prompt in Instructions Setup](/assets/posts/defeat-over-summarization/prompt_in_instructions_setup.png){: .shadow w="700" h="400"}
 _Configure AI prompt to be called from instructions_
@@ -186,11 +188,11 @@ _Test results showing consistent exact content extraction_
 
 Definition of best depends on what you care the most about. For me this means answer quality and consistency. 
 
-For the best consistency and granular control within a more complex agent, Method 1 was the the most consistent. While this method is the most complicated to setup, we have full control over the query generation, custom search pattern, and the AI Prompt. 
+For the best consistency and granular control within a more complex agent, Method 1 was the most consistent. While this method is the most complicated to setup, we have full control over the custom search pattern, query generation, and the AI Prompt. 
 
 Method 2 was somewhat inconsistent even with this test case being the only thing in the instructions. Additional instructions may make it even less consistent.
 
-Method 3 resulted in simmlar quality and concistency as Method 1, but since we can't currently set variables in instructions, I'm relying on telling the orchestrator what to use for inputs to the Prompt. While this worked in my limited testing, I could see this having consistency issues. We also have less granular control over the query and search outputs compared to Method 1. 
+Method 3 resulted in similar quality and consistency as Method 1, but since we can't currently set variables in instructions, I'm relying on telling the orchestrator what to use for inputs to the Prompt. While this worked in my limited testing, I could see this having consistency issues. We also have less granular control over the query and search outputs compared to Method 1. 
 
 Response and instruction adherence will vary with different models so you may experience different results using different models. Additionally, you'll need to consider response speed and agent cost into what you consider is best for you. 
 
