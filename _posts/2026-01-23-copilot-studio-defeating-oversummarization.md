@@ -23,7 +23,7 @@ _The RAG pipeline in Copilot Studio_
 
 In the Information Retrieval step (step 3), the user's optimized query is used to find matching information within the Knowledge available to the agent. This information is processed in the Summarization step (step 4) to synthesize the information across potentially many knowledge sources into a concise and legible answer to the user's query. This includes ensuring the response adheres to agent instructions including those regarding response formatting, tone, emojis etc...
 
-Since we can't just delete the Summarization step (Step 4) out of the RAG pattern in Copilot Studio I'll show you 3 methods that use specific instructions / prompt verbiage that @Adi Leibowitz graciously shared with me to achieve our goal of getting verbatim details out of Copilot Studio knowledge.
+Since we can't just delete the Summarization step (Step 4) out of the RAG pattern in Copilot Studio I'll show you 3 methods that use specific instructions / prompt verbiage that [Adi Leibowitz](/mcscatblog/authors/#adilei) graciously shared with me to achieve our goal of getting verbatim details out of Copilot Studio knowledge.
 
 ## Three Methods to Defeat Oversummarization
 
@@ -44,7 +44,7 @@ _Overview of the prompt in topic approach_
 
 The first step in building this method is to create a custom topic. I left the trigger as-is and added a clear description to help the agent understand when to call the topic. This is still useful even though I’m directly calling the topic in my agent instructions.
 
-Next, I pass the Activity.Text variable into the "Perform a Custom Search" action node to search specific knowledge sources. Perform a custom Search will automatically add conversation context before performing the knowledge search. More information about the Custom Search node in topics can be found here: https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-custom-search.
+Next, I pass the Activity.Text variable into the "Perform a Custom Search" action node to search specific knowledge sources. Perform a custom Search will automatically add conversation context before performing the knowledge search. For more details, see the [Custom Search documentation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-custom-search).
 
 ![Custom Search Setup](/assets/posts/defeat-over-summarization/custom_search_setup.png){: .shadow w="700" h="400"}
 _Setting up a custom search topic_
@@ -56,12 +56,12 @@ Then, I take the Custom Search output (which contains the raw knowledge results)
 
 Because we want to incorporate information from the conversation history into the query we send into the AI prompt, I will use the Generate a Search Query node. This is a topic-only tool that rewrites the user’s query by incorporating relevant conversation context to make the query more specific.
 
-For example, if the user was discussing parental leave with the agent and then followed up with “Who is eligible for leave?”, the Generate a Search Query node would rewrite the query to include “parental” before it is sent into the RAG pattern. Since the agent has the prior conversation context, it can infer what type of leave the user means. Without that context, the agent might respond with information about multiple types of leave, which may not be relevant. Use the Activity.Text variable if you do not want the system to add any conversation context to the user's query before passing the information to the AI Prompt
+For example, if the user was discussing parental leave with the agent and then followed up with “Who is eligible for leave?”, the Generate a Search Query node would rewrite the query to include “parental” before it is sent into the RAG pattern. Since the agent has the prior conversation context, it can infer what type of leave the user means. Without that context, the agent might respond with information about multiple types of leave, which may not be relevant. Note that while the Custom Search node automatically incorporates conversation context when we pass it Activity.Text, AI Prompts are not conversation-aware on their own. That's why we use the Generate a Search Query node to create a context-enriched query to pass to the AI Prompt. If you don't need conversation context in the AI Prompt, you can pass Activity.Text directly instead.
 
 ![Generate a Search Query](/assets/posts/defeat-over-summarization/custom_summarization_generate_search_query.png){: .shadow w="700" h="400"}
 _Adding the Generate a Search Query node_
 
-More information about this node can be found here: https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-search-query.
+For more details, see the [Generate a Search Query documentation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-search-query).
 
 With these two steps completed we now have the two inputs we need to pass into the AI Prompt. 
 
