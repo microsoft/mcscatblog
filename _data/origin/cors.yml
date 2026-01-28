@@ -28,8 +28,9 @@ fontawesome:
 
 # Algolia InstantSearch (replaces Simple Jekyll Search)
 # Using algoliasearch@4 UMD build for browser compatibility
+# Simple Jekyll Search loaded as fallback
 search:
-  js: https://cdn.jsdelivr.net/npm/algoliasearch@4.24.0/dist/algoliasearch-lite.umd.js,https://cdn.jsdelivr.net/npm/instantsearch.js@4.74.2/dist/instantsearch.production.min.js
+  js: https://cdn.jsdelivr.net/npm/algoliasearch@4.24.0/dist/algoliasearch-lite.umd.js,https://cdn.jsdelivr.net/npm/instantsearch.js@4.74.2/dist/instantsearch.production.min.js,https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js
   css: https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/reset-min.css
 
 mermaid:

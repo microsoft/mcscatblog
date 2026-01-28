@@ -3,91 +3,30 @@
   Replaces Simple Jekyll Search with Algolia-powered search
 -->
 
+{% capture result_elem %}
+  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">
+    <header>
+      <h2><a href="{url}">{title}</a></h2>
+      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">
+        {categories}
+        {tags}
+      </div>
+    </header>
+    <p>{content}</p>
+  </article>
+{% endcapture %}
+
 {% capture not_found %}<p class="mt-5">{{ site.data.locales[include.lang].search.no_results }}</p>{% endcapture %}
 
 <script>
-
-function initializeAlgoliaSearch() {
-  const appId = '{{ site.algolia.application_id }}';
-  const apiKey = '{{ site.algolia.search_only_api_key }}';
-  const indexName = '{{ site.algolia.index_name }}';
-  
-  if (typeof algoliasearch === 'undefined' || typeof instantsearch === 'undefined') {
-    setTimeout(initializeAlgoliaSearch, 100);
-    return;
-  }
-  
-  if (!appId || !apiKey || !indexName) {
-    console.error('Algolia credentials missing');
-    return;
-  }
-  
-  const searchClient = algoliasearch(appId, apiKey);
-  const search = instantsearch({
-    indexName: indexName,
-    searchClient: searchClient,
-  });
-
-  const renderSearchBox = (renderOptions, isFirstRender) => {
-    const { refine } = renderOptions;
-    if (isFirstRender) {
-      const input = document.getElementById('search-input');
-      if (input) {
-        input.addEventListener('input', (e) => {
-          refine(e.target.value);
-        });
-      }
-    }
-  };
-  const customSearchBox = instantsearch.connectors.connectSearchBox(renderSearchBox);
-
-  const renderHits = (renderOptions) => {
-    const { hits } = renderOptions;
-    const container = document.getElementById('search-results');
-    if (!container) return;
-
-    const baseUrl = '{{ site.baseurl }}';
-    container.innerHTML = hits.length
-      ? hits.map(hit => `
-          <article class="px-1 px-sm-2 px-lg-4 px-xl-0">
-            <header>
-              <h2><a href="${baseUrl}${hit.url}">${instantsearch.highlight({ hit, attribute: 'title' })}</a></h2>
-              <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">
-                ${hit.categories && hit.categories.length ? `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${Array.isArray(hit.categories) ? hit.categories.join(', ') : hit.categories}</div>` : ''}
-                ${hit.tags && hit.tags.length ? `<div><i class="fa fa-tag fa-fw"></i>${Array.isArray(hit.tags) ? hit.tags.join(', ') : hit.tags}</div>` : ''}
-              </div>
-            </header>
-            <p>${instantsearch.snippet({ hit, attribute: 'content' }) || instantsearch.snippet({ hit, attribute: 'excerpt' }) || hit.content || hit.excerpt || ''}</p>
-          </article>
-        `).join('')
-      : '{{ not_found | strip_newlines }}';
-  };
-  const customHits = instantsearch.connectors.connectHits(renderHits);
-
-  search.addWidgets([
-    customSearchBox({}),
-    customHits({}),
-    instantsearch.widgets.poweredBy({
-      container: '#algolia-poweredby',
-      theme: document.documentElement.getAttribute('data-mode') === 'dark' ? 'dark' : 'light'
-    })
-  ]);
-
-  search.start();
-
-  const observer = new MutationObserver(() => {
-    const poweredBy = document.querySelector('#algolia-poweredby .ais-PoweredBy');
-    if (poweredBy) {
-      const isDark = document.documentElement.getAttribute('data-mode') === 'dark';
-      document.getElementById('algolia-poweredby').classList.toggle('dark-theme', isDark);
-    }
-  });
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeAlgoliaSearch);
-} else {
-  initializeAlgoliaSearch();
-}
+window.searchConfig = {
+  appId: '{{ site.algolia.application_id }}',
+  apiKey: '{{ site.algolia.search_only_api_key }}',
+  indexName: '{{ site.algolia.index_name }}',
+  baseUrl: '{{ site.baseurl }}',
+  jsonUrl: "{{ '/assets/js/data/search.json' | relative_url }}",
+  resultTemplate: '{{ result_elem | strip_newlines }}',
+  noResultsText: '{{ not_found | strip_newlines }}'
+};
 </script>
+<script defer src="{{ '/assets/js/search-loader.js' | relative_url }}"></script>
