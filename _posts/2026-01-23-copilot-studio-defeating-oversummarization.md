@@ -81,7 +81,7 @@ respond to the user's [query] based on [search results], make sure to quote sear
 ```
 The complete topic flow will look like the below image. The final node in the topic sends a direct message to the user using the output variable from the AI Prompt. This is sent without allowing the orchestrator to summarize anything.
 
-![Custom Summarization Topic](/assets/posts/defeat-over-summarization/custom_summarization_topic.png){: .shadow w="700" h="400"}
+![Custom Summarization Topic](/assets/posts/defeat-over-summarization/custom_summarization_topic_updated.png){: .shadow w="700" h="400"}
 _Complete topic flow_
 
 You can use the YAML code below to help replicate the topic in your own environment. Note that you will need to update the knowledge sources, variables, AI Prompt, etc.
@@ -153,7 +153,7 @@ This method relies on the power of Copilot Studio's [Generative Orchestration](h
 
 ### Agent Setup
 
-![Instructions Only Setup](/assets/posts/defeat-over-summarization/instructionsonly_setup.png){: .shadow w="700" h="400"}
+![Instructions Only Setup](/assets/posts/defeat-over-summarization/custom_summarization_instructions_updated.png){: .shadow w="700" h="400"}
 _Agent instructions without custom topics_
 
 ### Results
