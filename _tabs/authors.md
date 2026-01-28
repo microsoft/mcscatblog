@@ -24,7 +24,7 @@ excerpt_separator: ""
   <ul class="author-posts">
     {% for post in author.items %}
     <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
       <time>{{ post.date | date: "%b %d, %Y" }}</time>
     </li>
     {% endfor %}
