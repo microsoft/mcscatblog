@@ -761,9 +761,18 @@
   /* About icon - Rose/Red */
   #sidebar .nav-link[href*="about"] i {
     color: #D83B73 !important; /* Rose from gradient */
-    
+
     &::before {
       content: "\f6be" !important; /* Cat icon for about */
+    }
+  }
+
+  /* Authors icon - Teal/Cyan (feather) */
+  #sidebar .nav-link[href*="authors"] i {
+    color: #00B7C3 !important; /* Teal - complements the gradient */
+
+    &::before {
+      content: "\f56b" !important; /* Feather-alt icon */
     }
   }
   
@@ -811,8 +820,13 @@
     #sidebar .nav-link[href*="about"] i {
       color: #FF6794 !important;
     }
+
+    /* Authors - Brighter teal */
+    #sidebar .nav-link[href*="authors"] i {
+      color: #00D4E0 !important;
+    }
   }
-  
+
   /* System dark mode - colorful icons */
   @media (prefers-color-scheme: dark) {
     html:not([data-mode="light"]) {
@@ -842,9 +856,14 @@
       #sidebar .nav-link[href*="about"] i {
         color: #FF6794 !important;
       }
+
+      /* Authors - Brighter teal */
+      #sidebar .nav-link[href*="authors"] i {
+        color: #00D4E0 !important;
+      }
     }
   }
-  
+
   /* Bottom bar icons - MORE SUBDUED COLORS */
   /* Remove the purple color and use subtle grays */
   #sidebar .sidebar-bottom {
@@ -901,7 +920,12 @@
   #sidebar .nav-link[href*="about"] i::before {
     content: "\f6be" !important; /* Info circle */
   }
-  
+
+  /* Authors icon - feather */
+  #sidebar .nav-link[href*="authors"] i::before {
+    content: "\f56b" !important; /* Feather-alt icon */
+  }
+
   /* Bottom bar icons */
   /* Theme toggle - sun/moon */
   #sidebar .sidebar-bottom #mode-toggle i.fa-sun::before {
