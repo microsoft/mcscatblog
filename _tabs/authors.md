@@ -4,6 +4,7 @@ title: Authors
 icon: fas fa-feather-alt
 order: 5
 excerpt_separator: ""
+image: /assets/img/customengine.png
 ---
 
 <div class="authors-grid">
