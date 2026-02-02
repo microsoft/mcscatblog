@@ -48,7 +48,7 @@ jobs:
 
             // Read the post file and extract author and title from front matter
             const postContent = fs.readFileSync(path.join(postsDir, postFile), 'utf8');
-            const frontMatterMatch = postContent.match(/^---\n([\s\S]*?)\n---/);
+            const frontMatterMatch = postContent.match(/^---[ \t]*\n([\s\S]*?)\n---/);
 
             if (!frontMatterMatch) {
               console.log('Could not parse front matter');
