@@ -79,7 +79,7 @@ jobs:
             // authorkey:
             //   ...
             //   avatar: https://github.com/username.png
-            const authorBlockRegex = new RegExp(`^${authorKey}:\\s*\\n([\\s\\S]*?)(?=^\\w|$)`, 'm');
+            const authorBlockRegex = new RegExp(`^${authorKey}:\\\\s*\\\\n((?:[ \\\\t]+.*\\\\n?)*)`, 'm');
             const authorBlockMatch = authorsContent.match(authorBlockRegex);
 
             if (!authorBlockMatch) {
