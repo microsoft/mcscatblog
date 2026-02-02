@@ -1,0 +1,121 @@
+name: Notify Author on New Comment
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  notify-author:
+    runs-on: ubuntu-latest
+    # Only run for issues created by utterances-bot
+    if: github.event.issue.user.login == 'utterances-bot'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract post slug and notify author
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const issueTitle = context.payload.issue.title;
+            console.log(`Issue title: ${issueTitle}`);
+
+            // Extract post slug from issue title (format: mcscatblog/posts/{slug}/)
+            const match = issueTitle.match(/mcscatblog\/posts\/([^/]+)\/?$/);
+            if (!match) {
+              console.log('Issue title does not match expected format. Skipping.');
+              return;
+            }
+
+            const postSlug = match[1];
+            console.log(`Post slug: ${postSlug}`);
+
+            // Find the matching post file in _posts/
+            const postsDir = '_posts';
+            const files = fs.readdirSync(postsDir);
+            const postFile = files.find(f => f.endsWith(`-${postSlug}.md`));
+
+            if (!postFile) {
+              console.log(`No post file found for slug: ${postSlug}`);
+              return;
+            }
+
+            console.log(`Found post file: ${postFile}`);
+
+            // Read the post file and extract author and title from front matter
+            const postContent = fs.readFileSync(path.join(postsDir, postFile), 'utf8');
+            const frontMatterMatch = postContent.match(/^---\n([\s\S]*?)\n---/);
+
+            if (!frontMatterMatch) {
+              console.log('Could not parse front matter');
+              return;
+            }
+
+            const frontMatter = frontMatterMatch[1];
+
+            // Extract author using regex (handles both "author: value" and "author: 'value'")
+            const authorMatch = frontMatter.match(/^author:\s*['"]?([^'"\n]+)['"]?/m);
+            if (!authorMatch) {
+              console.log('No author specified in post front matter');
+              return;
+            }
+
+            const authorKey = authorMatch[1].trim();
+            console.log(`Author key: ${authorKey}`);
+
+            // Extract title for the notification message
+            const titleMatch = frontMatter.match(/^title:\s*['"]?(.+?)['"]?\s*$/m);
+            const postTitle = titleMatch ? titleMatch[1] : postSlug;
+
+            // Read authors.yml and find the GitHub handle
+            const authorsContent = fs.readFileSync('_data/authors.yml', 'utf8');
+
+            // Parse the specific author's avatar URL using regex
+            // Format in authors.yml:
+            // authorkey:
+            //   ...
+            //   avatar: https://github.com/username.png
+            const authorBlockRegex = new RegExp(`^${authorKey}:\\s*\\n([\\s\\S]*?)(?=^\\w|$)`, 'm');
+            const authorBlockMatch = authorsContent.match(authorBlockRegex);
+
+            if (!authorBlockMatch) {
+              console.log(`Author block not found: ${authorKey}`);
+              return;
+            }
+
+            const avatarMatch = authorBlockMatch[1].match(/avatar:\s*https:\/\/github\.com\/([^.]+)\.png/);
+            if (!avatarMatch) {
+              console.log('Could not extract GitHub username from avatar URL');
+              return;
+            }
+
+            const githubUsername = avatarMatch[1];
+            console.log(`GitHub username: ${githubUsername}`);
+
+            // Assign the issue to the author
+            const postUrl = `https://microsoft.github.io/mcscatblog/posts/${postSlug}/`;
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                assignees: [githubUsername]
+              });
+              console.log(`Assigned issue to @${githubUsername}`);
+            } catch (err) {
+              console.log(`Could not assign issue to @${githubUsername}: ${err.message}`);
+            }
+
+            // Post a comment mentioning the author
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `🐱 **CATBOT**: Meow! @${githubUsername}, someone started a comment thread on your post: [${postTitle}](${postUrl})`
+            });
+
+            console.log(`Notified @${githubUsername} about new comment thread`);
