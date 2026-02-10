@@ -87,7 +87,7 @@ I'm then going to set the GlobalProductURL variable by using a couple of great, 
 
 2. Configure the Topic Input
 
-   Topic inputs are an excellent way to extract details out of user utterances or queries without needing to ask them. You can use Topic Inputs to automatically identify several different out of the box entities, you can define your own entities, or you can rely on descriptions and examples to extract details out of the user inputs. Since we are trying to identify mentions of Microsoft Product's I'm using the "Dynamically fill with best option" setting for how the agent will fill this input. Topic Inputs must be filled before the topic will progress to the next step. If the user does not mention a Product in their message to the agent, the agent will automatically ask them what product they are interested in. Using topic inputs can help reduce back and forth and make the agent interaction more natural. I know I am immediately put off by agent interactions that start with me saying "I have an issue with X", only for the agent to reply "Hi, I can help with questions, orders, and issues, let me know how I can help!". In this case the agent will only ask the user what product they want information on if they do not mention one in their message.
+   Topic inputs are an excellent way to extract details out of user utterances or queries without needing to ask them. You can use Topic Inputs to automatically identify several different out of the box entities, you can define your own entities, or you can rely on descriptions and examples to extract details out of the user inputs. Since we are trying to identify mentions of Microsoft Products I'm using the "Dynamically fill with best option" setting for how the agent will fill this input. Topic Inputs must be filled before the topic will progress to the next step. If the user does not mention a Product in their message to the agent, the agent will automatically ask them what product they are interested in. Using topic inputs can help reduce back and forth and make the agent interaction more natural. I know I am immediately put off by agent interactions that start with me saying "I have an issue with X", only for the agent to reply "Hi, I can help with questions, orders, and issues, let me know how I can help!". In this case the agent will only ask the user what product they want information on if they do not mention one in their message.
 
    ![Product Identifier input variable configuration](/assets/posts/dynamic-knowledge-urls/product-identifier-inputvar.png){: .shadow w="503" h="1306"}
    _Configuring topic input to capture product name_
@@ -137,19 +137,19 @@ I'm then going to set the GlobalProductURL variable by using a couple of great, 
 
 That's it! We now have a dynamic way to scope knowledge using a couple of cool topic based tricks. 
 
-Note: for demonstration purposes I added another topic that uses the "AI Response Triggered" trigger to send a message containing the contents of the GlobalProductURL variable every time the agent is about to respond to the user. This will show what the knowledge URL was scoped to so we can confirm everything is working correctly. 
+*Note: for demonstration purposes I added another topic that uses the "A plan completes" trigger to send a message containing the contents of the GlobalProductURL variable after responses from the agent. This will show what the knowledge URL was scoped to so we can confirm everything is working correctly.*
 
 ### Results
 
-In this first example I ask about WorkIQ in Copilot. The AI Response Triggered topic prints what the agent used to scope Knowledge and both citations that came back from the agent were appropriately scoped to www.microsoft.com/en-us/microsoft-365-copilot. 
+In this first example I ask about WorkIQ in Copilot. The 'A plan completes' topic prints what the agent used to scope the Knowledge URL. Both citations that came back from the agent were appropriately scoped to www.microsoft.com/en-us/microsoft-365-copilot. 
 
 ![Copilot scoped results](/assets/posts/dynamic-knowledge-urls/copilot-results.png){: .shadow w="700" h="400"}
 _Agent responding with Copilot-scoped knowledge_
 
-In this next example I ask a question without mentioning a product name. The agent generates its own question to identify which product I'm referring to with my question about ram. Once it fills the topic input with my response it then queries the scoped knowledge accordingly. 
+In this next example I ask a question without mentioning a product name. The agent generates its own question to identify which product I'm referring to. Once it fills the topic input with my response it then queries the scoped knowledge accordingly. 
 
-![Surface scoped results](/assets/posts/dynamic-knowledge-urls/surface-results.png){: .shadow w="700" h="400"}
-_Agent responding with Surface-scoped knowledge_
+![Teams Scoped results](/assets/posts/dynamic-knowledge-urls/teams-results.png){: .shadow w="700" h="400"}
+_Agent responding with Teams-scoped knowledge_
 
 ## Use Case 2: Country or Region Filtering
 
