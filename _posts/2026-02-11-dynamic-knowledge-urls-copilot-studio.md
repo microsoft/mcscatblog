@@ -1,9 +1,9 @@
 ---
 layout: post
 title: "Zero Noise, Maximum Relevance: Dynamic Knowledge URLs in Copilot Studio"
-date: 2026-02-09 12:00:00 +0000
+date: 2026-02-11 00:00:00 +0000
 categories: [copilot-studio, knowledge]
-tags: [knowledge-sources, dynamic-urls, public-website, alm, multi-region, powerfx, topic-inputs, topic-input, variables, table-variables]
+tags: [knowledge-sources, dynamic-urls, public-website, alm, multi-region, powerfx, topic-inputs, variables, table-variables]
 description: How a simple variable unlocks multi-market, multi-language, and multi-product web grounding while improving ALM processes.
 author: dbellingeri
 image:
@@ -14,7 +14,7 @@ image:
 
 Microsoft just introduced a small but powerful improvement: the ability to parameterize the URL of a knowledge website with a variable. With this, a single knowledge source can now shift automatically based on who the user is, what the conversation is about, or the environment in which the agent is running.
 
-This capability has been a consistent customer request, helping teams tailor knowledge access without the overhead of managing many separate knowledge entries.
+This capability has been a consistent customer request, helping teams tailor knowledge access without the overhead of managing many separate knowledge sources.
 
 ## The Problems this Solves
 
@@ -76,7 +76,7 @@ To accomplish this, I first need to create and set a Global variable to use for 
 
 In the tutorial below, I'm going to manage this variable via a Topic. Remember, you can set the variable you plan to use for knowledge in many ways, the key is to make sure you use a string type variable that is set to Global.
 
-I'm then going to set the GlobalProductURL variable by using a couple of great, but less talked about features within Topics. I will first extract Microsoft Product names out of the user's query using Topic Inputs. Then since the URL paths on websites for product pages aren't always friendly (Example: Copilot is in the /Microsoft-365-copilot path), I am capturing the user response for the "friendly" name via the Topic Input Variable and setting the GlobalProductURL variable to the correct URL Path for the friendly product name. To do this, I will define a table variable that contains the mapping between friendly product names and their respective URL Paths. 
+I'm then going to set the GlobalProductURL variable by using a couple of great, but less-talked-about features within Topics. I will first extract Microsoft Product names out of the user's query using Topic Inputs. Then since the URL paths on websites for product pages aren't always friendly (Example: Copilot is in the /Microsoft-365-copilot path), I am capturing the user response for the "friendly" name via the Topic Input Variable and setting the GlobalProductURL variable to the correct URL Path for the friendly product name. To do this, I will define a table variable that contains the mapping between friendly product names and their respective URL Paths. 
 
 1. Create the topic
 
@@ -89,7 +89,7 @@ I'm then going to set the GlobalProductURL variable by using a couple of great, 
 
    Topic inputs are an excellent way to extract details out of user utterances or queries without needing to ask them. You can use Topic Inputs to automatically identify several different out of the box entities, you can define your own entities, or you can rely on descriptions and examples to extract details out of the user inputs. Since we are trying to identify mentions of Microsoft Products I'm using the "Dynamically fill with best option" setting for how the agent will fill this input. Topic Inputs must be filled before the topic will progress to the next step. If the user does not mention a Product in their message to the agent, the agent will automatically ask them what product they are interested in. Using topic inputs can help reduce back and forth and make the agent interaction more natural. I know I am immediately put off by agent interactions that start with me saying "I have an issue with X", only for the agent to reply "Hi, I can help with questions, orders, and issues, let me know how I can help!". In this case the agent will only ask the user what product they want information on if they do not mention one in their message.
 
-   ![Product Identifier input variable configuration](/assets/posts/dynamic-knowledge-urls/product-identifier-inputvar.png){: .shadow w="503" h="1306"}
+   ![Product Identifier input variable configuration](/assets/posts/dynamic-knowledge-urls/product-identifier-inputvar.png){: .shadow w="300" h="780"}
    _Configuring topic input to capture product name_
 
 3. Configure Product Mapping Table
@@ -98,7 +98,7 @@ I'm then going to set the GlobalProductURL variable by using a couple of great, 
 
    The PowerFX for the table I used is as follows:
 
-   ```powerfx
+   ```javascript
    Table(
        { product: "Copilot",    Path: "microsoft-365-copilot" },
        { product: "Excel",      Path: "microsoft-365" },
@@ -116,7 +116,7 @@ I'm then going to set the GlobalProductURL variable by using a couple of great, 
 
    Add another Set Variable Value node and create a new variable called GlobalProductURL. Set this to be a string type and set the usage setting to Global. This will allow the variable to be used outside of the topic scope. In the To value open the PowerFX editor and use the following PowerFX function to perform a lookup into the table based on the value of the Product input variable "Topic.Product".
 
-   ```powerfx
+   ```javascript
    LookUp(Topic.ProductTable, product = Topic.Product, Path)
    ```
 
@@ -125,12 +125,12 @@ I'm then going to set the GlobalProductURL variable by using a couple of great, 
 
    Once configured the end to end topic will look like this:
 
-   ![Product Identifier Topic](/assets/posts/dynamic-knowledge-urls/product-identifier-topic.png){: .shadow w="549" h="1432"}
+   ![Product Identifier Topic](/assets/posts/dynamic-knowledge-urls/product-identifier-topic.png){: .shadow w="300" h="783"}
    _End to end view of the configured Product Identifier Topic_
 
 5. Configure the Website Knowledge Source to use the GlobalProductURL Variable
 
-   Once this topic is configured and we have our GlobalProductURL variable created, we need to go create our knowledge source entry. From Knowledge we will choose public website, then enter in our knowledge URL and then click the "{X}" to add in the GlobalProductURL variable we created in our topic.
+   Once this topic is configured and we have our GlobalProductURL variable created, we need to go create our knowledge source. From Knowledge we will choose public website, then enter in our knowledge URL and then click the "{X}" to add in the GlobalProductURL variable we created in our topic.
 
    ![Creating knowledge source with variable](/assets/posts/dynamic-knowledge-urls/knowledge-source-setup.png){: .shadow w="700" h="400"}
    _Setting up the knowledge source with the variable_
@@ -170,10 +170,10 @@ You may have a non-prod version of your website knowledge you use for developmen
 
 To do this you will first need to create an environment variable. Environment variables can be created from the solutions area in Copilot Studio.
 
-1. In the left hand nav of Copilot Studio click the ellipse
+1. In the left-hand nav of Copilot Studio click the ellipsis
 2. Select Solutions
 
-   ![Solutions menu](/assets/posts/dynamic-knowledge-urls/solutions-menu.png){: .shadow w="329" h="518"}
+   ![Solutions menu](/assets/posts/dynamic-knowledge-urls/solutions-menu.png){: .shadow w="250" h="393"}
    _Accessing Solutions in Copilot Studio_
 
 3. Open the solution your agent is in. Please try and avoid using the default solution for your agents.
@@ -183,9 +183,9 @@ To do this you will first need to create an environment variable. Environment va
 ![Creating environment variable](/assets/posts/dynamic-knowledge-urls/create-env-var.png){: .shadow w="700" h="400"}
 _Creating a new environment variable_
 
-6. In the New environment variable fly out, configure it for your website. Use Text as the data type. I set my default to the Microsoft US website as a fallback. Once the solution is deployed in your target environment you can update it to the correct value for the environment you are in.
+6. In the New environment variable flyout, configure it for your website. Use Text as the data type. I set my default to the Microsoft US website as a fallback. Once the solution is deployed in your target environment you can update it to the correct value for the environment you are in.
 
-![Environment variable configuration](/assets/posts/dynamic-knowledge-urls/env-var-config.png){: .shadow w="267" h="626"}
+![Environment variable configuration](/assets/posts/dynamic-knowledge-urls/env-var-config.png){: .shadow w="200" h="469"}
 _Creating the environment variable_
 
 7. You can then use this variable when adding a public website knowledge source.
