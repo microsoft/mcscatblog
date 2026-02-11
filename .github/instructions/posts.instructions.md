@@ -84,6 +84,7 @@ code here
 Options:
 - `{: file="path/to/file" }` - Show filename
 - `{: .nolineno }` - Hide line numbers
+- For PowerFX code, use `javascript` as the language identifier since Rouge does not have a PowerFX lexer
 
 ### File Paths
 ```markdown
