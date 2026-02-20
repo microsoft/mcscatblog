@@ -63,7 +63,7 @@ To solve both problems, we extended the adapter that already ships with the SDK.
 
 The adapter is open source and available at [github.com/adilei/copilot-webchat-adapter](https://github.com/adilei/copilot-webchat-adapter).
 
-> **Heads up:** This is an experimental, community-driven adapter for learning and prototyping. It's not officially supported by Microsoft and not intended for production use. Use at your own risk.
+> **Heads up:** This adapter is open source and provided as-is. It's not supported by Microsoft. If you use it, you own the code.
 {: .prompt-warning }
 
 Here's the architecture:
