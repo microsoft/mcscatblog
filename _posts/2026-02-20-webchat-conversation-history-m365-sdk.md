@@ -63,7 +63,7 @@ To solve both problems, we extended the adapter that already ships with the SDK.
 
 The adapter is open source and available at [github.com/adilei/copilot-webchat-adapter](https://github.com/adilei/copilot-webchat-adapter).
 
-> **Heads up:** This is an experimental, community-driven adapter for learning and prototyping. It's not officially supported by Microsoft and not intended for production use. Use at your own risk.
+> **Heads up:** This adapter is open source and provided as-is. It's not supported by Microsoft. If you use it, you own the code.
 {: .prompt-warning }
 
 Here's the architecture:
@@ -194,7 +194,7 @@ Let's be transparent about what this doesn't solve:
 
 Ideally, the M365 Agents SDK would add a `getActivities()` API natively, making the storage workaround unnecessary. The adapter is designed with that future in mind: when the SDK adds history fetching, `getHistoryFromExternalStorage` becomes an optional override rather than the primary mechanism.
 
-Until then, this pattern works. Our customer shipped it, their employees are happily switching between domain specialist agents without losing their place, and nobody's staring at a blank chat window wondering where their conversation went.
+Until then, this pattern works.
 
 Have you run into this gap yourself? Are you using the M365 Agents SDK with WebChat, or still on Direct Line? I'd love to hear about your experience in the comments.
 
