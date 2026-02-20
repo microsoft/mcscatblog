@@ -43,7 +43,17 @@ Your guide to Microsoft Copilot Studio documentation, training, tools, and best 
 
 ## Development Resources
 
+<<<<<<< Updated upstream
 ### Tools
+=======
+| Resource | Description |
+|:---------|:------------|
+| [CAT AI Webinars](https://microsoft.github.io/powercat/programs/ai-webinar.html) | Interactive virtual sessions for adopting Copilot and agents |
+| [Architecture Boot Camps](https://microsoft.github.io/powercat/programs/architecture-bootcamp.html) | Intensive workshops for enterprise-scale solutions |
+| [Kickstarter Workshops](https://kickstarter.powerappsportals.com/Available-Events/?workshopid=CS) | Define AI vision and identify high-value agents |
+| [Power Up Program](https://powerup.microsoft.com/) | Free cohort-based learning with peer collaboration |
+| [Copilot Studio Agent Build-A-Thon](https://microsoft.github.io/powercat/programs/agent-hackathon.html) | Virtual and In-person hackathons for building Agents with Copilot Studio |
+>>>>>>> Stashed changes
 
 - [Microsoft CAT Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) - Comprehensive toolkit for developing, governing, and testing custom agents with batch testing, compliance tools, and prompt optimization - [download here](https://marketplace.microsoft.com/en-us/product/dynamics-365/microsoftpowercatarch.copilotstudiokit2?tab=Overview)
 - [Copilot Studio VS Code Extension learn article](https://learn.microsoft.com/en-us/microsoft-copilot-studio/visual-studio-code-extension-install-configure) -- [download here](https://marketplace.visualstudio.com/items?itemName=ms-CopilotStudio.vscode-copilotstudio) Edit Copilot Studio agents directly in VS Code with version control and diff capabilities
@@ -68,4 +78,21 @@ Your guide to Microsoft Copilot Studio documentation, training, tools, and best 
 
 ---
 
+<<<<<<< Updated upstream
 Looking for something specific? Search our blog or check out our [categories](/mcscatblog/categories/) and [tags](/mcscatblog/tags/) for technical deep-dives.
+=======
+## <i class="fas fa-users"></i> Community & Support
+
+> Connect with other makers and learn from real implementations.
+{: .prompt-info }
+
+| Resource | Description |
+|:---------|:------------|
+| [Copilot Studio Community](https://community.powerplatform.com/forums/thread/?groupid=db8f53c2-767d-47d6-a1ae-fe4c828a6553) | Official forums and discussions |
+| [r/copilotstudio](https://www.reddit.com/r/copilotstudio/) | Community discussions, tips, and shared experiences |
+| [Agent Transformation Stories](https://adoption.microsoft.com/en-us/ai-agents/transformation-stories/) | Real-world implementations across industries |
+
+---
+
+Looking for something specific? Search our blog or check out our [categories]({% link _tabs/categories.md %}) and [tags]({% link _tabs/tags.md %}) for technical deep-dives.
+>>>>>>> Stashed changes
