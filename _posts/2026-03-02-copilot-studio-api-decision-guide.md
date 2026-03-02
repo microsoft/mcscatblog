@@ -393,12 +393,7 @@ The good news is that the branching structure actually works here. Three or four
 ## No API Needed (Publish to Teams/M365)
 {: #no-api-needed-publish-to-teams}
 
-If your agent only needs to reach employees who already live in Microsoft 365, you might not need an API at all. Copilot Studio [publishes directly to Teams](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams) as a first-class channel. Open your agent in the portal, go to **Settings > Channels > Microsoft Teams**, and hit **Publish**. Your employees find the agent in the Teams app store, or you can pre-install it via Teams admin policies.
-
-No token endpoints, no JavaScript, no infrastructure to maintain. The agent runs inside Teams with all the identity and security that comes for free in that environment.
-
-> You'd be surprised how many "Which API should I use?" conversations end with "You don't need one." If your employees already live in Teams, this is the right default. For tips on making the deployment smooth, check out [Best Practices for Deploying Copilot Studio Agents in Microsoft Teams]({% post_url 2025-11-11-copilot-studio-teams-deployment-ux %}).
-{: .prompt-tip }
+If your employees already live in Teams, this is a no-brainer. Copilot Studio [publishes directly to Teams](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams) as a first-class channel. No token endpoints, no JavaScript, no infrastructure to maintain. And choosing Teams now doesn't lock you in. You can always add a web-based experience later using any of the patterns below. For deployment tips, see [Best Practices for Deploying Copilot Studio Agents in Microsoft Teams]({% post_url 2025-11-11-copilot-studio-teams-deployment-ux %}), and for why publishing to Teams and M365 doesn't limit you later on, see [You Probably Don't Need Manual Auth in Copilot Studio]({% post_url 2025-11-18-you-dont-need-manual-auth %}).
 
 **When to use this:** Internal knowledge bases, IT help desks, HR FAQ agents, or any scenario where your users already spend their day in Teams/M365.
 
@@ -423,7 +418,7 @@ That's it. Microsoft hosts the WebChat instance, handles the token lifecycle, an
 
 The trade-off? When authentication is configured, the Microsoft-hosted embed uses **manual authentication**, which in this implementation means a magic validation code that users copy-paste from a browser tab. Manual auth itself doesn't mandate the magic code (that's just how the hosted WebChat implements it), but the result is the same: there's no way to get SSO through the embed. If your users are already signed into your site and you want seamless authentication, you'll need to self-host WebChat instead.
 
-> **Heads up (March 2026):** The [official docs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-integrate-web-or-native-app-m365-agents-sdk?tabs=dotnet#use-the-default-web-chat-embed-code-without-developmentcode) currently state the embed code is only available when authentication is set to "No authentication." That's incorrect. The embed code is available regardless of your auth setting, including agents configured with "Authenticate with Microsoft." We're working on getting the docs updated.
+> **Heads up (March 2026):** The [official docs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-integrate-web-or-native-app-m365-agents-sdk?tabs=dotnet#use-the-default-web-chat-embed-code-without-developmentcode) currently state the embed code is only available when authentication is set to "No authentication." That's not quite right. The embed code is available for both "No authentication" and "Manual authentication," but not for agents configured with "Authenticate with Microsoft." We're working on getting the docs updated.
 {: .prompt-info }
 
 **Would you like to see an SSO-enabled embed experience?** If a no-code embed with seamless Entra ID sign-in would be useful for your scenario, let us know in the comments.
@@ -472,7 +467,7 @@ Copilot Studio exposes two APIs for connecting WebChat to your agent: **Direct L
 For employee-facing scenarios, we recommend the **M365 Agents SDK client**. Here's why:
 
 - **"Authenticate with Microsoft"**: The SDK client requires this auth mode, which is exactly what you want for B2E. It gives you seamless Entra ID SSO (no magic codes), simpler configuration (one app registration), and unlocks [Tenant Graph Grounding](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-copilot-studio#tenant-graph-grounding) for higher quality responses grounded in SharePoint and Graph Connectors. For why this beats manual auth in almost every employee scenario, read [You Probably Don't Need Manual Auth in Copilot Studio]({% post_url 2025-11-18-you-dont-need-manual-auth %}).
-- **Streaming**: The SDK client supports streaming responses. Direct Line does support streaming for code-first agents built with the M365 Agents SDK, but not for Copilot Studio agents.
+- **Streaming**: The SDK client supports streaming responses. Direct Line does support streaming for code-first agents built with the M365 Agents SDK, but not for Copilot Studio agents. Yes, we see the irony.
 
 Direct Line is still a valid choice if you specifically need manual authentication (e.g., a non-Entra OAuth provider), but that's a rare requirement for internal agents.
 
@@ -509,7 +504,7 @@ The trade-off: WebChat handles adaptive cards, suggested actions, file attachmen
 ## WebChat + Direct Line (Customer-Facing)
 {: #webchat--direct-line-customer-facing}
 
-The most straightforward way to embed a chat experience in your customer-facing website or web app. The code is nearly identical to the employee version. What changes is the framing: branding, token security, and if your customers authenticate, you can wire up [SSO with non-Entra identity providers](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-sso-3p) like Google, Okta, or Auth0.
+The most straightforward way to embed a chat experience in your customer-facing website or web app. The code is nearly identical to the employee version. What changes is the context: your customers may not authenticate at all, or they authenticate with non-Entra providers. Direct Line supports both. For authenticated customers, you can wire up [SSO with identity providers](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-sso-3p) like Google, Okta, or Auth0.
 
 ```html
 <div id="webchat"></div>
@@ -538,10 +533,6 @@ The most straightforward way to embed a chat experience in your customer-facing 
     });
 </script>
 ```
-
-Pay attention to token security. Your token endpoint should **never** expose the Direct Line secret to the browser. The endpoint exchanges the secret server-side and returns a short-lived token. Rate-limit the endpoint and consider adding origin checks.
-
-You can inject a [mocked welcome message]({% post_url 2026-01-11-mocked-webchat-welcome-message %}) to greet visitors before any topics trigger.
 
 > **Want it even simpler?** [Embedding WebChat Without Writing a Single Line of JavaScript]({% post_url 2026-01-26-webchat-embed-zero-javascript %}) covers an open-source library that turns this already straightforward setup into a declarative HTML snippet.
 {: .prompt-tip }
@@ -625,7 +616,7 @@ for await (const reply of client.sendActivityStreaming(activity)) {
 
 If you need to support unauthenticated customers or can't use the SDK client, you can talk to Direct Line directly over HTTP. For a walkthrough of this approach, see [Triggering Copilot Studio Agents with HTTP Calls]({% post_url 2025-09-25-triggering-copilot-studio-http %}). Be aware of two things:
 
-1. **Intercepting the stream is painful.** Direct Line delivers responses via WebSocket (real-time push) or HTTP polling (1-10 seconds of latency per cycle). If your goal is to sanitize PII or transform content before it reaches the user, you're building a real-time message router on top of a persistent WebSocket connection. With polling, the architecture is simpler but the latency adds up fast.
+1. **Intercepting the stream is painful.** Direct Line delivers responses via WebSocket (real-time push) or HTTP polling (1-10 seconds of latency per cycle). If your goal is to sanitize PII or transform content before it reaches the user, you're building a real-time message router on top of a persistent WebSocket connection (which you'd want to avoid). With polling, the architecture is simpler but the latency adds up fast.
 2. **There's no "last message" concept.** Direct Line models a conversation where either party can send messages at any time. There's no built-in signal that says "the agent is done responding." Some customers work around this by embedding a "last message" signal in `channelData`, but that's a convention you have to build and maintain yourself.
 
 **When to use this:** When you need a server-side layer between your users and the agent for sanitization, compliance, or custom rendering. Use the SDK client if your users authenticate with Entra ID, or Direct Line over HTTP for anonymous and non-Entra scenarios.
