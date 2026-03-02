@@ -576,7 +576,7 @@ The [Direct Line JS sample](https://github.com/microsoft/CopilotStudioSamples/tr
 
 If you're building a native mobile app, Microsoft provides the [Agents Client SDK](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-communicate-with-agent-from-native-app) for [Android](https://github.com/microsoft/AgentsClientSDK.Android), [iOS](https://github.com/microsoft/AgentsClientSDK.iOS), and [Windows](https://github.com/microsoft/AgentsClientSDK.Windows). The SDK handles the connection to your agent under the hood. You call `sendMessage()`, observe responses via platform-native patterns (Kotlin `StateFlow`, SwiftUI `@ObservedObject`, C# events), and get Adaptive Cards rendering and optional speech support built in. On iOS, there's even a drop-in `PluggableChatComponent` that gives you a themed chat UI out of the box.
 
-> **Private preview, no-auth only (March 2026).** The SDK currently requires your agent to be configured with "No Authentication." The config schema has fields for Entra ID auth, but it's not functional yet. Plan accordingly.
+> **Preview (March 2026).** The SDK currently requires your agent to be configured with "No Authentication." The config schema has fields for Entra ID auth, but it's not functional yet. Plan accordingly.
 {: .prompt-warning }
 
 **When to use this:** Customer-facing native apps (Android, iOS, Windows) where a web-based chat widget isn't the right fit and you don't need authenticated users.
