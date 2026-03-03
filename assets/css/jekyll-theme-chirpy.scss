@@ -775,6 +775,15 @@
       content: "\f56b" !important; /* Feather-alt icon */
     }
   }
+
+  /* Resources icon - Green (compass) */
+  #sidebar .nav-link[href*="resources"] i {
+    color: #E8627C !important; /* Coral */
+
+    &::before {
+      content: "\f14e" !important; /* Compass icon */
+    }
+  }
   
   /* Hover state - make icons slightly brighter */
   #sidebar .nav-item .nav-link:hover {
@@ -825,6 +834,11 @@
     #sidebar .nav-link[href*="authors"] i {
       color: #00D4E0 !important;
     }
+
+    /* Resources - Brighter coral */
+    #sidebar .nav-link[href*="resources"] i {
+      color: #FF7B93 !important;
+    }
   }
 
   /* System dark mode - colorful icons */
@@ -860,6 +874,11 @@
       /* Authors - Brighter teal */
       #sidebar .nav-link[href*="authors"] i {
         color: #00D4E0 !important;
+      }
+
+      /* Resources - Brighter coral */
+      #sidebar .nav-link[href*="resources"] i {
+        color: #FF7B93 !important;
       }
     }
   }
@@ -924,6 +943,11 @@
   /* Authors icon - feather */
   #sidebar .nav-link[href*="authors"] i::before {
     content: "\f56b" !important; /* Feather-alt icon */
+  }
+
+  /* Resources icon - compass */
+  #sidebar .nav-link[href*="resources"] i::before {
+    content: "\f14e" !important; /* Compass icon */
   }
 
   /* Bottom bar icons */
