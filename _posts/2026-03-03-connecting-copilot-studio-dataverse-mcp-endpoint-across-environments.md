@@ -1,16 +1,17 @@
 ---
 layout: post
 title: "Connecting Copilot Studio to a Dataverse MCP Endpoint Across Environments: A Practical Guide"
-date: 2026-03-03 23:59:00 +0000
-categories: [copilot-studio, dataverse, mcp]
+date: 2026-03-03 00:00:00 +0000
+categories: [copilot-studio, mcp]
 tags:
   [
+    dataverse,
     oauth,
     custom-connector,
-    power-platform,
+    authentication,
     entra-id,
     cross-environment,
-    mcp-integration,
+    app-registration,
   ]
 description: "How to securely connect a Copilot Studio agent in one environment to a Dataverse MCP endpoint in another environment using OAuth and a custom connector."
 author: rcalejo
@@ -20,30 +21,27 @@ image:
   no_bg: true
 ---
 
-The Model Context Protocol (MCP) is transforming how AI agents connect to enterprise data and tools. With Microsoft Copilot Studio now supporting MCP servers, makers can run real-time queries against Dataverse and other systems, unlocking richer and more contextual agent behavior.
+Many enterprises centralize their master data in a single Dataverse environment: customer records, product catalogs, reference tables. But the agents that need that data often live somewhere else. Your Sales team builds agents in their own environment, HR has theirs, and Operations has yet another. When you add a Dataverse MCP tool in Copilot Studio, it connects to the environment you select right there in the studio, and that's it.
 
-However, there is an important architectural limitation to understand before planning multi-environment scenarios:
+So what happens when your agent is in one environment but the data it needs lives in another?
 
-> The out-of-the-box Dataverse MCP tool in Copilot Studio only connects to the Dataverse environment you select inside Copilot Studio. It does not provide a built-in way to connect to Dataverse MCP servers in other environments.
+> The built-in Dataverse MCP tool in Copilot Studio only connects to the Dataverse environment you select inside Copilot Studio. It does not provide a way to connect to Dataverse MCP servers in other environments.
+{: .prompt-info }
 
-If your goal is to have a Copilot Studio agent in Environment A interact with an MCP server hosted in Environment B, you must handle this through custom authentication and connector configuration, not through the built-in Dataverse MCP tool.
+The good news is that you can bridge that gap with a [custom connector]({% post_url 2025-12-05-obo-for-custom-connectors %}) and OAuth. This post walks through the setup step by step.
 
-This post walks through how to make that work.
+## Integration Scenario
 
-## 🚀 Integration Scenario
+Imagine you have:
 
-You have:
+- A **Central CRM** environment with your organization's master customer and product data, with a Dataverse MCP server enabled
+- A **Sales** environment where your team builds Copilot Studio agents
 
-- Copilot Studio agent in environment **Developer**
-- An MCP server endpoint in environment **Production**
-- OAuth 2.0 securing the MCP server
-- No Dynamic Client Registration (DCR) available in Dataverse / Entra ID
+Your goal is to let the Sales agent query Dataverse tables in the Central CRM environment, securely, without moving data or duplicating environments. Since the Dataverse MCP server is secured with OAuth 2.0, you need to handle authentication across the environment boundary.
 
-Your goal is to authenticate your Copilot agent and allow it to call the remote MCP server securely.
+## Step 1 — Register an OAuth app in the remote environment
 
-## ✅ Step 1 — Register an OAuth app in the remote environment
-
-Since Dataverse and Entra ID do not support dynamic registration for this flow, create an OAuth client manually:
+Dataverse and Entra ID do not support Dynamic Client Registration (DCR), so you need to create an OAuth client manually in the tenant that owns the Central CRM environment:
 
 1. Go to **Microsoft Entra ID** → **App registrations**.
 2. Select **New registration**.
@@ -52,27 +50,29 @@ Since Dataverse and Entra ID do not support dynamic registration for this flow, 
 5. Configure required API permissions and grant admin consent.
 6. Record `client_id`, `tenant_id`, and `client_secret` (if confidential client).
 
-![Step 1 screenshot](/assets/posts/dataverse-mcp-cross-environments/inline-01.png){: .shadow }
+![Entra ID API permissions showing Dynamics CRM and Microsoft Graph delegated permissions](/assets/posts/dataverse-mcp-cross-environments/inline-03.png){: .shadow }
+_API permissions configured on the app registration: Dynamics CRM and Microsoft Graph delegated access_
 
-This app represents the identity your Copilot agent will use in the remote environment.
+This app represents the identity your Sales agent will use when calling into the Central CRM environment.
 
-## ✅ Step 2 — Add the app registration to Dataverse as an Application User
+## Step 2 — Add the app registration to Dataverse as an Application User
 
-Once the OAuth app exists, a System Administrator in the target Dataverse environment must allow it:
+Once the OAuth app exists, a System Administrator in the Central CRM environment must allow it:
 
-1. In Power Apps, switch to the **Production** environment.
-2. Open **Advanced Settings** (or PPAC equivalent).
+1. In Power Apps, switch to the **Central CRM** environment.
+2. Open **Advanced Settings** (or the Power Platform Admin Center equivalent).
 3. Go to **Security** → **Users + Permissions** → **Application Users**.
 4. Select **+ New App User**.
 5. Choose the app registration created in Entra ID.
 6. Assign appropriate security roles (minimum required privileges, or System Administrator temporarily for validation).
 7. Save the App User.
 
-![Step 2 screenshot](/assets/posts/dataverse-mcp-cross-environments/inline-02.png){: .shadow }
+![Allowed MCP Client record in Dataverse with Application Id and enabled status](/assets/posts/dataverse-mcp-cross-environments/inline-04.png){: .shadow }
+_The Allowed MCP Client record in the target Dataverse environment_
 
-At this point, the production Dataverse environment trusts the OAuth client identity.
+At this point, the Central CRM environment trusts the OAuth client identity.
 
-## ✅ Step 3 — Create the custom connector by importing from GitHub
+## Step 3 — Create the custom connector by importing from GitHub
 
 Instead of building from scratch, import the MCP connector template.
 
@@ -86,17 +86,23 @@ In Power Apps (`https://make.powerapps.com`):
    - Connector: `MCP-Streamable-HTTP`
 5. Confirm import and continue.
 
-![Step 3 screenshot A](/assets/posts/dataverse-mcp-cross-environments/inline-03.png){: .shadow }
-![Step 3 screenshot B](/assets/posts/dataverse-mcp-cross-environments/inline-04.png){: .shadow }
-![Step 3 screenshot C](/assets/posts/dataverse-mcp-cross-environments/inline-05.png){: .shadow }
+![Import from GitHub dialog showing Custom connector type, dev branch, and MCP-Streamable-HTTP connector](/assets/posts/dataverse-mcp-cross-environments/inline-02.png){: .shadow }
+_Importing the MCP-Streamable-HTTP connector from GitHub_
+
+![Custom connector General Information tab with host and description](/assets/posts/dataverse-mcp-cross-environments/inline-06.png){: .shadow }
+_General Information tab pointing to the target Dataverse environment_
+
+![Custom connector Security tab with OAuth 2.0 client credentials configuration](/assets/posts/dataverse-mcp-cross-environments/inline-07.png){: .shadow }
+_Security tab configured with OAuth 2.0 credentials for the remote environment_
 
 In the `InvokeServer` action, update the target environment URL with `api/mcp`. This points to the Dataverse MCP server in the target environment.
 
-![Step 3 screenshot D](/assets/posts/dataverse-mcp-cross-environments/inline-06.png){: .shadow }
+![InvokeServer action Request URL pointing to the Dataverse MCP endpoint](/assets/posts/dataverse-mcp-cross-environments/inline-05.png){: .shadow }
+_The InvokeServer action URL updated to point to the remote Dataverse MCP endpoint_
 
 Create the connection and save the custom connector.
 
-## ✅ Step 4 — Add the MCP custom connector to your agent in Copilot Studio
+## Step 4 — Add the MCP custom connector to your agent in Copilot Studio
 
 With the connector imported, attach it to your agent:
 
@@ -108,37 +114,34 @@ With the connector imported, attach it to your agent:
 6. Save.
 7. Test an MCP tool operation such as `list_tables`.
 
-![Step 4 screenshot A](/assets/posts/dataverse-mcp-cross-environments/inline-07.png){: .shadow }
+![MCP tool configuration in Copilot Studio showing Dataverse MCP in another environment](/assets/posts/dataverse-mcp-cross-environments/inline-09.png){: .shadow }
+_The MCP tool added to the agent in Copilot Studio, showing available tools like list\_tables_
 
-### 📍 Why the first test should fail
+### Why the first test should fail
 
 Immediately after adding the connector, the test can fail and that is expected:
 
-- The Copilot Studio client identity has not yet been authorized in the Production environment for this connector.
-- The Production environment correctly blocks unauthorized MCP calls.
+- The Copilot Studio client identity has not yet been authorized in the Central CRM environment for this connector.
+- The Central CRM environment correctly blocks unauthorized MCP calls.
 
-Then go to PPAC, select the Production environment, and authorize the required client ID under features/authorized access (using your own publisher prefix for unique names).
+Then go to the Power Platform Admin Center (PPAC), select the Central CRM environment, and authorize the required client ID under features/authorized access (using your own publisher prefix for unique names).
 
-![Step 4 screenshot B](/assets/posts/dataverse-mcp-cross-environments/inline-08.png){: .shadow }
-![Step 4 screenshot C](/assets/posts/dataverse-mcp-cross-environments/inline-09.png){: .shadow }
+![Power Platform Admin Center Dataverse MCP settings with arrow pointing to Advanced Settings](/assets/posts/dataverse-mcp-cross-environments/inline-08.png){: .shadow }
+_PPAC Dataverse MCP settings: enable MCP client access and navigate to Advanced Settings to add allowed clients_
 
 After authorization, tests should succeed across environments.
 
-## 🎯 What you achieve
+![Agent successfully querying Dataverse tables across environments](/assets/posts/dataverse-mcp-cross-environments/inline-01.png){: .shadow }
+_The agent successfully querying Dataverse tables in the remote environment_
+
+## What you achieve
 
 By following these steps, you enable:
 
-- Secure OAuth 2.0 authentication
-- Cross-environment MCP communication
-- Copilot Studio as an MCP client
-- Enterprise governance over API access
+- Secure OAuth 2.0 authentication across environment boundaries
+- Cross-environment MCP communication via a custom connector
+- Copilot Studio acting as an MCP client against any Dataverse environment
+- Enterprise governance over which identities can access which data
 
-## 💬 Final thoughts
+Have you tried connecting Copilot Studio to MCP servers across environments or tenants? What challenges did you run into? Let us know in the comments.
 
-As MCP adoption grows, more servers will likely add automatic onboarding patterns. Today, for enterprise-grade systems like Dataverse, Power Platform, and Entra ID, manual registration remains a practical and secure approach when paired with Copilot Studio custom connectors.
-
-If you are experimenting with MCP across environments or tenants, this approach keeps the architecture clean, secure, and production-ready.
-
----
-
-Source article: [Connecting Copilot Studio to a Dataverse MCP Endpoint Across Environments: A Practical Guide](https://www.linkedin.com/pulse/connecting-copilot-studio-dataverse-mcp-endpoint-across-calejo-oi6re)
