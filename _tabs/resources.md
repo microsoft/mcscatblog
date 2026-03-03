@@ -51,6 +51,7 @@ Your guide to Microsoft Copilot Studio documentation, training, tools, and best 
 | [Architecture Boot Camps](https://microsoft.github.io/powercat/programs/architecture-bootcamp.html) | Intensive workshops for enterprise-scale solutions |
 | [Kickstarter Workshops](https://kickstarter.powerappsportals.com/Available-Events/?workshopid=CS) | Define AI vision and identify high-value agents |
 | [Power Up Program](https://powerup.microsoft.com/) | Free cohort-based learning with peer collaboration |
+| [Copilot Studio Agent Build-A-Thon](https://microsoft.github.io/powercat/programs/agent-hackathon.html) | Virtual and in-person hackathons for building agents with Copilot Studio |
 
 ### YouTube Channels
 
@@ -92,7 +93,8 @@ Your guide to Microsoft Copilot Studio documentation, training, tools, and best 
 |:---------|:------------|
 | [Copilot Studio Community](https://community.powerplatform.com/forums/thread/?groupid=db8f53c2-767d-47d6-a1ae-fe4c828a6553) | Official forums and discussions |
 | [r/copilotstudio](https://www.reddit.com/r/copilotstudio/) | Community discussions, tips, and shared experiences |
-| [Customer Stories](https://customers.microsoft.com/en-us/search?sq=%22copilot%20studio%22&ff=&p=0&so=story_publish_date%20desc) | Real-world implementations across industries |
+| [Agent Transformation Stories](https://adoption.microsoft.com/en-us/ai-agents/transformation-stories/) | Real-world implementations across industries |
+| [Customer Stories](https://customers.microsoft.com/en-us/search?sq=%22copilot%20studio%22&ff=&p=0&so=story_publish_date%20desc) | Customer implementations featuring Copilot Studio |
 
 ---
 
