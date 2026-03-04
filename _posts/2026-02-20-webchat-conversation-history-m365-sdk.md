@@ -14,6 +14,9 @@ mermaid: true
 published: true
 ---
 
+> **Update (March 2026):** Since this post was published, the official M365 Agents SDK adapter now supports passing a `conversationId` to resume conversations. Muahahah, we got it in. However, the underlying API still doesn't support fetching past activities or listing conversations for a given conversation ID, so the activity storage pattern described here remains necessary.
+{: .prompt-info }
+
 This one comes straight from the field. Teams and Microsoft 365 are the de-facto surfaces for deploying Copilot Studio agents, and for good reason. But not every organization wants to stop there. Some want to imagine their own portal, their own UX, their own branding. They want to control the full experience.
 
 A customer we've been working with is doing exactly that. They're building a custom employee portal where every department has its own AI-powered specialist. HR policies, IT support, finance approvals, legal guidance, all accessible from a single app, each agent grounded on its own domain-specific knowledge.
@@ -47,11 +50,11 @@ What's up, Microsoft? (Yes, I realize I'm saying this to myself. We're on the sa
 
 When we sat down to figure this out, we realized it was actually two distinct problems:
 
-### Problem 1: Conversation Resumption
+### Problem 1: Conversation Resumption ✅
 
-The official `CopilotStudioWebChat.createConnection()` method in the SDK doesn't accept a `conversationId` parameter. Every time you create a connection, it starts a brand new conversation. There's no way to say "connect me back to conversation `abc-123`."
+~~The official `CopilotStudioWebChat.createConnection()` method in the SDK doesn't accept a `conversationId` parameter. Every time you create a connection, it starts a brand new conversation. There's no way to say "connect me back to conversation `abc-123`."~~
 
-The underlying SDK client *does* support passing a `conversationId`, so the capability exists at the protocol level. The WebChat adapter just doesn't expose it. As a bonus, our custom adapter also lets you control whether the greeting fires, since not every app wants the agent to send the same welcome message each time a new conversation starts.
+**This one's been fixed.** The official adapter now accepts a `conversationId` parameter. Muahahah. When this post was originally written, the underlying SDK client supported passing a conversation ID, but the WebChat adapter didn't expose it. Now it does. Our custom adapter also lets you control whether the greeting fires, since not every app wants the agent to send the same welcome message each time a new conversation starts.
 
 ### Problem 2: Activity History
 
@@ -184,17 +187,17 @@ Let's be transparent about what this doesn't solve:
 
 ## Key Takeaways
 
-- The M365 Agents SDK enables streaming and tenant Graph grounding for Copilot Studio agents, but **lacks an API to fetch past conversation activities**.
+- The M365 Agents SDK enables streaming and tenant Graph grounding for Copilot Studio agents. The official adapter now supports **conversation resumption** via `conversationId`, but still **lacks an API to fetch past conversation activities**.
 - This means WebChat loses all visible conversation history on page reload, even though the agent retains context on the server.
-- The [copilot-webchat-adapter](https://github.com/adilei/copilot-webchat-adapter) solves this by acting as a **DirectLine-compatible shim** that adds conversation resumption and pluggable activity storage.
+- The [copilot-webchat-adapter](https://github.com/adilei/copilot-webchat-adapter) fills the remaining gap by acting as a **DirectLine-compatible shim** with pluggable activity storage.
 - Activities are saved via a **WebChat Redux middleware** and replayed on reconnect through the adapter's `getHistoryFromExternalStorage` callback.
 - The `ActivityStore` interface is abstract, so you can swap localStorage for any persistence layer that fits your requirements.
 
 ## What's Next
 
-Ideally, the M365 Agents SDK would add a `getActivities()` API natively, making the storage workaround unnecessary. The adapter is designed with that future in mind: when the SDK adds history fetching, `getHistoryFromExternalStorage` becomes an optional override rather than the primary mechanism.
+We're halfway there. The official adapter now supports conversation resumption (Problem 1), which is great. But the underlying API still doesn't offer a `getActivities()` endpoint or any way to list past conversations for a user. Until that lands, the activity storage pattern described here remains the way to give users visible conversation history on reconnect.
 
-Until then, this pattern works.
+The adapter is designed with that future in mind: when the SDK adds history fetching, `getHistoryFromExternalStorage` becomes an optional override rather than the primary mechanism.
 
 Have you run into this gap yourself? Are you using the M365 Agents SDK with WebChat, or still on Direct Line? I'd love to hear about your experience in the comments.
 
