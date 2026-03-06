@@ -17,11 +17,9 @@ If you've been building or managing Copilot Studio agents, you've probably alrea
 
 ## A Quick Refresher
 
-Copilot Studio Kit is a free, open-source Power Platform solution built by Microsoft's **Copilot Acceleration Team (CAT)**. As the PM for the kit, I get to see firsthand how our engineering team turns real customer challenges into shipping features.
+Copilot Studio Kit is a free, open-source Power Platform solution built by Microsoft's **Copilot Acceleration Team (CAT)**. Our engineering team within CAT focuses on building tools that complement Copilot Studio, filling the gaps that emerge when organizations move from building their first agent to running dozens in production.
 
-Copilot Studio is a powerful product, but organizations adopting it at scale quickly run into operational needs that go beyond what any single product can address out of the box. Testing across dozens of agents, enforcing governance policies tenant-wide, tracking long-term conversation trends: these are the kinds of challenges that emerge once you move past building your first agent and start running them in production.
-
-Because the kit is open source, we can iterate fast. When our engineers work with customers and spot a gap, we can prototype, validate, and ship a solution in weeks rather than months, without waiting for full product release cycles.
+Testing across multiple agents, enforcing governance policies tenant-wide, tracking long-term conversation trends: these are operational needs that go beyond what any single product can address out of the box. Because the kit is open source, we can ship at a pace that keeps up with those needs. When we spot a gap working with customers, we can prototype, validate, and deliver a solution in weeks rather than months.
 
 The kit complements Copilot Studio by helping organizations:
 
@@ -73,7 +71,7 @@ For organizations with strict branding requirements, admins can even maintain a 
 
 ### Adaptive Card Gallery
 
-Adaptive cards are powerful. They're also a pain to build from scratch every single time. (If you've ever [generated adaptive cards dynamically]({% post_url 2026-01-02-adaptive-card-generation %}), you know the JSON can get unwieldy fast.)
+Adaptive cards are powerful. They're also a pain to build from scratch every single time.
 
 The **Adaptive Card Gallery** ships with production-ready card templates tailored for actual scenarios you'll encounter (not just "Hello World" examples).
 
