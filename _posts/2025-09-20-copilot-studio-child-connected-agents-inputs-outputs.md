@@ -25,32 +25,11 @@ These parameters don't just guide the main agent's orchestrator, they also partl
 
 ## How to Define Inputs and Outputs
 
-**Note**: As of September 2025, inputs and outputs for child and connected agents can only be defined through YAML configuration. There is no UI-based designer available yet.
+### Child Agent
 
-### Connected Agent Example
+Inputs and outputs for child agents can be created directly through the Copilot Studio UI. No YAML editing required.
 
-```yaml
-kind: TaskDialog
-modelDisplayName: Mortgages Agent
-modelDescription: This agent helps customers with information about their mortgage accounts and products, answering common questions and carrying out common related transactions.
-action:
-  kind: InvokeConnectedAgentTaskAction
-  outputType:
-    properties:
-      MortgagePaymentDate:
-        displayName: PaymentDate
-        description: The payment date for the mortgage
-        type: String
-      Response:
-        displayName: AssignedTo
-        description: The agent's response
-        type: String
-  botSchemaName: cr30a_mortgagesAgent
-  historyType:
-    kind: ConversationHistory
-```
-
-### Child Agent Example
+Here's what the YAML looks like under the hood:
 
 ```yaml
 kind: AgentDialog
@@ -67,9 +46,9 @@ beginDialog:
 settings:
   instructions: |-
     If you are asked for the status of a ticket. Assume the following details.
-    
+
     Title is 'Test test'.
-    It is currently assigned to Adi Leibowitz. 
+    It is currently assigned to Adi Leibowitz.
     It is currently Active.
 
 inputType:
@@ -94,6 +73,69 @@ outputType:
       description: The title of the ticket
       type: String
 ```
+
+### Connected Agent
+
+Connected agents require configuration on **both sides**: the main agent that calls the connected agent, and the connected agent itself.
+
+#### Main agent side
+
+In your main agent, the connected agent is represented as a `TaskDialog`. Make sure that the `inputType` and `outputType` properties are defined inside the `action` section:
+
+```yaml
+kind: TaskDialog
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: expenseReportFileFullPath
+    description: Full file path, including SharePoint site URL, of an expense report file.
+
+modelDisplayName: Connected Agent
+modelDescription: Use this agent to process expense reports in a multi-agent scenario
+action:
+  kind: InvokeConnectedAgentTaskAction
+  inputType:
+    properties:
+      expenseReportFileFullPath:
+        displayName: expenseReportFileFullPath
+        isRequired: true
+        type: String
+  botSchemaName: gd_connectedAgent_QC906u
+  historyType:
+    kind: ConversationHistory
+```
+
+> Note that `inputType` and `outputType` go inside `action`, not at the root level of the `TaskDialog`. This is different from child agents, where they sit at the root level.
+{: .prompt-warning }
+
+#### Connected agent side
+
+On the connected agent itself, you need to set up a topic that receives the inputs when the agent is invoked by another agent. The key steps are:
+
+1. Make the variable **global**
+2. For inputs, tick **"External source can set the value"**
+3. For outputs, tick **"External source can receive the value"**
+4. Use the **OnRedirect** trigger, which fires when the agent is called by another agent
+
+Here's what the topic YAML looks like:
+
+```yaml
+kind: AdaptiveDialog
+modelDescription: Use this tool to initialize the agent when it's called through a different agent
+beginDialog:
+  kind: OnRedirect
+  id: main
+  actions:
+    - kind: SetVariable
+      id: setVariable_1nnsy7
+      variable: Global.expenseReportFileFullPath
+      value: "https://contoso.sharepoint.com/sites/Reports/Shared%20Documents/ExpenseReports/Expense_Report.xlsx"
+
+inputType: {}
+outputType: {}
+```
+
+> The `inputType: {}` and `outputType: {}` at the dialog level declare that this topic participates in the input/output contract. The actual variable mapping is handled through the global variable settings.
+{: .prompt-info }
 
 ---
 
