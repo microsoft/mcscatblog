@@ -53,6 +53,12 @@ The recommended approach is through the marketplace:
 /plugin install copilot-studio@skills-for-copilot-studio
 ```
 
+**VERY IMPORTANT!** After installation, make sure to enable auto-updates for the plugin in the plugin/marketplace settings. This way, you'll get all the latest improvements and support for new Copilot Studio features as we release them.
+
+In Claude Code, you can simply type `/plugin` and then use your arrow keys to navigate to the plugin to find "Skills for Copilot Studio". Once you find it, select it, and make sure to enable auto-updates.
+![How to set auto-update in Claude Code](/assets/posts/skills-for-copilot-studio/image1.png){: .shadow w="972" h="589" }
+_How to set auto-update in Claude Code_
+
 ---
 
 ## How does it work?
@@ -63,7 +69,7 @@ This first version of the plugin is not well suited for creating an agent from a
 ### Step 2: Clone the agent locally
 Once you have your agent created, we'll use the VS Code Extension for Copilot Studio to clone it into a local folder.
 
-![alt](/assets/posts/skills-for-copilot-studio/image1.png){: .shadow w="972" h="589" }
+![Screenshot of the VS Code Extension for MCS](/assets/posts/skills-for-copilot-studio/image1.png){: .shadow w="972" h="589" }
 _Screenshot of the VS Code Extension for MCS_
 
 Open VS Code, locate the extension in the left menu, and clone your agent in your folder of choice.
@@ -100,7 +106,7 @@ Open VS Code, locate the extension in the left menu, and push the changes to you
 
 I'll now tell you a real world story about this plugin. A few weeks ago, I was advising a system integrator working on a complex B2C implementation for a large multinational. Their customer has given them the below file (note that the file has been edited, anonymized, and industry has been changed to preserve privacy, however, the template and the length of requirements are real).
 
-![alt](/assets/posts/skills-for-copilot-studio/image2.png){: .shadow w="972" h="589" }
+![A "sort of" requirement document for a Copilot Studio Agent from Zava Bank](/assets/posts/skills-for-copilot-studio/image2.png){: .shadow w="972" h="589" }
 _A "sort of" requirement document for a Copilot Studio Agent from Zava Bank_
 
 The system integrator was struggling because requirements were not clear from the beginning, and the architecture they deployed initially was not scaling anymore with the new requirements received, resulting in errors, wrong disambiguations and a poor quality in general.
