@@ -25,11 +25,14 @@ These parameters don't just guide the main agent's orchestrator, they also partl
 
 ## How to Define Inputs and Outputs
 
+Inputs and outputs for child agents can be defined directly through the Copilot Studio UI. For connected agents, the configuration on the main agent side still requires YAML. The examples below show what the configuration looks like under the hood.
+
 ### Child Agent
 
-Inputs and outputs for child agents can be created directly through the Copilot Studio UI. No YAML editing required.
+![Child agent inputs UI in Copilot Studio](/assets/posts/copilot-studio-child-connected-agents-inputs-outputs/child-agent-inputs-ui.png){: .shadow w="700" }
+_Defining inputs for a child agent directly in the Copilot Studio UI_
 
-Here's what the YAML looks like under the hood:
+Here's what the resulting YAML looks like:
 
 ```yaml
 kind: AgentDialog
@@ -78,6 +81,8 @@ outputType:
 
 Connected agents require configuration on **both sides**: the main agent that calls the connected agent, and the connected agent itself.
 
+Consider a scenario where you have a main agent that orchestrates HR queries. When a user asks about someone's role, the main agent passes the user's email to a specialized HR connected agent, which looks up the role and returns it. The connected agent is independent, it can also be invoked directly or by other main agents.
+
 #### Main agent side
 
 In your main agent, the connected agent is represented as a `TaskDialog`. Make sure that the `inputType` and `outputType` properties are defined inside the `action` section:
@@ -86,20 +91,29 @@ In your main agent, the connected agent is represented as a `TaskDialog`. Make s
 kind: TaskDialog
 inputs:
   - kind: AutomaticTaskInput
-    propertyName: expenseReportFileFullPath
-    description: Full file path, including SharePoint site URL, of an expense report file.
+    propertyName: userEmail
+    description: The email address of the user to look up
 
-modelDisplayName: Connected Agent
-modelDescription: Use this agent to process expense reports in a multi-agent scenario
+modelDisplayName: HR Specialist
+modelDescription: Helps with HR information, including user role
+outputs:
+  - propertyName: userRole
+
 action:
   kind: InvokeConnectedAgentTaskAction
   inputType:
     properties:
-      expenseReportFileFullPath:
-        displayName: expenseReportFileFullPath
+      userEmail:
+        displayName: userEmail
         isRequired: true
         type: String
-  botSchemaName: gd_connectedAgent_QC906u
+  outputType:
+    properties:
+      userRole:
+        displayName: userRole
+        description: The role of the user in the organization
+        type: String
+  botSchemaName: cr26e_hrSpecialist
   historyType:
     kind: ConversationHistory
 ```
@@ -109,32 +123,62 @@ action:
 
 #### Connected agent side
 
-On the connected agent itself, you need to set up a topic that receives the inputs when the agent is invoked by another agent. The key steps are:
+On the connected agent itself, you need to set up topics that handle the input/output variables. The key steps are:
 
 1. Make the variable **global**
 2. For inputs, tick **"External source can set the value"**
 3. For outputs, tick **"External source can receive the value"**
-4. Use the **OnRedirect** trigger, which fires when the agent is called by another agent
 
-Here's what the topic YAML looks like:
+The connected agent typically has two relevant topics: one with an `OnRecognizedIntent` trigger for standalone use, and one with an `OnRedirect` trigger that fires when the agent is called by another agent.
+
+**Standalone topic** (handles the query when invoked directly):
 
 ```yaml
 kind: AdaptiveDialog
-modelDescription: Use this tool to initialize the agent when it's called through a different agent
+modelDescription: What's my role
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent: {}
+  actions:
+    - kind: SetMultipleVariables
+      id: setVariable_L7LrdA
+      assignments:
+        - variable: Global.userRole
+          value: project management
+        - variable: Topic.userRole
+          value: project management
+
+inputType: {}
+outputType:
+  properties:
+    userRole:
+      displayName: userRole
+      type: String
+```
+
+**Redirect topic** (receives inputs when called by another agent):
+
+```yaml
+kind: AdaptiveDialog
 beginDialog:
   kind: OnRedirect
   id: main
   actions:
     - kind: SetVariable
-      id: setVariable_1nnsy7
-      variable: Global.expenseReportFileFullPath
-      value: "https://contoso.sharepoint.com/sites/Reports/Shared%20Documents/ExpenseReports/Expense_Report.xlsx"
+      id: setVariable_vSrSNN
+      variable: Global.userName
+      value: "\"\""
 
 inputType: {}
-outputType: {}
+outputType:
+  properties:
+    userRole:
+      displayName: userRole
+      type: String
 ```
 
-> The `inputType: {}` and `outputType: {}` at the dialog level declare that this topic participates in the input/output contract. The actual variable mapping is handled through the global variable settings.
+> Information passes from the connected agent back to the main agent via the **global variable** only. The `outputType` on the connected agent's topics is for making the output visible internally within the connected agent itself. You'll notice the standalone topic sets the value to both `Global.userRole` (which is what the main agent receives) and `Topic.userRole` (which makes the tool output visible to the connected agent's own orchestrator). Setting `Topic.userRole` is one approach, but there are others, for example, a dedicated topic that runs at the end of every plan and populates global variables from tool outputs.
 {: .prompt-info }
 
 ---
