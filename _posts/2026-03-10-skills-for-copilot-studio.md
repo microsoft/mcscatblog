@@ -50,7 +50,7 @@ The recommended approach is through the marketplace:
 
 ```bash
 /plugin marketplace add microsoft/skills-for-copilot-studio
-/plugin install copilot-studio@microsoft/skills-for-copilot-studio
+/plugin install copilot-studio@skills-for-copilot-studio
 ```
 
 ---
