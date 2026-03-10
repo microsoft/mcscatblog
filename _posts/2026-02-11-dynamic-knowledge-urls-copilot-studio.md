@@ -2,6 +2,7 @@
 layout: post
 title: "Zero Noise, Maximum Relevance: Dynamic Knowledge URLs in Copilot Studio"
 date: 2026-02-11 00:00:00 +0000
+last_modified_at: 2026-03-10 00:00:00 +0000
 categories: [copilot-studio, knowledge]
 tags: [knowledge-sources, dynamic-urls, public-website, alm, multi-region, powerfx, topic-inputs, variables, table-variables]
 description: How a simple variable unlocks multi-market, multi-language, and multi-product web grounding while improving ALM processes.
@@ -12,7 +13,7 @@ image:
   no_bg: true
 ---
 
-Microsoft just introduced a small but powerful improvement: the ability to parameterize the URL of a knowledge website with a variable. With this, a single knowledge source can now shift automatically based on who the user is, what the conversation is about, or the environment in which the agent is running.
+Microsoft just introduced a small but powerful improvement: the ability to parameterize the URL of a knowledge website or SharePoint site with a variable. With this, a single knowledge source can now shift automatically based on who the user is, what the conversation is about, or the environment in which the agent is running.
 
 This capability has been a consistent customer request, helping teams tailor knowledge access without the overhead of managing many separate knowledge sources.
 
@@ -37,7 +38,7 @@ This led to:
 - Complex ALM (moving many URL-bound sources through Dev → Test → Prod as well as needing to modify URLs in target environments - not best practice)
 - Latency concerns - searching across too many irrelevant sources slows everything down
 
-## The Breakthrough: URL Variables in Public Website Knowledge
+## The Breakthrough: URL Variables in Knowledge
 
 Copilot Studio now allows you to define a knowledge source to include variables. This can be used to scope a knowledge site to a specific path or to replace an entire URL with a variable at runtime.
 
@@ -50,7 +51,7 @@ Copilot Studio now allows you to define a knowledge source to include variables.
    - [Environment Variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables)
 2. **Insert it into the public website link.** You can either scope a URL with the variable as a sub-path (www.site.com/{variable}) or replace the entire knowledge URL with the variable ({variable}).
 
-To do this, go to Add knowledge, choose Public Websites, then click the {x} to add a variable in the Public Website link field. 
+To do this, go to Add knowledge, choose Public Websites or SharePoint (Powered by Work IQ), then click the {x} to add a variable in the Public Website/SharePoint link field. 
 
 ![Add knowledge](/assets/posts/dynamic-knowledge-urls/addknowledge.png){: .shadow w="700" h="400"}
 
@@ -66,7 +67,11 @@ To do this, go to Add knowledge, choose Public Websites, then click the {x} to a
 
    Public site knowledge uses Bing's index. Bing guarantees indexing only to 2 levels deep. Scoped knowledge via variable changes what URL to target, not how deep Bing crawls.
 
-2. **This functionality is currently for public websites only.** Functionality to do the same with SharePoint knowledge is on the product roadmap.
+2. ~~**This functionality is currently for public websites only.** Functionality to do the same with SharePoint knowledge is on the product roadmap.~~
+
+   As of March 10, 2026, this functionality is also available for SharePoint knowledge sources using the Connector Powered by Work IQ SharePoint knowledge method. The Upload File / Dataverse sync method for SharePoint knowledge does not support variables.
+
+   ![SharePoint knowledge variable](/assets/posts/dynamic-knowledge-urls/SPOknowledgevariable.png){: .shadow w="700" h="400"}
 
 ## Real Life Example: Product Scoping for Microsoft.com
 
@@ -195,7 +200,7 @@ _Adding the environment variable to public website knowledge_
 
 ## Conclusion
 
-The new dynamic public website knowledge source capability is a subtle yet transformative feature that has the potential to improve the agent building experience for many organizations. With a single variable, you can now:
+The dynamic knowledge URL variable capability is a subtle yet transformative feature that has the potential to improve the agent building experience for many organizations. With a single variable, you can now:
 
 - Build multi-product agents
 - Build multi-region agents
@@ -211,4 +216,4 @@ If you're building enterprise-grade agents this feature should be part of your b
 *With a single variable now controlling knowledge scope, how will you rethink your agent design patterns to maximize relevance while minimizing maintenance overhead?*
 
 ---
-Stay tuned for more details regarding the same functionality for SharePoint knowledge source!
+**Update (March 10, 2026):** Dynamic knowledge URL variables are now also supported for SharePoint knowledge sources using the Connector Powered by Work IQ method.
