@@ -56,7 +56,7 @@ The recommended approach is through the marketplace:
 **VERY IMPORTANT!** After installation, make sure to enable auto-updates for the plugin in the plugin/marketplace settings. This way, you'll get all the latest improvements and support for new Copilot Studio features as we release them.
 
 In Claude Code, you can simply type `/plugin` and then use your arrow keys to navigate to the plugin to find "Skills for Copilot Studio". Once you find it, select it, and make sure to enable auto-updates.
-![How to set auto-update in Claude Code](/assets/posts/skills-for-copilot-studio/image1.png){: .shadow w="972" h="589" }
+![How to set auto-update in Claude Code](/assets/posts/skills-for-copilot-studio/image.png){: .shadow w="972" h="589" }
 _How to set auto-update in Claude Code_
 
 ---
