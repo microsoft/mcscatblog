@@ -57,10 +57,10 @@ The recommended approach is through the marketplace:
 
 ## How does it work?
 
-### Step 1: Clone the agent
+### Step 1: Create an empty agent
 This first version of the plugin is not well suited for creating an agent from an empty directory, thus our advice is to create an agent from the Copilot Studio interface. You can also create an empty agent (the one given by simply clicking "New Agent" and doing nothing more), the only important thing is to have all the basic components already in place.
 
-### Step 2: Clone the agent
+### Step 2: Clone the agent locally
 Once you have your agent created, we'll use the VS Code Extension for Copilot Studio to clone it into a local folder.
 
 ![alt](/assets/posts/skills-for-copilot-studio/image1.png){: .shadow w="972" h="589" }
@@ -86,7 +86,7 @@ In the chat, simply tag an agent with your request, for example:
 @copilot-studio:author I am building an agent used by the customers of Zava Bank. This agent will [...].
 ```
 
-### Step 4: Clone the agent
+### Step 4: Push changes to Copilot Studio
 Once you are happy with your YAML changes, you can push these changes to Copilot Studio via the VS Code Extension.
 
 ![alt](/assets/posts/skills-for-copilot-studio/image3.png){: .shadow w="972" h="589" }
