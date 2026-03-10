@@ -86,6 +86,14 @@ In the chat, simply tag an agent with your request, for example:
 @copilot-studio:author I am building an agent used by the customers of Zava Bank. This agent will [...].
 ```
 
+### Step 4: Clone the agent
+Once you are happy with your YAML changes, you can push these changes to Copilot Studio via the VS Code Extension.
+
+![alt](/assets/posts/skills-for-copilot-studio/image3.png){: .shadow w="972" h="589" }
+_Screenshot of the VS Code Extension for MCS_
+
+Open VS Code, locate the extension in the left menu, and push the changes to your agent.
+
 ---
 
 ## A real-life walkthrough
