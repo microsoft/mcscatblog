@@ -26,7 +26,7 @@ Many enterprises centralize their master data in a single Dataverse environment:
 So what happens when your agent is in one environment but the data it needs lives in another?
 
 > The built-in Dataverse MCP tool in Copilot Studio only connects to the Dataverse environment you select inside Copilot Studio. It does not provide a way to connect to Dataverse MCP servers in other environments.
-{: .prompt-info }
+> {: .prompt-info }
 
 The good news is that you can bridge that gap with a [custom connector]({% post_url 2025-12-05-obo-for-custom-connectors %}) and OAuth. This post walks through the setup step by step.
 
@@ -66,9 +66,6 @@ Once the OAuth app exists, a System Administrator in the Central CRM environment
 5. Choose the app registration created in Entra ID.
 6. Assign appropriate security roles (minimum required privileges, or System Administrator temporarily for validation).
 7. Save the App User.
-
-![Allowed MCP Client record in Dataverse with Application Id and enabled status](/assets/posts/dataverse-mcp-cross-environments/inline-04.png){: .shadow }
-_The Allowed MCP Client record in the target Dataverse environment_
 
 At this point, the Central CRM environment trusts the OAuth client identity.
 
@@ -115,7 +112,7 @@ With the connector imported, attach it to your agent:
 7. Test an MCP tool operation such as `list_tables`.
 
 ![MCP tool configuration in Copilot Studio showing Dataverse MCP in another environment](/assets/posts/dataverse-mcp-cross-environments/inline-09.png){: .shadow }
-_The MCP tool added to the agent in Copilot Studio, showing available tools like list\_tables_
+_The MCP tool added to the agent in Copilot Studio, showing available tools like list_tables_
 
 ### Why the first test should fail
 
@@ -128,6 +125,9 @@ Then go to the Power Platform Admin Center (PPAC), select the Central CRM enviro
 
 ![Power Platform Admin Center Dataverse MCP settings with arrow pointing to Advanced Settings](/assets/posts/dataverse-mcp-cross-environments/inline-08.png){: .shadow }
 _PPAC Dataverse MCP settings: enable MCP client access and navigate to Advanced Settings to add allowed clients_
+
+![Allowed MCP Client record in Dataverse with Application Id and enabled status](/assets/posts/dataverse-mcp-cross-environments/inline-04.png){: .shadow }
+_The Allowed MCP Client record in the target Dataverse environment_
 
 After authorization, tests should succeed across environments.
 
@@ -144,4 +144,3 @@ By following these steps, you enable:
 - Enterprise governance over which identities can access which data
 
 Have you tried connecting Copilot Studio to MCP servers across environments or tenants? What challenges did you run into? Let us know in the comments.
-
