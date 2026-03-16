@@ -94,9 +94,12 @@ Two common patterns:
 
 **Manual** — let the user invoke the topic from the chat (then you choose whether to display the transcript or just store it in a variable).
 
+![Teams chat showing the user asking to save conversation history and the agent responding with the full transcript](/assets/posts/power-of-topics-copilot-studio/conv-history-topic-end-manual.png){: .shadow }
+_The user types "save conversation history" and the agent immediately invokes the topic, dumping the full transcript inline_
+
 **Automatic** — at the end of a flow (end conversation / escalate / etc.), call it via a **Recognize intent** node with an input like `save conversation history`.
 
-![End of Conversation topic canvas showing the Recognize intent node after the goodbye message](/assets/posts/power-of-topics-copilot-studio/conv-history-topic-end-manual.png){: .shadow }
+![End of Conversation topic canvas showing the Recognize intent node after the goodbye message](/assets/posts/power-of-topics-copilot-studio/conv-history-topic-end.png){: .shadow }
 _In the End of Conversation topic, a Recognize intent node after "Ok, goodbye." gives the orchestrator one last chance to invoke the Save Conversation History topic before closing_
 
 Once you've captured the transcript, you can pass `conversationHistory` to a tool, save it to a custom Dataverse table, attach it to a support ticket, or hand it to a live agent during escalation.
