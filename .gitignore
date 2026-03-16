@@ -28,6 +28,9 @@ package-lock.json
 ehthumbs.db
 Thumbs.db
 
+# Worktrees
+.worktrees/
+
 # Misc
 _sass/vendors
 assets/js/dist
