@@ -761,9 +761,27 @@
   /* About icon - Rose/Red */
   #sidebar .nav-link[href*="about"] i {
     color: #D83B73 !important; /* Rose from gradient */
-    
+
     &::before {
       content: "\f6be" !important; /* Cat icon for about */
+    }
+  }
+
+  /* Authors icon - Teal/Cyan (feather) */
+  #sidebar .nav-link[href*="authors"] i {
+    color: #00B7C3 !important; /* Teal - complements the gradient */
+
+    &::before {
+      content: "\f56b" !important; /* Feather-alt icon */
+    }
+  }
+
+  /* Resources icon - Green (compass) */
+  #sidebar .nav-link[href*="resources"] i {
+    color: #E8627C !important; /* Coral */
+
+    &::before {
+      content: "\f14e" !important; /* Compass icon */
     }
   }
   
@@ -811,8 +829,18 @@
     #sidebar .nav-link[href*="about"] i {
       color: #FF6794 !important;
     }
+
+    /* Authors - Brighter teal */
+    #sidebar .nav-link[href*="authors"] i {
+      color: #00D4E0 !important;
+    }
+
+    /* Resources - Brighter coral */
+    #sidebar .nav-link[href*="resources"] i {
+      color: #FF7B93 !important;
+    }
   }
-  
+
   /* System dark mode - colorful icons */
   @media (prefers-color-scheme: dark) {
     html:not([data-mode="light"]) {
@@ -842,9 +870,19 @@
       #sidebar .nav-link[href*="about"] i {
         color: #FF6794 !important;
       }
+
+      /* Authors - Brighter teal */
+      #sidebar .nav-link[href*="authors"] i {
+        color: #00D4E0 !important;
+      }
+
+      /* Resources - Brighter coral */
+      #sidebar .nav-link[href*="resources"] i {
+        color: #FF7B93 !important;
+      }
     }
   }
-  
+
   /* Bottom bar icons - MORE SUBDUED COLORS */
   /* Remove the purple color and use subtle grays */
   #sidebar .sidebar-bottom {
@@ -901,7 +939,17 @@
   #sidebar .nav-link[href*="about"] i::before {
     content: "\f6be" !important; /* Info circle */
   }
-  
+
+  /* Authors icon - feather */
+  #sidebar .nav-link[href*="authors"] i::before {
+    content: "\f56b" !important; /* Feather-alt icon */
+  }
+
+  /* Resources icon - compass */
+  #sidebar .nav-link[href*="resources"] i::before {
+    content: "\f14e" !important; /* Compass icon */
+  }
+
   /* Bottom bar icons */
   /* Theme toggle - sun/moon */
   #sidebar .sidebar-bottom #mode-toggle i.fa-sun::before {
@@ -941,4 +989,75 @@
 }
 .wrapcodeblocktext pre.lineno {
   display: none !important;
+}
+
+/* === CAT Customization - Modern Search Result Highlighting === */
+/* Algolia InstantSearch highlight styling for light and dark modes */
+
+/* Light mode highlighting */
+html:not([data-mode]),
+html[data-mode="light"] {
+  /* Highlighted text in search results */
+  .ais-Highlight-highlighted,
+  .ais-Snippet-highlighted,
+  mark {
+    background-color: rgba(255, 235, 59, 0.3) !important; /* Warm yellow with transparency */
+    color: inherit !important;
+    font-weight: 500 !important;
+    padding: 0.1em 0.1em;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(255, 235, 59, 0.15);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  /* Hover state for interactive elements */
+  a:hover .ais-Highlight-highlighted,
+  a:hover .ais-Snippet-highlighted {
+    background-color: rgba(255, 235, 59, 0.45) !important;
+    box-shadow: 0 0 0 1px rgba(255, 235, 59, 0.3);
+  }
+}
+
+/* Dark mode highlighting */
+html[data-mode="dark"] {
+  .ais-Highlight-highlighted,
+  .ais-Snippet-highlighted,
+  mark {
+    background-color: rgba(255, 193, 7, 0.25) !important; /* Amber with transparency */
+    color: inherit !important;
+    font-weight: 500 !important;
+    padding: 0.1em 0.1em;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.15);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  a:hover .ais-Highlight-highlighted,
+  a:hover .ais-Snippet-highlighted {
+    background-color: rgba(255, 193, 7, 0.35) !important;
+    box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.25);
+  }
+}
+
+/* System preference dark mode */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode="light"]) {
+    .ais-Highlight-highlighted,
+    .ais-Snippet-highlighted,
+    mark {
+      background-color: rgba(255, 193, 7, 0.25) !important;
+      color: inherit !important;
+      font-weight: 500 !important;
+      padding: 0.1em 0.1em;
+      border-radius: 3px;
+      box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.15);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    a:hover .ais-Highlight-highlighted,
+    a:hover .ais-Snippet-highlighted {
+      background-color: rgba(255, 193, 7, 0.35) !important;
+      box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.25);
+    }
+  }
 }

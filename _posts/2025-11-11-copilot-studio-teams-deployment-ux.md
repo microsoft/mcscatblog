@@ -17,7 +17,7 @@ Deploying a Copilot Studio Agent to Microsoft Teams introduces unique challenges
 ## Why Teams Deployment is Different
 
 - Conversation persist across days without automatic reset, this is different from sessions which are an analytical concept and are calculated each time inactivity is triggered
-- Conversation Start events don't trigger on initial load
+- Conversation Start only trigger the FIRST time (when the conversation is created), uninstalling and re-installing into Teams will not generate another trigger.
 - Stale context and expired tokens can cause unexpected behavior
 - Updates may not propagate immediately due to caching
 
@@ -59,7 +59,7 @@ This ensures that when users go idle, the bot proactively resets for a clean sla
 After clearing state, send a clear message explaining what happened:
 
 ```
-"It looks like our conversation went idle, so I've cleared the prior context for safety. Please say 'hello' to start a new conversation."
+"It looks like our conversation went idle, so I've cleared the prior context for safety. Please say 'hello' to start a new chat session."
 ```
 
 This serves two critical purposes:
@@ -159,15 +159,10 @@ This helps both users and makers confirm which build is running. If a user repor
 When publishing to Teams, enable the **"Force newest version"** option:
 
 **What it does:**
-- Forces immediate refresh for all users
-- Eliminates the need to unpublish/republish
-- Users don't need to remove and re-add the app
-- New topic flows take effect immediately
+Forces immediate update: the next time the user messages the agent it will use the latest published version. New topics take effect the next time the user messages the bot
 
 ![Force Update Option](/assets/posts/teams-deployment/force-update.png)
-_Enable Force Update to ensure all users get the latest version._
-
-Previously, makers had to ask users to manually reinstall or increment manifest versions. The Force Update feature automates this process.
+_Enable Force Update to ensure all users get the latest agent version._
 
 > Heads-up: Forcing an update will interrupt any ongoing conversation, so use this power wisely!
 {: .prompt-tip }
@@ -176,12 +171,11 @@ Previously, makers had to ask users to manually reinstall or increment manifest 
 
 ### Handle Greeting Logic Properly
 
-Since ConversationStart won't auto-fire:
+Since "Conversation Start" only fires once (at the first install):
 
-1. **Keep greeting topic simple and straightforward**
+1. **Use the greetings topic** to execute your conversation start logic**
 2. **Provide written instructions** in Teams app description
-3. **Include onboarding tip**: "After installing or timeout, type 'hello' to get started"
-4. **Plan for users clicking bot and seeing nothing** until they type
+3. **Include helpful tip**: "After timeout, type 'hello' to start a new conversation"
 
 ### Optimize Triggers and Fallbacks
 

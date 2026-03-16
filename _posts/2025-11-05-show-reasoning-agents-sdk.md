@@ -2,7 +2,7 @@
 layout: post  
 title: "Showing Agent Reasoning in Custom UIs (Anthropic + Agents SDK)"  
 date: 2025-11-04 22:00:00 +0100  
-categories: [copilot-studio, tutorial, agents-sdk]  
+categories: [copilot-studio, tutorial, agents-sdk]
 tags: [anthropic, reasoning, agents-sdk]  
 description: Surface Anthropic reasoning process as informative activities via the Microsoft 365 Agents SDK and render summarized reasoning steps in your app.  
 author: giorgioughini  
