@@ -432,7 +432,7 @@ The trade-off? When authentication is configured, the Microsoft-hosted embed use
 ## Self-Hosted WebChat (Employee-Facing)
 {: #self-hosted-webchat-employee-facing}
 
-This is the most common pattern for custom-branded agent experiences. You host the `botframework-webchat` library yourself, giving you full control over styling, behavior, and authentication. And it's not limited to standalone web apps. The same WebChat component can be embedded natively in [SharePoint](https://github.com/microsoft/CopilotStudioSamples/tree/main/SSOSamples/SharePointSSOAppCustomizer), [ServiceNow](https://github.com/microsoft/CopilotStudioSamples/tree/main/ServiceNowWidget) (see our [field report]({% post_url 2026-02-24-servicenow-copilot-studio-widget %})), or any platform that can host JavaScript.
+This is the most common pattern for custom-branded agent experiences. You host the `botframework-webchat` library yourself, giving you full control over styling, behavior, and authentication. And it's not limited to standalone web apps. The same WebChat component can be embedded natively in [SharePoint](https://github.com/microsoft/CopilotStudioSamples/tree/main/ui/embed/sharepoint-customizer/SharePointSSOAppCustomizer), [ServiceNow](https://github.com/microsoft/CopilotStudioSamples/tree/main/ServiceNowWidget) (see our [field report]({% post_url 2026-02-24-servicenow-copilot-studio-widget %})), or any platform that can host JavaScript.
 
 The core pattern is almost always the same. You import the WebChat library, create a connection to your agent (more on the options below), and hand it to WebChat:
 
@@ -474,7 +474,7 @@ Direct Line is still a valid choice if you specifically need manual authenticati
 **Official samples and docs:**
 
 - **WebChat customization:** [Customize your chat canvas](https://learn.microsoft.com/en-us/microsoft-copilot-studio/customize-default-canvas) (uses Direct Line, but the styling and customization patterns apply to both APIs)
-- **M365 Agents SDK (recommended):** [React Web Chat](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webchat-react), [Web Client](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webclient), [SharePoint SSO](https://github.com/microsoft/CopilotStudioSamples/tree/main/SSOSamples/SharePointSSOAppCustomizer), [ServiceNow Widget](https://github.com/microsoft/CopilotStudioSamples/tree/main/ServiceNowWidget)
+- **M365 Agents SDK (recommended):** [React Web Chat](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webchat-react), [Web Client](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webclient), [SharePoint SSO](https://github.com/microsoft/CopilotStudioSamples/tree/main/ui/embed/sharepoint-customizer/SharePointSSOAppCustomizer), [ServiceNow Widget](https://github.com/microsoft/CopilotStudioSamples/tree/main/ServiceNowWidget)
 - **Direct Line with Entra SSO:** [Configure SSO for web apps](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-sso?tabs=webApp)
 
 **When to use this:** Internal web apps, SharePoint sites, ServiceNow portals, or any employee-facing platform where you need styling control and authenticated access to your agent.
