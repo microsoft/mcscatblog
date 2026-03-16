@@ -2,7 +2,7 @@
 layout: post
 title: "Open the Hood: What Your Copilot Studio Agent Is Really Doing"
 description: "How to extract, read, and understand Copilot Studio conversation transcripts so you know what your agent is doing and why."
-date: 2026-03-03
+date: 2026-03-16
 author: roels
 categories: [copilot-studio, tutorial]
 tags: [copilot-studio, transcripts, dataverse, analytics, best-practices]
@@ -11,7 +11,7 @@ image:
   alt: "Copilot Studio conversation transcripts"
 ---
 
-**Your agent is having hundreds of conversations. Do you know what's happening inside them?**
+**Somewhere between the user's question and the agent's answer, a lot happens. Most people never look.**
 
 ## TL;DR
 
@@ -68,10 +68,6 @@ Here's what's available:
 | Whether the conversation was resolved, escalated, or abandoned | `SessionInfo` activities with outcome and turn count |
 | What the user rated the experience | `CSATSurveyResponse` activities |
 
-That second to last section (knowledge sources, tools, agents, MCP) requires **enhanced transcripts** to be turned on. Without it, you get the conversation text but not the diagnostic detail underneath.
-
-> Enhanced transcripts must be explicitly enabled. In your agent's **Settings**, select **Enhance Transcripts**, and then turn on **Include node-level details in transcripts**. This is off by default. Do this first. Everything else is harder without it. See [Microsoft's docs on enhanced transcripts](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-transcripts-powerapps) for full details.
-{: .prompt-warning }
 
 ### A practical example: Diagnosing a slow agent
 
