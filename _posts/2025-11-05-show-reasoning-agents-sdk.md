@@ -3,7 +3,7 @@ layout: post
 title: "Showing Agent Reasoning in Custom UIs (Anthropic + Agents SDK)"  
 date: 2025-11-04 22:00:00 +0100  
 categories: [copilot-studio, tutorial, agents-sdk]
-tags: [anthropic, reasoning, agents-sdk]  
+tags: [webchat, anthropic, reasoning, agents-sdk]  
 description: Surface Anthropic reasoning process as informative activities via the Microsoft 365 Agents SDK and render summarized reasoning steps in your app.  
 author: giorgioughini  
 ---  
@@ -20,7 +20,7 @@ Copilot Studio agents using Anthropic models can expose their reasoning steps—
 {: .prompt-info }
 
 ## Our example
-In some steps of this tutorial, we will refer to a fully working example that can be found here: [Thinking-Activities-Sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/ShowReasoningSample).  
+In some steps of this tutorial, we will refer to a fully working example that can be found here: [Thinking-Activities-Sample](https://microsoft.github.io/CopilotStudioSamples/ui/custom-ui/reasoning-display).  
 This example shows a Copilot Studio agent triggered via the Microsoft 365 Agents SDK directly from a custom UI. To keep things simple, we used a static HTML+JS website.  
 The demo scenario features an organization that uses monday.com to log its tickets. They implemented an intake form for receiving tickets and an agent that triages them using the monday.com certified MCP server. If a similar ticket is found, the new intake request is merged as an update to the existing ticket; otherwise, a new ticket is opened.
 
@@ -81,7 +81,7 @@ Typical timeline:
 
 ## Implementation Walkthrough
 
-The snippets below show the core pattern. Not all function implementations are shown here. A complete, runnable sample demoing a ticket triage system is available at [Thinking-Activities-Sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/ShowReasoningSample).
+The snippets below show the core pattern. Not all function implementations are shown here. A complete, runnable sample demoing a ticket triage system is available at [Thinking-Activities-Sample](https://microsoft.github.io/CopilotStudioSamples/ui/custom-ui/reasoning-display).
 
 ### 1) Initialize the client
 
@@ -228,7 +228,7 @@ Refer to the [demo video](#our-example) for a demonstration.
 
 ## Try It Yourself
 
-- Clone the reference implementation at [Thinking-Activities-Sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/ShowReasoningSample)
+- Clone the reference implementation at [Thinking-Activities-Sample](https://microsoft.github.io/CopilotStudioSamples/ui/custom-ui/reasoning-display)
 - Configure an Anthropic model for the agent in Copilot Studio  
 - Run locally, observe typing/informative streams, and integrate the summarizer
 

@@ -29,7 +29,7 @@ The docs page now includes everything you need to go from zero to a working inte
 - **Step-by-step Einstein Bot dialog setup** with screenshots showing exactly how to wire the Welcome and Confused dialogs
 - **Deployment scripts** (Bash and PowerShell) that handle everything in one shot
 
-All the code lives in the [CopilotStudioSamples repo](https://github.com/microsoft/CopilotStudioSamples/tree/main/IntegrateWithEngagementHub/Salesforce), so you can clone it, inspect it, and modify it to fit your needs.
+All the code lives in the [CopilotStudioSamples repo](https://microsoft.github.io/CopilotStudioSamples/contact-center/servicenow/Salesforce), so you can clone it, inspect it, and modify it to fit your needs.
 
 ## How the Integration Works
 
@@ -64,7 +64,7 @@ sf org login web
 
 # Clone the sample and run the deployment
 git clone https://github.com/microsoft/CopilotStudioSamples.git
-cd CopilotStudioSamples/IntegrateWithEngagementHub/Salesforce
+cd CopilotStudioSamples/contact-center/servicenow/Salesforce
 ./scripts/deploy.sh
 ```
 

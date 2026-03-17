@@ -25,7 +25,7 @@ In this quickstart we'll focus on the last one: **connecting an A2A-enabled agen
 To keep things concrete, we'll use as connected agent a sample that I built with the [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview) that exposes A2A. Don't be scared, Agent Framework is not a prerequisite for A2A, but simply a choice that I made in order to have something that exposes A2A ready to be plugged in Copilot Studio. You can use any A2A enabled agent that you already have.  
   
 If you don't have any A2A agent, you can clone my GitHub repo for the sample agent.
-[Microsoft Copilot Studio A2A Samples | GitHub](https://github.com/microsoft/CopilotStudioSamples/tree/main/A2ASamples/Simple-A2A-Sample)
+[Microsoft Copilot Studio A2A Samples | GitHub](https://microsoft.github.io/CopilotStudioSamples/extensibility/a2a/Simple-A2A-Sample)
   
 We'll go end-to-end:  
   
