@@ -91,7 +91,7 @@ So instead, we ask the orchestrator to dump the transcript into an input variabl
 2. Add an input variable (example name: `conversationHistory`)
 3. In the input description, tell the orchestrator what you want (same trick as before, the description is the instruction). For example: _"Entire conversation history in the format 'User: …, Agent: …'"_ (You can ask for a summary instead, or omit speaker labels, this part is flexible.)
 
-![Save Conversation History topic showing the conversationHistory input and the full conversation content](/assets/posts/power-of-topics-copilot-studio/cot-topic.png){: .shadow }
+![Save Conversation History topic showing the conversationHistory input and the full conversation content](/assets/posts/power-of-topics-copilot-studio/conv-history-topic-input.png){: .shadow }
 _The Save Conversation History topic: the orchestrator fills the conversationHistory input with the full transcript, which the topic then surfaces or passes on to other tools_
 
 ### How to trigger it
