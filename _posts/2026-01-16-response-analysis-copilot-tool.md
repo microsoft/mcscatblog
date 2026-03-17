@@ -225,7 +225,7 @@ yield (
 
 ## 🎬 The Feature Presentation: Complete Working Tool
 
-A fully functional version of this tool is available in the publicly available [ResponseAnalysisAgentsSDK](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK) repository. 
+A fully functional version of this tool is available in the publicly available [ResponseAnalysisAgentsSDK](https://microsoft.github.io/CopilotStudioSamples/testing/functional/ResponseAnalysisAgentsSDK) repository. 
 The codebase is ready for use and includes comprehensive instructions on initial environment setup, execution of tests, and the technical interpretation of the results. 
 
 !["Copilot Studio Response Analysis Screen Stats"](/assets/posts/response-analysis-tool/Screen-Statistics.png)
@@ -239,7 +239,7 @@ Before you rush off to try and implement this, let's be honest about a few thing
 > The current implementation is designed exclusively for single-session analysis.
 {: .prompt-warning}
 
-> Before deploying the tool, review the [requirements](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK#prerequisite) to ensure your environment is compatible, then execute the [setup steps](https://github.com/microsoft/CopilotStudioSamples/tree/main/FunctionalTesting/ResponseAnalysisAgentsSDK#step-1-create-an-agent-in-copilot-studio) to configure the tool.
+> Before deploying the tool, review the [requirements](https://microsoft.github.io/CopilotStudioSamples/testing/functional/ResponseAnalysisAgentsSDK#prerequisite) to ensure your environment is compatible, then execute the [setup steps](https://microsoft.github.io/CopilotStudioSamples/testing/functional/ResponseAnalysisAgentsSDK#step-1-create-an-agent-in-copilot-studio) to configure the tool.
 {: .prompt-warning}
 
 > Never commit access tokens or credentials to source control. Always use environment variables or secure credential stores, and implement proper token refresh logic.
