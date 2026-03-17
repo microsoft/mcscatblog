@@ -17,7 +17,7 @@ description: "Topics are where the secret switches are hidden in Copilot Studio.
 author: raemone
 image:
   path: /assets/posts/power-of-topics-copilot-studio/cover.png
-  alt: "The Orchestrator’s Secret: Chain-of-Thought & Transcript on Demand"
+  alt: "The Orchestrator’s Secrets: Chain-of-Thought & Transcript on Demand"
   no_bg: true
 ---
 
