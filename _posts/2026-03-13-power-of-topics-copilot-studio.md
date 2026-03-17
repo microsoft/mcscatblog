@@ -103,9 +103,16 @@ _The user types "save conversation history" and the agent immediately invokes th
 ![End of Conversation topic canvas showing the Recognize intent node after the goodbye message](/assets/posts/power-of-topics-copilot-studio/conv-history-topic-end.png){: .shadow }
 _In the End of Conversation topic, a Recognize intent node after "Ok, goodbye." gives the orchestrator one last chance to invoke the Save Conversation History topic before closing_
 
-Once you've captured the transcript, you can pass `conversationHistory` to a tool, save it to a custom Dataverse table, attach it to a support ticket, or hand it to a live agent during escalation.
+Once you've captured the transcript, you can pass `conversationHistory` to a tool, save a record to a custom Dataverse table, attach a summary or reference to a support ticket, or hand it to a live agent during escalation.
 
-Want to get fancy? Chain it with other tools — for example, an Outlook MCP server — to email the transcript, attach it to a ticket, or hand it off to an escalation workflow automatically.
+If you want to chain it with other tools — for example, an Outlook MCP server to email the transcript, or a Dataverse MCP server to log it against a case — treat the full conversation history as sensitive data and design the flow accordingly.
+
+> **Security & privacy checklist for transcript flows**
+> - Get clear user or organizational consent before capturing and sharing full transcripts, especially across systems (email, tickets, external tools).
+> - Minimize and sanitize: only send what’s needed (for example, a summary or case ID instead of the raw transcript), and redact obvious PII/secrets where possible.
+> - Use secure storage and transport (encrypted channels, governed Dataverse tables) and set retention policies that match your compliance requirements.
+> - Apply least-privilege access: scope MCP servers, connectors, and Dataverse permissions so that only authorized apps and people can see stored transcripts.
+{: .prompt-warning }
 
 ![Copilot Studio activity trace showing MCP servers, tool calls, and topic invocations in sequence](/assets/posts/power-of-topics-copilot-studio/conv-history-end.png){: .shadow }
 _The full activity trace: Dataverse MCP → read\_query tool → Log Chain of Thoughts topic → Goodbye topic → Save Conversation History topic → Email Management MCP → SendEmail tool_
