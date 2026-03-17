@@ -55,8 +55,9 @@ _The Log Chain of Thoughts topic: input variable CoT with a description that tel
 Now tell the orchestrator when to use it by adding an instruction at the agent level:
 
 ```
-After every tool, topic, or step you take, log your intermediate reasoning
-by calling /Log Chain of Thoughts.
+After every tool, topic, or step you take (except when you are already
+calling /Log Chain of Thoughts or other debug/logging topics), log your
+intermediate reasoning by calling /Log Chain of Thoughts.
 ```
 
 Make sure you reference the topic using the `/` picker so it resolves to the exact topic name.
