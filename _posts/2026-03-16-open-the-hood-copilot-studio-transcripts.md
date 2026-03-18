@@ -9,6 +9,7 @@ tags: [copilot-studio, transcripts, dataverse, analytics, best-practices]
 image:
   path: /assets/posts/conversation-transcripts/header.png
   alt: "Copilot Studio conversation transcripts"
+mermaid: true
 ---
 
 **Somewhere between the user's question and the agent's answer, a lot happens. Most people never look.**
@@ -21,7 +22,9 @@ This post covers:
 
 - **Why** you should look at conversation transcripts (with two real scenarios)
 - **What** you can actually see: topics, knowledge sources, tool calls, agent calls, MCP server calls, orchestration plans, timing
+- **The data model**: records, sessions, and conversations — and why their boundaries matter for analytics
 - **Six ways** to get transcripts: the test pane, Copilot Studio UI, Power Apps table view, the Dataverse Web API, Application Insights, and the Copilot Studio Kit
+- **Which tool for which role**: maker, analyst, and ops personas mapped to the right data sources
 - **Which roles** you need to access them
 - **How** to make sense of all this data (hint: let AI do it)
 
@@ -83,6 +86,51 @@ Imagine your agent takes 15 seconds to respond to "How do I submit an expense re
 Without the transcript, you'd be guessing. With it, you can see the exact step that's slow, which knowledge source is causing it, and whether the agent's plan made sense in the first place.
 
 You get the full turn by turn conversation, but also the "behind the scenes" view: what the agent considered, what it called, what came back, and how it stitched the answer together.
+
+---
+
+## Understanding the data model
+
+Before you start querying transcripts, you need to understand three concepts that Copilot Studio uses differently than you might expect: records, sessions, and conversations.
+
+### Record
+
+A single row in the `ConversationTranscript` Dataverse table. One conversation can span **multiple records** because the `Content` column has a 1 MB limit. When a conversation exceeds that limit, Copilot Studio splits it across records that share the same `Name` and `ConversationStartTime`, differentiated by `Metadata.BatchId`. To reconstruct the full conversation, merge records by sorting on `BatchId`.
+
+### Session
+
+A Copilot Studio session. It starts when a user sends the first message and ends after **30 minutes of inactivity**. The `SessionInfo` activity marks session boundaries and carries the session outcome: Resolved, Escalated, or Abandoned.
+
+### Conversation
+
+The broader user interaction from the user's perspective. A single "conversation" can span **multiple sessions** if the user goes idle for more than 30 minutes and then comes back. Copilot Studio has no native "conversation end" event — sessions time out, they don't close.
+
+### How these relate
+
+```mermaid
+timeline
+    title User interaction spanning 2 sessions and 3 records
+    section Session 1
+        09:00 - User asks question : Record 1 (BatchId 0)
+        09:02 - Agent responds : Record 1 (BatchId 0)
+        09:05 - Follow-up exchange : Record 2 (BatchId 1)
+                                   : (1 MB limit reached, new record)
+        09:06 - Session continues : Record 2 (BatchId 1)
+    section 30-min inactivity gap
+        09:06 → 09:40 : No messages
+    section Session 2
+        09:40 - User returns : Record 3 (BatchId 0)
+        09:42 - Agent responds : Record 3 (BatchId 0)
+                               : (new session, new SessionInfo)
+```
+
+**Example scenario:** A user asks a question at 9:00, gets an answer, asks a follow-up at 9:05, then walks away. At 9:40, they come back with another question. From the user's perspective, this is one conversation. In the data, it's **two sessions** with separate `SessionInfo` activities and potentially separate outcomes. If the first session was resolved and the second was abandoned, your analytics shows one resolved and one abandoned — not one conversation with a mixed outcome.
+
+### Why this matters for analytics
+
+You can't reliably measure "conversation duration" or "conversations per user" without understanding these boundaries. A single user interaction might show up as 1 session or 3, depending on response times and idle gaps. If you're building dashboards or reports, count **sessions** (not records, not "conversations") as your primary unit, and be aware that one user visit can produce multiple sessions.
+
+**What you can do about it:** You can implement explicit conversation-end signals in your agent — a "Done" button, a closing topic, or a satisfaction survey that marks the natural end of an interaction. This gives you cleaner session boundaries than relying on the 30-minute timeout. But even with these signals, the underlying session mechanics remain the same: if a user comes back after 30 minutes, it's a new session regardless.
 
 ---
 
@@ -197,6 +245,11 @@ Application Insights captures:
 
 The key advantage: **Application Insights data is available in near real time**, unlike Dataverse transcripts which have a 30 minute delay. If you need to monitor agent performance live or set up alerts when error rates spike, this is the way.
 
+> **Session outcomes are not in Application Insights.** App Insights gives you operational telemetry: errors, latency, dependency health. Session outcomes (Resolved, Escalated, Abandoned) live in Dataverse only. If you need both operational health and conversation outcomes, you need both data sources.
+{: .prompt-warning }
+
+For a pre-built starting point, check the [Copilot Studio Analytics Template Workbook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry#analytics-template-workbook) for Application Insights. It gives you operational dashboards for error rates, latency, and availability out of the box.
+
 You can query Application Insights data using **KQL (Kusto Query Language)** in the Azure portal, connect it to Power BI, or export to Log Analytics for long term retention.
 
 To connect your agent, go to **Settings > Advanced > Application Insights** in Copilot Studio and configure the connection string. See [Connect your agent to Application Insights](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry) for the full walkthrough.
@@ -212,6 +265,32 @@ What it gives you for transcripts specifically:
 - **[Agent Insights Hub](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit)** is a full analytics dashboard that aggregates telemetry from both Application Insights and Conversation Transcripts into a single view with KPI cards, trend charts, CSAT scores, and filtering by agent, channel, and date range. Supports up to 365 days of historical data.
 
 But the Kit goes well beyond transcripts. It includes test automation with AI graded rubrics, agent inventory for tenant wide visibility, compliance hub for governance policies, webchat playground for customizing chat appearance, and more. If you're running agents in production, it's worth the install. See the [Copilot Studio Kit overview](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-overview) for the full feature list.
+
+---
+
+## Where to find what: choosing the right tool
+
+Not every role needs the same data. Before you dive into transcripts, figure out what you're actually looking for.
+
+```mermaid
+flowchart TD
+    Q["What do you need?"] --> D{"Diagnostic detail?<br/>Topics, tool calls,<br/>orchestration plans"}
+    Q --> A{"Aggregated patterns?<br/>Outcomes, CSAT,<br/>escalation rates"}
+    Q --> O{"Operational health?<br/>Errors, latency,<br/>availability"}
+
+    D --> |Maker / Builder| D1["Test pane snapshot<br/>Dataverse API<br/>Power Apps table view"]
+    A --> |Analyst| A1["Analytics CSV<br/>Copilot Studio Kit<br/>Power BI + Dataverse"]
+    O --> |Operations| O1["Application Insights<br/>Analytics Template Workbook"]
+```
+
+**Maker / Builder** — You need to see exactly what happened: which topic fired, which knowledge sources returned results, what the tool call payload looked like, what the orchestration plan was. Use the test pane snapshot for quick debugging, the Dataverse API for scripted analysis, or the Power Apps table view for browsing raw JSON.
+
+**Analyst** — You need patterns across conversations: session outcomes, CSAT scores, common intents, escalation rates, topic coverage gaps. Use the Copilot Studio Analytics CSV for quick exports, the Copilot Studio Kit's Conversation KPIs and Analyzer for automated aggregation, or connect Power BI directly to the Dataverse `ConversationTranscript` table for custom dashboards.
+
+**Operations** — You need to know if the agent is healthy right now: error rates, response latency, dependency failures, availability. Use Application Insights for near real-time telemetry and alerting. The [Copilot Studio Analytics Template Workbook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry#analytics-template-workbook) for App Insights gives you a pre-built ops dashboard as a starting point.
+
+> **Session outcomes are NOT in Application Insights.** This is the most common source of confusion. App Insights gives you operational telemetry (errors, latency, dependency health). Session outcomes (Resolved, Escalated, Abandoned) live in Dataverse only. If your ops dashboard needs both error rates and resolution rates, you need both data sources.
+{: .prompt-warning }
 
 ---
 
