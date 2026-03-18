@@ -64,9 +64,12 @@ intermediate reasoning by calling /Log Chain of Thoughts.
 
 Make sure you reference the topic by typing `/` in the instructions editor (a dropdown will appear with your topics) so it resolves to the exact topic name. The recursion guard in the instruction ("except when you are already calling…") is best-effort since it's a natural language instruction, not a hard stop. If you notice looping, adjust the wording or add a condition node as a harder guard.
 
+![Copilot Studio agent showing chain of thought instructions](/assets/posts/power-of-topics-copilot-studio/cot-instructions.png){: .shadow }
+_Instructions asking to specifically call the tool after each steps while avoiding infinite loops._
+
 And you're done. The next time the orchestrator chains multiple actions, you'll see the play-by-play in the chat.
 
-![Copilot Studio agent showing chain of thought messages in Teams chat](/assets/posts/power-of-topics-copilot-studio/cot-instructions.png){: .shadow }
+![Copilot Studio agent showing chain of thought messages in Teams chat](/assets/posts/power-of-topics-copilot-studio/cot-example-chat.png){: .shadow }
 _Each reasoning step surfaces in Teams chat as a "Thinking: …" message — before the agent proceeds to its next action_
 
 This is great for understanding what's happening during MCP tool chains or long-running reasoning flows — and it works on every channel because it's just a regular message node.
@@ -88,7 +91,7 @@ So instead, we ask the orchestrator to dump the transcript into an input variabl
 2. Add an input variable (example name: `conversationHistory`)
 3. In the input description, tell the orchestrator what you want (same trick as before, the description is the instruction). For example: _"Entire conversation history in the format 'User: …, Agent: …'"_ (You can ask for a summary instead, or omit speaker labels, this part is flexible.)
 
-![Save Conversation History topic showing the conversationHistory input and the full conversation content](/assets/posts/power-of-topics-copilot-studio/cot-topic.png){: .shadow }
+![Save Conversation History topic showing the conversationHistory input and the full conversation content](/assets/posts/power-of-topics-copilot-studio/conv-history-topic-input.png){: .shadow }
 _The Save Conversation History topic: the orchestrator fills the conversationHistory input with the full transcript, which the topic then surfaces or passes on to other tools_
 
 ### How to trigger it
