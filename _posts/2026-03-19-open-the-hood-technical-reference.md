@@ -5,7 +5,7 @@ description: "Data model deep-dive, Dataverse vs Application Insights comparison
 date: 2026-03-19
 author: roels
 categories: [copilot-studio, tutorial]
-tags: [transcripts, dataverse, application-insights, power-apps, copilot-studio-kit, debugging, analytics, best-practices]
+tags: [transcripts, dataverse, application-insights, power-apps, copilot-studio-kit, debugging, analytics, kql, data-model]
 image:
   path: /assets/posts/conversation-transcripts/header-technical-reference.png
   alt: "Copilot Studio conversation transcripts - technical reference"
@@ -37,43 +37,14 @@ There are four distinct concepts, and the confusion comes from using "conversati
 
 **Record**: one row in the `ConversationTranscript` table. One record = one inactivity window = one `ConversationStartTime`. If the user goes idle for 30 minutes and comes back, a new record is written. Same `Name` (same ConversationId), but a new `ConversationStartTime`. If a single inactivity window produces more than 1 MB of content, that window is split into multiple records. Those share both the same `Name` and the same `ConversationStartTime`, and you sort them by `BatchId` to reassemble them.
 
-**Session**: Copilot Studio's unit of analytics, not a conversation reset. It starts with the first user message and ends after **30 minutes of inactivity**. Each session gets its own `SessionInfo` activity with an outcome: Resolved, Escalated, or Abandoned. A new session does not clear conversation history, session variables, or LLM context. It only creates a new analytics boundary. One session = one inactivity window = one `ConversationStartTime` in the data.
+**Session**: Copilot Studio's unit of analytics, not a conversation reset. It starts with the first user message and ends after **30 minutes of inactivity**. Each session gets its own `SessionInfo` activity with an outcome: Resolved, Escalated, or Abandoned. A new session does **not** reset state — see [Managing conversation boundaries](#managing-conversation-boundaries) for what does and doesn't carry over. One session = one inactivity window = one `ConversationStartTime` in the data.
 
 **Conversation**: the human concept. Everything the user experienced. It can span multiple sessions if they go idle and return. There is no native "conversation" entity in the transcript table. You reconstruct it by grouping all records with the same `Name`.
 
 ### How these relate
 
-```
-ConversationId  →  lives in Name column (Name = ConversationId_BotId)
-                   groups ALL records for this user thread
-
-  Session 1     →  one ConversationStartTime
-                   one or more records (if >1 MB, split by BatchId)
-                   one SessionInfo outcome (e.g. Resolved)
-
-  Session 2     →  new ConversationStartTime (same Name, different start time)
-  (user returned    one or more records
-  after 30 min)     new SessionInfo outcome (e.g. Abandoned)
-```
-
-```mermaid
-gantt
-    title User interaction spanning 2 sessions and 3 records
-    dateFormat HH:mm
-    axisFormat %H:%M
-
-    section Session 1
-    User asks question (Record 1, BatchId 0)      :active, s1a, 09:00, 2m
-    Agent responds (Record 1, BatchId 0)           :active, s1b, 09:02, 3m
-    Follow-up exchange (Record 2, BatchId 1)       :active, s1c, 09:05, 1m
-
-    section Inactivity
-    30-min timeout gap                              :done, gap, 09:06, 34m
-
-    section Session 2
-    User returns (Record 3, BatchId 0)             :active, s2a, 09:40, 2m
-    Agent responds (Record 3, BatchId 0)           :active, s2b, 09:42, 3m
-```
+![Data records map to user conversations — showing how ConversationId, sessions, records, and BatchId relate](/assets/posts/conversation-transcripts/data-model-overview.png)
+_How Dataverse records map to user conversations: one ConversationId spans multiple sessions, each session can contain multiple records split by BatchId._
 
 **Example scenario:** A user asks a question at 9:00, gets an answer, asks a follow-up at 9:05, then walks away. At 9:40, they come back with another question. From the user's perspective, this is one conversation. In the data, it's **two sessions** with separate `SessionInfo` activities and potentially separate outcomes. If the first session was resolved and the second was abandoned, your analytics shows one resolved and one abandoned, not one conversation with a mixed outcome.
 
@@ -198,7 +169,7 @@ This gives you access to the full `Content` column with all the raw JSON, the `M
 
 You can also set up **views** to filter by specific agents or date ranges, making it easy to monitor specific agents over time.
 
-> From here you can also export to Excel, connect Power BI directly to this table, or set up a Power Platform dataflow for ongoing processing.
+> For reporting at scale, use [Dataverse link to Microsoft Fabric](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/azure-synapse-link-view-in-fabric) to sync the `ConversationTranscript` table into a Fabric lakehouse. From there, use a dataflow or automated notebook to parse the raw transcript JSON into a structured semantic model, then query that model from Power BI. This gives you full control over the data shape and refresh cadence without hitting Dataverse API limits.
 {: .prompt-tip }
 
 ### 4. Dataverse Web API
@@ -252,7 +223,7 @@ transcripts = response.json().get("value", [])
 **Things to know:**
 
 - Transcripts are written **30 minutes after conversation inactivity**, not in real time. See [how transcripts are retained](https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-transcript-controls) for details.
-- Default retention is **30 days**. A bulk delete job in Power Apps removes older records automatically. You can [change this schedule](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-transcripts-powerapps) by cancelling the existing bulk delete job and creating a new one with a different retention period. For long-term storage, use [Azure Synapse Link for Dataverse](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/custom-analytics-strategy) to export to Azure Data Lake Storage Gen2.
+- Default retention is **30 days**. A bulk delete job in Power Apps removes older records automatically. You can [change this schedule](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-transcripts-powerapps) by cancelling the existing bulk delete job and creating a new one with a different retention period. For long-term storage, use [Dataverse link to Microsoft Fabric](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/azure-synapse-link-view-in-fabric) to sync to a Fabric lakehouse (recommended), or [Azure Synapse Link for Dataverse](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/custom-analytics-strategy) to export to Azure Data Lake Storage Gen2.
 - Each record has a **1 MB limit** on the `Content` column. Longer conversations get split across multiple records sharing the same `Name` and `ConversationStartTime`, differentiated by `Metadata.BatchId`. Merge them by sorting on `BatchId`.
 
 ### 5. Application Insights
@@ -271,15 +242,238 @@ The key advantage: **Application Insights data is available in near real time**,
 
 For a pre-built starting point, check the [Copilot Studio Analytics Template Workbook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry#analytics-template-workbook) for Application Insights. It gives you operational dashboards for error rates, latency, and availability out of the box.
 
-You can query Application Insights data using **KQL (Kusto Query Language)** in the Azure portal, connect it to Power BI, or export to Log Analytics for long-term retention.
+You can query Application Insights data using **KQL (Kusto Query Language)** in the Azure portal, connect it to Power BI via the [Azure Monitor data source](https://learn.microsoft.com/en-us/power-bi/connect-data/service-connect-to-services), or export to Log Analytics for long-term retention.
 
 To connect your agent, go to **Settings > Advanced > Application Insights** in Copilot Studio and configure the connection string. You'll find three logging toggles there: **Log activities** (incoming/outgoing messages and events), **Log sensitive Activity properties** (user IDs, names, message text), and **Log node tools** (an event for each topic node execution). See [Connect your agent to Application Insights](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry) for the full walkthrough.
 
-> **Filter out test pane traffic.** Copilot Studio tags all telemetry with a `designMode` custom dimension. Use `where customDimensions['designMode'] == "False"` in your KQL queries to exclude test pane conversations and only analyze production traffic.
+> **Filter out test pane traffic.** Copilot Studio tags all telemetry with a `DesignMode` custom dimension. Use `where customDimensions['DesignMode'] == "False"` in your KQL queries to exclude test pane conversations and only analyze production traffic.
 {: .prompt-tip }
 
 > **`user_Id` is not always a real user.** In anonymous channels like webchat, Application Insights `user_Id` is a session-based identifier that changes with each conversation. Metrics like "distinct users" actually represent "unique conversations" in those scenarios. Only authenticated channels provide a stable user identity.
 {: .prompt-warning }
+
+#### Full conversation trace query {#kql-full-trace}
+
+The simple queries above are great for quick lookups. For deeper investigation — understanding exactly what happened in a conversation, measuring response latency, and seeing every topic and action in order — use the extensive analysis query below. It enriches raw `customEvents` data with human-readable labels, calculates timing between events, and provides five switchable output modes. If you're triaging a user-reported issue, see the [triage workflow]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}#supportops-triage-a-user-reports-a-problem) for when to use this query.
+
+Set `targetConversation` to a specific conversation ID, or leave it empty to trace all conversations. Output mode A (chronological trace) is active by default — uncomment one of the other blocks to switch.
+
+> The code below is **KQL (Kusto Query Language)**, but rendered with SQL highlighting because this site doesn't support KQL syntax highlighting.
+{: .prompt-info }
+
+<details markdown="1">
+<summary><strong>Full conversation trace query</strong> — ~200 lines of KQL with five output modes <em style="color: #3b82f6; font-weight: normal;">(click to expand)</em></summary>
+
+```sql
+// ============================================================================
+// MCS Full Conversation Trace — Extensive Analysis Query
+// ============================================================================
+// Replace the conversationId below, or remove the filter to trace all conversations.
+// Works in the classic App Insights scope (customEvents table).
+// ============================================================================
+
+let targetConversation = "your-conversation-id";  // set to "" for all conversations
+
+// ── Step 1: Extract and enrich every field we have ──────────────────────────
+let enriched = customEvents
+| where cloud_RoleName == "Microsoft Copilot Studio"
+| extend conversationId = tostring(customDimensions["conversationId"])
+| where isempty(targetConversation) or conversationId == targetConversation
+| extend
+    // Identity
+    agent           = cloud_RoleInstance,
+    channelId       = tostring(customDimensions["channelId"]),
+    isDesignMode    = tostring(customDimensions["DesignMode"]),
+    // Message fields
+    messageText     = tostring(customDimensions["text"]),
+    speakText       = tostring(customDimensions["speak"]),
+    fromId          = tostring(customDimensions["fromId"]),
+    recipientId     = tostring(customDimensions["recipientId"]),
+    recipientName   = tostring(customDimensions["recipientName"]),
+    activityType    = tostring(customDimensions["type"]),
+    replyActivityId = tostring(customDimensions["replyActivityId"]),
+    locale          = tostring(customDimensions["locale"]),
+    // Topic fields
+    topicName       = tostring(customDimensions["TopicName"]),
+    topicId         = tostring(customDimensions["TopicId"]),
+    trigger         = tostring(customDimensions["Trigger"]),
+    action          = tostring(customDimensions["Action"]),
+    // Action fields
+    actionId        = tostring(customDimensions["ActionId"]),
+    actionKind      = tostring(customDimensions["Kind"]);
+
+// ── Step 2: Build the chronological trace with timing + classification ──────
+let trace = enriched
+| order by conversationId asc, timestamp asc
+| extend
+    prevConv      = prev(conversationId),
+    prevTimestamp  = prev(timestamp),
+    prevEventName  = prev(name)
+| extend
+    deltaMs = iff(conversationId == prevConv, (timestamp - prevTimestamp) / 1ms, 0.0)
+// Classify each event into a human readable category
+| extend eventCategory = case(
+    // Messages
+    name == "BotMessageReceived" and activityType == "message",  "USER MESSAGE",
+    name == "BotMessageReceived" and activityType == "event",    "TRIGGER EVENT",
+    name == "BotMessageReceived",                                "INCOMING",
+    name == "BotMessageSend",                                    "BOT RESPONSE",
+    // Topic lifecycle
+    name == "TopicStart" and isnotempty(trigger),                "TOPIC START (triggered)",
+    name == "TopicStart",                                        "TOPIC START",
+    name == "TopicEnd",                                          "TOPIC END",
+    // Actions by Kind
+    name == "TopicAction" and actionKind == "SetVariable",             "ACTION: SetVariable",
+    name == "TopicAction" and actionKind == "SendActivity",            "ACTION: SendActivity",
+    name == "TopicAction" and actionKind == "SearchAndSummarizeContent","ACTION: SearchAndSummarize",
+    name == "TopicAction" and actionKind == "Question",                "ACTION: Question",
+    name == "TopicAction" and actionKind == "Condition",               "ACTION: Condition",
+    name == "TopicAction" and actionKind == "HttpRequest",             "ACTION: HttpRequest",
+    name == "TopicAction" and actionKind == "RedirectToTopic",         "ACTION: Redirect",
+    name == "TopicAction",                                             strcat("ACTION: ", actionKind),
+    name
+  )
+// Build a display label for the trace line
+| extend traceLabel = case(
+    name == "BotMessageReceived",
+        strcat(eventCategory, " | ",
+            iff(strlen(messageText) > 120, strcat(substring(messageText, 0, 120), "..."), messageText)),
+    name == "BotMessageSend",
+        strcat(eventCategory, " | ",
+            iff(strlen(messageText) > 120, strcat(substring(messageText, 0, 120), "..."), messageText)),
+    name == "TopicStart",
+        strcat(eventCategory, " | ", topicName,
+            iff(isnotempty(trigger), strcat(" [trigger: ", trigger, "]"), ""),
+            iff(isnotempty(action), strcat(" [action: ", action, "]"), "")),
+    name == "TopicEnd",
+        strcat(eventCategory, " | ", topicName),
+    name == "TopicAction",
+        strcat(eventCategory, " | ", topicName,
+            iff(isnotempty(actionId), strcat(" (", actionId, ")"), "")),
+    strcat(eventCategory, " | ", name)
+  );
+
+// ── Step 3: Conversation level summary ──────────────────────────────────────
+let convSummary = trace
+| summarize
+    startTime           = min(timestamp),
+    endTime             = max(timestamp),
+    totalEvents         = count(),
+    userMessages        = countif(name == "BotMessageReceived"),
+    botResponses        = countif(name == "BotMessageSend"),
+    topicsTriggered     = countif(name == "TopicStart"),
+    topicsCompleted     = countif(name == "TopicEnd"),
+    actionsExecuted     = countif(name == "TopicAction"),
+    uniqueTopics        = dcount(iff(name == "TopicStart", topicName, "")),
+    uniqueActionKinds   = dcount(iff(name == "TopicAction", actionKind, "")),
+    topicList           = make_set(iff(name == "TopicStart", topicName, ""), 50),
+    actionKindList      = make_set(iff(name == "TopicAction", actionKind, ""), 50),
+    channelId           = take_any(channelId),
+    agent               = take_any(agent),
+    isDesignMode        = take_any(isDesignMode)
+    by conversationId
+| extend
+    durationSec         = (endTime - startTime) / 1s,
+    topicsDropped       = topicsTriggered - topicsCompleted,
+    // Remove empty strings from sets
+    topicList           = set_difference(topicList, dynamic([""])),
+    actionKindList      = set_difference(actionKindList, dynamic([""]));
+
+// ── Step 4: Topic execution timing ──────────────────────────────────────────
+let topicTiming = trace
+| where name in ("TopicStart", "TopicEnd")
+| extend topicEvent = iff(name == "TopicStart", "start", "end")
+| summarize
+    topicStartTime = minif(timestamp, name == "TopicStart"),
+    topicEndTime   = maxif(timestamp, name == "TopicEnd")
+    by conversationId, topicName
+| extend topicDurationMs = (topicEndTime - topicStartTime) / 1ms
+| where isnotnull(topicStartTime) and isnotnull(topicEndTime)
+| order by conversationId asc, topicStartTime asc;
+
+// ── Step 5: Response latency (time from last user message to bot response) ──
+let responseTiming = trace
+| where name in ("BotMessageReceived", "BotMessageSend")
+| order by conversationId asc, timestamp asc
+| extend prevEvent = prev(name), prevTs = prev(timestamp), prevConvId = prev(conversationId)
+| where name == "BotMessageSend" and prevEvent == "BotMessageReceived" and conversationId == prevConvId
+| extend responseLatencyMs = (timestamp - prevTs) / 1ms
+| project conversationId, timestamp, responseLatencyMs;
+
+// ── Step 6: Action breakdown per topic ──────────────────────────────────────
+let actionBreakdown = trace
+| where name == "TopicAction"
+| summarize
+    actionCount     = count(),
+    actionKinds     = make_set(actionKind),
+    actionIds       = make_set(actionId)
+    by conversationId, topicName
+| order by conversationId asc;
+
+// ============================================================================
+// OUTPUT: Choose which result set to render by uncommenting one block below.
+// ============================================================================
+
+// ── A. Full chronological trace (default) ───────────────────────────────────
+trace
+| project
+    timestamp,
+    conversationId,
+    agent,
+    channelId,
+    traceLabel,
+    deltaMs,
+    // Raw fields for drill down
+    name,
+    topicName,
+    actionKind,
+    actionId,
+    messageText,
+    trigger,
+    action,
+    isDesignMode,
+    session_Id
+| order by conversationId asc, timestamp asc
+
+// ── B. Conversation summary (uncomment to use) ─────────────────────────────
+// convSummary
+// | project
+//     conversationId, agent, channelId, isDesignMode,
+//     startTime, endTime, durationSec,
+//     userMessages, botResponses,
+//     topicsTriggered, topicsCompleted, topicsDropped,
+//     actionsExecuted,
+//     uniqueTopics, topicList,
+//     uniqueActionKinds, actionKindList
+// | order by startTime desc
+
+// ── C. Topic execution timing (uncomment to use) ───────────────────────────
+// topicTiming
+// | project conversationId, topicName, topicStartTime, topicEndTime, topicDurationMs
+// | order by conversationId asc, topicStartTime asc
+
+// ── D. Response latency (uncomment to use) ─────────────────────────────────
+// responseTiming
+// | project conversationId, timestamp, responseLatencyMs
+// | order by conversationId asc, timestamp asc
+
+// ── E. Action breakdown per topic (uncomment to use) ───────────────────────
+// actionBreakdown
+// | project conversationId, topicName, actionCount, actionKinds, actionIds
+// | order by conversationId asc
+```
+
+</details>
+
+**Output modes:**
+
+| Mode | What it shows |
+|------|---------------|
+| **A. Chronological trace** (default) | Every event in order with human-readable labels, timing deltas, and raw fields for drill-down |
+| **B. Conversation summary** | One row per conversation: duration, message counts, topic list, action breakdown |
+| **C. Topic execution timing** | Start/end timestamps and duration per topic |
+| **D. Response latency** | Time between each user message and the next bot response |
+| **E. Action breakdown** | Which actions ran in each topic, with counts and kinds |
 
 ### 6. Copilot Studio Kit
 **Pre-built transcript analysis, KPIs, and dashboards**
@@ -290,7 +484,6 @@ What it gives you for transcripts specifically:
 
 - **[Conversation KPIs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-kpi)** automatically parse transcripts and generate aggregated outcome data in Dataverse: sessions, turns, outcomes (resolved, escalated, abandoned), with optional full transcript storage and a built-in transcript visualizer. KPIs are generated twice daily automatically, or on demand.
 - **[Conversation Analyzer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-analyzer)** lets you run custom AI prompts against transcripts to surface insights like sentiment analysis, personal data detection, or any pattern you define. Comes with two built-in prompts and supports custom ones you create and reuse.
-- **[Agent Insights Hub](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-overview)** is a full analytics dashboard that aggregates telemetry from both Application Insights and Conversation Transcripts into a single view with KPI cards, trend charts, CSAT scores, and filtering by agent, channel, and date range. Supports up to 365 days of historical data.
 
 But the Kit goes well beyond transcripts. It includes test automation with AI-graded rubrics, agent inventory for tenant-wide visibility, compliance hub for governance policies, webchat playground for customizing chat appearance, and more. If you're running agents in production, it's worth the install. See the [Copilot Studio Kit overview](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-overview) for the full feature list.
 

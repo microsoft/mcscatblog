@@ -5,7 +5,7 @@ description: "How to extract, read, and understand Copilot Studio conversation t
 date: 2026-03-19
 author: roels
 categories: [copilot-studio, tutorial]
-tags: [transcripts, dataverse, application-insights, power-apps, copilot-studio-kit, debugging, analytics, best-practices]
+tags: [transcripts, dataverse, application-insights, power-apps, copilot-studio-kit, debugging, analytics]
 image:
   path: /assets/posts/conversation-transcripts/header.png
   alt: "Copilot Studio conversation transcripts"
@@ -40,7 +40,7 @@ flowchart TD
 
     D --> |Maker / Builder| D1["Test pane snapshot<br/>MCS Agent Analyser"]:::blue
     A --> |Support / Ops| A1["App Insights (real-time)<br/>Dataverse transcript (context)<br/>Conversation ID lookup"]:::red
-    O --> |Analyst| O1["Copilot Studio Kit<br/>Power BI + Dataverse<br/>Built-in Analytics"]:::green
+    O --> |Analyst| O1["Built-in Analytics<br/>Copilot Studio Kit<br/>Power BI + Dataverse"]:::green
 
     classDef gray fill:#f0f0f0,stroke:#999,color:#333
     classDef blue fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f
@@ -71,9 +71,9 @@ Click the **...** (three dots) in the test pane next to "Test your agent" and se
 | Whether the conversation was resolved, escalated, or abandoned | `SessionInfo` activities with outcome and turn count |
 | What the user rated the experience | Customer Satisfaction (CSAT) survey response in `CSATSurveyResponse` activities |
 
-**Not in the test pane?** Have the user type `/debug conversationid` in the chat to get the conversation ID (a GUID). Confirmed working in Teams as of March 2026; not tested in M365 Copilot or webchat. Use that ID to look up the full transcript in Dataverse. See [How to Get Your Conversation ID]({% post_url 2026-01-24-conversationid-users %}) for details.
+**Not in the test pane?** Have the user type `/debug conversationid` in the chat to get the conversation ID (a GUID). Use that ID to look up the full transcript in Dataverse. See [How to Get Your Conversation ID]({% post_url 2026-01-24-conversationid-users %}) for details.
 
-For deterministic, structural analysis of your agent alongside transcripts, the [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) parses both the agent definition and transcripts to show you structure alongside behavior. More on that [below](#mcs-agent-analyser).
+For deterministic, structural analysis of your agent alongside transcripts, the [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) parses both the agent definition and transcripts to show you structure alongside behavior. See [MCS Agent Analyser](#mcs-agent-analyser) for details.
 
 #### A real example: Why the agent sometimes went silent in Teams
 
@@ -114,9 +114,24 @@ Your agent is live. A user reaches out: "The agent gave me the wrong answer" or 
 
 **Step 1: Get the conversation ID.** Ask the user to share three things: what they were doing, what they expected, and their conversation ID. They can type `/debug conversationid` in the chat to get a GUID like `0c4ebb21-3f74-4df4-b191-812aea31273d` (see [How to Get Your Conversation ID]({% post_url 2026-01-24-conversationid-users %})).
 
-**Step 2: Check Application Insights.** App Insights is where errors, latency, dependency failures, and stack traces live. It gives you near real-time telemetry, unlike Dataverse transcripts which aren't written until ~30 minutes after conversation inactivity. To correlate with the conversation ID from Step 1, query `customDimensions` in [KQL (Kusto Query Language)](https://learn.microsoft.com/en-us/kusto/query/) — the conversation ID appears in fields like `session_Id` or within `customDimensions`. A starting query: `traces | where customDimensions has 'your-conversation-id'` or `requests | where session_Id == 'your-conversation-id'`.
+**Step 2: Check Application Insights.** App Insights is where errors, latency, dependency failures, and stack traces live. It gives you near real-time telemetry, unlike Dataverse transcripts which aren't written until ~30 minutes after conversation inactivity.
 
-For a pre-built starting point, check the [Copilot Studio Analytics Template Workbook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry#analytics-template-workbook), which gives you operational dashboards for error rates, latency, and availability out of the box. For org-specific triage needs, you can also emit [custom telemetry events](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry) and build KQL queries tailored to your environment.
+Most of the useful Copilot Studio data sits inside `customDimensions`, a structured bag of key/value pairs on each event. The conversation ID from Step 1 is stored in `customDimensions["conversationId"]`. The standard App Insights field `session_Id` is a separate identifier that groups telemetry within a session; it's useful for counting sessions, ordering events, and correlating across tables, but it's not the same as the conversation ID. Here's a starting query:
+
+> The code below is **KQL (Kusto Query Language)**, but rendered with SQL highlighting because this site doesn't support KQL syntax highlighting.
+{: .prompt-info }
+
+```sql
+customEvents
+| extend conversationId = tostring(customDimensions["conversationId"])
+| where conversationId == 'your-conversation-id'
+| project timestamp, name, session_Id, customDimensions
+| order by timestamp asc
+```
+
+For a pre-built starting point, check the [Copilot Studio Analytics Template Workbook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry#analytics-template-workbook), which gives you operational dashboards for error rates, latency, and availability out of the box.
+
+For a full conversation trace with timing, topic flow, and action breakdown, see [the extensive analysis query in the technical reference]({% post_url 2026-03-19-open-the-hood-technical-reference %}#kql-full-trace).
 
 > **Don't have App Insights connected yet?** Skip to Step 3 and pull the Dataverse transcript once available. Then [connect App Insights](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry) so you're ready next time.
 {: .prompt-info }
@@ -152,18 +167,19 @@ This is analyst territory. You're not reading individual transcripts, you're loo
 
 **Start with the built-in Analytics pane.** Copilot Studio's **Analytics** section gives you session outcomes, engagement rates, resolution and escalation trends, CSAT scores, and topic performance out of the box. No setup, no code. This is your first stop for understanding how your agent is performing.
 
-**For deeper, pre-built analytics**, the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) takes it further. Install the solution and you get [Conversation KPIs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-kpi) (automated outcome aggregation), [Conversation Analyzer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-analyzer) (custom AI prompts against transcripts), and [Agent Insights Hub](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-overview) (unified dashboard combining App Insights and Dataverse data).
+**For deeper, pre-built analytics**, the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) takes it further. Install the solution and you get [Conversation KPIs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-kpi) (automated outcome aggregation) and [Conversation Analyzer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-analyzer) (custom AI prompts against transcripts).
 
-**For fully custom dashboards**, connect Power BI directly to the Dataverse `ConversationTranscript` table. Build whatever views you need: CSAT by topic, escalation rates by channel, resolution trends over time.
-
-**For long-term storage**, the default 30-day retention won't cut it. Use [Azure Synapse Link for Dataverse](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/custom-analytics-strategy) to continuously export to Azure Data Lake Storage Gen2. From there you can run historical analysis in Synapse, Fabric, or any tool that reads Parquet files.
+**For fully custom dashboards**, use [Dataverse link to Microsoft Fabric](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/azure-synapse-link-view-in-fabric) to sync the `ConversationTranscript` table into a Fabric lakehouse. The raw transcript JSON needs parsing — use a dataflow or automated Fabric notebook to flatten it into a structured semantic model. From there, build whatever Power BI views you need: CSAT by topic, escalation rates by channel, resolution trends over time. This also solves long-term storage: the default 30-day Dataverse retention won't cut it for trend analysis, but your Fabric lakehouse retains everything you sync.
 
 > **Trend analysis is where Dataverse and App Insights come together.** Individual debugging can often use one or the other. Trend analysis needs both: Dataverse for conversation content and outcomes, App Insights for operational health and real-time alerting.
 {: .prompt-tip }
 
 #### Quick reference: data model and access methods
 
-Sessions ≠ conversations. A session ends after 30 minutes of inactivity and gets an outcome (Resolved, Escalated, Abandoned). A conversation can span multiple sessions if the user goes idle and returns. Understanding this distinction is critical for accurate analytics — see [Understanding the data model]({% post_url 2026-03-19-open-the-hood-technical-reference %}#understanding-the-data-model) in the Technical Reference for the full breakdown of records, sessions, and conversations. Dataverse stores conversation content and outcomes; Application Insights stores operational health (errors, latency, dependency failures). Most production setups need both.
+Sessions ≠ conversations. A session ends after 30 minutes of inactivity and gets an outcome (Resolved, Escalated, Abandoned). A conversation can span multiple sessions if the user goes idle and returns. Dataverse stores conversation content and outcomes; Application Insights stores operational health (errors, latency, dependency failures). Most production setups need both.
+
+![Data records map to user conversations — showing how ConversationId, sessions, records, and BatchId relate](/assets/posts/conversation-transcripts/data-model-overview.png)
+_How Dataverse records map to user conversations. For the detailed breakdown of records, sessions, and conversations, see [Understanding the data model]({% post_url 2026-03-19-open-the-hood-technical-reference %}#understanding-the-data-model) in the Technical Reference._
 
 | Method | Best for | Scenarios | Code required |
 |---|---|---|---|
@@ -206,7 +222,7 @@ Transcripts show you a lot, but not everything. Knowing the gaps saves you from 
 
 **Token counts are not tracked in transcripts.** In Copilot Studio, billing works through [Copilot Credits](https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-messages-management), not per-token pricing. Token counts aren't exposed because they're not how you're billed. Monitor consumption through credit usage in the Power Platform admin center.
 
-**Orchestrator reasoning.** You can see *what* the orchestrator planned to do (search these sources, call this tool, then summarize). The full chain-of-thought reasoning for *why* it chose that plan over alternatives depends on the model configuration. When using a [deep reasoning](https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-messages-management#reasoning-model-billing-rates) model, the reasoning tokens appear as additional trace data in the transcript activities, giving you visibility into the orchestrator's decision process. Without deep reasoning, you only see the resulting plan — not the reasoning behind it.
+**Orchestrator reasoning.** You can see *what* the orchestrator planned to do (search these sources, call this tool, then summarize). When using a [deep reasoning](https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-messages-management#reasoning-model-billing-rates) model, the chain of thought is shared in the transcript, giving you visibility into *why* it chose that plan. Without deep reasoning, you only see the resulting plan — not the reasoning behind it.
 
 ---
 
@@ -318,7 +334,7 @@ Where you start depends on your persona.
 
 **If you're in support/ops (triaging live issues):** Connect Application Insights if you haven't already. The near real-time data and alerting are worth the setup. Start collecting conversation IDs from users who report problems, and make sure your support team knows about `/debug conversationid`.
 
-**If you're an analyst (building trend analysis):** Install the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) for pre-built dashboards and automated transcript analysis. If your retention needs exceed 30 days, set up Synapse Link. Connect Power BI for custom views.
+**If you're an analyst (building trend analysis):** Install the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) for pre-built dashboards and automated transcript analysis. If your retention needs exceed 30 days, set up [Dataverse link to Microsoft Fabric](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/azure-synapse-link-view-in-fabric). Connect Power BI for custom views.
 
 **Regardless of persona:** Let AI and tooling do the heavy lifting. Use the Kit's [Conversation Analyzer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-analyzer) for automated pattern detection, and feed transcripts to a Copilot for open-ended analysis. If you're a maker or in ops, use the [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) for deterministic structure-level validation of your agent's configuration alongside runtime behavior.
 
