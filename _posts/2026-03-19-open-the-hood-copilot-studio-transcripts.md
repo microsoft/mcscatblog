@@ -24,13 +24,11 @@ This post is structured around three personas:
 - **[Support/ops triage](#supportops-triage-a-user-reports-a-problem)**: A user reports a problem. Find the conversation, trace the failure.
 - **[Analyst trends](#trend-analysis-conversation-quality-and-patterns-at-scale)**: You need patterns across hundreds of conversations. Build dashboards and pipelines.
 
-Each persona points you to the right tools. For the full data model, Dataverse vs App Insights comparison, and detailed access methods with code examples, see the [Technical Reference]({% post_url 2026-03-19-open-the-hood-technical-reference %}).
+Each persona points you to the right tools.
 
 ---
 
-## Three personas
-
-Three personas, three different starting points.
+## Three personas, different starting points
 
 ```mermaid
 flowchart TD
@@ -38,7 +36,7 @@ flowchart TD
     Q --> A{"Error triage?<br/>Errors, latency,<br/>dependency failures,<br/>stack traces"}:::red
     Q --> O{"Trends at scale?<br/>Conversation quality,<br/>CSAT patterns,<br/>topic coverage gaps"}:::green
 
-    D --> |Maker / Builder| D1["Test pane snapshot<br/>MCS Agent Analyser"]:::blue
+    D --> |Maker / Builder| D1["Test pane snapshot<br/>Community tools"]:::blue
     A --> |Support / Ops| A1["App Insights (real-time)<br/>Dataverse transcript (context)<br/>Conversation ID lookup"]:::red
     O --> |Analyst| O1["Built-in Analytics<br/>Copilot Studio Kit<br/>Power BI + Dataverse"]:::green
 
@@ -54,9 +52,9 @@ You're in the test pane. The agent won't pick up the right knowledge source, rou
 
 **Open the hood.**
 
-Click the **...** (three dots) in the test pane next to "Test your agent" and select **Save snapshot**. It downloads a zip file called `botcontent` containing the conversation transcript and the full agent configuration. Open the transcript JSON and read what actually happened.
+Click the **...** (three dots) in the test pane next to "Test your agent" and select **Save snapshot**. It downloads a zip file called `botcontent` containing the conversation transcript and the full agent configuration. Open `dialog.json` and read what actually happened.
 
-**What you'll see:**
+**Here are a few examples of what you'll find:**
 
 | What you want to know | Where to find it |
 |---|---|
@@ -71,40 +69,32 @@ Click the **...** (three dots) in the test pane next to "Test your agent" and se
 | Whether the conversation was resolved, escalated, or abandoned | `SessionInfo` activities with outcome and turn count |
 | What the user rated the experience | Customer Satisfaction (CSAT) survey response in `CSATSurveyResponse` activities |
 
-**Not in the test pane?** Have the user type `/debug conversationid` in the chat to get the conversation ID (a GUID). Use that ID to look up the full transcript in Dataverse. See [How to Get Your Conversation ID]({% post_url 2026-01-24-conversationid-users %}) for details.
+That's a lot of data. Here's why it matters.
 
-For deterministic, structural analysis of your agent alongside transcripts, the [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) parses both the agent definition and transcripts to show you structure alongside behavior. See [MCS Agent Analyser](#mcs-agent-analyser) for details.
+#### A real example: Why the agent sometimes went silent
 
-#### A real example: Why the agent sometimes went silent in Teams
+A customer's agent worked fine most of the time, but would sometimes just... not respond. No error, no timeout message. Just silence. It turned out that Copilot Studio enforces a synchronous response timeout (around 120 seconds based on [observed behavior](https://learn.microsoft.com/en-us/answers/questions/5619297/how-to-fix-a-flowactiontimedout-error-within-copil) and [community reports](https://learn.microsoft.com/en-us/answers/questions/5722696/intermittent-non-response-issue-with-copilot-studi), not official documentation), and in Teams, exceeding it results in a silent failure. The user gets nothing.
 
-I had a customer whose agent worked fine most of the time, but would sometimes just... not respond. The user would ask a question in Teams and get nothing back. No error, no timeout message. Just silence.
-
-Here's what most people don't know: **Copilot Studio appears to enforce a synchronous response timeout around 120 seconds across all channels.** This is based on observed behavior and community reports, not official documentation. If your agent doesn't send a response within that window, the connection drops. In some channels (notably Teams), this happens silently — no error, no message. Other channels may surface a timeout error or show a loading spinner indefinitely. This same timeout applies to synchronous flow actions called from Copilot Studio. See [this Microsoft Q&A thread](https://learn.microsoft.com/en-us/answers/questions/5619297/how-to-fix-a-flowactiontimedout-error-within-copil) for details on the ~120 second behavior, and [this thread](https://learn.microsoft.com/en-us/answers/questions/5722696/intermittent-non-response-issue-with-copilot-studi) for a community report of the exact same symptom pattern.
-
-We opened the transcripts for the slow conversations and traced where the time was going:
+Downloading the snapshot was the first step, but what really helped was running it through the [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) to visualize exactly where the time was going. (For a different approach to real-time performance tracing, see [Agentic Tooling: Making Agent Performance Transparent and Measurable]({% post_url 2026-01-16-response-analysis-copilot-tool %}).) Here's what the trace showed:
 
 1. **User message**: "How do I submit an expense report?"
 2. **IntentRecognition**: Topic `ExpenseSubmission` triggered with confidence 0.92. Correct topic.
-3. **HTTP connector call**: `expense_lookup` API checked the user's pending reports. **Returned in 34 seconds.** That was the first red flag.
+3. **HTTP connector call**: `expense_lookup` API checked the user's pending reports. **Returned in 34 seconds.** First red flag.
 4. **Topic redirect**: Routed to `ExpenseGuidelines` for the how-to answer.
 5. **Knowledge source search**: The agent searched **2 SharePoint sites** and **1 uploaded PDF**. All three returned **0 relevant chunks**. The content had been migrated to a new intranet months earlier, but nobody had updated the knowledge source configurations.
 6. **Fallback**: No useful results, so the orchestrator fell through to a catch-all topic that ran an **Azure AI Search** query against the full document index. That single call took **62 seconds**.
 7. **Response generation**: The LLM summarized the Azure AI Search results. **Total elapsed: 34s + 62s + LLM generation = ~130 seconds.** Past the timeout. The user got silence.
 
 **The fix** was three things:
-- **Updated knowledge source descriptions** so the orchestrator targeted the right source (the new intranet, not the stale SharePoint sites that had been emptied during migration)
+- **Updated the knowledge sources** — they were still pointing at the old SharePoint sites that had been emptied during migration, not the new intranet where the content actually lived
 - **Optimized the Azure AI Search index** — added semantic ranking and reduced the search scope so the catch-all query wasn't scanning the entire document corpus
 - **Restructured the catch-all topic** to set a timeout and return a graceful fallback message instead of hanging
 
 Result: average response time dropped to ~35 seconds. No more silent failures.
 
-> **Persistent channels like Teams need extra attention.** Conversation state carries over across session boundaries, which can compound timeout issues. See [Managing conversation boundaries]({% post_url 2026-03-19-open-the-hood-technical-reference %}#managing-conversation-boundaries) in the Technical Reference for techniques to handle this.
-{: .prompt-tip }
-
 That's the difference between guessing ("maybe I should tweak some settings") and debugging with data ("the knowledge sources are pointing at empty SharePoint sites, and the catch-all is doing a full index scan").
 
-> **What about the things you CAN'T see?** Transcripts show you a lot, but not everything. See [What's not in the transcript](#whats-not-in-the-transcript) for the gaps and why they exist.
-{: .prompt-info }
+But what if you're not in the test pane? Maybe the agent is already live and users are reporting issues. That's a different scenario entirely.
 
 ---
 
@@ -114,12 +104,7 @@ Your agent is live. A user reaches out: "The agent gave me the wrong answer" or 
 
 **Step 1: Get the conversation ID.** Ask the user to share three things: what they were doing, what they expected, and their conversation ID. They can type `/debug conversationid` in the chat to get a GUID like `0c4ebb21-3f74-4df4-b191-812aea31273d` (see [How to Get Your Conversation ID]({% post_url 2026-01-24-conversationid-users %})).
 
-**Step 2: Check Application Insights.** App Insights is where errors, latency, dependency failures, and stack traces live. It gives you near real-time telemetry, unlike Dataverse transcripts which aren't written until ~30 minutes after conversation inactivity.
-
-Most of the useful Copilot Studio data sits inside `customDimensions`, a structured bag of key/value pairs on each event. The conversation ID from Step 1 is stored in `customDimensions["conversationId"]`. The standard App Insights field `session_Id` is a separate identifier that groups telemetry within a session; it's useful for counting sessions, ordering events, and correlating across tables, but it's not the same as the conversation ID. Here's a starting query:
-
-> The code below is **KQL (Kusto Query Language)**, but rendered with SQL highlighting because this site doesn't support KQL syntax highlighting.
-{: .prompt-info }
+**Step 2: Check Application Insights.** If you're running agents in production, [connecting Copilot Studio to Application Insights](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry) is a best practice. App Insights is where errors, latency, dependency failures, and stack traces live, and it gives you near real-time telemetry. Here's a simple KQL query that returns everything for a single conversation using the conversation ID from Step 1:
 
 ```sql
 customEvents
@@ -129,16 +114,11 @@ customEvents
 | order by timestamp asc
 ```
 
-For a pre-built starting point, check the [Copilot Studio Analytics Template Workbook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry#analytics-template-workbook), which gives you operational dashboards for error rates, latency, and availability out of the box.
+This is just to get you started. For pre-built dashboards, check the [Copilot Studio Analytics Template Workbook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry#analytics-template-workbook). A full conversation trace query with timing, topic flow, and action breakdown will be covered in an upcoming post.
 
-For a full conversation trace with timing, topic flow, and action breakdown, see [the extensive analysis query in the technical reference]({% post_url 2026-03-19-open-the-hood-technical-reference %}#kql-full-trace).
+**Step 3: When App Insights isn't enough.** Tool invocations show up as `TopicStart` events in App Insights, so you can see *which* tools and connectors were called, but not with the same clarity as Dataverse transcripts. Knowledge source details (which sources were searched, what chunks came back, search duration), intent recognition confidence scores, the orchestration plan, and session outcomes (Resolved, Escalated, Abandoned) aren't in App Insights at all. If you need to follow the agent's complete orchestration plan, Dataverse transcripts are significantly more detailed. We hope future updates will bring more of this data into App Insights. For now, you need the Dataverse transcript. Filter the `ConversationTranscript` table's `Name` column (which stores `ConversationId_BotId`) with the conversation ID from Step 1. Note that transcripts aren't written until ~30 minutes after conversation inactivity, so recent conversations may not be available yet.
 
-> **Don't have App Insights connected yet?** Skip to Step 3 and pull the Dataverse transcript once available. Then [connect App Insights](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-bot-framework-composer-capture-telemetry) so you're ready next time.
-{: .prompt-info }
-
-**Step 3: If App Insights doesn't give you enough context,** pull the full Dataverse transcript. Filter the `ConversationTranscript` table's `Name` column (which stores `ConversationId_BotId`) with the conversation ID from Step 1. The transcript gives you the complete activity chain: which topic fired, the orchestration plan, whether a tool call failed, whether a knowledge source returned nothing, or whether the agent routed to the wrong topic entirely.
-
-If the conversation just happened (within the last 30 minutes), the transcript may not be available yet. You can also use the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) or the [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) to pull and visualize conversations once the transcript lands.
+For browsing and parsing transcripts, you can [view them directly in Power Apps](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-transcripts-powerapps), use the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) for pre-built dashboards, or the community tools mentioned earlier.
 
 **The triage workflow:**
 
@@ -165,60 +145,22 @@ You're past one-off debugging. Your agent handles real conversations at scale an
 
 This is analyst territory. You're not reading individual transcripts, you're looking for patterns.
 
-**Start with the built-in Analytics pane.** Copilot Studio's **Analytics** section gives you session outcomes, engagement rates, resolution and escalation trends, CSAT scores, and topic performance out of the box. No setup, no code. This is your first stop for understanding how your agent is performing.
+**Start with the [built-in Analytics pane](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-overview).** Copilot Studio's **Analytics** section gives you more than you might expect out of the box: session outcomes, AI-generated [themes](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-themes) that cluster user questions into categories, [generated answer rate and quality](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness#generated-answer-rate-and-quality-preview) scoring (with drill-down to individual questions), sentiment analysis, CSAT scores, tool use metrics, and estimated savings. No setup, no code. This is your first stop for understanding how your agent is performing.
 
-**For deeper, pre-built analytics**, the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) takes it further. Install the solution and you get [Conversation KPIs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-kpi) (automated outcome aggregation) and [Conversation Analyzer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-analyzer) (custom AI prompts against transcripts).
+**For custom analytics over transcript data**, the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) is a middle ground between built-in analytics and a full custom pipeline. It parses Dataverse transcripts into a relational data model, gives you [Conversation KPIs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-kpi) and reference reports out of the box, and lets you build your own reports over that data model. The [Conversation Analyzer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-analyzer) adds AI-powered prompts against transcripts for custom pattern detection.
 
 **For fully custom dashboards**, use [Dataverse link to Microsoft Fabric](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/azure-synapse-link-view-in-fabric) to sync the `ConversationTranscript` table into a Fabric lakehouse. The raw transcript JSON needs parsing — use a dataflow or automated Fabric notebook to flatten it into a structured semantic model. From there, build whatever Power BI views you need: CSAT by topic, escalation rates by channel, resolution trends over time. This also solves long-term storage: the default 30-day Dataverse retention won't cut it for trend analysis, but your Fabric lakehouse retains everything you sync.
 
-> **Trend analysis is where Dataverse and App Insights come together.** Individual debugging can often use one or the other. Trend analysis needs both: Dataverse for conversation content and outcomes, App Insights for operational health and real-time alerting.
-{: .prompt-tip }
-
-#### Quick reference: data model and access methods
-
-Sessions ≠ conversations. A session ends after 30 minutes of inactivity and gets an outcome (Resolved, Escalated, Abandoned). A conversation can span multiple sessions if the user goes idle and returns. Dataverse stores conversation content and outcomes; Application Insights stores operational health (errors, latency, dependency failures). Most production setups need both.
-
-![Data records map to user conversations — showing how ConversationId, sessions, records, and BatchId relate](/assets/posts/conversation-transcripts/data-model-overview.png)
-_How Dataverse records map to user conversations. For the detailed breakdown of records, sessions, and conversations, see [Understanding the data model]({% post_url 2026-03-19-open-the-hood-technical-reference %}#understanding-the-data-model) in the Technical Reference._
-
-| Method | Best for | Scenarios | Code required |
-|---|---|---|---|
-| **Test pane** | Quick debugging during development | Maker | No |
-| **Analytics UI** | Session outcome exports and CSV downloads | Maker, Analyst | No |
-| **Power Apps table** | Browsing raw transcript JSON | Maker, Analyst | No |
-| **Dataverse Web API** | Scripted analysis and pipelines | Maker, Analyst | Yes |
-| **Application Insights** | Real-time operational monitoring and alerting | Triage, Ops | No (KQL queries) |
-| **Copilot Studio Kit** | Pre-built dashboards, KPIs, and automated analysis | Analyst, Ops | No (install solution) |
-
-For the full data model deep-dive, Dataverse vs App Insights comparison, and detailed instructions for all six access methods (including a Python code example), see the [Technical Reference]({% post_url 2026-03-19-open-the-hood-technical-reference %}).
-
----
-
-## Which roles do you need?
-
-This trips people up. Here's the breakdown:
-
-| What you want to do | Role required |
-|---|---|
-| View transcripts in the Copilot Studio test pane | Agent maker or editor access |
-| View and download transcripts from Copilot Studio Analytics | **Bot Transcript Viewer** security role (Dataverse). Only admins can grant this during agent sharing. |
-| View and download transcripts from Power Apps | **Bot Transcript Viewer** security role (Dataverse) |
-| Query transcripts via the Dataverse Web API | **Bot Transcript Viewer** security role on your Dataverse user |
-| Query telemetry in Application Insights | **Reader** or **Log Analytics Reader** on the App Insights resource (Azure RBAC) |
-| Configure transcript settings for an environment | **Environment administrator** or **System administrator** role |
-
-> The **Bot Transcript Viewer** is a Dataverse environment security role, not a Microsoft Entra ID app registration setting. Makers with the Environment Maker role do **not** automatically get transcript access. An admin must explicitly assign Bot Transcript Viewer during agent sharing.
-{: .prompt-warning }
-
-For Application Insights roles, see the [Technical Reference]({% post_url 2026-03-19-open-the-hood-technical-reference %}#dataverse-vs-application-insights).
 
 ---
 
 ## What's not in the transcript
 
-Transcripts show you a lot, but not everything. Knowing the gaps saves you from hunting for data that isn't there.
+Transcripts show you a lot, but not everything. Whether you're a maker reading a snapshot or an analyst building custom reports, knowing the gaps saves you from hunting for data that isn't there.
 
 **The full LLM prompt and completion are not exposed.** You can see the orchestration plan, the knowledge source results fed to the model, and the agent's final response. But the actual system prompt assembled by the orchestrator (the full instruction set sent to the LLM) is not in the transcript. This is intentional: the system prompt contains behavioral instructions, safety guardrails, and internal logic. Exposing it would create a security risk, the same reason you wouldn't log API keys in application traces.
+
+**Responses grounded in sensitive enterprise data are excluded.** Agent responses that use SharePoint as a knowledge source and reference documents containing sensitive data are [not included in the conversation transcript](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-transcripts-powerapps). This is a privacy safeguard, but it means you may see gaps in the transcript where a knowledge-grounded response was generated but not recorded.
 
 **Token counts are not tracked in transcripts.** In Copilot Studio, billing works through [Copilot Credits](https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-messages-management), not per-token pricing. Token counts aren't exposed because they're not how you're billed. Monitor consumption through credit usage in the Power Platform admin center.
 
@@ -226,130 +168,12 @@ Transcripts show you a lot, but not everything. Knowing the gaps saves you from 
 
 ---
 
-## Beyond transcripts: Automate your analysis
+## Wrapping up
 
-Reading raw JSON transcripts at scale isn't fun. There are two approaches: AI-assisted analysis for pattern detection and open-ended questions, and deterministic tooling for structured, repeatable validation.
+This post is the starting point: which persona are you, what data do you need, and where do you find it. We covered how makers can debug with test pane snapshots, how support and ops teams can triage with App Insights and Dataverse transcripts, and how analysts can build trend analysis with the built-in analytics, the Copilot Studio Kit, and Fabric.
 
-You can use **Copilot itself** to analyze your transcripts. Drop a transcript (or a batch of them) into a Copilot with researcher or analyst capabilities, and ask it to:
+There's a lot more to dig into. The Dataverse transcript data model, detailed App Insights queries, how to build custom analytics pipelines, and how to set up automated analysis are all topics that deserve their own posts. If there's interest, we'll go deeper.
 
-- Identify conversations where the wrong topic fired
-- Find patterns in escalated or abandoned sessions
-- Spot tool calls that are failing or timing out
-- Flag knowledge source searches that return no results
-- Summarize the most common user intents that aren't covered by your agent
-
-<details markdown="1">
-<summary><strong>Ready-to-use analysis prompt</strong> - Copy-paste this into any LLM or Copilot <em style="color: #3b82f6; font-weight: normal;">(click to expand)</em></summary>
-
-```text
-You are a Copilot Studio agent analyst. Your job is to analyze how an agent
-is built, how it behaves at runtime, and where the gaps are between the two.
-
-## Data sources
-
-You may receive any combination of the following:
-
-### Agent architecture (from bot export or test pane snapshot)
-- botContent.yml -- the full agent definition: topics (with trigger phrases
-  and model descriptions), knowledge sources, actions, entities, global
-  variables, system instructions, authentication mode, content moderation
-  settings, orchestrator configuration, and connected agents/skills.
-  This is the primary definition format used in Copilot Studio exports.
-- dialog.json -- conversation flow definitions from Bot Framework Composer:
-  node configurations per topic, condition branches, variable assignments,
-  message nodes, BeginDialog calls (topic-to-topic routing), and action
-  invocations. Note: dialog.json is a Bot Framework Composer artifact.
-  Copilot Studio exports use botContent.yml as the primary definition
-  format. You'll encounter dialog.json in legacy exports or Composer-based
-  customizations.
-
-### Conversation transcripts (JSON from Dataverse or snapshot)
-A JSON array of activity objects based on the Bot Framework protocol.
-Key activity valueTypes and what they tell you:
-- IntentRecognition -- which topic fired, TopicName, confidence Score
-- DialogRedirect -- topic-to-topic routing with target dialog IDs
-- SearchAndSummarizeContent (in nodeTraceData) -- knowledge source searches,
-  which sources were queried, what chunks were returned, search duration
-- SessionInfo -- session outcome (Resolved, Escalated, Abandoned), turn
-  count, session start/end timestamps
-- CSATSurveyResponse -- user satisfaction rating
-- VariableAssignment -- variable values set during the conversation
-- Event activities -- tool/action calls (connectors, HTTP requests),
-  child/connected agent invocations, MCP server calls, orchestration
-  plan traces with the agent's reasoning and planned steps
-
-### Data model rules
-- Sessions time out after 30 minutes of inactivity
-- Transcripts can span multiple Dataverse records (1 MB limit per record)
-  -- merge records sharing the same Name and ConversationStartTime by
-  sorting on Metadata.BatchId
-- The Name column is ConversationId_BotId -- use it to group all records
-  for a single user thread
-- Timestamps on each activity let you calculate step-by-step durations
-
-## How to analyze
-
-1. Start with the architecture files to understand what the agent is
-   designed to do: its topics, trigger phrases, knowledge sources, actions,
-   and routing logic.
-2. Then examine transcripts to see what actually happened at runtime:
-   which topics fired, what confidence scores looked like, which knowledge
-   sources were searched, what tools were called, and how long each step
-   took.
-3. Compare intent to execution: are the right topics triggering? Are
-   knowledge sources returning relevant results? Are tools succeeding?
-   Is the orchestration plan sensible?
-4. Flag mismatches between architecture and behavior -- that's where the
-   bugs and optimization opportunities live.
-
-## Your task
-
-[YOUR ANALYSIS GOAL HERE]
-```
-
-Example analysis goals:
-
-- Overlapping topic triggers causing misroutes (compare trigger phrases across topics in `botContent.yml`)
-- Error diagnosis for a specific conversation ID (trace the full activity chain)
-- Topic routing issues where confidence scores are close (look at `IntentRecognition` scores)
-- Coverage gaps: user intents with no matching topic (unmatched messages falling to fallback)
-- Slow knowledge source lookups (compare search durations across sources in `nodeTraceData`)
-- Failing tool calls or connector errors (look for error events and HTTP status codes)
-- Orchestration plan quality (does the agent's reasoning match the expected flow?)
-- Stale or contradictory system instructions (cross-reference instructions in `botContent.yml` with actual behavior)
-
-</details>
-
-### MCS Agent Analyser
-
-The [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) is an open-source Python tool for deterministic analysis of agent structure alongside runtime behavior. It parses bot exports, transcripts, and live Dataverse connections to give you routing decision trees, trigger overlap detection, best-practice validation, and execution timeline Gantt charts. No LLM required. Particularly useful for [maker debugging](#maker-debugging-youre-building-and-somethings-not-working) and [support/ops troubleshooting](#supportops-triage-a-user-reports-a-problem).
-
----
-
-## What to do next
-
-Where you start depends on your persona.
-
-**If you're a maker (building and debugging):** Start with eval-driven development. Build an evaluation dataset, run evals, and use transcripts to diagnose failures. Save a test pane snapshot and read the raw JSON of a few conversations. You'll be surprised what's in there.
-
-**If you're in support/ops (triaging live issues):** Connect Application Insights if you haven't already. The near real-time data and alerting are worth the setup. Start collecting conversation IDs from users who report problems, and make sure your support team knows about `/debug conversationid`.
-
-**If you're an analyst (building trend analysis):** Install the [Copilot Studio Kit](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit) for pre-built dashboards and automated transcript analysis. If your retention needs exceed 30 days, set up [Dataverse link to Microsoft Fabric](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/azure-synapse-link-view-in-fabric). Connect Power BI for custom views.
-
-**Regardless of persona:** Let AI and tooling do the heavy lifting. Use the Kit's [Conversation Analyzer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-conversation-analyzer) for automated pattern detection, and feed transcripts to a Copilot for open-ended analysis. If you're a maker or in ops, use the [MCS Agent Analyser](https://github.com/Roelzz/mcs-agent-analyser) for deterministic structure-level validation of your agent's configuration alongside runtime behavior.
-
-The gap between "I think my agent is working" and "I know my agent is working" is exactly one transcript analysis away.
-
----
-
-## You made it.
-
-**If you actually read all of this, you just speed-ran what took me months of digging through Dataverse tables, decoding JSON blobs, and wondering why `SessionInfo` says "Resolved" when the user clearly rage-quit.**
-
-You now know more about Copilot Studio conversation transcripts than most people who build agents for a living. Use that power wisely. Or at least use it to win an argument about whether your agent is actually working.
-
-For the full data model deep-dive, all six access methods with code, and the Dataverse vs App Insights comparison table, check the [Technical Reference]({% post_url 2026-03-19-open-the-hood-technical-reference %}).
-
-**One ask:** Drop a comment below with your lightning bolt moment, the thing that made you go "wait, THAT's how it works?", or any question this post didn't answer. Your feedback shapes what comes next.
+**One ask:** Drop a comment below with what you'd like to see next, or any question this post didn't answer. Your feedback shapes what comes next.
 
 Happy investigating, and may your topic routing always fire correctly on the first try.
