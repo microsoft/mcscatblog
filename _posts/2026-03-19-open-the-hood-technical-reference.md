@@ -10,6 +10,7 @@ image:
   path: /assets/posts/conversation-transcripts/header-technical-reference.png
   alt: "Copilot Studio conversation transcripts - technical reference"
 mermaid: true
+published: false
 ---
 
 **This is the technical companion to [Open the Hood: What Your Copilot Studio Agent Is Really Doing]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}). That post tells you which scenario you're in and where to start. This one gives you the full reference.**
