@@ -1,8 +1,8 @@
 ---
-title: "Too Much Table Knowledge to Filter? Copilot Studio Turns Dataverse Search Into a Discovery Agent — and It Works Unauthenticated!"
+title: "Agentic Tables with Zero User Auth: Copilot Studio + Dataverse Search Unlock Agent‑Ready Structured Data"
 date: 2026-03-20
 categories: [copilot-studio, dataverse]
-tags: [Copilot Studio, Dataverse, Search, Unauthenticated, searchquery, Agentic, enterprise-grade, NL2Query, B2C]
+tags: [copilot studio, dataverse, search, unauthenticated, searchquery, agentic, enterprise-grade, nl2query, b2c]
 description: "Use Dataverse searchQuery as an unbound action in Copilot Studio to build fuzzy, ranked search over structured data — no user sign-in required. Includes copy-paste tool configs, the settings treasure map, and enterprise patterns you won't find anywhere else."
 author: KarimaKT
 image:
@@ -16,7 +16,9 @@ Then your first tester types "Is there a Darol center near downtown?" and the ag
 
 This is the blog where we fix that.
 
-We'll use **Dataverse search** (`searchQuery`) — a fuzzy, ranked, relevance-based search that works through a regular Dataverse connector in Copilot Studio. It finds "Darrell" when someone types "Darol." It ranks the best matches. And — here's the part that changes everything for public-facing agents — **it works unauthenticated**.
+Users aren’t asking for a query—they’re asking for discovery and completion in an agentic planning layer that can  discover, retrieve, and merge both into a grounded response with hard guardrails for an enterprise‑ready agentic table pattern that is repeatable across environments and resilient under real‑world inputs.
+
+We'll use **Dataverse search** (`searchQuery`) — a fuzzy, ranked, relevance-based search that works through a regular Dataverse connector in Copilot Studio. It finds "Darrell" when someone types "Darol." It ranks the best matches. And — here's the part that changes everything for public-facing agents — **it works unauthenticated and federated accross environments**.
 
 By the end of this post, you'll have a working agent with two tools and a search experience that feels completely conversational — and that your users will actually enjoy.
 
@@ -34,7 +36,7 @@ By the end of this post, you'll have a working agent with two tools and a search
 |---|---|---|
 | [**The Landscape**](#the-landscape--where-searchquery-fits) | How searchQuery compares to Knowledge, List Rows, and MCP — and when to reach for each | Stop guessing which approach fits your scenario |
 | [**The Concepts**](#the-concepts--what-you-need-to-know) | The two-tool mental model and how the orchestrator turns two connectors into a conversation | Understand *why* this works — including the selectColumns vs searchColumns distinction nobody explains |
-| [**Quick Start**](#quick-start--build-it) | Step-by-step build with copy-paste configs, with or without your own table | A working agent in under an hour — plus the **Dataverse settings treasure map** that brings order to scattered configuration |
+| [**Quick Start**](#quick-start--build-it) | Step-by-step build with copy-paste configs, with or without your own table | A working agent — plus the **Dataverse settings treasure map** that brings order to scattered configuration |
 | [**See It Work**](#see-it-work--live-demos) | Demos: fuzzy matching, pagination, map links, and a **PowerFx guardrail AI can't bypass** | Watch "Darol" match "Darrell" and see a deterministic interception pattern that's genuinely new |
 | [**Level Up**](#level-up--advanced-features) | Highlights, filters, and a **practical reference for the entities JSON and OData format** | The search API elements explained with a real example — plus the post-filter vs List Rows distinction that trips everyone up |
 | [**Enterprise Patterns**](#enterprise-patterns) | Federated search across environments, glossary scaling, topic caching, and **when MCP, Knowledge, or custom tools are the right call** | Patterns for production agents that aren't documented anywhere else — including multiple specialized instances of the same tool |
@@ -542,7 +544,7 @@ Here's a pattern that's not widely known. In the search input's advanced setting
 
 ```yaml
 inputSettings:
-  validation: ==Not("police" in Lower(Topic.Input.item.search)
+  validation: =Not("police" in Lower(Topic.Input.item.search))
   invalidPrompt:
     activity: For the Police, please leave the chat and call 911
     mode: Strict
