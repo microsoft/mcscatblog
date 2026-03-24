@@ -10,7 +10,7 @@ image:
   alt: "Agentic Dataverse search over structured data — unauthenticated"
 ---
 
-Let me tell you about the tool that changes how we build agents over structured data.
+Let me tell you about the tool that changes how we build agents over structured data tables in Dataverse.
 
 Imagine an agent over a public-facing community services directory — hundreds of facilities, each with descriptions, phone numbers, opening hours, map coordinates. The agent needs to be unauthenticated (think B2C, think kiosk, think departmental portal for hundreds of users who won't sign in). And the very first tester types *"Is there a Darol center near downtown?"*
 
@@ -34,7 +34,7 @@ _Two tools. Simple instructions. A conversational search experience._
 
 ---
 
-## What to Expect
+## What to Expect from SearchQuery
 {: #what-to-expect}
 
 Before we dive in, let's set the right expectations — because I've had every one of these conversations, and they always start the same way.
@@ -66,7 +66,7 @@ Before we dive in, let's set the right expectations — because I've had every o
 
 ---
 
-## Setup
+## Setup Your Data and Index
 {: #setup}
 
 This section gets you from zero to a working agent. We'll create test data, index it, wire up both tools, and paste in the YAML. By the end, you'll have something running — and then the [Design](#design) section will show you how to make it *smart*.
@@ -160,7 +160,7 @@ _Step 5: Set columns as Searchable so they can be indexed_
 > **Impatient? Me too.** After adding a table to the index, there can be a delay before it's searchable. Here's a pro tip I stumbled onto: add the table to **Knowledge** in any Copilot Studio agent. This triggers Dataverse to start indexing right away under the covers. You can remove it from Knowledge afterward — the index persists. You're welcome.
 {: .prompt-tip }
 
-### Add Your Tools
+### Add Your Search and Tools to Copilot Studio
 {: #add-your-tools}
 
 Now for the exciting part. `searchQuery` is an **[unbound action](#glossary)** on the Dataverse connector. To add it:
@@ -359,7 +359,7 @@ You now have a working agent. But working and *intelligent* are two different th
 
 ---
 
-## Design
+## Design Patterns for Data in Copilot Studio
 {: #design}
 
 This is my favorite section, and it's where most of the thought leadership in this blog lives.
@@ -451,11 +451,11 @@ And notice the guardrails baked right into the description: "DO NOT ask follow-u
 > **The default filter is a subtle but important design choice.** When no filter criterion is implied, the description says to return `statecode eq 0` — active records only (see **[statecode](#glossary)**). This prevents the agent from surfacing deleted or deactivated records when someone is just browsing. Small detail, big impact on trust.
 {: .prompt-info }
 
-#### The Skip Input — Pagination Without Code
+#### Get Next 10 items — Pagination Without Code
 
 The `item.skip` input detects pagination intent from phrases like "next," "more," or "show me the rest." Combined with `item.top` set to 10, this gives you paginated results driven entirely by conversation — no variables, no counters, no code. The user says "next" and it just works.
 
-### The Entities JSON — Controlling the Search Scope
+### How to use Entities JSON — Controlling the Search Scope
 {: #entities-json}
 
 ```json
@@ -476,7 +476,7 @@ In our config: `crc57_district`, `crc57_facilitytype`, and `crc57_phonenumber` a
 
 Columns not in SelectColumns at all — image URL, coordinates, opening hours — require **List Rows**. That's by design: searchQuery finds the right facilities, List Rows completes the picture.
 
-### Static vs Dynamic — The Design Pattern
+### Static vs Dynamic Inputs — Design your Inputs
 
 | Input | Static or Dynamic | What it controls |
 |-------|-------------------|------------------|
@@ -493,7 +493,7 @@ Columns not in SelectColumns at all — image URL, coordinates, opening hours �
 > **Here's the design pattern in one sentence:** Static inputs lock down **what** you're searching. Dynamic inputs let the AI decide **how** to search. This separation — maker controls the scope, AI controls the execution — is the entire design philosophy.
 {: .prompt-tip }
 
-### The PowerFx Guardrail — A Gate That AI Cannot Open
+### The PowerFx Guardrail — A Input Value Gate That AI Cannot Open
 {: #powerfx-guardrail}
 
 Now here's something that genuinely excites me. Notice the `inputSettings.validation` on the search input:
@@ -513,7 +513,7 @@ This isn't a prompt-based guardrail that a clever user might talk their way arou
 > **This pattern works for any keyword interception:** block sensitive terms, require certain terms, validate input format, enforce length limits. Any rule you can express as a Power Fx formula becomes an unbreakable gate on any tool input. I use this everywhere now.
 {: .prompt-tip }
 
-### The Chunked Index — Why List Rows Is Essential
+### The Chunked Index — Why List Rows Is Essential for Full Data Retrieval
 {: #chunked-index}
 
 Here's a fact about searchQuery that I wish someone had told me before I built my first agent with it: the Dataverse search index is powered by Azure Cognitive Search, and it **chunks long text** — meaning it breaks multiline fields into smaller fragments for indexing. When searchQuery returns a result with a multiline Description column, you often get a *fragment* of that text — the relevant chunk — not the whole thing.
@@ -543,7 +543,7 @@ Why does this matter so much? Because without it, the agent either truncates unp
 > **Topics supercharge connectors.** Wrapping a connector in a topic doesn't just add a processing step — it turns the connector into something smarter than the sum of its parts. The topic has inputs the orchestrator fills intelligently, internal logic that shapes the data, and outputs that are right-sized for the conversation. This is the enterprise-grade pattern for agents that handle real volumes of data.
 {: .prompt-tip }
 
-### Pre-Added Summary vs On-the-Fly Summary
+### Planning for Large text Entries: Pre-Added Summary vs On-the-Fly Summary
 
 Two strategies for getting the right answer to the user, and choosing wrong costs you:
 
@@ -633,7 +633,7 @@ The `entities` array accepts multiple objects. One searchQuery call can search a
 
 Results come back ranked together across both tables. The orchestrator sees one unified result set and responds naturally — no stitching required on your side.
 
-### Specialized Tool Instances
+### Specialized Tool Instances for Enterprise Grade Performance
 
 Here's a pattern that scales beautifully. Same connector, different instances with configurations. The orchestrator picks the right one based on the user's question. This adds full llm understanding, filter precision, and custom business rules to important categories:
 
@@ -645,9 +645,9 @@ Here's a pattern that scales beautifully. Same connector, different instances wi
 
 "My grandmother needs wellness activities" routes to SearchSeniorServices. "Where can my kids go after school?" routes to SearchYouthPrograms. Each instance has its own entities JSON, default filter, description, and auth settings. This is the granular control that makes enterprise agents trustworthy.
 
-### Glossary Scaling — From Inline to AI-Prompt-Powered
+### Table Descriptions — Planning for different size of tables
 
-The inline glossary in the filter description works beautifully for one table with a handful of fields. But what happens when your Table glossary outgrows the input field?
+The inline table description glossary in the filter description works beautifully for one table with a handful of fields. But what happens when your Table glossary outgrows the input field?
 
 | Scale | Strategy | Where the glossary lives |
 |-------|----------|--------------------------|
@@ -675,7 +675,7 @@ The solution: wrap your searchQuery call in a topic and **cache the search resul
 > **Two topic patterns, two different problems.** The [List Rows wrapper](#topic-wrapping-listrows) solves *output too large* — it intercepts, processes, and right-sizes the data. The searchQuery caching pattern here solves *too many API calls* — it stores and reuses results across turns. Both use topics as intelligent wrappers around connectors, but for completely different reasons.
 {: .prompt-info }
 
-### Highlights — Show Users Why Results Matched
+### The Highlights Feature— Show Users Why Results Matched
 
 searchQuery returns highlighted text with `{crmhit}` markers showing which terms matched:
 
