@@ -49,7 +49,8 @@ For models that don't have built-in reasoning tokens (like GPT-4.1 or GPT-5 Chat
 
 1. Create a new topic (example name: **Log Chain of Thoughts**)
 2. Add an input variable (example name: `CoT`). In the description, put something like: _"Full intermediate chain of thought / rationale from the model for the current step."_
-3. Add a message node that outputs the variable. Tip: italicize it so it reads like a trace, not the agent's "official" answer.
+3. Make sure to uncheck the box "Should prompt user" in the "Additional settings" section at the bottom
+4. Add a message node that outputs the variable. Tip: italicize it so it reads like a trace, not the agent's "official" answer.
 
 ![The Log Chain of Thoughts topic in Copilot Studio showing the CoT input variable and Message node](/assets/posts/power-of-topics-copilot-studio/cot-input.png){: .shadow }
 _The Log Chain of Thoughts topic: input variable CoT with a description that tells the orchestrator exactly what to pass in, and a single Message node rendering it_
@@ -90,6 +91,8 @@ So instead, we ask the orchestrator to dump the transcript into an input variabl
 1. Create a topic (example name: **Save Conversation History**)
 2. Add an input variable (example name: `conversationHistory`)
 3. In the input description, tell the orchestrator what you want (same trick as before, the description is the instruction). For example: _"Entire conversation history in the format 'User: …, Agent: …'"_ (You can ask for a summary instead, or omit speaker labels, this part is flexible.)
+4. Make sure to uncheck the box "Should prompt user" in the "Additional settings" section at the bottom
+
 
 ![Save Conversation History topic showing the conversationHistory input and the full conversation content](/assets/posts/power-of-topics-copilot-studio/conv-history-topic-input.png){: .shadow }
 _The Save Conversation History topic: the orchestrator fills the conversationHistory input with the full transcript, which the topic then surfaces or passes on to other tools_
