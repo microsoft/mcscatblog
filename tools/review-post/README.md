@@ -21,38 +21,36 @@ GitHub Copilot code review catches formatting issues (date mismatches, malformed
 - Are there sections that are valuable but tangential?
 - Is the post trying to do too many things at shallow depth?
 
-This skill does both. Use GitHub Copilot for automatic linting on every PR, and this skill for the editorial pass.
+This skill does both. GitHub Copilot runs automatically on every PR for linting. Use this skill for the editorial pass.
 
-## Install
+## How to Use
 
-### Claude Code CLI
+### Prerequisites
 
-Copy the skill file into your local Claude Code skills directory:
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed
+- `gh` CLI authenticated with access to the repo
+- Ruby/Bundler for the local Jekyll server (`bundle install`)
+- Python 3 with Pillow for image resizing (`pip install Pillow`)
 
-```bash
-# From the repo root
-mkdir -p ~/.claude/skills/review-post
-cp tools/review-post/skill.md ~/.claude/skills/review-post/skill.md
-```
+### No Install Needed
 
-Then in Claude Code, run:
+The skill is already in the repo at `.claude/skills/review-post/SKILL.md`. Claude Code discovers it automatically when you open the project. Just clone the repo and run:
 
 ```
 /review-post 244
 ```
 
-(where `244` is the PR number, or a branch name, or an author's GitHub username)
+Where the argument is a PR number, a branch name, or an author's GitHub username.
 
-### GitHub Copilot CLI (gh copilot)
+### What Happens
 
-The skill is designed for Claude Code, but the review instructions at `.github/instructions/posts.instructions.md` are automatically picked up by GitHub Copilot on every PR. Those handle the automated linting layer.
-
-## Prerequisites
-
-- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed
-- `gh` CLI authenticated with access to the repo
-- Ruby/Bundler for the local Jekyll server (`bundle install`)
-- Python 3 with PIL/Pillow for image resizing (`pip install Pillow`)
+Claude Code will:
+1. Check out the PR branch
+2. Start the local Jekyll server
+3. Read the post and review it against the [review instructions](../../.github/instructions/posts.instructions.md)
+4. Present the top issues ranked by impact
+5. Ask which fixes to apply
+6. Commit, push, and comment on the PR
 
 ## Review Criteria
 
@@ -67,3 +65,10 @@ The skill reviews against five priorities (in order of impact):
 | 5. Scope and Length | Word count, tangential sections, "one thing well" |
 
 Full review instructions: [`.github/instructions/posts.instructions.md`](../../.github/instructions/posts.instructions.md)
+
+## Two-Layer Review Strategy
+
+| Layer | Tool | What it catches | When it runs |
+|-------|------|----------------|-------------|
+| Automated linting | GitHub Copilot | Date mismatches, malformed tables, missing links, code block issues | Automatically on every PR |
+| Editorial review | Claude Code (`/review-post`) | Narrative flow, progressive disclosure, scope control, redundancy, verifiable claims | On demand, before merge |
