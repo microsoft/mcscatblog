@@ -1,5 +1,5 @@
 ---
-name: local-server
+name: mcscatblog-local-server
 description: Start the local Jekyll dev server and open a post in the browser
 ---
 

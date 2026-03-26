@@ -1,5 +1,5 @@
 ---
-name: submit-pr
+name: mcscatblog-submit-pr
 description: Commit current changes and create a pull request for review
 ---
 

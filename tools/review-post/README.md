@@ -6,7 +6,7 @@ Use it with [Claude Code](https://docs.anthropic.com/en/docs/claude-code) or [Gi
 
 ## What It Does
 
-When you run `/review-post` in Claude Code, it:
+When you run `/mcscatblog-review-post` in Claude Code, it:
 
 1. Pulls the PR branch and starts the local Jekyll server
 2. Reviews the post against prioritized criteria (narrative > accuracy > experience > metadata > scope)
@@ -36,10 +36,10 @@ This skill does both. GitHub Copilot runs automatically on every PR for linting.
 
 ### No Install Needed
 
-The skill is already in the repo at `.claude/skills/review-post/SKILL.md`. Claude Code discovers it automatically when you open the project. Just clone the repo and run:
+The skill is already in the repo at `.claude/skills/mcscatblog-review-post/SKILL.md`. Claude Code discovers it automatically when you open the project. Just clone the repo and run:
 
 ```
-/review-post 244
+/mcscatblog-review-post 244
 ```
 
 Where the argument is a PR number, a branch name, or an author's GitHub username.
@@ -73,4 +73,4 @@ Full review instructions: [`.github/instructions/posts.instructions.md`](../../.
 | Layer | Tool | What it catches | When it runs |
 |-------|------|----------------|-------------|
 | Automated linting | GitHub Copilot | Date mismatches, malformed tables, missing links, code block issues | Automatically on every PR |
-| Editorial review | Claude Code (`/review-post`) | Narrative flow, progressive disclosure, scope control, redundancy, verifiable claims | On demand, before merge |
+| Editorial review | Claude Code (`/mcscatblog-review-post`) | Narrative flow, progressive disclosure, scope control, redundancy, verifiable claims | On demand, before merge |
