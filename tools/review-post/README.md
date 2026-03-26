@@ -1,6 +1,8 @@
 # Blog Post Review Skill
 
-A Claude Code skill for reviewing blog posts before they're published. Catches structural, narrative, and technical issues that automated linting misses.
+**We strongly recommend every post goes through this skill before merging.** It catches the structural, narrative, and technical issues that matter most for reader experience — things that automated linting and GitHub Copilot review consistently miss.
+
+Use it with [Claude Code](https://docs.anthropic.com/en/docs/claude-code) or [GitHub Copilot CLI](https://docs.github.com/en/copilot/github-copilot-in-the-cli) (`gh copilot`).
 
 ## What It Does
 
