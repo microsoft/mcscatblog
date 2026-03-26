@@ -11,7 +11,9 @@ Start the Jekyll development server for the blog.
 
 1. Check if the server is already running at `http://127.0.0.1:4000/mcscatblog/`
 2. If not running:
-   - Check if dependencies are installed by running `bundle check`. If not, run `bundle install` first.
+   - Check if dependencies are installed by running `bundle check`. If that fails, run the platform-appropriate setup script:
+     - Mac: `bash tools/setup/mac/install.sh`
+     - Windows: `powershell tools/setup/win/install.ps1`
    - Run `./tools/run.sh` in the background
 3. Wait for the server to be ready (poll until HTTP 200)
 4. If an argument is provided (a post slug or filename), open that post's URL. Otherwise, open the homepage.
