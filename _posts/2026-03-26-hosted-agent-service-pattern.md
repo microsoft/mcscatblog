@@ -4,7 +4,7 @@ title: "[Demo] Your Service, Your Auth: The Hosted Agent Pattern for Copilot Stu
 date: 2026-03-26 10:00:00 +0000
 categories: [copilot-studio, authentication]
 tags: [agents-sdk, obo, entra-id, copilot-studio, authentication, sso]
-description: Learn how to build a custom Azure-hosted agent service that authenticates users via Entra ID, orchestrates prompts through Copilot Studio, and securely calls enterprise APIs using the On-Behalf-Of flow.
+description: Learn how to build a custom Azure-hosted agent service that authenticates users via Entra ID, routes prompts to Copilot Studio for AI planning and tool invocation, and securely calls enterprise APIs using the On-Behalf-Of flow.
 author: jpad5
 image:
   path: /assets/posts/hosted-agent-service/has-title.jpg
