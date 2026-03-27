@@ -58,12 +58,12 @@ This 1-minute walkthrough shows the full pattern running locally, from user sign
 
 ## The Code Sample
 
-The complete working sample is available at [**github.com/jpad5/azure-agent-patterns/01-hosted-agent-service**](https://github.com/jpad5/azure-agent-patterns/tree/master/01-hosted-agent-service), with 3 deployable components:
+The complete working sample for user sign-in, JWT validation, the On-Behalf-Of flow, and the downstream Enterprise API is available at [**github.com/jpad5/azure-agent-patterns/01-hosted-agent-service**](https://github.com/jpad5/azure-agent-patterns/tree/master/01-hosted-agent-service). In this repo, the Copilot Studio call is simulated so you can run everything locally without a Copilot Studio environment.
 
 | Component | Port | Purpose |
 |---|---|---|
 | **FrontendApp** | `5010` | Razor Pages app with Entra ID SSO (OIDC) |
-| **AgentService** | `5020` | JWT validation + Copilot Studio orchestration + OBO |
+| **AgentService** | `5020` | JWT validation + simulated Copilot Studio orchestration + OBO |
 | **Enterprise API** | `5050` | Mock downstream API that validates OBO tokens |
 
 ### The OBO Flow — Core of the Pattern
