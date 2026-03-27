@@ -19,12 +19,12 @@ image:
 
 ### Overview
 
-When building AI agent experiences, one of the most common enterprise requirements is: _"I need a custom frontend, full control over orchestration, and secure delegated access to internal APIs — all with my existing Entra ID infrastructure."_
+When building AI agent experiences, one of the most common enterprise requirements is: _"I need a custom frontend, full control over authentication, API access, and response shaping — while still letting Copilot Studio handle AI planning and tool invocation — all within my existing Entra ID infrastructure."_
 
-The **Hosted Agent Service** pattern addresses this by placing a custom ASP.NET Core service between your frontend and Microsoft Copilot Studio. This service:
+The **Hosted Agent Service** pattern addresses this by placing a custom ASP.NET Core service between your frontend and Microsoft Copilot Studio. **You control** hosting, auth, OBO token exchange, and how responses are composed. **Copilot Studio controls** AI planning and tool invocation. Specifically, the service:
 
 1. **Validates user JWTs** from your frontend (Teams, Portal, or any custom UI)
-2. **Orchestrates agent logic** using the [Microsoft 365 Agents SDK](https://learn.microsoft.com/en-us/microsoft/agents/overview) to call Copilot Studio (see [Integrate Copilot Studio with the Microsoft 365 Agents SDK](https://learn.microsoft.com/en-us/microsoft/copilot-studio/integrate-m365-agents-sdk) for setup and connection-string configuration)
+2. **Delegates AI planning and tool invocation** to Copilot Studio via the [Microsoft 365 Agents SDK](https://learn.microsoft.com/en-us/microsoft/agents/overview) (see [Integrate Copilot Studio with the Microsoft 365 Agents SDK](https://learn.microsoft.com/en-us/microsoft/copilot-studio/integrate-m365-agents-sdk) for setup and connection-string configuration)
 3. **Performs On-Behalf-Of (OBO) token exchange** to call downstream enterprise APIs as the signed-in user
 4. **Returns composed responses** combining agent intelligence with enterprise data
 
