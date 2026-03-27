@@ -88,7 +88,7 @@ apiResponse.EnsureSuccessStatusCode();
 var enterpriseData = await apiResponse.Content.ReadFromJsonAsync<object>();
 ```
 
-The `ITokenAcquisition.GetAccessTokenForUserAsync()` method does the heavy lifting — it takes the user's inbound JWT, sends it to Entra ID's `/oauth2/v2.0/token` endpoint with `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`, and returns a new token scoped to the Enterprise API. The user's identity flows through the entire chain. For a connector-based approach to OBO in Copilot Studio, see [OBO for Custom Connectors]({% post_url 2025-12-05-obo-for-custom-connectors %}).
+The `ITokenAcquisition.GetAccessTokenForUserAsync()` method does the heavy lifting — it takes the user's inbound JWT, sends it to Entra ID's `/oauth2/v2.0/token` endpoint with `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`, and returns a new token scoped to the Enterprise API. The user's identity flows through the entire chain. For more on how this works under the hood, see the [Microsoft identity platform on-behalf-of flow documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-on-behalf-of-flow). For a connector-based approach to OBO in Copilot Studio, see [OBO for Custom Connectors]({% post_url 2025-12-05-obo-for-custom-connectors %}).
 
 ### Wiring Up the Agent Service
 
