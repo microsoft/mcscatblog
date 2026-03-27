@@ -171,9 +171,9 @@ You need **3 Entra ID app registrations**. Here's the minimal setup:
 |---|---|---|---|
 | **Enterprise API** | `api://<id>/access_as_user` | — | No |
 | **Agent Service** | `api://<id>/access_as_user` | Enterprise API scope (for OBO) | Yes |
-| **Frontend App** | — | Agent Service scope (for token acquisition) | No |
+| **Frontend App** | — | Agent Service scope (for token acquisition) | Yes (web app client secret) |
 
-The key configuration: the Agent Service must have **API permission** for the Enterprise API's scope, and a **client secret** to perform the OBO exchange.
+The key configuration: the Agent Service must have **API permission** for the Enterprise API's scope and a **client secret** to perform the OBO exchange, and the Frontend App (a Razor Pages server-side web app using `AddMicrosoftIdentityWebApp(...)`) must also be configured as a confidential client with its own **client secret** and delegated permission to call the Agent Service scope.
 
 ## Key Takeaways
 
