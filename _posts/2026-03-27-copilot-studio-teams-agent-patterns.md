@@ -3,35 +3,35 @@ layout: post
 title: "Copilot Studio Teams Agent Patterns That Actually Work"
 date: 2026-03-27
 categories: [copilot-studio, teams]
-tags: [teams, microsoft-365-copilot, conversation-management, troubleshooting]
-description: Six production patterns for deploying Copilot Studio agents to Teams and M365 Copilot - handling reinstalls, context management, and self-service troubleshooting with diagnostic cards.
+tags: [teams, microsoft-365-copilot, conversation-management, troubleshooting, adaptive-cards]
+description: Eight production patterns for deploying Copilot Studio agents to Teams and M365 Copilot - handling reinstalls, context management, error handling, and self-service troubleshooting with diagnostic cards.
 author: henryjammes
 ---
 
-So you've built a Copilot Studio agent. Published it to Teams. Users start asking why the chat is empty after reinstalling. Why the agent uses context from three weeks ago. Why errors say "Something went wrong" with no way to fix it.
+Your agent works great in the test chat. Ship it to Teams and suddenly users are confused why their chat is empty after reinstalling the app, why the agent remembers context from last month, and why errors just say "Something went wrong" with zero hints on what to do next.
 
-Welcome to production. Here's how to fix it.
+Welcome to production, where everything that worked perfectly in your controlled environment meets the chaos of real user behavior.
 
-This guide covers six production-ready patterns that handle the real-world challenges of deploying agents to Microsoft Teams and Microsoft 365 Copilot: conversation persistence, reinstallation behavior, context management, and self-service troubleshooting. These aren't theoretical best practices—these are the patterns you need when users actually start using your agent.
+This guide covers eight patterns for handling the real-world mess: users who reinstall apps weekly, conversations that persist for months, context that goes stale, and errors that need to be debugged without a Ph.D. in distributed systems.
 
-## Jump to Pattern
+## Jump to any pattern
 
 - [Handling re-installs and Conversation Start](#handling-re-installs-and-conversation-start)
-- [Clearing conversation history after inactivity](#clearing-conversation-history-after-inactivity)
+- [Clearing conversation history after inactivity](#clearing-conversation-history-after-a-period-of-inactivity)
 - [Letting the user know after inactivity](#letting-the-user-know-a-new-conversation-is-starting-after-inactivity)
 - [Setting global context variables](#setting-global-context-variables)
 - [Update the Reset Conversation topic](#update-the-reset-conversation-topic-to-clear-history-session-variables-and-redirect-to-conversation-start)
 - [Update the Start Over topic](#update-the-start-over-topic-to-offer-more-troubleshooting-options)
+- [Updating the On Error topic](#updating-the-on-error-topic-for-self-serve-troubleshooting)
+- [Configure suggested prompts](#configure-suggested-prompts)
 
 ---
 
 ## Handling re-installs and Conversation Start
 
-Users reinstall Teams apps all the time. IT pushes an update. Someone clears their cache. Someone just clicks "Remove" and "Add" to see if it fixes something. When they do, they're greeted with an empty chat screen because **Conversation Start** doesn't trigger on reinstalls.
+Users reinstall Teams apps all the time. IT pushes an update, someone clears their cache, someone just rage-quits and reinstalls hoping it'll fix whatever's broken. When they do, they get an empty chat screen because [Conversation Start](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#conversation-start) doesn't trigger on reinstalls.
 
-Here's why that matters: [Conversation Start](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#conversation-start) is where you typically set up context, show welcome messages, and establish the initial state. But the [OnInstallationUpdate trigger](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#installation-update) fires instead—and by default, it does nothing.
-
-The fix is simple: redirect to **Conversation Start** when the agent detects an installation update event.
+The fix: redirect to **Conversation Start** when the agent detects an [installation update event](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#installation-update).
 
 ![OnInstallationUpdate trigger](/assets/posts/copilot-studio-teams-agent-patterns/image1.png)
 
@@ -48,15 +48,13 @@ beginDialog:
       dialog: cat_B2EAgent.topic.ConversationStart
 ```
 
-Now users get the same welcome experience whether they're opening the agent for the first time or reinstalling after a cache clear. No empty screens, no confusion.
-
 ---
 
-## Clearing conversation history after inactivity
+## Clearing conversation history after a period of inactivity
 
-Agent conversations in Teams persist indefinitely. That's great for continuity—until it isn't. Users return after a week and the agent still has old context. It remembers they were asking about budget reports last Tuesday, but now they need help with something completely different. The agent's working with stale information, and users don't realize it.
+Agent conversations in Teams are persistent. Users return after a week and the agent still has old context from Tuesday's budget report question, except now they need help with something completely different. The agent's working with stale information, and users have no idea why it's confused.
 
-This is where the [OnInactivity trigger](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#inactivity) comes in. Set an inactivity threshold (in seconds) to end topics and clear [history and variables](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables) after silence.
+Set an [inactivity trigger](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#inactivity) (in seconds) to end topics and clear [history and variables](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables) after silence. Once you've cleared everything, set a flag (`Global.InactiveConversation`) to handle follow-up smoothly.
 
 ```yaml
 kind: AdaptiveDialog
@@ -81,17 +79,15 @@ inputType: {}
 outputType: {}
 ```
 
-Note the `durationInSeconds: 43200`—that's 12 hours. Adjust based on your use case. The pattern clears conversation history, clears all variables, sets a flag (`Global.InactiveConversation`) to track that the session ended, and cancels all active dialogs.
-
-Why the flag? Because we need to tell users what happened when they come back.
+Note: `durationInSeconds: 43200` is 12 hours. Adjust based on your use case.
 
 ---
 
 ## Letting the user know a new conversation is starting after inactivity
 
-When users ask a follow-up after inactivity, they need to know context was reset. Otherwise they'll be confused when the agent doesn't remember what they were talking about.
+When users ask a follow-up after context was cleared, they need to know. Otherwise they'll be confused when the agent doesn't remember what they were talking about.
 
-Use a [Hero Card](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#hero-cards) to notify them. The "Start over" button stays persistent so they can always trigger a fresh start manually if needed.
+Use a [Basic Card](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#hero-cards) to notify them. The "Start over" button stays persistent so users can trigger a fresh start anytime.
 
 ![Session expired notification](/assets/posts/copilot-studio-teams-agent-patterns/image7.png)
 
@@ -123,18 +119,16 @@ inputType: {}
 outputType: {}
 ```
 
-This pattern triggers on any message activity when `Global.InactiveConversation` is true. It immediately sets the flag back to false (so the card only shows once), then displays the notification. Users get a clear signal that context was reset, and they can proceed with their new question without wondering why the agent seems to have forgotten everything.
-
 ---
 
 ## Setting global context variables
 
-Context variables—like user language, country, department, or any other environmental data—are typically set in **Conversation Start**. But that doesn't cover all scenarios:
+Context variables (user language, country, department, etc.) are typically set in **Conversation Start**. But that doesn't cover all scenarios:
 
-- **Microsoft 365 Copilot doesn't trigger Conversation Start**. Users invoke your agent directly from M365 Copilot, and the first message activity is their actual question.
-- **Variables get cleared after "Start Over" or inactivity**. If you only set them in Conversation Start, users lose that context mid-session.
+- **Microsoft 365 Copilot doesn't trigger Conversation Start**
+- **Variables get cleared after "Start Over" or inactivity**
 
-Better approach: trigger a topic when context values are unknown. This ensures variables are set on the user's first message, regardless of channel, and can be re-established after any reset event.
+Better approach: trigger a topic when context values are unknown. This ensures variables are set on the user's first message, regardless of channel, and can be re-established after any reset.
 
 ![Context variables trigger](/assets/posts/copilot-studio-teams-agent-patterns/image8.png)
 
@@ -159,8 +153,6 @@ inputType: {}
 outputType: {}
 ```
 
-The `priority: -2` setting ensures this runs before other message handlers. The condition `=IsBlank(Global.UserContext)` checks if the variable exists—if not, it sets it. In a real implementation, you'd typically call a connector here to fetch actual user data from Microsoft Graph or another system.
-
 You can also update the agent instructions so the absence of values triggers the topic:
 
 ```markdown
@@ -170,7 +162,7 @@ The current user country is: "{Global.UserContext.Country}", and language is "{G
 If you don't know the user country (e.g., ""), use this tool to get the current values: {System.Bot.Components.Topics.'cat_B2EAgent.topic.SetContextVariables'.DisplayName}.
 ```
 
-If you want these values set during **Conversation Start** too (for the Teams scenario), redirect to the context variables topic:
+If you'd like these values to also be set during the Conversation Start topic, simply redirect to that topic:
 
 ![Conversation Start redirecting to context variables](/assets/posts/copilot-studio-teams-agent-patterns/image10.png)
 
@@ -192,15 +184,11 @@ beginDialog:
           - Hello and thank you for calling {System.Bot.Name}. Please note that some responses are generated by AI and may require verification for accuracy. How may I help you today?
 ```
 
-Now you have context variables that work across all channels and persist through resets.
-
 ---
 
 ## Update the Reset Conversation topic to clear history, session variables, and redirect to Conversation Start
 
-The [Reset Conversation system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#reset-conversation) is called by **Start Over**. By default, it doesn't clear conversation history or redirect to **Conversation Start**. It just clears some variables and calls it a day.
-
-Let's make it actually reset the conversation.
+Users may choose to start over at any time using the Start Over topic, which redirects to the [Reset Conversation system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#reset-conversation). By default, it doesn't clear conversation history or redirect to **Conversation Start**. Let's fix that.
 
 ![Reset Conversation topic](/assets/posts/copilot-studio-teams-agent-patterns/image11.png)
 
@@ -208,8 +196,7 @@ Let's make it actually reset the conversation.
 
 ```yaml
 kind: AdaptiveDialog
-startBehavior: UseLatestPublishedContentAndCancelOtherTopics
-beginDialog:
+startBehavior: UseLatestPublishedContentAndCancelOtherTopicsbeginDialog:
   kind: OnSystemRedirect
   id: main
   actions:
@@ -226,35 +213,29 @@ beginDialog:
       id: cancelAllDialogs_12Gt21
 ```
 
-This clears conversation-scoped variables, clears the entire conversation history (so the generative AI doesn't have old context), redirects to **Conversation Start** (so users get the welcome message again), and cancels all active dialogs (so nothing is left hanging).
-
-Now "Start Over" actually starts over.
-
 ---
 
 ## Update the Start Over topic to offer more troubleshooting options
 
-The default [Start Over system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#start-over) is basic. It asks "Do you want to start over?" with quick reply buttons and that's it. Let's turn it into something actually useful.
+The default [Start Over system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#start-over) asks "Do you want to start over?" and that's it. Let's make it useful.
 
-The updated version:
-- **Confirms with an Adaptive Card** (no accidental resets from misclicks)
-- **Offers advanced troubleshooting options** (clear state, clear history, conversation ID commands)
-- **Displays diagnostic info** (environment ID, agent ID, tenant ID, conversation ID, timestamp)
+Update it with a confirmation dialog that offers troubleshooting options using an [Adaptive Card](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#adaptive-cards):
 
-Why does this matter? Users get self-service tools to troubleshoot issues without contacting support. Admins get diagnostic data without setting up elaborate logging infrastructure. When someone reports "the agent isn't working," they can expand the advanced options, screenshot the diagnostic info, and send it to you. That's environment ID, agent schema name, conversation ID, and timestamp—everything you need to investigate.
+- Confirms with an adaptive card (no accidental resets)
+- Offers advanced troubleshooting options (clear state, clear history, conversation ID)
+- Displays diagnostic info (environment ID, agent ID, tenant ID, conversation ID, timestamp)
 
 ![Start Over confirmation](/assets/posts/copilot-studio-teams-agent-patterns/image13.png)
-*Start Over confirmation card with expandable advanced options*
 
-![Start Over expanded](/assets/posts/copilot-studio-teams-agent-patterns/image18.png)
-*Advanced options expanded showing troubleshooting actions and diagnostic information*
+![Start Over Adaptive Card in Studio](/assets/posts/copilot-studio-teams-agent-patterns/image14.png)
 
-Since we're not using the default 'Boolean' option (because we want [Adaptive Card](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#adaptive-cards) buttons instead of "Yes/No" quick replies), we need to set up a closed list entity for Yes/No in the question node.
+Since we're not using the default 'Boolean' option (we want Adaptive Card action buttons instead of "Yes/No" quick replies), set up a closed list entity for Yes/No in the question node.
 
 ![YesNo entity](/assets/posts/copilot-studio-teams-agent-patterns/image17.png)
-*YesNo closed list entity for confirmation*
 
 Then fix the condition branches to use that entity.
+
+![Start Over expanded](/assets/posts/copilot-studio-teams-agent-patterns/image18.png)
 
 <details markdown="1">
 <summary><strong>View complete YAML for Start Over topic</strong></summary>
@@ -629,29 +610,482 @@ beginDialog:
 
 </details>
 
-Users can expand **Advanced options** to get more commands for self-troubleshooting and diagnostic data to share with admins. This pattern also works great for the [On Error system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#error)—when something breaks, give users the tools to help themselves or report detailed information.
+Users can expand **Advanced options** to get troubleshooting commands and diagnostic data to share with admins.
+
+---
+
+## Updating the On Error topic for self-serve troubleshooting
+
+The [On Error system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#error) can be updated to offer a more user-friendly experience when unexpected errors occur, with troubleshooting commands and diagnostic data to share with admins.
+
+<details markdown="1">
+<summary><strong>View complete YAML for On Error topic</strong></summary>
+
+```yaml
+kind: AdaptiveDialog
+startBehavior: UseLatestPublishedContentAndCancelOtherTopics
+beginDialog:
+  kind: OnError
+  id: main
+  actions:
+    - kind: SendActivity
+      id: sendActivity_idc9Fl
+      activity:
+        attachments:
+          - kind: AdaptiveCardTemplate
+            cardContent: |-
+              ={
+                '$schema': "https://adaptivecards.io/schemas/adaptive-card.json",
+                type: "AdaptiveCard",
+                version: "1.5",
+                body: [
+                  {
+                    type: "TextBlock",
+                    text: "⚠️ Something went wrong",
+                    wrap: true,
+                    weight: "Bolder",
+                    size: "Medium"
+                  },
+                  {
+                    type: "TextBlock",
+                    text: "We couldn't complete your request. You can review the details below or use the advanced troubleshooting options if needed.",
+                    wrap: true,
+                    isSubtle: true,
+                    spacing: "Small"
+                  },
+                  {
+                    type: "Container",
+                    spacing: "Medium",
+                    style: "attention",
+                    bleed: true,
+                    items: [
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "110px",
+                            items: [
+                              { type: "TextBlock", text: "Error message", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Error.Message), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "110px",
+                            items: [
+                              { type: "TextBlock", text: "Error code", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Error.Code), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "110px",
+                            items: [
+                              { type: "TextBlock", text: "Conversation ID", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Conversation.Id), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "110px",
+                            items: [
+                              { type: "TextBlock", text: "Time (UTC)", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              {
+                                type: "TextBlock",
+                                text: Text(Now(), DateTimeFormat.UTC),
+                                size: "Small",
+                                wrap: true,
+                                spacing: "None",
+                                isSubtle: true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    type: "Container",
+                    spacing: "Small",
+                    style: "emphasis",
+                    bleed: true,
+                    items: [
+                      {
+                        type: "TextBlock",
+                        text: "Advanced options",
+                        size: "Small",
+                        weight: "Bolder",
+                        wrap: true
+                      }
+                    ],
+                    selectAction: {
+                      type: "Action.ToggleVisibility",
+                      targetElements: ["advancedOptions"]
+                    }
+                  },
+                  {
+                    type: "Container",
+                    id: "advancedOptions",
+                    isVisible: false,
+                    spacing: "Small",
+                    items: [
+                      {
+                        type: "TextBlock",
+                        text: "Troubleshooting actions",
+                        size: "Small",
+                        weight: "Bolder",
+                        spacing: "Small"
+                      },
+                      {
+                        type: "ActionSet",
+                        spacing: "Small",
+                        actions: [
+                          { type: "Action.Submit", title: "Start over", data: "Start over" },
+                          { type: "Action.Submit", title: "Clear state", data: "/debug clearstate" },
+                          { type: "Action.Submit", title: "Clear history", data: "/debug clearhistory" },
+                          { type: "Action.Submit", title: "Conversation ID", data: "/debug conversationid" }
+                        ]
+                      },
+                      {
+                        type: "TextBlock",
+                        text: "Troubleshooting information",
+                        weight: "Bolder",
+                        size: "Small",
+                        spacing: "Small",
+                        separator: true
+                      },
+                      {
+                        type: "TextBlock",
+                        text: "Environment details",
+                        weight: "Bolder",
+                        size: "Small",
+                        spacing: "Small"
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Environment ID", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Bot.EnvironmentId), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Tenant ID", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Bot.TenantId), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "TextBlock",
+                        text: "Agent details",
+                        weight: "Bolder",
+                        size: "Small",
+                        spacing: "Small",
+                        separator: true
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Name", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Bot.Name), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Agent ID", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Bot.Id), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Schema name", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Bot.SchemaName), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "TextBlock",
+                        text: "User details",
+                        weight: "Bolder",
+                        size: "Small",
+                        spacing: "Small",
+                        separator: true
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Language", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.User.Language), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Object ID", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.User.Id), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "TextBlock",
+                        text: "Conversation details",
+                        weight: "Bolder",
+                        size: "Small",
+                        spacing: "Small",
+                        separator: true
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Channel", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Activity.ChannelId), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Conversation ID", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              { type: "TextBlock", text: Text(System.Conversation.Id), size: "Small", wrap: true, spacing: "None", isSubtle: true }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        type: "ColumnSet",
+                        spacing: "None",
+                        columns: [
+                          {
+                            type: "Column",
+                            width: "90px",
+                            items: [
+                              { type: "TextBlock", text: "Time (UTC)", weight: "Bolder", size: "Small", wrap: true, spacing: "None" }
+                            ]
+                          },
+                          {
+                            type: "Column",
+                            width: "stretch",
+                            items: [
+                              {
+                                type: "TextBlock",
+                                text: Text(Now(), DateTimeFormat.UTC),
+                                size: "Small",
+                                wrap: true,
+                                spacing: "None",
+                                isSubtle: true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+    - kind: LogCustomTelemetryEvent
+      id: 9KwEAn
+      eventName: OnErrorLog
+      properties: "={ErrorMessage: System.Error.Message, ErrorCode: System.Error.Code, TimeUTC: Text(Now(), DateTimeFormat.UTC), ConversationId: System.Conversation.Id}"
+    - kind: CancelAllDialogs
+      id: NW7NyY
+```
+
+</details>
+
+Expanding **Advanced options** offers troubleshooting commands and diagnostic details for admins to investigate.
+
+---
+
+## Configure suggested prompts
+
+[Suggested prompts](https://learn.microsoft.com/microsoft-copilot-studio/nlu-boost-conversations#configure-suggested-prompts) configured at the agent level work in both Teams and Microsoft 365 Copilot.
+
+![Suggested prompts configuration](/assets/posts/copilot-studio-teams-agent-patterns/image19.png)
+
+![Suggested prompts in Teams](/assets/posts/copilot-studio-teams-agent-patterns/image20.png)
+
+Configure in **Settings → Generative AI → Suggested prompts** for consistent discoverability across channels.
 
 ---
 
 ## The result
 
 ![B2E Agent deployed in Teams](/assets/posts/copilot-studio-teams-agent-patterns/image2.png)
-*B2E Agent (DEV) deployed and pinned in Teams sidebar*
 
-You now have production-ready patterns for:
-- **Handling reinstalls gracefully**: Users get a proper welcome every time
-- **Managing session lifecycle automatically**: Old context doesn't pollute new conversations
-- **Providing self-service troubleshooting**: Users can reset state and access diagnostic info without filing tickets
-- **Reducing support burden**: Diagnostic cards surface the exact IDs and timestamps admins need to investigate issues
+You now have eight production patterns covering:
+- Reinstalls that don't leave users stranded
+- Stale context that gets cleared automatically
+- Users who know when context resets
+- Context variables that work everywhere (including M365 Copilot)
+- "Start Over" that actually resets everything
+- Self-service troubleshooting with diagnostic info
+- Error handling that gives users tools instead of dead ends
+- Suggested prompts that guide users from the start
 
-These patterns work together to create a reliable, user-friendly experience in both Teams and Microsoft 365 Copilot. They handle the edge cases that only show up in production—the things users actually do with your agent, not just the happy path you tested.
-
-For deployment strategies (DEV/TEST/PROD environments, auto-install, and pinning), see Part 2 of this series: [Best Practices for Deploying Copilot Studio Agents in Microsoft Teams](https://microsoft.github.io/mcscatblog/posts/copilot-studio-teams-deployment-ux/).
+These patterns handle the chaos of real production deployments where users do unexpected things and conversations persist longer than anyone planned.
 
 ## Related Resources
 
 - [System triggers](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers)
+- [System topics](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics)
 - [Variables and scopes](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables)
 - [Adaptive Cards for Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#adaptive-cards)
 - [Power Fx functions](https://learn.microsoft.com/power-platform/power-fx/formula-reference)
-- [System topics](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics)
