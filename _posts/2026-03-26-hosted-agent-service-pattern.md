@@ -12,7 +12,7 @@ image:
   no_bg: true
 ---
 
-> This post walks through the **Hosted Agent Service** pattern, a custom-built agent service hosted on Azure that delegates orchestration to Microsoft Copilot Studio and securely calls enterprise APIs using the On-Behalf-Of (OBO) flow. A working .NET 8 code sample with Bicep infrastructure is included.
+> This post walks through the **Hosted Agent Service** pattern, a custom-built agent service hosted on Azure that delegates AI planning and tool invocation to Microsoft Copilot Studio and securely calls enterprise APIs using the On-Behalf-Of (OBO) flow. A working .NET 8 code sample with Bicep infrastructure is included.
 {: .prompt-info }
 
 ## What Is the Hosted Agent Service Pattern?
