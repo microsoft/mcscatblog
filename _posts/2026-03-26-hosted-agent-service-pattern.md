@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[Demo] Your Service, Your Auth: The Hosted Agent Pattern for Copilot Studio"
+title: "[Demo] Your Service, Your Auth: The Hosted Agent Service Pattern for Copilot Studio"
 date: 2026-03-26 10:00:00 +0000
 categories: [copilot-studio, authentication]
 tags: [agents-sdk, obo, entra-id, copilot-studio, authentication, sso]
