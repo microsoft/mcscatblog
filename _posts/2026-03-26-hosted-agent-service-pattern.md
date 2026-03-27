@@ -15,6 +15,21 @@ image:
 > This post walks through the **Hosted Agent Service** pattern, a custom-built agent service hosted on Azure that delegates AI planning and tool invocation to Microsoft Copilot Studio and securely calls enterprise APIs using the On-Behalf-Of (OBO) flow. A working .NET 8 code sample with Bicep infrastructure is included.
 {: .prompt-info }
 
+## Before You Reach for This Pattern
+
+Let's be upfront: **Copilot Studio already handles a lot of this out of the box.** If you embed your agent with [WebChat](https://github.com/microsoft/BotFramework-WebChat), you get a fully customizable chat UI, SSO via Direct Line token exchange, and Conditional Access enforcement through the M365 Agents SDK's native Entra ID integration. For many scenarios, that's all you need.
+
+So when would you reach for the Hosted Agent Service pattern instead?
+
+**You hit one of these walls:**
+
+- **You need the On-Behalf-Of (OBO) flow to call downstream APIs as the user.** This is the big one. WebChat + Direct Line gives your agent an auth token, but if your agent needs to call enterprise APIs that enforce per-user authorization (think: "show me _my_ expense reports"), you need OBO to exchange the user's token for one scoped to each downstream API. Copilot Studio connectors can do OBO ([see this post]({% post_url 2025-12-05-obo-for-custom-connectors %})), but if you need to orchestrate multiple API calls with custom logic between them, a hosted service gives you full control over that chain.
+- **You need custom orchestration logic between prompts and Copilot Studio.** Maybe you're enriching prompts with data from a user profile service, routing to different agents based on business rules, or filtering responses before they reach the user. A proxy service lets you inject logic at every step.
+- **Your frontend isn't a web app.** If you're building a native mobile app, a desktop client, or integrating into an existing SPA framework that doesn't use WebChat, you need a service endpoint your app can call directly over HTTP.
+- **You need to compose responses from Copilot Studio with data from other services.** If the final response to the user combines agent intelligence with data from enterprise APIs, and that composition logic lives in your service tier rather than in Copilot Studio topics.
+
+If none of these apply, you probably don't need this pattern. Start with WebChat + SSO and see how far it gets you. If you've tried that and hit the wall, read on.
+
 ## What Is the Hosted Agent Service Pattern?
 
 ### Overview
@@ -177,13 +192,14 @@ The key configuration: the Agent Service must have **API permission** for the En
 
 ## Key Takeaways
 
-- **Zero intermediary services** — The frontend talks directly to your Agent Service via HTTP. No Bot Framework Connector, no Direct Line, no extra hops.
+- **Start simple first** — WebChat + Direct Line SSO covers most agent scenarios. Copilot Studio already enforces Conditional Access and supports connectors with OBO. Only reach for this pattern when you've hit a specific limitation.
+- **OBO is the primary driver** — If your agent needs to call multiple downstream APIs as the signed-in user with custom orchestration logic between calls, this pattern gives you full control over the token exchange chain.
 - **Standard Entra ID SSO** — Users sign in once via OIDC. Conditional Access policies are enforced at sign-in. No OAuth cards or backchannel hacks needed. If you're evaluating auth patterns, [You Don't Need Manual Auth]({% post_url 2025-11-18-you-dont-need-manual-auth %}) covers when SSO is sufficient.
 - **On-Behalf-Of preserves user identity** — The Enterprise API sees the actual user's claims, not a service principal. This enables per-user authorization and auditing in downstream systems.
 - **Copilot Studio as orchestrator** — Copilot Studio handles prompt planning and tool invocation. Your service handles auth, OBO, and API integration — a clean separation of concerns.
 - **Deployable with `azd up`** — Bicep + azure.yaml included. One command to provision and deploy all 3 components.
 
-This pattern gives you the **most control** over the agent experience while leveraging Copilot Studio for AI orchestration and Entra ID for enterprise-grade security. It's ideal for organizations that need custom frontends, own their orchestration logic, and require delegated access to internal APIs.
+This pattern trades simplicity for control. You're taking on more infrastructure (an extra service to host, monitor, and secure) in exchange for full authority over the auth chain, orchestration logic, and response composition. That trade-off is worth it when your requirements demand it.
 
 The full code sample is available at [**github.com/jpad5/azure-agent-patterns**](https://github.com/jpad5/azure-agent-patterns).
 
