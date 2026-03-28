@@ -56,6 +56,8 @@ The agent calls the tools through the single connector, and the responses come b
 
 ## Under the Hood: The Connector
 
+**Before deploying this connector, read [A Note on Security](#a-note-on-security) for important considerations about URL handling in this pattern.**
+
 ### The Swagger: `x-ms-dynamic-values`
 
 That dropdown is powered by two operations in the connector's Swagger definition. A hidden `ListInstances` operation fetches the catalog, and the `InvokeMCP` operation references it via [`x-ms-dynamic-values`](https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions):
@@ -208,12 +210,25 @@ function createServer(instanceId: string): Server {
 
 In a production setting, these would be separate services running independently across regions or tenants. The routing pattern works the same either way: the catalog lists them, the connector routes to them.
 
+## A Note on Security
+
+The sample intentionally skips authentication to keep the focus on the dynamic URL routing pattern. In a production deployment, your connector and MCP endpoints should require authentication. For guidance on setting up auth with custom connectors, including the On-Behalf-Of flow, see the [OBO for Custom Connectors]({% post_url 2025-12-05-obo-for-custom-connectors %}) post.
+
+The sample also passes the full MCP endpoint URL as the `instanceUrl` parameter. That's the most flexible approach, but it means a maker could, in theory, edit the dropdown value and point the connector at an arbitrary URL that didn't come from the catalog.
+
+This risk can be mitigated with [Virtual Network (VNet) integration for Power Platform](https://learn.microsoft.com/en-us/power-platform/admin/vnet-support-overview). With VNet support, the connector's outbound traffic is restricted to addresses within your subnet, so even if someone tampered with the URL, the request would only reach services you control.
+
+If you want to lock this down further without VNet, you can change the pattern so the catalog returns instance **IDs** instead of full URLs, and the C# script resolves those IDs back to URLs by calling the catalog itself. That way the dropdown value is just a name like `contoso`, and the actual endpoint URL never leaves the server side. Alternatively, the catalog can return IDs that map to path segments (e.g., `/instances/contoso/mcp`), and the C# script constructs the full URL from a base address that's hardcoded in the connector or script.
+
+> As of today, [DLP policies](https://learn.microsoft.com/en-us/power-platform/admin/dlp-custom-connector-parity) and [connector action control policies](https://learn.microsoft.com/en-us/power-platform/admin/connector-action-control) for custom connectors do not block URLs that are resolved at runtime by C# scripts. There is active work being done in this area, so this may change. In the meantime, VNet integration is the most reliable way to control where your connector traffic can go.
+{: .prompt-info }
+
 ## Key Takeaways
 
 - **Maker-friendly**: Makers pick from a dropdown. They never see or manage URLs.
 - **Self-updating**: New instances added to the catalog appear automatically in the dropdown. No connector updates, no redeployment, no maker action required.
 - **A natural fit for MCP**: Tools are discovered at runtime, so instances can even offer different tool sets without changing the connector.
-- **C# script routing**: The connector's code component rewrites URLs at runtime, but be aware that C# in connectors may not be approved everywhere, so check your governance policies.
+- **C# script routing**: The connector's code component rewrites URLs at runtime. Be aware that C# in connectors may not be approved everywhere, and that dynamic URL resolution introduces security considerations. See [A Note on Security](#a-note-on-security) for mitigations.
 
 If you're working with MCP in Copilot Studio and haven't explored the [connector comparison post]({% post_url 2026-01-29-compare-mcp-servers-pp-connectors %}) yet, that's a good companion read for understanding where connectors and MCP servers overlap. And if you're new to MCP tools and resources in general, the [MCP tools and resources walkthrough]({% post_url 2025-10-29-mcp-tools-resources %}) covers the fundamentals.
 
