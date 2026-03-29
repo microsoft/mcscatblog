@@ -3,7 +3,7 @@ layout: post
 title: "Closing the Loop: Automated Agent Improvement with Publish and Test"
 date: 2026-03-29
 categories: [copilot-studio, testing]
-tags: []
+tags: [plugin, orchestration, deepeval, testing, m365-agents-sdk]
 description: ""
 author: adilei
 image:
@@ -11,7 +11,7 @@ image:
   alt: ""
 ---
 
-We added a `publish` command to the [the AI coding agent plugin for Copilot Studio](https://github.com/microsoft/skills-for-copilot-studio). This means an AI coding agent can now do the full loop without manual intervention: edit a Copilot Studio agent's YAML, push changes, publish the draft to make it live, run tests against the published Copilot Studio agent, analyze failures, and iterate.
+In a [previous post]({% post_url 2026-03-26-claude-copilot-skills-copilot-studio-plugin-demo %}), we introduced an AI coding plugin that can author Copilot Studio agents from YAML. We've now added a `publish` command to the [plugin](https://github.com/microsoft/skills-for-copilot-studio), which means an AI coding agent can do the full loop without manual intervention: edit a Copilot Studio agent's YAML, push changes, publish the draft to make it live, run tests against the published Copilot Studio agent, analyze failures, and iterate.
 
 This post walks through what we built and a trial run of the loop on a real Copilot Studio agent. Here it is in action:
 
