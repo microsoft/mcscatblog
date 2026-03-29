@@ -39,13 +39,14 @@ For evaluation, we used the [PytestAgentsSDK sample](https://github.com/microsof
 
 ## The loop
 
-Starting from blank instructions, we ran 7 iterations. Each iteration followed the same pattern:
+Starting from blank instructions, we ran 7 iterations. The agent never saw the expected answers or the SRD document directly. It only saw test results: which questions failed, their scores, and DeepEval's reasoning for the failure. From that signal alone, it generated and refined the agent instructions.
+
+Each iteration followed the same pattern:
 
 1. Run the test suite against the published agent
 2. Analyze which tests failed and why (the eval provides a score and reasoning)
-3. Hand the failures to the author agent with specific feedback
-4. Author updates the agent instructions
-5. Push, publish, re-test
+3. Hand the failures to the author agent, which updates the agent instructions based solely on the eval feedback
+4. Push, publish, re-test
 
 Here is the progression:
 
