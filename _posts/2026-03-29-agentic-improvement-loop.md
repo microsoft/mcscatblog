@@ -57,7 +57,7 @@ Each iteration followed the same pattern:
 graph LR
     A[Run test suite] --> B[Analyze failures]
     B --> C[Author sub-agent<br/>updates instructions]
-    C --> D[Push & Publish]
+    C --> D[Manage sub-agent<br/>pushes & publishes]
     D --> A
 ```
 
