@@ -4,7 +4,7 @@ title: "Closing the Loop: Automated Agent Improvement with Publish and Test"
 date: 2026-03-29
 categories: [copilot-studio, testing]
 tags: [plugin, orchestration, deepeval, testing, m365-agents-sdk]
-description: ""
+description: "We added a publish command to the Copilot Studio plugin, enabling an automated edit-push-publish-test loop. A trial run on a D&D rules agent shows the progression from blank instructions to a stable 60% pass rate across 7 iterations."
 author: adilei
 mermaid: true
 image:
@@ -49,7 +49,7 @@ For evaluation, we used the [PytestAgentsSDK sample](https://github.com/microsof
 
 ## The loop
 
-Starting from blank instructions on the Copilot Studio agent, we ran 7 iterations. the AI coding agent never saw the expected answers or the SRD document directly. It only saw test results: which questions failed, their scores, and DeepEval's reasoning for the failure. From that signal alone, it generated and refined the Copilot Studio agent's instructions.
+Starting from blank instructions on the Copilot Studio agent, we ran 7 iterations. The AI coding agent never saw the expected answers or the SRD document directly. It only saw test results: which questions failed, their scores, and DeepEval's reasoning for the failure. From that signal alone, it generated and refined the Copilot Studio agent's instructions.
 
 Each iteration followed the same pattern:
 
@@ -73,7 +73,7 @@ Here is the progression:
 | 5 | Simplified to 7 rules | 3/5 (60%) | Recovered. 7 rules is the sweet spot |
 | 6 | Added advantage/disadvantage rule | 2/5 (40%) | Multi-turn cascade: one wrong answer poisoned later turns |
 
-No human wrote these instructions. the AI coding agent's author sub-agent constructed them entirely from test failure feedback -- scores and evaluator reasoning -- across 5 iterations. Here is what it converged on:
+No human wrote these instructions. The AI coding agent's author sub-agent constructed them entirely from test failure feedback -- scores and evaluator reasoning -- across 5 iterations. Here is what it converged on:
 
 ```
 You are a D&D 5e rules expert grounded in the SRD 5.1.
@@ -102,7 +102,7 @@ Answer concisely and accurately.
 
 **Isolate test cases in separate conversations.** The test harness runs all 5 questions in a single conversation. When question 3 produced a wrong calculation, the conversation context carried that confusion into questions 4 and 5, both scoring 0.00. Running each test in its own session would give more accurate per-question scores and avoid this cascading effect.
 
-**The loop works.** The mechanics are solid: the AI coding agent's author sub-agent edits, the manage sub-agent pushes and publishes, the test harness runs and scores, results come back with reasoning, and the next iteration targets specific failures. Each step is handled by a specialized sub-agent that knows its domain.
+**The loop works.** The mechanics are solid: the author sub-agent edits, the manage sub-agent pushes and publishes, the test harness runs and scores, results come back with reasoning, and the next iteration targets specific failures. Each step is handled by a specialized sub-agent that knows its domain.
 
 ## Try it yourself
 
