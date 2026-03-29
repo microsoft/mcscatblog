@@ -100,6 +100,6 @@ Answer concisely and accurately.
 
 **The loop works.** The mechanics are solid: the AI coding agent's author sub-agent edits, the manage sub-agent pushes and publishes, the test harness runs and scores, results come back with reasoning, and the next iteration targets specific failures. Each step is handled by a specialized sub-agent that knows its domain.
 
-## Source
+## Try it yourself
 
-The plugin is open source at [github.com/microsoft/skills-for-copilot-studio](https://github.com/microsoft/skills-for-copilot-studio). The test harness is at [github.com/microsoft/CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/testing/functional/PytestAgentsSDK).
+The plugin is open source at [github.com/microsoft/skills-for-copilot-studio](https://github.com/microsoft/skills-for-copilot-studio) and the test harness is at [github.com/microsoft/CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/testing/functional/PytestAgentsSDK). If you try the loop on your own agents, we'd love to hear how it goes -- whether it improved your agent, where it got stuck, and what you'd want it to do differently. Open an [issue or enhancement request](https://github.com/microsoft/skills-for-copilot-studio/issues) on the plugin repo.
