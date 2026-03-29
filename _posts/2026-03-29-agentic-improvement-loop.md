@@ -89,7 +89,7 @@ Answer concisely and accurately.
 
 ## What we learned
 
-**Instructions-only changes have a ceiling.** We intentionally limited changes to the Copilot Studio agent's instructions -- no topics, no custom logic, no additional knowledge sources. This got us from 40% to a stable 60%. The remaining two tests consistently scored 0.65-0.73, just below the 0.75 threshold. Pushing past this would likely require topic-level changes or breaking the multi-turn test conversation into independent sessions.
+**Instructions-only changes have a ceiling.** We intentionally limited changes to the Copilot Studio agent's system instructions -- no conversation flow changes, no custom logic, no additional knowledge sources. This got us from 40% to a stable 60%. The remaining two tests consistently scored 0.65-0.73, just below the 0.75 threshold. Breaking through would likely require dedicated conversation flows for specific question types, or running each test in an independent session to avoid cascading failures.
 
 **Too many instruction rules backfire.** Going from 7 to 14 rules caused a regression from 3/5 to 1/5. The Copilot Studio generative orchestrator has limited capacity for instruction-following, and past a certain density, rules start conflicting or being ignored. Seven concise, non-overlapping rules was the stable maximum.
 
