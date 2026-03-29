@@ -31,7 +31,12 @@ With this in place, the AI coding agent's sub-agents can orchestrate a full impr
 
 We set up a D&D 5th Edition rules assistant as a Copilot Studio agent, backed by the [Systems Reference Document 5.1](https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf) (403 pages, Creative Commons CC-BY-4.0) as a document knowledge source. The Copilot Studio agent was configured with `useModelKnowledge: false` so all answers had to come from the uploaded PDF.
 
-The Copilot Studio agent had no trouble with factual correctness. It could parse the SRD's tables, cross-reference race traits with class features, and do the arithmetic. What it struggled with was style: it was verbose, showed step-by-step reasoning when a direct answer was expected, and added unsolicited caveats. So we designed our test cases to require not just correct answers but a specific response style -- concise, direct, no unnecessary detail. Each question also deliberately required information from multiple distant sections of the document:
+The Copilot Studio agent had no trouble with factual correctness -- it could parse the SRD's tables, cross-reference race traits with class features, and do the arithmetic. The challenge was style.
+
+> **Correctness was never the problem. Style was.** The agent was verbose, showed step-by-step reasoning when a direct answer was expected, and added unsolicited caveats. So we designed our test cases to require not just correct answers but a specific response style -- concise, direct, no unnecessary detail.
+{: .prompt-info }
+
+Each question also deliberately required information from multiple distant sections of the document:
 
 | # | Question | Expected answer |
 |---|----------|-----------------|
