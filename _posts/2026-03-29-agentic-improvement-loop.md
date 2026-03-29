@@ -8,7 +8,7 @@ description: ""
 author: adilei
 image:
   path: /assets/posts/agentic-improvement-loop/header.png
-  alt: ""
+  alt: "A D&D adventuring party caught in a time loop, surrounded by test result scrolls with checkmarks and X marks"
 ---
 
 In a [previous post]({% post_url 2026-03-26-claude-copilot-skills-copilot-studio-plugin-demo %}), we introduced an AI coding plugin that can author Copilot Studio agents from YAML. We've now added a `publish` command to the [plugin](https://github.com/microsoft/skills-for-copilot-studio), which means an AI coding agent can do the full loop without manual intervention: edit a Copilot Studio agent's YAML, push changes, publish the draft to make it live, run tests against the published Copilot Studio agent, analyze failures, and iterate.
