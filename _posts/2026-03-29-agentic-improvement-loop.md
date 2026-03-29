@@ -6,6 +6,7 @@ categories: [copilot-studio, testing]
 tags: [plugin, orchestration, deepeval, testing, m365-agents-sdk]
 description: ""
 author: adilei
+mermaid: true
 image:
   path: /assets/posts/agentic-improvement-loop/header.png
   alt: "A D&D adventuring party caught in a time loop, surrounded by test result scrolls with checkmarks and X marks"
