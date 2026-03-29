@@ -65,7 +65,7 @@ Here is the progression:
 | 1 | Added completeness rules | 3/5 (60%) | Tests 1 and 4 fixed (modifiers now included) |
 | 2 | Added brevity rules | 3/5 (60%) | Test 5 fixed but Test 3 still verbose |
 | 3 | Added race prefix + alternatives | 3/5 (60%) | Test 1 fixed again, Test 3 improving (0.73) |
-| 4 | Added 7 more rules (14 total) | 1/5 (20%) | Regression. Too many rules overwhelmed the orchestrator |
+| 4 | Added 7 more rules (14 total) | 1/5 (20%) | Regression. Too many rules competing for attention |
 | 5 | Simplified to 7 rules | 3/5 (60%) | Recovered. 7 rules is the sweet spot |
 | 6 | Added advantage/disadvantage rule | 2/5 (40%) | Multi-turn cascade: one wrong answer poisoned later turns |
 
@@ -94,9 +94,9 @@ Answer concisely and accurately.
 
 **Instructions-only changes have a ceiling.** We deliberately constrained this experiment to system instructions only -- no conversation flows, no code interpreter, no additional knowledge sources -- just to stress-test the loop mechanics. This got us from 40% to a stable 60%. The remaining two tests consistently scored 0.65-0.73, just below the 0.75 threshold. In practice you would reach for stronger tools: a code interpreter action for deterministic arithmetic, a structured topic that enforces a specific response formula, or few-shot examples embedded in the instructions. The point was to see whether the loop itself works, not to achieve a perfect score.
 
-**Too many instruction rules backfire.** Going from 7 to 14 rules caused a regression from 3/5 to 1/5. The Copilot Studio generative orchestrator has limited capacity for instruction-following, and past a certain density, rules start conflicting or being ignored. Seven concise, non-overlapping rules was the stable maximum.
+**Keep instruction rules few and focused.** Going from 7 to 14 rules caused a regression from 3/5 to 1/5. Like any prompt engineering, there's a sweet spot -- too many rules compete for attention and start conflicting with each other. Seven concise, non-overlapping rules was the stable maximum for this agent. This is a good general practice for Copilot Studio agent instructions: favor a small number of clear directives over an exhaustive rulebook.
 
-**Multi-turn testing amplifies failures.** The test harness runs all 5 questions in a single conversation. When the Copilot Studio agent miscalculated on question 3, it produced a confused response that poisoned questions 4 and 5 in the same session, both scoring 0.00. Running each test in an independent session would give more accurate per-question scores.
+**Isolate test cases in separate conversations.** The test harness runs all 5 questions in a single conversation. When question 3 produced a wrong calculation, the conversation context carried that confusion into questions 4 and 5, both scoring 0.00. Running each test in its own session would give more accurate per-question scores and avoid this cascading effect.
 
 **The loop works.** The mechanics are solid: the AI coding agent's author sub-agent edits, the manage sub-agent pushes and publishes, the test harness runs and scores, results come back with reasoning, and the next iteration targets specific failures. Each step is handled by a specialized sub-agent that knows its domain.
 
