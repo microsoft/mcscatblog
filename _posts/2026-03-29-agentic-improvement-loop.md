@@ -52,10 +52,13 @@ Starting from blank instructions on the Copilot Studio agent, we ran 7 iteration
 
 Each iteration followed the same pattern:
 
-1. Run the test suite against the published Copilot Studio agent
-2. Analyze which tests failed and why (the eval provides a score and reasoning)
-3. the AI coding agent's author sub-agent updates the Copilot Studio agent's instructions based solely on the eval feedback
-4. Push, publish, re-test
+```mermaid
+graph LR
+    A[Run test suite] --> B[Analyze failures]
+    B --> C[Author sub-agent<br/>updates instructions]
+    C --> D[Push & Publish]
+    D --> A
+```
 
 Here is the progression:
 
