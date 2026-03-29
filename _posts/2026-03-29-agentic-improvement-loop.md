@@ -17,13 +17,9 @@ This post walks through what we built and a trial run of the loop on a real agen
 
 ## What changed
 
-The manage agent sub-agent already supported pull, push, clone, and validate. We added:
+The manage agent sub-agent already supported pull, push, clone, and validate. We added a **`publish`** command that calls the Dataverse `PvaPublish` bound action and polls the `publishedon` timestamp until it changes, confirming the draft is live. The manage agent prompt enforces the correct sequence (pull, push, publish) and checks for pending changes before publishing.
 
-- **`publish`** calls the Dataverse `PvaPublish` bound action and polls the `publishedon` timestamp until it changes, confirming the draft is live.
-- **Workflow rules** in the manage agent prompt enforce the correct sequence: pull, push, publish. The agent checks for pending changes before publishing and warns the user before making changes live for end users.
-- **Auth mode detection** in the chat script queries the Dataverse `bots` entity for `authenticationmode` and routes to DirectLine or the Copilot Studio SDK automatically. This means the test agent can connect to any published agent without the user providing connection details.
-
-With these pieces, the sub-agents can orchestrate a full improvement cycle: the author agent edits instructions, the manage agent pushes and publishes, the test agent runs the test suite and reports results, and the troubleshoot agent diagnoses failures.
+With this in place, the sub-agents can orchestrate a full improvement cycle: the author agent edits instructions, the manage agent pushes and publishes, and a test suite evaluates the published agent's responses.
 
 ## Trial run
 
@@ -39,7 +35,7 @@ We wrote 5 test cases that require the agent to cross-reference information from
 | 4 | 9th-level Barbarian crits with Greataxe: total damage dice | Weapon table, Brutal Critical, critical hit rules |
 | 5 | Reckless Attack vs Dodge: advantage/disadvantage interaction | Reckless Attack, Dodge action, advantage rules |
 
-We used Microsoft's [PytestAgentsSDK](https://github.com/microsoft/CopilotStudioSamples/tree/main/testing/functional/PytestAgentsSDK) test harness with DeepEval's GEval metric at a 0.75 threshold to evaluate responses semantically against expected answers written in a concise, direct style.
+For evaluation, we used the [PytestAgentsSDK sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/testing/functional/PytestAgentsSDK) from the CopilotStudioSamples repo. This harness connects to a published agent via the [M365 Agents SDK](https://github.com/microsoft/Agents-for-python), sends each test case as a conversation turn, and evaluates the response using [DeepEval's](https://github.com/confident-ai/deepeval) GEval metric. We set the pass threshold at 0.75 and wrote expected answers in a concise, direct style.
 
 ## The loop
 
