@@ -13,21 +13,19 @@ image:
 
 We added a `publish` command to the [Claude Code plugin for Copilot Studio](https://github.com/microsoft/skills-for-copilot-studio). This means the AI coding agent can now do the full loop without manual intervention: edit agent YAML, push changes, publish the draft to make it live, run tests against the published agent, analyze failures, and iterate.
 
-This post walks through what we built and a trial run of the loop on a real agent.
-
-## What changed
-
-The [manage agent](https://github.com/microsoft/skills-for-copilot-studio/blob/main/agents/copilot-studio-manage.md) sub-agent already supported pull, push, clone, and validate. We added a **`publish`** command that calls the Dataverse `PvaPublish` bound action and polls the `publishedon` timestamp until it changes, confirming the draft is live. The manage agent prompt enforces the correct sequence (pull, push, publish) and checks for pending changes before publishing.
-
-With this in place, the sub-agents can orchestrate a full improvement cycle: the author agent edits instructions, the manage agent pushes and publishes, and a test suite evaluates the published agent's responses.
-
-Here is a recording of the loop in action, starting from blank instructions and iterating through several cycles:
+This post walks through what we built and a trial run of the loop on a real agent. Here it is in action:
 
 {%
   include embed/video.html
   src='https://github.com/adilei/videos/releases/download/mcs-loop-v1/mcs-loop.mp4'
   title='Demo: agentic improvement loop running against a D&D 5e rules agent'
 %}
+
+## What changed
+
+The [manage agent](https://github.com/microsoft/skills-for-copilot-studio/blob/main/agents/copilot-studio-manage.md) sub-agent already supported pull, push, clone, and validate. We added a **`publish`** command that calls the Dataverse `PvaPublish` bound action and polls the `publishedon` timestamp until it changes, confirming the draft is live. The manage agent prompt enforces the correct sequence (pull, push, publish) and checks for pending changes before publishing.
+
+With this in place, the sub-agents can orchestrate a full improvement cycle: the author agent edits instructions, the manage agent pushes and publishes, and a test suite evaluates the published agent's responses.
 
 ## Trial run
 
