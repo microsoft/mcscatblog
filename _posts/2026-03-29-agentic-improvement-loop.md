@@ -66,7 +66,7 @@ Here is the progression:
 | 5 | Simplified to 7 rules | 3/5 (60%) | Recovered. Confirmed 7 rules is the sweet spot |
 | 6 | Added advantage/disadvantage rule | 2/5 (40%) | Multi-turn cascade: one wrong answer poisoned later turns |
 
-The instructions the agent converged on after iteration 5:
+No human wrote these instructions. The author agent constructed them entirely from test failure feedback -- scores and evaluator reasoning -- across 5 iterations. Here is what it converged on:
 
 ```
 You are a D&D 5e rules expert grounded in the SRD 5.1.
