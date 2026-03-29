@@ -18,6 +18,7 @@ This post walks through what we built and a trial run of the loop on a real Copi
 {%
   include embed/video.html
   src='https://github.com/adilei/videos/releases/download/mcs-loop-v1/mcs-loop.mp4'
+  poster='assets/posts/agentic-improvement-loop/video-poster.jpg'
   title='Demo: agentic improvement loop running against a D&D 5e rules agent in Copilot Studio'
 %}
 
@@ -29,7 +30,7 @@ With this in place, the AI coding agent's sub-agents can orchestrate a full impr
 
 ## Trial run
 
-We set up a D&D 5th Edition rules assistant as a Copilot Studio agent, backed by the [Systems Reference Document 5.1](https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf) (403 pages, Creative Commons CC-BY-4.0) as a document knowledge source. The Copilot Studio agent was configured with `useModelKnowledge: false` so all answers had to come from the uploaded PDF.
+We set up a D&D 5th Edition rules assistant as a Copilot Studio agent (because why not D&D?), backed by the [Systems Reference Document 5.1](https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf) (403 pages, Creative Commons CC-BY-4.0) as a document knowledge source. The Copilot Studio agent was configured with `useModelKnowledge: false` so all answers had to come from the uploaded PDF.
 
 The Copilot Studio agent got the basics right early on -- it could find information in the SRD and give broadly correct answers. But the failures were a mix of two things: **style** (verbose, step-by-step breakdowns when a direct answer was expected, unsolicited caveats) and **reliability** (occasionally miscalculating arithmetic or omitting a key rule consequence). The style issues were more frequent, but the correctness lapses were more damaging -- a wrong number in one answer could cascade into confused follow-ups in the same conversation. This isn't surprising -- LLMs are pattern matchers, not calculators, and multi-step arithmetic is where they're least reliable.
 
