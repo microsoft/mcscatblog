@@ -31,17 +31,17 @@ With this in place, the sub-agents can orchestrate a full improvement cycle: the
 
 We set up a D&D 5th Edition rules assistant in Copilot Studio, backed by the [Systems Reference Document 5.1](https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1.pdf) (403 pages, Creative Commons CC-BY-4.0) as a document knowledge source. The agent was configured with `useModelKnowledge: false` so all answers had to come from the uploaded PDF.
 
-We wrote 5 test cases that require the agent to cross-reference information from different sections of the document:
+The agent had no trouble with factual correctness. It could parse the SRD's tables, cross-reference race traits with class features, and do the arithmetic. What it struggled with was style: it was verbose, showed step-by-step reasoning when a direct answer was expected, and added unsolicited caveats. So we designed our test cases to require not just correct answers but a specific response style -- concise, direct, no unnecessary detail. Each question also deliberately required information from multiple distant sections of the document:
 
-| # | Question | Sections involved |
-|---|----------|-------------------|
-| 1 | Halfling Barbarian: AC, Rage Damage, rages/day, Lucky on a nat 1 | Race traits, class table, Unarmored Defense |
-| 2 | Dwarf Fighter in Plate armor: AC, speed, Stealth, heavy armor speed rule | Armor table, Dwarf racial trait |
-| 3 | Prone creature in difficult terrain: stand up + move 10 ft, base speed 30 | Prone rules, difficult terrain, movement math |
-| 4 | 9th-level Barbarian crits with Greataxe: total damage dice | Weapon table, Brutal Critical, critical hit rules |
-| 5 | Reckless Attack vs Dodge: advantage/disadvantage interaction | Reckless Attack, Dodge action, advantage rules |
+| # | Question | Expected answer |
+|---|----------|-----------------|
+| 1 | 5th-level Halfling Barbarian (16 Str, 14 Con), raging, no armor. AC? Rage Damage? Rages/day? Roll a 1? | Unarmored Defense AC is 10 + Dex mod + Con mod (+2), minimum 12. Rage Damage +2. 3 rages/long rest. Halfling Lucky trait: reroll the 1. |
+| 2 | Dwarf Fighter in Plate. AC? Speed? Stealth disadvantage? Str requirement? Heavy armor speed rule? | AC 18, Str 15 required, Stealth disadvantage. 25 ft speed -- Dwarf trait means speed is not reduced by heavy armor. |
+| 3 | Prone in difficult terrain, stand up + move 10 ft, base speed 30. Movement cost? | Stand up = 15 ft. Move 10 ft difficult terrain = 20 ft. Total 35 ft > 30 ft speed. Can't do it, 5 ft short. |
+| 4 | 9th-level Barbarian (18 Str), raging, crits with Greataxe. Total damage dice? | Greataxe 1d12, crit = 2d12, Brutal Critical +1d12 = 3d12. Plus Str (+4) + Rage (+3). Final: 3d12 + 7. |
+| 5 | Reckless Attack vs Dodge. Advantage/disadvantage interaction? | Reckless = advantage. Dodge = disadvantage. Both cancel. Roll one d20, straight. |
 
-For evaluation, we used the [PytestAgentsSDK sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/testing/functional/PytestAgentsSDK) from the CopilotStudioSamples repo. This harness connects to a published agent via the [M365 Agents SDK](https://github.com/microsoft/Agents-for-python), sends each test case as a conversation turn, and evaluates the response using [DeepEval's](https://github.com/confident-ai/deepeval) GEval metric. We set the pass threshold at 0.75 and wrote expected answers in a concise, direct style.
+For evaluation, we used the [PytestAgentsSDK sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/testing/functional/PytestAgentsSDK) from the CopilotStudioSamples repo. This harness connects to a published agent via the [M365 Agents SDK](https://github.com/microsoft/Agents-for-python), sends each test case as a conversation turn, and evaluates the response using [DeepEval's](https://github.com/confident-ai/deepeval) GEval metric at a 0.75 threshold.
 
 ## The loop
 
