@@ -12,7 +12,7 @@ image:
   no_bg: true
 ---
 
-> This post walks through the **Hosted Agent Service** pattern, a custom-built agent service hosted on Azure that delegates AI planning and tool invocation to Microsoft Copilot Studio and securely calls enterprise APIs using the On-Behalf-Of (OBO) flow. A working .NET 8 code sample with Bicep infrastructure is included.
+> **This is Part 1** of a two-part series. This post walks through the **Hosted Agent Service** pattern: a custom-built service that validates user JWTs, delegates AI planning to Copilot Studio, and securely calls enterprise APIs using the On-Behalf-Of (OBO) flow. A working .NET 8 code sample with Bicep infrastructure is included. In **Part 2**, we'll convert this service into a full Agent Framework agent with channel publishing (Teams, Outlook) and distributed conversation state across stateless nodes.
 {: .prompt-info }
 
 ## Before You Reach for This Pattern
@@ -201,9 +201,22 @@ The key configuration: the Agent Service must have **API permission** for the En
 
 This pattern trades simplicity for control. You're taking on more infrastructure (an extra service to host, monitor, and secure) in exchange for full authority over the auth chain, orchestration logic, and response composition. That trade-off is worth it when your requirements demand it.
 
-The full code sample is available at [**github.com/jpad5/azure-agent-patterns**](https://github.com/jpad5/azure-agent-patterns).
+## What's Next: From Proxy to Orchestrator Agent (Part 2)
+
+This post demonstrated the auth plumbing — JWT validation, OBO token exchange, and Copilot Studio delegation — but the hosted service is still essentially a **proxy**. It forwards prompts and relays responses. That's useful, but there's a much more powerful version of this pattern.
+
+In **Part 2**, we'll turn this service into a **custom orchestrator agent** built with [Microsoft Agent Framework](https://learn.microsoft.com/en-us/microsoft/agents/overview). That changes the game:
+
+- **Channel publishing** — By implementing `ActivityHandler` and registering with Azure Bot Service, your agent becomes a first-class citizen in Teams, Outlook, and other M365 channels. No WebChat embedding required.
+- **Custom orchestration** — Instead of blindly forwarding prompts to a single Copilot Studio agent, your orchestrator can route between multiple agents, call external LLMs, apply business rules, and compose responses from different sources.
+- **Distributed conversation state** — How do you handle conversation state when your agent runs across multiple stateless nodes behind a load balancer? We'll cover state storage in Azure Blob/Cosmos, sticky sessions vs. distributed state, and how OBO token caching works in a multi-node deployment.
+
+> If the full pattern with channel publishing and custom orchestration is what you're after, stay tuned for Part 2.
+{: .prompt-tip }
+
+The full code sample for this post is available at [**github.com/jpad5/azure-agent-patterns**](https://github.com/jpad5/azure-agent-patterns).
 
 Happy Building!
 
-> How would the On-Behalf-Of flow change your approach to building enterprise agent experiences that need secure, user-delegated access to internal APIs? Let us know in the comments!
+> Have you hit the wall where a simple proxy wasn't enough and you needed a full orchestrator agent? What drove that decision? Let us know in the comments!
 {: .prompt-tip }
