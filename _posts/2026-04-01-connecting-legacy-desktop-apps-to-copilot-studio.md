@@ -29,20 +29,18 @@ Microsoft Copilot Studio — and by extension Custom Agents — **does not curre
 
 Here are the key findings when attempting to include RPA functionality in a custom agent:
 
-**Changing a cloud flow's plan to Copilot Studio when it internally invokes a desktop flow**
-
-[To invoke a cloud flow from a Custom Agent, its plan must be set to Copilot Studio. When that cloud flow internally calls a desktop flow, the plan change is rejected:](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_switching_plan_to_copilot_studio.png){: .shadow w="700" }
+- Changing a cloud flow's plan to Copilot Studio when it internally invokes a desktop flow
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_switching_plan_to_copilot_studio.png)
 
 > Flow client error returned with status code "Forbidden" and details "RpaActionNotSupportedForMcs".
 
-![Adding a "Run a Desktop Flow" action as a Tool](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rpa_as_a_tool_actual_message.png){: .shadow w="700" }
-_Attempting to add Run Desktop Flow as a Tool returns a server error._
+- Adding a "Run a Desktop Flow" action as a Tool
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rpa_as_a_tool_actual_message.png)
 
 > Something went wrong. Please try again. An unexpected server error occurred.
 
-**Adding a "Run a Desktop Flow" action inside an Agent Flow**
-
-![Clicking Publish on an agent flow that includes a desktop flow action results in a validation error, rendering it unpublishable:](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rap_in_agent_flows_actual_message.png){: .shadow w="700" }
+- Adding a "Run a Desktop Flow" action inside an Agent Flow and attempting to publish it
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rap_in_agent_flows_actual_message.png)
 
 > We ran into an error while validating your flow. Please try again.
 
@@ -81,9 +79,9 @@ Create a new Custom Agent in Copilot Studio. For this demo, I named mine **Conto
 
 ### Step 2 – Add the Computer Use Tool
 
-- Navigate to the **Tools** tab and click ![Add the Computer Use tool.](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_cua_as_a_tool.png){: .shadow w="700" }
+- Navigate to the **Tools** tab and click **Add the Computer Use tool.** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_cua_as_a_tool.png)
 
-- Provide instructions for the tool and click ![Add and configure.](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/add_new_cua_tool_with_instructions.png){: .shadow w="700" }
+- Provide instructions for the tool and click **Add and configure.** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/add_new_cua_tool_with_instructions.png)
 
 > **On writing good instructions:** Be thorough and specific. CUA automation is **outcome-based, not action-based** — every instruction is a goal, and the tool will use every method at its disposal to achieve it. If the target application isn't visible on screen, CUA will search via Windows Search, browse the file system, locate the `.exe`, and more. Instructions should clearly describe the desired outcome in terms of the application being automated.
 >
@@ -92,33 +90,36 @@ Create a new Custom Agent in Copilot Studio. For this demo, I named mine **Conto
 ### Step 3 – Connect Your Machine
 
 - Scroll down to the **Machines** section of the Computer Use tool configuration.
-- ![In the dropdown, select **Bring-your-own machine** and choose the machine registered in the Prerequisites step.](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_a_machine_in_cua_existing_machine.png){: .shadow w="700" }
+- In the dropdown, select **Bring-your-own machine** and choose the machine registered in the Prerequisites step. ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_a_machine_in_cua_existing_machine.png)
 
 > For more on where Computer Use runs: [Configure where computer use runs (preview)](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use)
 
 ### Step 4 – Create a Connection and Test
 
-- With your machine selected, ![create a connection for CUA](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/create_cua_connection.png){: .shadow w="700" }
+- With your machine selected, create a **connection for CUA** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/create_cua_connection.png)
 
-- Click **Test** — ![your registered machine should appear and be ready.](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_screen_cua.png){: .shadow w="700" }
+- Click **Test** your registered machine should appear and be ready. ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_screen_cua.png)
 
 ### Step 5 – Configure Agent Instructions and Run
 
 - Return to the agent's **Instructions** section and provide thorough guidance, explicitly referencing the CUA tool and the objectives it should pursue against the target application.
-
-![Instructions](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/agent_details.png){: .shadow w="700" }
+**Instructions** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/agent_details.png)
 
 - Save your changes and open the **Test** panel.
 
 The agent invokes the Computer Use tool, which navigates the desktop application to reach its objectives. Once complete, the retrieved data is surfaced directly in the agent conversation.
 
-![Agent test initiated](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent.png){: .shadow w="700" }
+- Agent test initiated
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent.png)
 
-![Computer Use steps in action](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent_cua_steps.png){: .shadow w="700" }
+- Computer Use steps in action
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent_cua_steps.png)
 
-![Data successfully extracted](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent_cua_extracted_data.png){: .shadow w="700" }
+- Data successfully extracted
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent_cua_extracted_data.png)
 
-![Agent returns the data](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent_agent_returns_data.png){: .shadow w="700" }
+- Agent returns the data
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_the_agent_agent_returns_data.png)
 
 ---
 
@@ -164,7 +165,8 @@ The idea is simple: let each layer do what it does best.
 
 **Execution Layer:** The Custom Agent uses the custom Dataverse table as a knowledge source, having direct access to clean, structured, up-to-date data on every interaction — without ever touching the desktop application directly.
 
-![Separation of Concerns architecture](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/separation_of_concerns.png){: .shadow w="700" }
+**Separation of Concerns pattern**
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/separation_of_concerns.png)
 _The Knowledge Layer handles data retrieval and storage. The Execution Layer handles agent interactions._
 
 This approach offers several concrete advantages over direct CUA integration:
