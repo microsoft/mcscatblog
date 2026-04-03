@@ -21,11 +21,18 @@ We are now well into the **Hyper Automation era**. As organizations move toward 
 
 Which leads to a natural question: *What if I could connect my existing Power Automate RPA stack to Copilot Studio and amplify my agents with data that lives exclusively inside desktop apps?*
 
+In this post we explore two approaches to answer exactly that:
+
+- **Computer Use Agents (CUA)** — a fully agentic, vision-based approach where a Copilot Studio agent interacts with desktop applications directly, as a human would.
+- **Separation of Concerns with Power Automate** — a pattern that keeps your existing RPA stack intact, using it as a reliable data retrieval layer that feeds a Copilot Studio agent through Dataverse.
+
+But first, let's look at what happens when you try the most direct route.
+
 ---
 
-## The Current State: RPA and Copilot Studio Don't Mix
+## Directly Invoking RPA from Copilot Studio: What Happens Today
 
-Microsoft Copilot Studio — and by extension Custom Agents — **does not currently support RPA (Robotic Process Automation) integration**. Any attempt to invoke a "Run Desktop Flow" action, whether directly or indirectly via a cloud flow or agent flow, is blocked.
+At the time of writing, directly invoking RPA desktop flows is not yet supported.
 
 Here are the key findings when attempting to include RPA functionality in a custom agent:
 
@@ -46,7 +53,7 @@ Here are the key findings when attempting to include RPA functionality in a cust
 
 ---
 
-## Enter Computer Use Agents (CUA)
+## Going fully agentic: Enter Computer Use Agents (CUA)
 
 Microsoft has introduced a fundamentally different approach to desktop automation in Copilot Studio: **Computer Use Agents (CUA)**.
 
@@ -103,7 +110,7 @@ Create a new Custom Agent in Copilot Studio. For this demo, I named mine **Conto
 ### Step 5 – Configure Agent Instructions and Run
 
 - Return to the agent's **Instructions** section and provide thorough guidance, explicitly referencing the CUA tool and the objectives it should pursue against the target application.
-**Instructions** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/agent_details.png)
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/agent_details.png)
 
 - Save your changes and open the **Test** panel.
 
@@ -155,7 +162,7 @@ Second, CUA's **goal-based approach** comes with a latency cost. Unlike determin
 
 ---
 
-## A Practical Alternative: Separation of Concerns with Power Automate
+## Retaining the RPA stack: Separation of Concerns with Power Automate
 
 CUA is a compelling capability, but there is a pragmatic alternative that leverages the **maturity and reliability of Power Automate** — one that maps cleanly to the **Separation of Concerns** architectural principle.
 
