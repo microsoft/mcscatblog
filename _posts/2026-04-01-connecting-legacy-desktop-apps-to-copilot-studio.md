@@ -48,7 +48,7 @@ Changing a cloud flow's plan to Copilot Studio when it internally invokes a desk
 > Something went wrong. Please try again. An unexpected server error occurred.
 
 - Adding a "Run a Desktop Flow" action inside an Agent Flow and attempting to publish it
-![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rap_in_agent_flows_actual_message.png)
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rpa_in_agent_flows_actual_message.png)
 
 > We ran into an error while validating your flow. Please try again.
 
