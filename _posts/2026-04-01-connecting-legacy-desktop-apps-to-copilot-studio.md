@@ -4,7 +4,7 @@ title: "Bridging the Gap: Connecting Legacy Desktop Applications to Copilot Stud
 date: 2026-04-01
 categories: [copilot-studio, agents]
 tags: [computer-use, agents, power-automate, rpa, legacy, desktop, dataverse, robotic-process-automation, cua]
-description: "A technical deep-dive into connecting legacy desktop applications to Microsoft Copilot Studio agents - exploring why native RPA integration is blocked, how Computer Use Agents (CUA) fill the gap, and a production-ready alternative using Power Automate and Dataverse."
+description: "A technical deep-dive into connecting legacy desktop applications to Microsoft Copilot Studio agents - exploring current limitations in RPA integration, how Computer Use Agents (CUA) fill the gap, and a production-ready alternative using Power Automate and Dataverse."
 author: jpapadimitriou
 image:
   path: /assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/header.png
@@ -32,7 +32,11 @@ But first, let's look at what happens when you try the most direct route.
 
 ## Directly Invoking RPA from Copilot Studio: What Happens Today
 
-At the time of writing, directly invoking RPA desktop flows is not yet supported.
+At the time of writing, invoking RPA desktop flows from Copilot Studio is not yet a consistently supported or reliable pattern across all approaches.
+
+While certain integration paths have existed or are emerging, they are either limited in scope, under active development, or not yet production-ready.
+
+As a result, attempting to directly integrate RPA into agents today can lead to errors or unsupported scenarios, depending on the approach used.
 
 Here are the key findings when attempting to include RPA functionality in a custom agent:
 
@@ -51,6 +55,8 @@ Changing a cloud flow's plan to Copilot Studio when it internally invokes a desk
 ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rpa_in_agent_flows_actual_message.png)
 
 > We ran into an error while validating your flow. Please try again.
+
+Given the current state of integration, organizations need to think in terms of patterns rather than a single “correct” approach.
 
 ---
 
