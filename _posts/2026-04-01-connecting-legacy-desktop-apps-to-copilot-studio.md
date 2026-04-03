@@ -17,7 +17,7 @@ Many organizations still rely on legacy desktop applications that are critical t
 
 RPA (Robotic Process Automation) was created precisely to bridge this gap. Power Automate enables the creation of deterministic desktop flows with sophisticated tooling for UI automation, flow execution, and error handling.
 
-We are now well into the **Hyper Automation era**. As organizations move toward agentic automation, surfacing data from legacy desktop applications and making it available to AI agents becomes increasingly critical.
+We are now well into the **Agentic Automation era**. As organizations move toward agentic automation, surfacing data from legacy desktop applications and making it available to AI agents becomes increasingly critical.
 
 Which leads to a natural question: *What if I could connect my existing Power Automate RPA stack to Copilot Studio and amplify my agents with data that lives exclusively inside desktop apps?*
 
@@ -36,7 +36,8 @@ At the time of writing, directly invoking RPA desktop flows is not yet supported
 
 Here are the key findings when attempting to include RPA functionality in a custom agent:
 
-- Changing a cloud flow's plan to Copilot Studio when it internally invokes a desktop flow
+- In order to invoke a cloud flow from an Agent you have to change its plan to **Copilot Studio**. 
+Changing a cloud flow's plan to Copilot Studio when it internally invokes a desktop flow:
 ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_switching_plan_to_copilot_studio.png)
 
 > Flow client error returned with status code "Forbidden" and details "RpaActionNotSupportedForMcs".
