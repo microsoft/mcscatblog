@@ -191,4 +191,6 @@ This approach offers several concrete advantages over direct CUA integration:
 - **Auditability** - every flow run, data write, and agent query is logged and traceable
 - **Decoupling** - the desktop application, the data pipeline, and the agent can each evolve independently
 
-This pattern won't suit every scenario. If you need real-time data or genuinely ad-hoc UI interactions, CUA is the right choice. But for recurring, structured data retrieval, this approach delivers production-grade reliability today, allowing you for the re-use of your existing RPA stack.
+> Note: This pattern won't suit every scenario. If you need real-time data or genuinely ad-hoc UI interactions, CUA is the right choice. But for recurring, structured data retrieval, this approach delivers production-grade reliability today, allowing you for the re-use of your existing RPA stack.
+
+As the platform evolves, we can expect tighter integration between agents and desktop automation, but today, choosing the right pattern is key.
