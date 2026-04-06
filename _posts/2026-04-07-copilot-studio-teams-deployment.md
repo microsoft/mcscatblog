@@ -7,8 +7,8 @@ tags: [teams-deployment, admin-center, setup-policies, app-manifest, alm, enviro
 description: "Master the three deployment paths for Copilot Studio agents in Teams. Learn how to customize manifests for DEV/TEST environments and leverage Setup Policies for automated production rollouts with auto-install and pinning."
 author: henryjammes
 image:
-  path: /assets/posts/copilot-studio-teams-deployment/image2.png
-  alt: "Copilot Studio agent pinned in Microsoft Teams sidebar"
+  path: /assets/posts/copilot-studio-teams-deployment/header.png
+  alt: "Test chat environment vs Teams deployment chaos"
 ---
 
 ## The Identity Crisis
