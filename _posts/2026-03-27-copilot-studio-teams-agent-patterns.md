@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Copilot Studio Teams Agent Patterns That Actually Work"
+title: "Deploying Copilot Studio Agents in Teams (Because Test Chat Was Too Easy)"
 date: 2026-03-27
 categories: [copilot-studio, teams]
 tags: [teams, microsoft-365-copilot, conversation-management, troubleshooting, adaptive-cards]
-description: Eight production patterns for deploying Copilot Studio agents to Teams and M365 Copilot - handling reinstalls, context management, error handling, and self-service troubleshooting with diagnostic cards.
+description: Eight production patterns for deploying Copilot Studio agents to Teams and Microsoft 365 Copilot - handling reinstalls, context management, error handling, and self-service troubleshooting with diagnostic cards.
 author: henryjammes
 ---
 
@@ -13,6 +13,11 @@ Your agent works great in the test chat. Ship it to Teams and suddenly users are
 Welcome to production, where everything that worked perfectly in your controlled environment meets the chaos of real user behavior.
 
 This guide covers eight patterns for handling the real-world mess: users who reinstall apps weekly, conversations that persist for months, context that goes stale, and errors that need to be debugged without a Ph.D. in distributed systems.
+
+> Want to skip the copy-paste? [Download the finished solution file](/assets/posts/copilot-studio-teams-agent-patterns/B2EAgent_1_0_0_0.zip) and import it directly into Copilot Studio. If you need a walkthrough, check the [import/export docs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-import-export#import-the-solution-with-your-agent).
+{: .prompt-tip }
+
+![Copilot Studio Agent optimized for Microsoft](../assets/posts/copilot-studio-teams-agent-patterns/mcs_teams_agent.gif)
 
 ## Jump to any pattern
 
@@ -29,7 +34,7 @@ This guide covers eight patterns for handling the real-world mess: users who rei
 
 ## Handling re-installs and Conversation Start
 
-Users reinstall Teams apps all the time. IT pushes an update, someone clears their cache, someone just rage-quits and reinstalls hoping it'll fix whatever's broken. When they do, they get an empty chat screen because [Conversation Start](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#conversation-start) doesn't trigger on reinstalls.
+Users reinstall Teams apps more often than expected. IT rolls out updates, caches get cleared, or users reinstall to resolve issues. When that happens, they often land on an empty chat screen because [Conversation Start](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#conversation-start) doesn't trigger on reinstalls.
 
 The fix: redirect to **Conversation Start** when the agent detects an [installation update event](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#installation-update).
 
@@ -87,7 +92,7 @@ Note: `durationInSeconds: 43200` is 12 hours. Adjust based on your use case.
 
 When users ask a follow-up after context was cleared, they need to know. Otherwise they'll be confused when the agent doesn't remember what they were talking about.
 
-Use a [Basic Card](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#hero-cards) to notify them. The "Start over" button stays persistent so users can trigger a fresh start anytime.
+Use a [Basic Card](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-send-message#add-a-basic-cards) to notify them. The "Start over" button stays persistent so users can trigger a fresh start anytime.
 
 ![Session expired notification](/assets/posts/copilot-studio-teams-agent-patterns/image7.png)
 
@@ -126,7 +131,7 @@ outputType: {}
 Context variables (user language, country, department, etc.) are typically set in **Conversation Start**. But that doesn't cover all scenarios:
 
 - **Microsoft 365 Copilot doesn't trigger Conversation Start**
-- **Variables get cleared after "Start Over" or inactivity**
+- **Variables get cleared after "Start Over", or even inactivity, in our previous pattern**
 
 Better approach: trigger a topic when context values are unknown. This ensures variables are set on the user's first message, regardless of channel, and can be re-established after any reset.
 
@@ -188,7 +193,7 @@ beginDialog:
 
 ## Update the Reset Conversation topic to clear history, session variables, and redirect to Conversation Start
 
-Users may choose to start over at any time using the Start Over topic, which redirects to the [Reset Conversation system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#reset-conversation). By default, it doesn't clear conversation history or redirect to **Conversation Start**. Let's fix that.
+Users may choose to start over at any time using the **Start Over** topic, which redirects to the [Reset Conversation system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#reset-conversation). By default, it doesn't clear conversation history or redirect to **Conversation Start**. Let's fix that.
 
 ![Reset Conversation topic](/assets/posts/copilot-studio-teams-agent-patterns/image11.png)
 
