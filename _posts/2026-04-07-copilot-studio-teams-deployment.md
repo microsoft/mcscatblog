@@ -13,13 +13,13 @@ image:
 
 ## The Identity Crisis
 
-You've built three Copilot Studio agents: Dev, Test, and Prod. Users open Microsoft Teams and see three identical blue icons, all named "Support Agent."
+You've built a Copilot Studio agent and [promoted it across environments](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-import-export) via solution export/import: Dev, Test, Prod. You deploy each one to Teams. Your developers and testers open Microsoft Teams and see three identical blue icons, all named "Support Agent."
 
-Which one is production?
+Which one is production? Which one is the dev instance they're supposed to be testing?
 
 Nobody knows.
 
-This isn't a discoverability problem—it's an ALM (Application Lifecycle Management) problem. And while Copilot Studio's 1-click deploy to Teams is convenient, it creates identical apps across all environments with the same name, same icon, same description, and same manifest.
+This isn't a discoverability problem, it's an ALM (Application Lifecycle Management) problem. Copilot Studio's 1-click deploy to Teams generates the same name, same icon, same description, and same manifest regardless of which environment the agent lives in.
 
 The solution? Environment-based deployment strategies that differentiate your agents and give you precise control over distribution, auto-installation, and pinning in the Teams sidebar.
 
