@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "From DEV to PROD: Auto-Install and Pinning for Copilot Studio Agents"
-date: 2026-03-27
+date: 2026-04-07
 categories: [copilot-studio, teams, deployment]
 tags: [teams-deployment, admin-center, setup-policies, app-manifest, alm, environment-strategy, auto-install]
 description: "Master the three deployment paths for Copilot Studio agents in Teams. Learn how to customize manifests for DEV/TEST environments and leverage Setup Policies for automated production rollouts with auto-install and pinning."
