@@ -12,7 +12,7 @@ Your agent works great in the test chat. Ship it to Teams and suddenly users are
 
 Welcome to production, where everything that worked perfectly in your controlled environment meets the chaos of real user behavior.
 
-This guide covers eight patterns for handling the real-world mess: users who reinstall apps weekly, conversations that persist for months, context that goes stale, and errors that need to be debugged without a Ph.D. in distributed systems.
+This guide builds on Remi Dyon's [best practices for deploying agents in Teams]({% post_url 2025-11-11-copilot-studio-teams-deployment-ux %}), making them more practical with ready-to-import YAML and taking a few patterns further. Eight patterns for handling the real-world mess: users who reinstall apps weekly, conversations that persist for months, context that goes stale, and errors that need to be debugged without a Ph.D. in distributed systems.
 
 > Want to skip the copy-paste? [Download the finished solution file](/assets/posts/copilot-studio-teams-agent-patterns/B2EAgent_1_0_0_0.zip) and import it directly into Copilot Studio. If you need a walkthrough, check the [import/export docs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-import-export#import-the-solution-with-your-agent).
 {: .prompt-tip }
