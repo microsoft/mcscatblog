@@ -23,6 +23,9 @@ This isn't a discoverability problem—it's an ALM (Application Lifecycle Manage
 
 The solution? Environment-based deployment strategies that differentiate your agents and give you precise control over distribution, auto-installation, and pinning in the Teams sidebar.
 
+> If you haven't optimized your agent for Teams yet, start with [Deploying Copilot Studio Agents in Teams (Because Test Chat Was Too Easy)]({% post_url 2026-04-07-copilot-studio-teams-agent-patterns %}) for production patterns covering reinstalls, inactivity, error handling, and diagnostic cards.
+{: .prompt-info }
+
 ## Why Standard Deployment Falls Short
 
 Copilot Studio's [1-click deploy to Teams](https://learn.microsoft.com/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams) works great for single-environment scenarios. Click "Add to Teams," publish, and you're done. But it doesn't account for:
