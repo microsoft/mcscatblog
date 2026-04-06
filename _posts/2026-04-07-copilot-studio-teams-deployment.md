@@ -13,9 +13,9 @@ image:
 
 ## The Identity Crisis
 
-You've built a Copilot Studio agent and [promoted it across environments](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-import-export) via solution export/import: Dev, Test, Prod. You deploy each one to Teams. Your developers and testers open Microsoft Teams and see three identical blue icons, all named "Support Agent."
+You've built a Copilot Studio agent and [promoted it across environments](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-import-export) via solution export/import: DEV, TEST, PROD. You deploy each one to Teams. Your developers and testers open Microsoft Teams and see three identical blue icons, all named "Support Agent."
 
-Which one is production? Which one is the dev instance they're supposed to be testing?
+Which one is production? Which one is the DEV instance they're supposed to be testing?
 
 Nobody knows.
 
@@ -206,18 +206,6 @@ The manifest.json file contains all the metadata Teams uses to display your agen
 - Add `(DEV)` suffix to short name
 - Custom accent color (yellow/gold for DEV)
 - Incremented version number
-
-### Color Psychology for Environments
-
-Use distinct colors to create immediate visual differentiation:
-
-| Environment | Accent Color | Color Meaning | Icon Treatment |
-|-------------|--------------|---------------|----------------|
-| **DEV** | `#FFD700` (Yellow/Gold) | Development, testing | Yellow tint or border |
-| **TEST** | `#FFC300` (Amber) | Validation phase | Amber tint or border |
-| **PROD** | `#0078D4` (Blue) or brand | Stable, production | Clean brand colors |
-
-Users will instantly recognize which environment they're working in based on color alone.
 
 ### Step 4: Repackage
 
