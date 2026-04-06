@@ -72,7 +72,10 @@ Let's examine each path in detail.
 > **Governance Level:** Low • **Speed:** Fastest • **Approval:** None
 {: .prompt-info }
 
-Users can install the agent **without admin involvement**, in two ways:
+Users can install the agent **without admin involvement**, in two ways.
+
+> Both methods require [custom app interaction to be enabled](https://learn.microsoft.com/en-us/microsoftteams/teams-custom-app-policies-and-settings) in your tenant's Teams app policies. If sideloading is disabled, users won't see the "Upload a custom app" option, and Method A may also be blocked depending on your org's app permission policies.
+{: .prompt-warning }
 
 **Method A: From Copilot Studio ("See agent in Teams")**
 - Click "See agent in Teams" in Copilot Studio
