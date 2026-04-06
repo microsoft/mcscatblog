@@ -1090,6 +1090,8 @@ You now have eight production patterns covering:
 
 These patterns handle the chaos of real production deployments where users do unexpected things and conversations persist longer than anyone planned.
 
+Once your agent is ready, check out [From DEV to PROD: Auto-Install and Pinning for Copilot Studio Agents]({% post_url 2026-04-07-copilot-studio-teams-deployment %}) for environment-based deployment strategies, manifest customization, and auto-install with pinning via Setup Policies.
+
 ## Related Resources
 
 - [System triggers](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers)
