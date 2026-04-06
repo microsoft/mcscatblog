@@ -6,6 +6,9 @@ categories: [copilot-studio, teams]
 tags: [teams, microsoft-365-copilot, conversation-management, troubleshooting, adaptive-cards]
 description: Eight production patterns for deploying Copilot Studio agents to Teams and Microsoft 365 Copilot - handling reinstalls, context management, error handling, and self-service troubleshooting with diagnostic cards.
 author: henryjammes
+image:
+  path: /assets/posts/copilot-studio-teams-agent-patterns/header.png
+  alt: "Test chat environment vs Teams deployment chaos"
 ---
 
 Your agent works great in the test chat. Ship it to Teams and suddenly users are confused why their chat is empty after reinstalling the app, why the agent remembers context from last month, and why errors just say "Something went wrong" with zero hints on what to do next.
