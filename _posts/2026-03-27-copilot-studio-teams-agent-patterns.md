@@ -232,7 +232,7 @@ Update it with a confirmation dialog that offers troubleshooting options using a
 
 ![Start Over confirmation](/assets/posts/copilot-studio-teams-agent-patterns/image13.png)
 
-![Start Over Adaptive Card in Studio](/assets/posts/copilot-studio-teams-agent-patterns/image14.png)
+![Start Over Adaptive Card in Studio](/assets/posts/copilot-studio-teams-agent-patterns/image15.png)
 
 Since we're not using the default 'Boolean' option (we want Adaptive Card action buttons instead of "Yes/No" quick replies), set up a closed list entity for Yes/No in the question node.
 
