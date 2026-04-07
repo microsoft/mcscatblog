@@ -417,6 +417,8 @@ Pair this with manifest customization for DEV/TEST environments, and you have a 
 
 **What deployment challenges have you faced with Copilot Studio agents?** Drop a comment below—I'd love to hear how you're handling environment strategies and distribution in your organization.
 
+Before you ship to production, Remi Dyon's [best practices for deploying agents in Teams]({% post_url 2025-11-11-copilot-studio-teams-deployment-ux %}) is worth a read for UX-level guidance on conversation design that complements the ALM strategy here. Once the agent is live and users start hitting issues, having a clear story around [How to Get Your Conversation ID When Chatting with Agents]({% post_url 2026-01-24-conversationid-users %}) saves a lot of back-and-forth in support tickets. And if you want a systematic way to validate agent behavior across environments before you promote to PROD, [Copilot Studio Kit: Beyond Test Automation]({% post_url 2026-03-06-copilot-studio-kit %}) covers the test and governance tooling that ties an ALM pipeline together.
+
 ## Related Resources
 
 **Deployment Documentation:**
