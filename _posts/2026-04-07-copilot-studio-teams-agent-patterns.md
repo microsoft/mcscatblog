@@ -94,6 +94,9 @@ outputType: {}
 
 Note: `durationInSeconds: 43200` is 12 hours. Adjust based on your use case.
 
+> Clearing conversation history periodically also helps reduce token limit errors, since long-running conversations accumulate tokens over time.
+{: .prompt-tip }
+
 ---
 
 ## Letting the user know a new conversation is starting after inactivity
@@ -1063,7 +1066,13 @@ beginDialog:
 
 </details>
 
+![On Error topic actions](/assets/posts/copilot-studio-teams-agent-patterns/image19.png)
+
+![On Error card in Teams](/assets/posts/copilot-studio-teams-agent-patterns/image20.png)
+
 Expanding **Advanced options** offers troubleshooting commands and diagnostic details for admins to investigate.
+
+![On Error advanced options expanded](/assets/posts/copilot-studio-teams-agent-patterns/image21.png)
 
 ---
 
@@ -1071,9 +1080,9 @@ Expanding **Advanced options** offers troubleshooting commands and diagnostic de
 
 [Suggested prompts](https://learn.microsoft.com/microsoft-copilot-studio/nlu-boost-conversations#configure-suggested-prompts) configured at the agent level work in both Teams and Microsoft 365 Copilot.
 
-![Suggested prompts configuration](/assets/posts/copilot-studio-teams-agent-patterns/image19.png)
+![Suggested prompts configuration](/assets/posts/copilot-studio-teams-agent-patterns/image22.png)
 
-![Suggested prompts in Teams](/assets/posts/copilot-studio-teams-agent-patterns/image20.png)
+![Suggested prompts in Teams](/assets/posts/copilot-studio-teams-agent-patterns/image23.png)
 
 Configure in **Settings → Generative AI → Suggested prompts** for consistent discoverability across channels.
 
