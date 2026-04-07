@@ -81,7 +81,23 @@ Before starting, ensure the following are in place:
 
 > **Important:** Enabling Computer Use on a machine removes it from the pool available for standard desktop flow connections and will break any existing connections tied to it. Ensure no active desktop flows depend on this machine before proceeding.
 
-> **Demo setup:** For this walkthrough, I used a locally hosted Hyper-V Virtual Machine with a dedicated CUA user account, Power Automate Machine Runtime, and the **Contoso Invoicing** desktop application installed.
+### Choosing your machine: local VM vs Hosted Machines
+
+For this demo, I used a locally hosted Hyper-V Virtual Machine - it reflects how most organizations with an existing RPA stack operate today, running legacy desktop applications on their own infrastructure.
+
+That said, for production deployments, **Power Automate Hosted Machines** are worth serious consideration. Hosted Machines are a fully managed, SaaS-based offering - Microsoft provisions and maintains the underlying infrastructure, eliminating the need to manage your own VMs. Key advantages include:
+
+- **No infrastructure overhead** - no VM provisioning, patching, or maintenance
+- **Scalability** - spin up additional machines on demand to handle concurrent automation workloads
+- **Reliability** - machines are always available, with no dependency on on-premises uptime
+- **Simplified setup** - golden image creation, app installation, and Machine Runtime configuration are handled once, then replicated at scale
+- **Cost efficiency** - pay-as-you-go model aligned with actual automation usage
+
+> Learn more about [Configuring where computer use runs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-where-computer-use-runs) and for [Hosted machines in Power Automate](https://learn.microsoft.com/en-us/power-automate/desktop-flows/hosted-machines)
+
+The upfront investment in setting up a Hosted Machine - creating the golden image with your application installed and Machine Runtime configured - pays off quickly at scale. If you are building CUA automation for production use or planning to expand coverage across multiple applications, Hosted Machines are the recommended path.
+
+> See how to use custom VM images for your hosted machines [here](https://learn.microsoft.com/en-us/power-automate/desktop-flows/hosted-machines#use-custom-vm-images-for-your-hosted-machine)
 
 ---
 
