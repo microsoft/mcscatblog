@@ -64,6 +64,9 @@ Agent conversations in Teams are persistent. Users return after a week and the a
 
 Set an [inactivity trigger](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#inactivity) (in seconds) to end topics and clear [history and variables](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables) after silence. Once you've cleared everything, set a flag (`Global.InactiveConversation`) to handle follow-up smoothly.
 
+<details>
+<summary>Full YAML — click to expand</summary>
+
 ```yaml
 kind: AdaptiveDialog
 beginDialog:
@@ -86,6 +89,8 @@ beginDialog:
 inputType: {}
 outputType: {}
 ```
+
+</details>
 
 Note: `durationInSeconds: 43200` is 12 hours. Adjust based on your use case.
 
@@ -1091,6 +1096,8 @@ You now have eight production patterns covering:
 These patterns handle the chaos of real production deployments where users do unexpected things and conversations persist longer than anyone planned.
 
 Once your agent is ready, check out [From DEV to PROD: Auto-Install and Pinning for Copilot Studio Agents]({% post_url 2026-04-07-copilot-studio-teams-deployment %}) for environment-based deployment strategies, manifest customization, and auto-install with pinning via Setup Policies.
+
+Speaking of diagnostic info: the conversation IDs surfaced in Pattern 6 and Pattern 7 are exactly what support teams need. [How to Get Your Conversation ID When Chatting with Agents]({% post_url 2026-01-24-conversationid-users %}) walks end-users through retrieving that ID from any channel, so you can pair the diagnostic card with a self-service guide. For deeper investigation, [Open the Hood: What Your Copilot Studio Agent Is Really Doing]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}) covers reading conversation transcripts directly from Dataverse — the next step once you have the conversation ID in hand.
 
 ## Related Resources
 
