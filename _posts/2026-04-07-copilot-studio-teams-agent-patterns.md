@@ -1090,8 +1090,6 @@ Configure in **Settings → Generative AI → Suggested prompts** for consistent
 
 ## The result
 
-![B2E Agent deployed in Teams](/assets/posts/copilot-studio-teams-agent-patterns/image2.png)
-
 You now have eight production patterns covering:
 - Reinstalls that don't leave users stranded
 - Stale context that gets cleared automatically
