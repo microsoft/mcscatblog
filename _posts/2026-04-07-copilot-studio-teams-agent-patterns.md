@@ -56,6 +56,9 @@ beginDialog:
       dialog: cat_B2EAgent.topic.ConversationStart
 ```
 
+> `startBehavior: UseLatestPublishedContentAndCancelOtherTopics` forces the agent to use the latest published version immediately, canceling any in-progress topics. Without it, Copilot Studio preserves existing sessions after publishing — the agent only picks up the new version once the dialog stack is empty. Since Teams conversations persist longer than other channels, users are more likely to be stuck on an older version. You'll see this property on several topics throughout this post.
+{: .prompt-info }
+
 ---
 
 ## Clearing conversation history after a period of inactivity
