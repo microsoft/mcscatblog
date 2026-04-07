@@ -33,8 +33,7 @@
       "Bash('/c/Program Files/PowerShell/7/pwsh.exe' -Command 'Add-Type -AssemblyName System.Drawing; Get-ChildItem '\\\\''C:\\\\projects\\\\mcscatblog\\\\mcscatblog\\\\assets\\\\posts\\\\copilot-studio-teams-agent-patterns\\\\*.png'\\\\'' | ForEach-Object { $img = [System.Drawing.Image]::FromFile\\($_.FullName\\); Write-Output \"$\\($_.Name\\): $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\) }')",
       "Bash('/c/Program Files/PowerShell/7/pwsh.exe' -Command 'Get-ChildItem '\\\\''C:\\\\Users\\\\hejammes\\\\OneDrive - Microsoft\\\\Desktop\\\\Deploying to Microsoft Teams & Microsoft 365 Copilot best practices\\\\word\\\\media\\\\*.png'\\\\'' | ForEach-Object { Write-Output \"$\\($_.Name\\): $\\($_.Length\\)\" }')",
       "Bash('/c/Program Files/PowerShell/7/pwsh.exe' -Command 'Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\('\\\\''C:\\\\Users\\\\hejammes\\\\AppData\\\\Local\\\\Temp\\\\repo_image7_old.png'\\\\''\\); Write-Output \"Old repo: $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\); $img2 = [System.Drawing.Image]::FromFile\\('\\\\''C:\\\\Users\\\\hejammes\\\\OneDrive - Microsoft\\\\Desktop\\\\Deploying to Microsoft Teams & Microsoft 365 Copilot best practices\\\\word\\\\media\\\\image7.png'\\\\''\\); Write-Output \"Docx original: $\\($img2.Width\\)x$\\($img2.Height\\)\"; $img2.Dispose\\(\\)')",
-      "Bash(git mv:*)",
-      "Bash(git checkout:*)"
+      "Bash(git mv:*)"
     ],
     "additionalDirectories": [
       "\\tmp\\docx_images\\word\\media",
