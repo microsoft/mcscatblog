@@ -334,6 +334,9 @@ Agents can be made available in [Microsoft 365 Copilot](https://learn.microsoft.
 
 The M365 Admin Center offers similar distribution controls to Teams, ensuring consistent governance across both channels.
 
+> Teams and Microsoft 365 Copilot are inherently different channels with different runtime behaviors. Don't assume that because your agent evaluates well in one channel, it will behave the same in the other. Test and validate in both channels independently.
+{: .prompt-warning }
+
 **Documentation:** [Agent Registry in M365 Admin Center](https://learn.microsoft.com/microsoft-365/admin/manage/manage-plugins-for-copilot-in-integrated-apps)
 
 ## Updating Agents: Runtime vs. Manifest Changes
@@ -394,6 +397,7 @@ Use this checklist for every production deployment:
 **Validation:**
 - [ ] Verified with test user (signed out/in, app appears pinned)
 - [ ] Confirmed agent responds correctly in Teams
+- [ ] Confirmed agent responds correctly in Microsoft 365 Copilot (if applicable — Teams and M365 Copilot behave differently)
 - [ ] Verified no [conflicting setup policies](https://learn.microsoft.com/en-us/microsoftteams/policy-assignment-overview) — policies are not cumulative, the highest-ranked group assignment wins
 
 **Communication:**
