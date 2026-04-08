@@ -20,7 +20,7 @@ This guide builds on Remi Dyon's [best practices for deploying agents in Teams](
 > Want to skip the copy-paste? [Download the finished solution file](/assets/posts/copilot-studio-teams-agent-patterns/B2EAgent_1_0_0_0.zip) and import it directly into Copilot Studio. If you need a walkthrough, check the [import/export docs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-import-export#import-the-solution-with-your-agent).
 {: .prompt-tip }
 
-![Copilot Studio Agent optimized for Microsoft](../assets/posts/copilot-studio-teams-agent-patterns/mcs_teams_agent.gif)
+![Copilot Studio Agent optimized for Microsoft](/assets/posts/copilot-studio-teams-agent-patterns/mcs_teams_agent.gif)
 
 ## Jump to any pattern
 
@@ -215,7 +215,8 @@ Users may choose to start over at any time using the **Start Over** topic, which
 
 ```yaml
 kind: AdaptiveDialog
-startBehavior: UseLatestPublishedContentAndCancelOtherTopicsbeginDialog:
+startBehavior: UseLatestPublishedContentAndCancelOtherTopics
+beginDialog:
   kind: OnSystemRedirect
   id: main
   actions:
