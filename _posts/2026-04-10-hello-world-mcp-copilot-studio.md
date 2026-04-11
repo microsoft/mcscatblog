@@ -4,7 +4,7 @@ title: "Five Minutes to MCP: Your First Copilot Studio MCP Connector"
 date: 2026-04-10
 categories: [copilot-studio, mcp]
 tags: []
-description: ""
+description: "Connect a public MCP server to a Copilot Studio agent in five minutes by automatically generating a custom connector, no code required. A step-by-step guide using DeepWiki as an example."
 author: chrisgarty
 image:
   path: /assets/posts/hello-world-mcp-copilot-studio/cat-building-agent-with-mcp.png
