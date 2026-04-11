@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Hello World MCP! Your First Copilot Studio MCP Connector"
+title: "Five Minutes to MCP: Your First Copilot Studio MCP Connector"
 date: 2026-04-10
 categories: [copilot-studio, mcp]
 tags: []
