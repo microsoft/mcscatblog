@@ -60,7 +60,7 @@ Before we dive into each method, here's a simplified decision flow. Your startin
 
 ```mermaid
 flowchart TD
-    START["What does your<br>agent need to do?"] --> Q1{"Are queries specific<br>and filterable?"}
+    START["What does your<br>agent need to do?"] --> Q1{"Can user requests map to<br>precise queries?"}
     
     Q1 -- "Yes, precise queries" --> Q2{"Need exhaustive<br>results — all rows?"}
     Q2 -- Yes --> LISTROWS["List Rows<br>OData filter via connector"]
@@ -68,9 +68,11 @@ flowchart TD
     
     Q1 -- "No, fuzzy/discovery" --> Q3{"Large dataset?<br>100K+ rows"}
     Q3 -- Yes --> SEARCH["Search Query<br>Relevance search +<br>pair with List Rows"]
-    Q3 -- No --> Q4{"Can prefilter to<br>< 1000 rows?"}
+    Q3 -- No --> KNOWLEDGE
+    
+    Q1 -- "Need reasoning<br>over content" --> Q4{"Can prefilter to<br>< 1000 rows?"}
     Q4 -- Yes --> PROMPT["Prompt Tool<br>LLM reasoning over tables"]
-    Q4 -- No --> KNOWLEDGE
+    Q4 -- No --> SEARCH
     
     Q1 -- "Mixed / exploring" --> Q5{"Need granular<br>control?"}
     Q5 -- No --> MCP["MCP Server<br>Quick start, all tables"]
