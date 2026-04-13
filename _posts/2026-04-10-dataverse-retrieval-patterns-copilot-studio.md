@@ -3,8 +3,8 @@ layout: post
 title: "Dataverse Retrieval Patterns for Structured Data in Copilot Studio Agents"
 date: 2026-04-10
 categories: [copilot-studio, dataverse]
-tags: [dataverse, retrieval-patterns, knowledge, list-rows, mcp, searchquery, prompt-tool, connectors. table, search]
-description: "Five ways to retrieve Dataverse data from Copilot Studio agents — Knowledge, List Rows, MCP Server, Search Query, and Prompt Tool. A decision guide with setup steps and trade-offs, flow charts and a handy ingteractive widget to help you pick the right method."
+tags: [dataverse, retrieval-patterns, knowledge, list-rows, mcp, searchquery, prompt-tool, connectors, decision-guide]
+description: "Five ways to retrieve Dataverse data from Copilot Studio agents — Knowledge, List Rows, MCP Server, Search Query, and Prompt Tool. A decision guide with setup steps and trade-offs, flow charts and a handy interactive widget to help you pick the right method."
 authors: [KarimaKT, roels]
 image:
   path: /assets/posts/dataverse-retrieval-patterns-copilot-studio/header.png
@@ -33,9 +33,15 @@ Throughout this post, we'll use one scenario across all five methods so you can 
 
 To follow along, download the sample dataset used in this post and import it in a Dataverse Table: [fictional_facilities_table_import_to_DV.csv](/assets/posts/dataverse-retrieval-patterns-copilot-studio/fictional_facilities_table_import_to_DV.csv).
 
+![Imported Facility table in Dataverse](/assets/posts/dataverse-retrieval-patterns-copilot-studio/TableImported01.png){: .shadow w="700" h="400" }
+_The Facility table after importing the sample CSV into Dataverse_
+
 **The setup:** You're building a Copilot Studio agent for the fictional Greenfield Parks & Recreation Department. They have a Dataverse table called **Facility** (logical name: `crc57_facility1`) with 100 fictional facilities spread across six districts and five facility types.
 
 The data is intentionally varied. Facility Names overlap. Types include Community Hubs, Library Branches, Recreation Centres, Civic Offices, and Access Points. Districts span North, South, East, West, Central, and Downtown. Descriptions are rich multi-line text with details about amenities and programs — the kind of free-form content that makes fuzzy search interesting. There are also columns you won't search but will want to retrieve: image URLs, opening hours, websites, capacity, GPS coordinates, and accessibility flags.
+
+![Sample facility data](/assets/posts/dataverse-retrieval-patterns-copilot-studio/01tabledatafacilities.png){: .shadow w="700" h="400" }
+_A sample of the facility records with districts, types, and descriptions_
 
 There's a related **Service Offerings** table (yoga classes, swimming lessons, after-school programs) linked to Facilities through a many-to-many relationship.
 
@@ -54,15 +60,15 @@ Before we dive into each method, here's a simplified decision flow. Your startin
 
 ```mermaid
 flowchart TD
-    START["What does your<br>agent need to do?"] --> Q1{"Can user requests map to<br>precise queries?"}
+    START["What does your<br>agent need to do?"] --> Q1{"Are queries specific<br>and filterable?"}
     
-    Q1 -- "Yes, precise Queries" --> Q2{"Need exhaustive<br>results - all rows?"}
+    Q1 -- "Yes, precise queries" --> Q2{"Need exhaustive<br>results — all rows?"}
     Q2 -- Yes --> LISTROWS["List Rows<br>OData filter via connector"]
     Q2 -- No --> KNOWLEDGE["Knowledge<br>Quick setup, top N results"]
     
     Q1 -- "No, fuzzy/discovery" --> Q3{"Large dataset?<br>100K+ rows"}
     Q3 -- Yes --> SEARCH["Search Query<br>Relevance search +<br>pair with List Rows"]
-    Q3 -- No --> Q4{"Can prefilter to under 1000 rows and want extra intelligence over content?"}
+    Q3 -- No --> Q4{"Can prefilter to<br>< 1000 rows?"}
     Q4 -- Yes --> PROMPT["Prompt Tool<br>LLM reasoning over tables"]
     Q4 -- No --> KNOWLEDGE
     
@@ -258,7 +264,8 @@ MCP is great for exploration and prototyping. For production agents with high-st
 
 The Dataverse connector's ["List rows" action](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-flow-list-of-results), added as a [tool in Copilot Studio](https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-tools-custom-agent). You describe the [OData filter syntax](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/query/filter-rows) in natural language inside the tool input description, and the orchestrator generates the actual OData query from the user's question. This gives you deterministic, filtered retrieval — every row that matches comes back.
 
->For complex queries with joins use [FetchXML queries](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/fetchxml/overview) within List Rows
+> For complex queries with joins, use [FetchXML queries](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/fetchxml/overview) within List Rows.
+{: .prompt-info }
 
 ### When to use it
 
@@ -291,15 +298,17 @@ _The tool input description teaches the orchestrator how to generate OData filte
 
 5. Write your input description like pseudocode:
 
-```
-OData filter for the Facilities table.
+<details>
+<summary>Example OData input description</summary>
+<pre><code>OData filter for the Facilities table.
 - If the user mentions a district (north, south, east, west, central, downtown), filter on: crc57_district eq '{value}'
 - If the user mentions a facility type (community hub, library branch, recreation centre, civic office, access point), filter on: crc57_facilitytype eq '{value}'
 - If the user mentions a city name, filter on: crc57_city eq '{value}'
 - Always return columns: crc57_facility, crc57_district, crc57_city, crc57_phonenumber, crc57_facilitytype
 - Use logical field names only
 - DO NOT invent filter values that the user did not mention
-```
+</code></pre>
+</details>
 
 > The "DO NOT invent filter values" instruction is important if you are providing a closed set of values. If your list is not exhaustive, allow the filters to add keywords, variations and synonyms to emulate search behavior. 
 {: .prompt-tip }
@@ -400,15 +409,16 @@ Key inputs to configure:
 - **top** (`item.top`): set a limit (e.g., `10`) to control how many results come back
 - **facets** (`item.facets`): set to columns you want aggregated (e.g., `["district"]`) for faceted navigation
 
-Example `entities` value:
 
-```json
-[{
+<details>
+<summary>Example <code>entities</code> value</summary>
+<pre><code class="language-json">[{
     "Name": "crc57_facility1",
     "SelectColumns": ["crc57_facility1id", "crc57_facility", "crc57_district", "crc57_facilitydescription"],
     "SearchColumns": ["crc57_facility", "crc57_facilitydescription"]
 }]
-```
+</code></pre>
+</details>
 
 For a complete production-ready `searchquery` configuration pattern, see [Structured Data with Zero User Auth]({% post_url 2026-03-20-dataverse-search-in-copilot-studio-unauthenticated-structured-data %}).
 
@@ -456,7 +466,7 @@ Search Query finds "Daryl Community Center" despite the typo, scores it highest,
 
 ### When you'll hit the wall
 
-Search Query does not search text content "by meaning", as in, its index is not a semandic index with vector embeddings.
+Search Query does not search text content "by meaning" — its index is keyword-based, not a semantic index with vector embeddings. A user asking "where can I play basketball?" won't find facilities whose descriptions mention "multi-purpose gym" or "youth sports programs." For that kind of intent-matching over free-text data, you need the Prompt Tool.
 
 ## 5. Prompt Tool: LLM Reasoning Over Your Data
 
@@ -475,7 +485,7 @@ Copilot Studio's [prompt tool](https://learn.microsoft.com/en-us/microsoft-copil
 
 ### When to move on
 
-- Simple lookups where List Rows or Knowledge would suffice and the agentès orchestrator could handle the rest of the reasoning (don't use a cannon for a nail)
+- Simple lookups where List Rows or Knowledge would suffice and the agent's orchestrator could handle the rest of the reasoning (don't use a cannon for a nail)
 - You need real-time, high-throughput retrieval (Prompt Tool adds LLM processing time)
 - Your filtered data is too large to fit in a prompt context window
 
@@ -566,7 +576,7 @@ _The Activity tab reveals which tools the orchestrator selected and why_
 
 **Don't force one method.** A well-built agent often uses two or three retrieval methods, or multiple instances of certain methods for different scenarios and configurations within the same agent. Start with one, add more as you expand scope or hit limits.
 
-**Write good table and column names in Dataverse** MCP and Knowledge  pull these names and types automatically. Good metadata in Dataverse means less configuration work in Copilot Studio.
+**Write good table and column names in Dataverse.** MCP and Knowledge pull these names and types automatically. Good metadata in Dataverse means less configuration work in Copilot Studio.
 
 **DLP before you ship.** Review your DLP policies before deploying any of these patterns to production:
 - **Connectors** (List Rows, Search Query, Prompt Tool): controllable per DLP policy
