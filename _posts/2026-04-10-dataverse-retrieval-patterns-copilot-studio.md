@@ -217,10 +217,6 @@ The Dataverse [MCP (Model Context Protocol) server](https://learn.microsoft.com/
 5. The MCP server automatically pulls **table and column names** from your Dataverse table definitions as a starter glossary
 6. Test and check the **Activity tab** to see which operations the MCP chains together
 
-![MCP server tool configuration](/assets/posts/dataverse-retrieval-patterns-copilot-studio/DVMCP-RetrievalTools.png){: .shadow w="700" h="400" }
-
-_The Dataverse MCP Server tools panel with retrieval operations enabled (list_tables, describe_table, read_query, search, fetch) and write operations disabled (create_table, update_table, delete_table, create_record, update_record, delete_record)_
-
 > The entire MCP server is treated as a single connector for DLP purposes. You either allow it or block it — you can't allow "list rows via MCP" but block "delete rows via MCP" at the DLP level. Disable unwanted operations in the MCP tool configuration instead.
 {: .prompt-warning }
 
@@ -229,14 +225,12 @@ _The Dataverse MCP Server tools panel with retrieval operations enabled (list_ta
 The orchestrator can chain any tools together — this isn't MCP-specific behavior. What makes MCP different is that related operations are **bundled and context-aware**. They share the same endpoint, the same table metadata, and the same connection, and they understand when to call each other. You don't have to configure each operation as a separate tool.
 
 ```mermaid
-flowchart TD
-    A["User: 'Find something<br>like Darol Civics'"] --> B["Orchestrator routes<br>to MCP server"]
-    B --> C["MCP: Search Query<br>(fuzzy match)<br>+ Optional Post-filter"]
-    C --> D{"Results<br>sufficient?"}
-    D -- "Need more detail" --> E["MCP: List Rows<br>(full records)"]
+flowchart LR
+    B["agent"] --> C["MCP: Search Query<br>(fuzzy match)<br>+ Optional Post-filter"]
+    C --> D{"Neen more<br> details??"}
+    D -- "Yes" --> E["MCP: List Rows<br>(full records)"]
     E --> F["Combined results<br>returned to agent"]
-    D -- "Yes" --> F
-    F --> G["Agent formats<br>and responds"]
+    D -- "No" --> F
     
     style C fill:#d97706,color:#fff
     style E fill:#2d7d46,color:#fff
@@ -326,11 +320,9 @@ _The tool input description teaches the orchestrator how to generate OData filte
 
 ```mermaid
 flowchart LR
-    A["User: 'Show me<br>facilities in the<br>north district'"] --> B["Orchestrator reads<br>tool input description"]
-    B --> C["Generates OData:<br>crc57_district eq 'North'"]
+    A["agent"] --> C["Generates OData:<br>crc57_district eq 'North'"]
     C --> D["List Rows connector<br>executes query"]
     D --> E["Full result set<br>returned to agent"]
-    E --> F["Agent formats<br>and responds"]
 ```
 
 The orchestrator's OData generation is reliable when you write clear, pedagogical input descriptions with explicit glossaries of valid values. It handles `eq`, `ne`, `and`, `or`, and `contains()` well. Where it struggles is when descriptions are vague or leave room for interpretation — that's when you get hallucinated filter values or unnecessary follow-up questions.
@@ -382,12 +374,6 @@ The Dataverse ["Perform unbound action"](https://learn.microsoft.com/en-us/micro
 
 **Prerequisites:** Dataverse Search must be enabled and your columns must be indexed. This is the prerequisite people most often miss.
 
-1. Go to **Power Platform Admin Center** → select your environment
-2. Navigate to **Settings** → **Product** → **Features**
-3. Find **[Dataverse Search](https://learn.microsoft.com/en-us/power-platform/admin/configure-relevance-search-organization)** and toggle it **On**
-4. Wait for the environment-level index to initialize (can take a few minutes)
-5. In your **Dataverse solution**, open each table you want searchable
-6. **Enable the table for search indexing** and select which columns to index
 
 > Only text-type columns can be indexed (Single Line of Text, Multiple Lines of Text). Booleans, numbers, and lookups are not indexable for fuzzy search. Be selective — indexing consumes storage.
 {: .prompt-warning }
@@ -396,31 +382,7 @@ The Dataverse ["Perform unbound action"](https://learn.microsoft.com/en-us/micro
 
 1. Add a new tool → **Dataverse connector** → **Perform unbound action**
 2. Set the **action name** to `searchquery`
-3. Configure the inputs. The screenshot below shows a working configuration:
-
-![Search Query tool configuration](/assets/posts/dataverse-retrieval-patterns-copilot-studio/SearchQueryToolSetup.png){: .shadow w="700" h="400" }
-
-_The Search Query tool configured as a Dataverse unbound action with the action name set to `Search community facilities`, search and filter inputs dynamically filled by AI, and entities, count, top, and facets set as custom values_
-
-Key inputs to configure:
-
-- **implicit search words** (`item.search`): set to **Dynamically fill with AI** with your instructions so the orchestrator extracts the search term from the user's question
-- **entities** (`item.entities`): set as a **Custom value** with your table name, select columns, and search columns
-- **implicitfilter** (`item.filter`): set to **Dynamically fill with AI** with your instructions so the orchestrator can add OData post-filters when the user mentions specific values for narrowing results.
-- **count** (`item.count`): set to `true` to return the total result count
-- **top** (`item.top`): set a limit (e.g., `10`) to control how many results come back
-- **facets** (`item.facets`): set to columns you want aggregated (e.g., `["district"]`) for faceted navigation
-
-
-<details>
-<summary>Example <code>entities</code> value</summary>
-<pre><code class="language-json">[{
-    "Name": "crc57_facility1",
-    "SelectColumns": ["crc57_facility1id", "crc57_facility", "crc57_district", "crc57_facilitydescription"],
-    "SearchColumns": ["crc57_facility", "crc57_facilitydescription"]
-}]
-</code></pre>
-</details>
+3. **Configure** the inputs.
 
 For a complete production-ready `searchquery` configuration pattern, see [Structured Data with Zero User Auth]({% post_url 2026-03-20-dataverse-search-in-copilot-studio-unauthenticated-structured-data %}).
 
@@ -430,12 +392,11 @@ This is the most common enterprise pattern. Fuzzy search discovers candidates, t
 
 ```mermaid
 flowchart LR
-    A["User: 'Tell me about<br>Darol center'"] --> B["Search Query<br>(fuzzy match)"]
+    A["agent"] --> B["Search Query<br>(fuzzy match)"]
     B --> C["Returns candidates:<br>Daryl Community Center<br>Darrel Services Point<br>Darnell Civic Office"]
     C --> D["Agent picks<br>best match or<br>asks user"]
     D --> E["List Rows<br>(by record ID)"]
-    E --> F["Full record<br>with all columns"]
-    F --> G["Agent responds<br>with complete info"]
+    E --> F["Full record<br>returned to agent"]
     
     style B fill:#9333ea,color:#fff
     style E fill:#2d7d46,color:#fff
@@ -497,37 +458,35 @@ Copilot Studio's [prompt tool](https://learn.microsoft.com/en-us/microsoft-copil
 
 1. In Copilot Studio, create a new **Prompt** (under Tools or the Prompt section)
 2. Write **instructions** in natural language describing what the prompt should do, how to interpret user questions, and what format to return results in
-3. Add **Dataverse tables as knowledge** — click the knowledge picker and select your tables. All columns become available to the LLM
-4. Define **inputs** (e.g., the user's question or a specific filter value)
+3. Add **Dataverse tables as knowledge** — click the knowledge picker and select your tables, columns and filter values. All columns become available to the LLM
+4. Define **inputs** (e.g., the user's question and a filter value)
 5. Define **outputs** (e.g., a text summary, a count, a formatted list)
 6. **Select a model** from the dropdown
 7. Test the prompt directly in the prompt editor before wiring it into your agent
 8. Add the prompt as a **tool** in your agent so the orchestrator can call it when relevant
 
-![Prompt Tool editor](/assets/posts/dataverse-retrieval-patterns-copilot-studio/aipromptwithDataversefullrowquery.png){: .shadow w="700" h="400" }
+![Prompt Tool editor](/assets/posts/dataverse-retrieval-patterns-copilot-studio/Prompt-DV-Filter-Dynamic.png){: .shadow w="700" h="400" }
 
-_The Prompt Tool editor with Dataverse tables attached as knowledge and model selection_
+_The Prompt Tool with dynamic inputs (User Question, City), the Facility table as knowledge filtered by City, and selected columns. The model reasons over descriptions to find sports activities in Hillcrest._
 
 ### How the Prompt Tool works
 
 ```mermaid
 flowchart LR
-    A["User: 'Where can<br>I play basketball<br>near Hillcrest?'"] --> B["Orchestrator routes<br>to Prompt Tool"]
-    B --> C["Prompt Tool loads<br>Facility table<br>as knowledge context"]
+    A["agent"] --> C["Prompt Tool loads<br>Facility table<br>as knowledge context"]
     C --> D["Selected model<br>reasons over<br>descriptions"]
-    D --> E["Returns: 'Johnathan<br>Family Hub has a<br>multi-purpose gym...'"]
-    E --> F["Agent passes<br>result to user"]
+    D --> E["'Johnathan<br>Family Hub has a<br>multi-purpose gym...' returned to agent"]
     
     style D fill:#dc2626,color:#fff
 ```
 
 ### Greenfield example
 
-A resident asks: *"Where can I play basketball near Hillcrest?"*
+A resident asks: *"Where can I play basketball in Hillcrest?"*
 
 None of the other methods can answer this directly. "Basketball" doesn't appear as a column value anywhere — it's buried inside free-text descriptions like "multi-purpose gym" and "youth programs." Knowledge and Search Query match keywords, but they can't reason about whether a "multi-purpose gym" implies basketball. List Rows can't search descriptions at all.
 
-The Prompt Tool loads the Facility table, reads descriptions across all rows, and connects "basketball" to facilities with gyms and sports amenities in or near Hillcrest. It returns: "Johnathan Family Hub in Hillcrest has a multi-purpose gym and youth programs. Jonty Access Point in Birchwood also has gym facilities."
+The Prompt Tool loads columns from the Facility table filtered by city, reads descriptions across all rows, and connects "basketball" to facilities with gyms and sports amenities in Hillcrest. It returns: "Johnathan Family Hub in Hillcrest has a multi-purpose gym and youth programs. Jonty Access Point in Birchwood also has gym facilities."
 
 This is where the Prompt Tool earns its keep: **semantic reasoning over free-text data**. The LLM reads your descriptions and interprets intent, bridging the gap between what users ask and how your data is actually written.
 

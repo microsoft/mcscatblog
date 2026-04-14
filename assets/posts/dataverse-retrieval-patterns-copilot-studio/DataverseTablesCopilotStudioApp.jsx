@@ -672,7 +672,7 @@ export default function DataverseRetrievalDemoSolid() {
                     className="rounded-2xl"
                     onClick={() => setView("table")}
                   >
-                    <Table2 className="h-4 w-4" />
+                    <Table2 className="mr-1.5 h-4 w-4" />Table
                   </Button>
                   <Button
                     variant={view === "details" ? "default" : "secondary"}
@@ -680,7 +680,7 @@ export default function DataverseRetrievalDemoSolid() {
                     className="rounded-2xl"
                     onClick={() => setView("details")}
                   >
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="mr-1.5 h-4 w-4" />Details
                   </Button>
                 </div>
               </div>
@@ -752,8 +752,6 @@ export default function DataverseRetrievalDemoSolid() {
                         </tbody>
                       </table>
                   </div>
-
-                  <div className="text-[11px] text-slate-500">Switch to Details to see retrieval steps and maker controls.</div>
                 </div>
               ) : null}
 
