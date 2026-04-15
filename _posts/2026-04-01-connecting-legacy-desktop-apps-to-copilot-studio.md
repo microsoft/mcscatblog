@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "Bridging the Gap: Connecting Legacy Desktop Applications to Copilot Studio Agents"
-date: 2026-04-01
+date: 2026-04-15
 categories: [copilot-studio, agents]
 tags: [computer-use, agents, power-automate, rpa, legacy, desktop, dataverse, robotic-process-automation, cua]
-description: "A technical deep-dive into connecting legacy desktop applications to Microsoft Copilot Studio agents - exploring current limitations in RPA integration, how Computer Use Agents (CUA) fill the gap, and a production-ready alternative using Power Automate and Dataverse."
+description: "A technical deep-dive into connecting legacy desktop applications to Microsoft Copilot Studio agents - exploring how a Separation of Concerns pattern lets you reuse your existing RPA stack today, and how Computer Use Agents (CUA) enable a fully agentic alternative."
 author: jpapadimitriou
 image:
   path: /assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/header.png
@@ -23,44 +23,61 @@ Which leads to a natural question: *What if I could connect my existing Power Au
 
 In this post we explore two approaches to answer exactly that:
 
-- **Computer Use Agents (CUA)** - a fully agentic, vision-based approach where a Copilot Studio agent interacts with desktop applications directly, as a human would.
 - **Separation of Concerns with Power Automate** - a pattern that keeps your existing RPA stack intact, using it as a reliable data retrieval layer that feeds a Copilot Studio agent through Dataverse.
-
-But first, let's look at what happens when you try the most direct route.
-
----
-
-## Directly Invoking RPA from Copilot Studio: What Happens Today
-
-At the time of writing, invoking RPA desktop flows from Copilot Studio is not yet a consistently supported or reliable pattern across all approaches.
-
-While certain integration paths have existed or are emerging, they are either limited in scope, under active development, or not yet production-ready.
-
-As a result, attempting to directly integrate RPA into agents today can lead to errors or unsupported scenarios, depending on the approach used.
-
-Here are the key findings when attempting to include RPA functionality in a custom agent:
-
-- In order to invoke a cloud flow from an Agent you have to change its plan to **Copilot Studio**. 
-Changing a cloud flow's plan to Copilot Studio when it internally invokes a desktop flow:
-![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_switching_plan_to_copilot_studio.png)
-
-> Flow client error returned with status code "Forbidden" and details "RpaActionNotSupportedForMcs".
-
-- Adding a "Run a Desktop Flow" action as a Tool
-![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rpa_as_a_tool_actual_message.png)
-
-> Something went wrong. Please try again. An unexpected server error occurred.
-
-- Adding a "Run a Desktop Flow" action inside an Agent Flow and attempting to publish it
-![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/error_adding_rpa_in_agent_flows_actual_message.png)
-
-> We ran into an error while validating your flow. Please try again.
-
-Given the current state of integration, organizations need to think in terms of patterns rather than a single “correct” approach.
+- **Computer Use Agents (CUA)** - a fully agentic, vision-based approach where a Copilot Studio agent interacts with desktop applications directly, as a human would.
 
 ---
 
-## Going fully agentic: Enter Computer Use Agents (CUA)
+## Choosing Your Approach: CUA vs RPA
+
+Before diving into implementation, it is worth understanding how these two technologies compare and where each fits best.
+
+| **Aspect** | **RPA** | **CUA** |
+|---|---|---|
+| Automation type | Rule-based / Deterministic | LLM-driven / Outcome-based |
+| Interacts via | UI tree | Vision |
+| Authoring | Visual scripting | Natural language instructions |
+| Decision making | Predefined rules | Autonomous, visual-based decisions |
+| Error handling | Predefined error handling | Self-correcting based on visual feedback |
+
+### When to use each - today
+
+| | **Use RPA when…** | **Use CUA when…** |
+|---|---|---|
+| **UI stability** | UI is stable - screens, fields, and selectors hardly change | UIs shift or vary widely - multiple apps, frequent redesigns |
+| **Decision complexity** | Rules are clear - decisions can be captured in logic | Decisions are fuzzy - the agent must reason or self-correct |
+| **Speed** | Speed matters - high-volume where every second counts | Vision matters - the task depends on what's visible on screen |
+| **Team capacity** | An RPA team owns it - existing skills and tooling in place | RPA team can't take it - backlog is full, faster to build with CUA |
+| **Criticality** | GA is a must - mission-critical systems require stability | Tolerance for retries is acceptable - e.g. read-only scenarios |
+
+---
+
+## Approach 1: Retaining the RPA Stack with Separation of Concerns
+
+CUA is a compelling capability, but there is a pragmatic alternative that leverages the **maturity and reliability of Power Automate** - one that maps cleanly to the **Separation of Concerns** architectural principle.
+
+The idea is simple: let each layer do what it does best.
+
+**Knowledge / Data Retrieval Layer:** A scheduled cloud flow, executed at defined intervals (e.g. once per day), invokes a desktop flow. The desktop flow retrieves all requisite data from the legacy desktop application using UI Automation, then stores it in a custom Dataverse table using the dedicated Power Automate Dataverse actions.
+
+**Execution Layer:** The Custom Agent uses the custom Dataverse table as a knowledge source, having direct access to clean, structured, up-to-date data on every interaction - without ever touching the desktop application directly.
+
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/separation_of_concerns.png)
+_The Knowledge Layer handles data retrieval and storage. The Execution Layer handles agent interactions._
+
+This approach offers several concrete advantages:
+
+- **Speed** - the agent queries structured data instantly, with no UI navigation overhead
+- **Robustness** - Power Automate desktop flows are deterministic and battle-tested
+- **Scalability** - Dataverse handles concurrent agent queries without additional machine load
+- **Auditability** - every flow run, data write, and agent query is logged and traceable
+- **Decoupling** - the desktop application, the data pipeline, and the agent can each evolve independently
+
+> This pattern won't suit every scenario. If you need real-time data or genuinely ad-hoc UI interactions, CUA is the right choice. But for recurring, structured data retrieval, this approach delivers production-grade reliability today, allowing you to reuse your existing RPA stack without modification.
+
+---
+
+## Approach 2: Going Fully Agentic with Computer Use Agents (CUA)
 
 Microsoft has introduced a fundamentally different approach to desktop automation in Copilot Studio: **Computer Use Agents (CUA)**.
 
@@ -74,30 +91,33 @@ Rather than scripted, deterministic flows, CUA emulates human behavior. You set 
 
 Before starting, ensure the following are in place:
 
-- A **US-based Power Platform environment** - CUA is currently only available in US regions. See the full requirements [here](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use).
-- A target machine (physical or VM) with **Power Automate Machine Runtime** installed and registered. See [how to set up a machine in Power Automate](https://learn.microsoft.com/en-us/power-automate/desktop-flows/manage-machines).
+- A **US-based Power Platform environment** - CUA is currently only available in US regions. See the full requirements [here](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use#requirements).
+- A target machine with **Power Automate Machine Runtime** installed and registered. See [how to set up a machine in Power Automate](https://learn.microsoft.com/en-us/power-automate/desktop-flows/manage-machines).
 - The machine **enabled for Computer Use**: Power Automate > Machines > select your machine > Settings > toggle **"Enable for computer use"** to ON.
-- A **dedicated CUA user account** on the target machine - see [best practices for securing machines](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use).
+- A **dedicated CUA user account** on the target machine - see [best practices for securing machines](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use#best-practices-for-securing-machines).
 
 > **Important:** Enabling Computer Use on a machine removes it from the pool available for standard desktop flow connections and will break any existing connections tied to it. Ensure no active desktop flows depend on this machine before proceeding.
 
-### Choosing your machine: local VM vs Hosted Machines
+### Choosing where CUA runs: local VM, Hosted Machines, or Hosted Browser
 
-For this demo, I used a locally hosted Hyper-V Virtual Machine - it reflects how most organizations with an existing RPA stack operate today, running legacy desktop applications on their own infrastructure.
+CUA gives you three options for where automation runs, each suited to different scenarios.
 
-That said, for production deployments, **Power Automate Hosted Machines** are worth serious consideration. Hosted Machines are a fully managed, SaaS-based offering - Microsoft provisions and maintains the underlying infrastructure, eliminating the need to manage your own VMs. Key advantages include:
+**Bring-your-own machine (local VM)** is the right choice when you already have infrastructure in place - the legacy desktop application is installed and running on a machine you control. This is the approach used in this demo, as it reflects how most organizations with an existing RPA stack operate today.
+
+**Power Automate Hosted Machines** are the recommended path for production deployments and scale. They are a fully managed, SaaS-based offering - Microsoft provisions and maintains the underlying infrastructure. Key advantages:
 
 - **No infrastructure overhead** - no VM provisioning, patching, or maintenance
-- **Scalability** - spin up additional machines on demand to handle concurrent automation workloads
-- **Reliability** - machines are always available, with no dependency on on-premises uptime
-- **Simplified setup** - golden image creation, app installation, and Machine Runtime configuration are handled once, then replicated at scale
-- **Cost efficiency** - pay-as-you-go model aligned with actual automation usage
+- **Scalability** - spin up additional machines on demand for concurrent workloads
+- **Reliability** - no dependency on on-premises uptime
+- **Simplified setup** - configure a golden image once, replicate at scale
 
-> Learn more about [Configuring where computer use runs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-where-computer-use-runs) and for [Hosted machines in Power Automate](https://learn.microsoft.com/en-us/power-automate/desktop-flows/hosted-machines)
+> Learn more: [Hosted Machines in Power Automate](https://learn.microsoft.com/en-us/power-automate/desktop-flows/hosted-machines) · [Use custom VM images](https://learn.microsoft.com/en-us/power-automate/desktop-flows/hosted-machines#use-custom-vm-images-for-your-hosted-machine)
 
-The upfront investment in setting up a Hosted Machine - creating the golden image with your application installed and Machine Runtime configured - pays off quickly at scale. If you are building CUA automation for production use or planning to expand coverage across multiple applications, Hosted Machines are the recommended path.
+**Hosted Browser** is the lightest option - no machine setup required at all. If your automation target is a web application, CUA can run directly against a hosted browser session managed by Microsoft. It is the fastest way to get started and ideal for web-only scenarios.
 
-> See how to use custom VM images for your hosted machines [here](https://learn.microsoft.com/en-us/power-automate/desktop-flows/hosted-machines#use-custom-vm-images-for-your-hosted-machine)
+> Learn more: [Configure where computer use runs (preview)](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-where-computer-use-runs)
+
+> **Demo setup:** For this walkthrough, I used a locally hosted Hyper-V Virtual Machine with a dedicated CUA user account, Power Automate Machine Runtime, and the **Contoso Invoicing** desktop application installed.
 
 ---
 
@@ -109,26 +129,29 @@ Create a new Custom Agent in Copilot Studio. For this demo, I named mine **Conto
 
 ### Step 2 – Add the Computer Use Tool
 
-- Navigate to the **Tools** tab and click **Add the Computer Use tool.** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_cua_as_a_tool.png)
+- Navigate to the **Tools** tab and click **Add the Computer Use tool.**
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_cua_as_a_tool.png)
 
-- Provide instructions for the tool and click **Add and configure.** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/add_new_cua_tool_with_instructions.png)
+- Provide instructions for the tool and click **Add and configure.**
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/add_new_cua_tool_with_instructions.png)
 
 > **On writing good instructions:** Be thorough and specific. CUA automation is **outcome-based, not action-based** - every instruction is a goal, and the tool will use every method at its disposal to achieve it. If the target application isn't visible on screen, CUA will search via Windows Search, browse the file system, locate the `.exe`, and more. Instructions should clearly describe the desired outcome in terms of the application being automated.
 >
-> See: [Setting up instructions – Microsoft Learn](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use)
+> See: [Best practices for instructions for computer use – Microsoft Learn](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use#best-practices-for-instructions-for-computer-use)
 
 ### Step 3 – Connect Your Machine
 
 - Scroll down to the **Machines** section of the Computer Use tool configuration.
-- In the dropdown, select **Bring-your-own machine** and choose the machine registered in the Prerequisites step. ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_a_machine_in_cua_existing_machine.png)
-
-> For more on where Computer Use runs: [Configure where computer use runs (preview)](https://learn.microsoft.com/en-us/microsoft-copilot-studio/computer-use)
+- In the dropdown, select **Bring-your-own machine** and choose the machine registered in the Prerequisites step.
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/adding_a_machine_in_cua_existing_machine.png)
 
 ### Step 4 – Create a Connection and Test
 
-- With your machine selected, create a **connection for CUA** ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/create_cua_connection.png)
+- With your machine selected, create a **connection for CUA.**
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/create_cua_connection.png)
 
-- Click **Test** your registered machine should appear and be ready. ![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_screen_cua.png)
+- Click **Test** - your registered machine should appear and be ready.
+![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/testing_screen_cua.png)
 
 ### Step 5 – Configure Agent Instructions and Run
 
@@ -163,50 +186,8 @@ Second, CUA's **goal-based approach** comes with a latency cost. Unlike determin
 
 ---
 
-## CUA vs RPA: A Quick Comparison
+## What's Next: Native RPA Integration in Copilot Studio
 
-| **Aspect** | **RPA** | **CUA** |
-|---|---|---|
-| Automation type | Rule-based / Deterministic | LLM-driven / Outcome-based |
-| Interacts via | UI tree | Vision |
-| Authoring | Visual scripting | Natural language instructions |
-| Decision making | Predefined rules | Autonomous, visual-based decisions |
-| Error handling | Predefined error handling | Self-correcting based on visual feedback |
+Both patterns explored in this post are designed to work within the current platform capabilities - but the landscape is evolving quickly. Native RPA integration in Copilot Studio is actively being developed: the ability to invoke desktop flows via cloud flows from within a Custom Agent is expected to roll out worldwide in the near term, with direct desktop flow invocation from agents under active implementation.
 
-### When to use each - today
-
-| | **Use RPA when…** | **Use CUA when…** |
-|---|---|---|
-| **UI stability** | UI is stable - screens, fields, and selectors hardly change | UIs shift or vary widely - multiple apps, frequent redesigns |
-| **Decision complexity** | Rules are clear - decisions can be captured in logic | Decisions are fuzzy - the agent must reason or self-correct |
-| **Speed** | Speed matters - high-volume where every second counts | Vision matters - the task depends on what's visible on screen |
-| **Team capacity** | An RPA team owns it - existing skills and tooling in place | RPA team can't take it - backlog is full, faster to build with CUA |
-| **Criticality** | GA is a must - mission-critical systems require stability | Tolerance for retries is acceptable - e.g. read-only scenarios |
-
----
-
-## Retaining the RPA stack: Separation of Concerns with Power Automate
-
-CUA is a compelling capability, but there is a pragmatic alternative that leverages the **maturity and reliability of Power Automate** - one that maps cleanly to the **Separation of Concerns** architectural principle.
-
-The idea is simple: let each layer do what it does best.
-
-**Knowledge / Data Retrieval Layer:** A scheduled cloud flow, executed at defined intervals (e.g. once per day), invokes a desktop flow. The desktop flow retrieves all requisite data from the legacy desktop application using UI Automation, then stores it in a custom Dataverse table using the dedicated Power Automate Dataverse actions.
-
-**Execution Layer:** The Custom Agent uses the custom Dataverse table as a knowledge source, having direct access to clean, structured, up-to-date data on every interaction - without ever touching the desktop application directly.
-
-**Separation of Concerns pattern**
-![Image](/assets/posts/connecting-legacy-desktop-apps-to-copilot-studio/separation_of_concerns.png)
-_The Knowledge Layer handles data retrieval and storage. The Execution Layer handles agent interactions._
-
-This approach offers several concrete advantages over direct CUA integration:
-
-- **Speed** - the agent queries structured data instantly, with no UI navigation overhead
-- **Robustness** - Power Automate desktop flows are deterministic and battle-tested
-- **Scalability** - Dataverse handles concurrent agent queries without additional machine load
-- **Auditability** - every flow run, data write, and agent query is logged and traceable
-- **Decoupling** - the desktop application, the data pipeline, and the agent can each evolve independently
-
-> Note: This pattern won't suit every scenario. If you need real-time data or genuinely ad-hoc UI interactions, CUA is the right choice. But for recurring, structured data retrieval, this approach delivers production-grade reliability today, allowing you for the re-use of your existing RPA stack.
-
-As the platform evolves, we can expect tighter integration between agents and desktop automation, but today, choosing the right pattern is key.
+When that support lands, the Separation of Concerns pattern becomes even more powerful - the scheduled pipeline can be replaced with on-demand agent-triggered RPA execution, closing the gap between real-time data needs and legacy application access. Watch this space.
