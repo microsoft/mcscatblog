@@ -186,8 +186,6 @@ Second, CUA's **goal-based approach** comes with a latency cost. Unlike determin
 
 ---
 
-## What's Next: Native RPA Integration in Copilot Studio
+## What's Next
 
-Both patterns explored in this post are designed to work within the current platform capabilities - but the landscape is evolving quickly. Native RPA integration in Copilot Studio is actively being developed: the ability to invoke desktop flows via cloud flows from within a Custom Agent is expected to roll out worldwide in the near term, with direct desktop flow invocation from agents under active implementation.
-
-When that support lands, the Separation of Concerns pattern becomes even more powerful - the scheduled pipeline can be replaced with on-demand agent-triggered RPA execution, closing the gap between real-time data needs and legacy application access. Watch this space.
+The two patterns covered in this post represent solid, production-minded approaches for connecting legacy desktop applications to Copilot Studio agents today. In future posts we will explore patterns and best practices for directly invoking RPA functionality through agents.
