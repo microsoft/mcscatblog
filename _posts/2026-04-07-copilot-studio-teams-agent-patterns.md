@@ -33,6 +33,9 @@ This guide builds on Remi Dyon's [best practices for deploying agents in Teams](
 - [Updating the On Error topic](#updating-the-on-error-topic-for-self-serve-troubleshooting)
 - [Configure suggested prompts](#configure-suggested-prompts)
 
+> The first four patterns are **new topics** — create them from scratch in Copilot Studio. The next three (their headings start with "Update") **modify existing system topics**. Don't paste new-topic YAML into an existing topic.
+{: .prompt-info }
+
 ---
 
 ## Handling re-installs and Conversation Start
@@ -65,7 +68,7 @@ beginDialog:
 
 Agent conversations in Teams are persistent. Users return after a week and the agent still has old context from Tuesday's budget report question, except now they need help with something completely different. The agent's working with stale information, and users have no idea why it's confused.
 
-Set an [inactivity trigger](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers#:~:text=The%20user%20is%20inactive%20for%20a%20while) (in seconds) to end topics and clear [history and variables](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables) after silence. Once you've cleared everything, set a flag (`Global.InactiveConversation`) to handle follow-up smoothly.
+Create a new topic with an [inactivity trigger](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers#:~:text=The%20user%20is%20inactive%20for%20a%20while) (in seconds) to end topics and clear [history and variables](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables) after silence. Once you've cleared everything, set a flag (`Global.InactiveConversation`) to handle follow-up smoothly.
 
 <details markdown="1">
 <summary>Full YAML — click to expand</summary>
