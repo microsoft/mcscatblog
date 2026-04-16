@@ -37,9 +37,9 @@ This guide builds on Remi Dyon's [best practices for deploying agents in Teams](
 
 ## Handling re-installs and Conversation Start
 
-Users reinstall Teams apps more often than expected. IT rolls out updates, caches get cleared, or users reinstall to resolve issues. When that happens, they often land on an empty chat screen because [Conversation Start](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#conversation-start) doesn't trigger on reinstalls.
+Users reinstall Teams apps more often than expected. IT rolls out updates, caches get cleared, or users reinstall to resolve issues. When that happens, they often land on an empty chat screen because [Conversation Start](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-system-topics?tabs=webApp#conversation-start) doesn't trigger on reinstalls.
 
-The fix: redirect to **Conversation Start** when the agent detects an [installation update event](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#installation-update).
+The fix: redirect to **Conversation Start** when the agent detects an [installation update event](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers#:~:text=a%20specific%20event.-,An%20activity%20occurs,-Fires%20when%20an).
 
 ![OnInstallationUpdate trigger](/assets/posts/copilot-studio-teams-agent-patterns/image1.png)
 
@@ -65,7 +65,7 @@ beginDialog:
 
 Agent conversations in Teams are persistent. Users return after a week and the agent still has old context from Tuesday's budget report question, except now they need help with something completely different. The agent's working with stale information, and users have no idea why it's confused.
 
-Set an [inactivity trigger](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers#inactivity) (in seconds) to end topics and clear [history and variables](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables) after silence. Once you've cleared everything, set a flag (`Global.InactiveConversation`) to handle follow-up smoothly.
+Set an [inactivity trigger](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers#:~:text=The%20user%20is%20inactive%20for%20a%20while) (in seconds) to end topics and clear [history and variables](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables) after silence. Once you've cleared everything, set a flag (`Global.InactiveConversation`) to handle follow-up smoothly.
 
 <details markdown="1">
 <summary>Full YAML — click to expand</summary>
@@ -106,7 +106,7 @@ Note: `durationInSeconds: 43200` is 12 hours. Adjust based on your use case.
 
 When users ask a follow-up after context was cleared, they need to know. Otherwise they'll be confused when the agent doesn't remember what they were talking about.
 
-Use a [Basic Card](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-send-message#add-a-basic-cards) to notify them. The "Start over" button stays persistent so users can trigger a fresh start anytime.
+Use a [Basic Card](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-send-message#add-a-basic-card) to notify them. The "Start over" button stays persistent so users can trigger a fresh start anytime.
 
 ![Session expired notification](/assets/posts/copilot-studio-teams-agent-patterns/image7.png)
 
@@ -237,9 +237,9 @@ beginDialog:
 
 ## Update the Start Over topic to offer more troubleshooting options
 
-The default [Start Over system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#start-over) asks "Do you want to start over?" and that's it. Let's make it useful.
+The default [Start Over system topic](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-system-topics?tabs=webApp#reset-conversation) asks "Do you want to start over?" and that's it. Let's make it useful.
 
-Update it with a confirmation dialog that offers troubleshooting options using an [Adaptive Card](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#adaptive-cards):
+Update it with a confirmation dialog that offers troubleshooting options using an [Adaptive Card](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-send-message#add-an-adaptive-card):
 
 - Confirms with an adaptive card (no accidental resets)
 - Offers advanced troubleshooting options (clear state, clear history, conversation ID)
@@ -636,7 +636,7 @@ Users can expand **Advanced options** to get troubleshooting commands and diagno
 
 ## Updating the On Error topic for self-serve troubleshooting
 
-The [On Error system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics#error) can be updated to offer a more user-friendly experience when unexpected errors occur, with troubleshooting commands and diagnostic data to share with admins.
+The [On Error system topic](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-system-topics?tabs=webApp#on-error) can be updated to offer a more user-friendly experience when unexpected errors occur, with troubleshooting commands and diagnostic data to share with admins.
 
 <details markdown="1">
 <summary><strong>View complete YAML for On Error topic</strong></summary>
@@ -1082,7 +1082,7 @@ Expanding **Advanced options** offers troubleshooting commands and diagnostic de
 
 ## Configure suggested prompts
 
-[Suggested prompts](https://learn.microsoft.com/microsoft-copilot-studio/nlu-boost-conversations#configure-suggested-prompts) configured at the agent level work in both Teams and Microsoft 365 Copilot.
+[Suggested prompts](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-starter-prompts) configured at the agent level work in both Teams and Microsoft 365 Copilot.
 
 ![Suggested prompts configuration](/assets/posts/copilot-studio-teams-agent-patterns/image22.png)
 
@@ -1112,8 +1112,8 @@ Speaking of diagnostic info: the conversation IDs surfaced in Pattern 6 and Patt
 
 ## Related Resources
 
-- [System triggers](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-triggers)
+- [System triggers](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers)
 - [System topics](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics)
 - [Variables and scopes](https://learn.microsoft.com/microsoft-copilot-studio/authoring-variables)
-- [Adaptive Cards for Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/authoring-send-message#adaptive-cards)
-- [Power Fx functions](https://learn.microsoft.com/power-platform/power-fx/formula-reference)
+- [Adaptive Cards for Copilot Studio](https://learn.microsoft.com/en-us/microsoft-copilot-studio/adaptive-cards-overview)
+- [Power Fx functions](https://learn.microsoft.com/en-us/power-platform/power-fx/formula-reference-copilot-studio)
