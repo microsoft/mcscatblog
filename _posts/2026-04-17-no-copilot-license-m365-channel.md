@@ -66,9 +66,6 @@ What you get that Agent Builder and the Agents Toolkit can't give you on their o
 - **[Agent evaluations](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro)**: Test sets that simulate real-world scenarios, run every time you tweak instructions, swap a model, or update knowledge sources. Bulletproof agents that don't regress.
 - **[Managed Environments](https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-overview)**: Govern agents through the Power Platform admin center through environment groups and rules (allow or block connectors, enforce security settings, set sharing limits, etc.), manage your agents' ALM and deployment pipelines with solutions.
 
-![Copilot Studio agent type selection showing "Agent for your employees" option](/assets/posts/no-copilot-license-m365-channel/copilot-studio-agent-type.png){: .shadow w="700" }
-_Copilot Studio now lets you create agents targeting Microsoft 365 and Copilot users_
-
 ## The Licensing Picture
 
 [Microsoft 365 Copilot](https://learn.microsoft.com/en-us/microsoft-365/copilot/which-copilot-for-your-organization) comes in two tiers:
