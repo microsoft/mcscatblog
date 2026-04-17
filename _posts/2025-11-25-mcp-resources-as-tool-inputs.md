@@ -129,7 +129,7 @@ No massive JSON in the context window and no token-heavy strings slowing everyth
 ## The sample scenario: random characters generator and counter  
   
 Let's use the sample MCP server from this repo:    
-[Github.com: Microsoft/CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/extensibility/mcp/pass-resources-as-inputs)  
+[Github.com: Microsoft/CopilotStudioSamples](https://microsoft.github.io/CopilotStudioSamples/extensibility/mcp/pass-resources-as-inputs)  
   
 It exposes two tools:  
   
@@ -291,7 +291,7 @@ A few practical tips when applying this pattern:
 To see this pattern live:  
   
 1. Clone the sample:    
-   [Github.com: Microsoft/CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/extensibility/mcp/pass-resources-as-inputs)     
+   [Github.com: Microsoft/CopilotStudioSamples](https://microsoft.github.io/CopilotStudioSamples/extensibility/mcp/pass-resources-as-inputs)     
 2. Deploy the MCP server as described in the repo.    
 3. Connect it to your Copilot Studio agent.    
 4. Run your tests    

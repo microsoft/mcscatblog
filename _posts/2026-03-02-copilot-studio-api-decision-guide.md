@@ -432,7 +432,7 @@ The trade-off? When authentication is configured, the Microsoft-hosted embed use
 ## Self-Hosted WebChat (Employee-Facing)
 {: #self-hosted-webchat-employee-facing}
 
-This is the most common pattern for custom-branded agent experiences. You host the `botframework-webchat` library yourself, giving you full control over styling, behavior, and authentication. And it's not limited to standalone web apps. The same WebChat component can be embedded natively in [SharePoint](https://github.com/microsoft/CopilotStudioSamples/tree/main/ui/embed/sharepoint-customizer/SharePointSSOAppCustomizer), [ServiceNow](https://github.com/microsoft/CopilotStudioSamples/tree/main/ServiceNowWidget) (see our [field report]({% post_url 2026-02-24-servicenow-copilot-studio-widget %})), or any platform that can host JavaScript.
+This is the most common pattern for custom-branded agent experiences. You host the `botframework-webchat` library yourself, giving you full control over styling, behavior, and authentication. And it's not limited to standalone web apps. The same WebChat component can be embedded natively in [SharePoint](https://microsoft.github.io/CopilotStudioSamples/ui/embed/sharepoint-customizer/SharePointSSOAppCustomizer), [ServiceNow](https://microsoft.github.io/CopilotStudioSamples/ui/embed/servicenow-widget) (see our [field report]({% post_url 2026-02-24-servicenow-copilot-studio-widget %})), or any platform that can host JavaScript.
 
 The core pattern is almost always the same. You import the WebChat library, create a connection to your agent (more on the options below), and hand it to WebChat:
 
@@ -474,7 +474,7 @@ Direct Line is still a valid choice if you specifically need manual authenticati
 **Official samples and docs:**
 
 - **WebChat customization:** [Customize your chat canvas](https://learn.microsoft.com/en-us/microsoft-copilot-studio/customize-default-canvas) (uses Direct Line, but the styling and customization patterns apply to both APIs)
-- **M365 Agents SDK (recommended):** [React Web Chat](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webchat-react), [Web Client](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webclient), [SharePoint SSO](https://github.com/microsoft/CopilotStudioSamples/tree/main/ui/embed/sharepoint-customizer/SharePointSSOAppCustomizer), [ServiceNow Widget](https://github.com/microsoft/CopilotStudioSamples/tree/main/ServiceNowWidget)
+- **M365 Agents SDK (recommended):** [React Web Chat](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webchat-react), [Web Client](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webclient), [SharePoint SSO](https://microsoft.github.io/CopilotStudioSamples/ui/embed/sharepoint-customizer/SharePointSSOAppCustomizer), [ServiceNow Widget](https://microsoft.github.io/CopilotStudioSamples/ui/embed/servicenow-widget)
 - **Direct Line with Entra SSO:** [Configure SSO for web apps](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-sso?tabs=webApp)
 
 **When to use this:** Internal web apps, SharePoint sites, ServiceNow portals, or any employee-facing platform where you need styling control and authenticated access to your agent.
@@ -488,7 +488,7 @@ Direct Line is still a valid choice if you specifically need manual authenticati
 
 Maybe WebChat isn't your thing. Maybe your team already has a React design system, you're deep into a framework like [Assistant UI](https://www.assistant-ui.com/) or the [Vercel AI SDK](https://sdk.vercel.ai/), and the idea of wrapping a Microsoft chat component doesn't fit your architecture. That's a valid position, and Copilot Studio supports it.
 
-The connection layer is the same M365 Agents SDK client [discussed above](#self-hosted-webchat-employee-facing), with the same authentication and streaming benefits. The difference is that instead of handing the connection to WebChat, you wire it into your own components. The [Assistant UI + Copilot Studio sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/AssistantUICopilotStudioClient/assistant-ui-mcs) shows what this looks like: a React app using Assistant UI components connected to a Copilot Studio agent through the SDK.
+The connection layer is the same M365 Agents SDK client [discussed above](#self-hosted-webchat-employee-facing), with the same authentication and streaming benefits. The difference is that instead of handing the connection to WebChat, you wire it into your own components. The [Assistant UI + Copilot Studio sample](https://microsoft.github.io/CopilotStudioSamples/ui/custom-ui/assistant-ui/assistant-ui-mcs) shows what this looks like: a React app using Assistant UI components connected to a Copilot Studio agent through the SDK.
 
 The trade-off: WebChat handles adaptive cards, suggested actions, file attachments, typing indicators, and dozens of Bot Framework activity types out of the box. When you bring your own UI, you're responsible for all of that. If your agent sends an adaptive card and your custom UI doesn't render it, the user sees nothing (or worse, raw JSON). And WebChat itself is [heavily customizable](https://github.com/microsoft/BotFramework-WebChat/tree/main/samples/06.recomposing-ui). We'll dig deeper into this comparison in an upcoming WebChat series.
 
@@ -551,7 +551,7 @@ The most straightforward way to embed a chat experience in your customer-facing 
 
 Not every agent experience is a chat window. Maybe you want a search box that sends a query to your Copilot Studio agent and displays the answer inline, or a product page that pulls a recommendation without any visible chat UI. For these scenarios, you can call Direct Line directly from your own components.
 
-The [Direct Line JS sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/DirectLineJSSample) shows this pattern: a lightweight JavaScript client that talks to Direct Line without any WebChat dependency. You send activities, receive responses, and render them however you want.
+The [Direct Line JS sample](https://microsoft.github.io/CopilotStudioSamples/ui/custom-ui/directline-js) shows this pattern: a lightweight JavaScript client that talks to Direct Line without any WebChat dependency. You send activities, receive responses, and render them however you want.
 
 > Before going this route, remember that WebChat is [heavily customizable](https://github.com/microsoft/BotFramework-WebChat/tree/main/samples/06.recomposing-ui). You can strip it down, replace components, or restyle it completely. But if what you're building doesn't resemble a chat interface at all, Direct Line without WebChat is the right call.
 {: .prompt-tip }

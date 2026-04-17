@@ -15,6 +15,9 @@ _site
 node_modules
 package-lock.json
 
+# Widget build artifacts
+**/widget/dist
+
 # IDE configurations
 .idea
 .vscode/
@@ -27,6 +30,9 @@ package-lock.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Worktrees
+.worktrees/
 
 # Misc
 _sass/vendors

@@ -44,7 +44,7 @@ Enjoy the video!
   muted=false
 %}
 
-> Tip: Watch how the agent reasons over the transcript data to make scheduling decisions autonomously.
+> UPDATE March 13th: The name of the MCP servers have been sligthly changed and are now "Work IQ"+Tool. For example, the one used in the video is now called Work IQ Copilot.
 {: .prompt-tip }
 
 ---

@@ -100,7 +100,7 @@ This means the widget works with **any** ServiceNow authentication configuration
 Nobody wants to manually create a dozen ServiceNow records. So we built a deployment script.
 
 ```bash
-cd ServiceNowWidget
+cd ui/embed/servicenow-widget
 npm install
 npm run build
 
@@ -119,7 +119,7 @@ It's **idempotent**. Run it once to set up, run it again after code changes to u
 
 ## The Sample
 
-The full sample is available in the [CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/ServiceNowWidget) repo. It includes:
+The full sample is available in the [CopilotStudioSamples](https://microsoft.github.io/CopilotStudioSamples/ui/embed/servicenow-widget) repo. It includes:
 
 - **TypeScript source** for the widget (auth, bubble UI, WebChat initialization)
 - **ServiceNow widget files** (HTML, client JS, server JS, SCSS) ready to copy into the widget editor
