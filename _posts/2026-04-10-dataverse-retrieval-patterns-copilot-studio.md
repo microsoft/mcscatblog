@@ -7,7 +7,7 @@ tags: [dataverse, retrieval-patterns, knowledge, list-rows, mcp, searchquery, pr
 description: "Five ways to retrieve Dataverse data from Copilot Studio agents — Knowledge, List Rows, MCP Server, Search Query, and Prompt Tool. A decision guide with setup steps and trade-offs, flow charts and a handy interactive widget to help you pick the right method."
 authors: [KarimaKT, roels]
 image:
-  path: /assets/posts/dataverse-retrieval-patterns-copilot-studio/header.png
+  path: /assets/posts/dataverse-retrieval-patterns-copilot-studio/DVMCP-RetrievalTools.png
   alt: "Five retrieval patterns connecting Copilot Studio to Dataverse"
 published: true
 mermaid: true
@@ -31,7 +31,7 @@ This guide covers the five main retrieval patterns for **structured Dataverse ta
 
 Throughout this post, we'll use one scenario across all five methods so you can compare apples to apples.
 
-To follow along, download the sample dataset used in this post and import it in a Dataverse Table: [fictional_facilities_table_import_to_DV.csv](/assets/posts/dataverse-retrieval-patterns-copilot-studio/fictional_facilities_table_import_to_DV.csv).
+To follow along, download the sample dataset used in this post and import it in a Dataverse Table: [fictional_facilities_table_import_to_DV.csv]({{ site.baseurl }}/assets/posts/dataverse-retrieval-patterns-copilot-studio/fictional_facilities_table_import_to_DV.csv).
 
 ![Imported Facility table in Dataverse](/assets/posts/dataverse-retrieval-patterns-copilot-studio/TableImported01.png){: .shadow w="700" h="400" }
 _The Facility table after importing the sample CSV into Dataverse_
