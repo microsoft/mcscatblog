@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "From DEV to PROD: Auto-Install and Pinning for Copilot Studio Agents"
+title: "From DEV to PROD: Deploying Copilot Studio Agents to Teams and Microsoft 365 Copilot"
 date: 2026-04-07
 categories: [copilot-studio, teams, deployment]
-tags: [teams-deployment, admin-center, setup-policies, app-manifest, alm, environment-strategy, auto-install]
-description: "Master the three deployment paths for Copilot Studio agents in Teams. Learn how to customize manifests for DEV/TEST environments and leverage Setup Policies for automated production rollouts with auto-install and pinning."
+tags: [teams-deployment, admin-center, setup-policies, app-manifest, alm, environment-strategy, auto-install, microsoft-365-copilot]
+description: "Master the three deployment paths for Copilot Studio agents in Teams and Microsoft 365 Copilot. Learn how to customize manifests for DEV/TEST environments, leverage Setup Policies for auto-install and pinning, and deploy to M365 Copilot through the Admin Center."
 author: henryjammes
 image:
   path: /assets/posts/copilot-studio-teams-deployment/header.png
@@ -309,7 +309,7 @@ This is professional, enterprise-grade deployment. No training required, no supp
 
 ## Deploying to Microsoft 365 Copilot
 
-Agents can be made available in [Microsoft 365 Copilot](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams) alongside Teams.
+Agents can be made available in [Microsoft 365 Copilot](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams) alongside Teams. And no, your users don't need a Microsoft 365 Copilot license for this — [Copilot Chat is enough]({% post_url 2026-04-17-no-copilot-license-m365-channel %}).
 
 ![M365 Copilot availability](/assets/posts/copilot-studio-teams-deployment/image27.png)
 *M365 Admin Center - Agent availability with specific users/groups option*
