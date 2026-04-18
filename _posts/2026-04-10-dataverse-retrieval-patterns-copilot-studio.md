@@ -7,7 +7,7 @@ tags: [dataverse, retrieval-patterns, knowledge, list-rows, mcp, searchquery, pr
 description: "Five ways to retrieve Dataverse data from Copilot Studio agents — Knowledge, List Rows, MCP Server, Search Query, and Prompt Tool. A decision guide with setup steps and trade-offs, flow charts and a handy interactive widget to help you pick the right method."
 authors: [KarimaKT, roels]
 image:
-  path: /assets/posts/dataverse-retrieval-patterns-copilot-studio/DVMCP-RetrievalTools.png
+  path: /assets/posts/dataverse-retrieval-patterns-copilot-studio/header-dataverse-retrieval-patterns-copilot-studio.png
   alt: "Five retrieval patterns connecting Copilot Studio to Dataverse"
 published: true
 mermaid: true
