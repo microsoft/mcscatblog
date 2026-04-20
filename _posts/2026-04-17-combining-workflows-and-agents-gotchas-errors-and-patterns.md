@@ -49,7 +49,7 @@ Before troubleshooting anything else, make sure your workflow actually shows up 
 
 ## #2 The 100-second wall (and how to get past it)
 
-This is the one that catches teams most off guard. Agent-triggered workflows in Copilot Studio have a **hard synchronous response limit of 100 seconds**. If your workflow doesn't return a response to the agent within that window, you'll see a `FlowActionTimedOut` error.
+This is the one that catches teams most off guard. Agent-triggered workflows in Copilot Studio have a **hard synchronous response limit of 100 seconds** ([Microsoft Learn documents this limit for flows used by agents/tools](https://learn.microsoft.com/microsoft-copilot-studio/advanced-flow)). If your workflow doesn't return a response to the agent within that window, you'll see a `FlowActionTimedOut` error.
 
 > For the full list of Copilot Studio error codes, see the [official error codes reference](https://learn.microsoft.com/troubleshoot/power-platform/copilot-studio/authoring/error-codes).
 {: .prompt-info }
