@@ -7,22 +7,20 @@ tags: [dataverse, retrieval-patterns, knowledge, list-rows, mcp, searchquery, pr
 description: "Five ways to retrieve Dataverse data from Copilot Studio agents — Knowledge, List Rows, MCP Server, Search Query, and Prompt Tool. A decision guide with setup steps and trade-offs, flow charts and a handy interactive widget to help you pick the right method."
 authors: [KarimaKT, roels]
 image:
-  path: /assets/posts/dataverse-retrieval-patterns-copilot-studio/header.png
+  path: /assets/posts/dataverse-retrieval-patterns-copilot-studio/header-giorgio.png
   alt: "Five retrieval patterns connecting Copilot Studio to Dataverse"
 published: true
 mermaid: true
 ---
 
-A few weeks ago, I watched an internal video by Karima and Bobby Chang walking through the different ways a Copilot Studio agent can pull data out of Dataverse. Five methods. Five different sets of trade-offs. And the kind of practical, opinionated guidance that never makes it into official docs.
+As of today, we have five distinct methods for Dataverse data retrieval, each carrying a unique set of trade-offs regarding performance, security, and scalability.
 
-I thought it was too good to keep internal. So Karima and I turned it into this post.
-
-Here's the thing: most people discover one method that works and never look at the others. You wire up Knowledge because it's the first thing you see, hit a wall when results get truncated, and then spend a week figuring out what you should have used instead. Or you go straight to MCP because it sounds powerful, and then realize you've given your agent access to every table in the environment.
-
-This guide covers the five main retrieval patterns for **structured Dataverse table data**, when each one shines, and how to use them. It's an architecture decision guide first and a usage reference second. If we've already published a deep dive on a specific method, we'll link to it rather than repeat it.
-
->One thing to note: This guide does not cover unstructured file upload Knowledge in Copilot Studio (Which uses different Dataverse methods)
+>One thing to note: This guide does not cover unstructured file upload Knowledge in Copilot Studio (Which uses different Dataverse methods). The focus is instead on tabular data (i.e. structured dataverse tables with rows and columns)
 {: .prompt-warning }
+
+Here's the thing: most people discover one method that works and never look at the others. You wire up Knowledge because it's the first thing you see, hit a wall when results get truncated (i.e. one of tradeoffs of Dataverse used as Knowledge via the "knowledge" button), and then spend a week figuring out what you should have used instead. Or you go straight to MCP because it sounds powerful, and then realize you've given your agent access to every table in the environment (which is what Dataverse MCP does).
+
+This guide covers the five main retrieval patterns for **structured Dataverse tabular data**, when each one shines, and how to use them. It's an architecture decision guide first and a usage reference second. If we've already published a deep dive on a specific method, we'll link to it rather than repeat it.
 
 >One more thing: this post is about **retrieval** — reading data from Dataverse. We're not covering create, update, or delete operations here. If you see CRUD mentioned, it's only in the context of turning it off.
 {: .prompt-warning }
