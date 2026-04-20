@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Hello World MCP: Your First Copilot Studio MCP Connector in Five Minutes"
+title: "Five Minutes to Your First MCP Connector in Copilot Studio"
 date: 2026-04-10
 categories: [copilot-studio, mcp]
-tags: []
-description: "Connect a public MCP server to a Copilot Studio agent in five minutes by automatically generating a custom connector, no code required. A step-by-step guide using DeepWiki as an example."
+tags: [mcp, custom-connectors, alm, connection-references, a2a, solutions, copilot-studio]
+description: "Create your first MCP connector in Copilot Studio in five minutes, then understand what was created behind the scenes: custom connectors, connection references, and solution structure."
 author: chrisgarty
 image:
   path: /assets/posts/hello-world-mcp-copilot-studio/cat-building-agent-with-mcp.png
@@ -13,7 +13,7 @@ image:
 
 Every MCP tutorial seems to start the same way: "First, build an MCP server." But what if you just want to see an MCP server working in Copilot Studio, without an existing connector and without writing a single line of code?
 
-You can connect a Copilot Studio agent to an existing, publicly available MCP server in about five minutes. No server setup, no authentication, no deployment. Just paste a URL and go.
+You can connect a Copilot Studio agent to an existing, publicly available MCP server in about five minutes. No server setup, no authentication, no deployment. Just paste a URL and go. Along the way, we'll look at what Copilot Studio actually creates behind the scenes and why it matters for managing your agent across environments.
 
 ## What We're Connecting
 
@@ -61,7 +61,7 @@ For more detail about *MCP onboarding* wizard, see the [official documentation](
 
 That's it. You have a working MCP connector configured as a tool for your agent.
 
-## What Just Happened?
+## What happened under the hood?
 
 When you added the MCP server through the wizard, Copilot Studio created a **custom connector** in your Power Platform environment under the hood. This connector contains an OpenAPI specification that routes requests to the MCP server's `/mcp` endpoint using the Streamable HTTP protocol.
 
@@ -69,11 +69,37 @@ You can view and edit this connector in the current solution. From the agent det
 
 ![The DeepWiki custom connector in the solution view](/assets/posts/hello-world-mcp-copilot-studio/view-solution.png){: .shadow }
 
+But the wizard created more than just a custom connector. Look at the solution contents and you'll also find a **connection reference**. 
+
+### Three distinct things associated with the custom connector
+
+1. **Custom connector:** the API definition itself. It describes the MCP server's endpoint, transport, and authentication. Think of it as the *template*.
+2. **Connection reference:** a solution-aware pointer that says "this agent needs a connection for the DeepWiki custom connector." It doesn't contain credentials or a live connection. It's a pointer that gets resolved per-environment.
+3. **Connection:** the actual runtime connection you created when you clicked "Create connection" in Step 2. Each connection is specific to an environment and associated a specific user. It's *not* part of the solution.
+
+### Why do the solution component details matter? 
+
+When you use pipelines or manual export/import to more your solution into another environment (say, test or production), the custom connector and connection reference are included in the solution. However the connection does not. Someone in the target environment will need to create a new connection and map it to the connection reference. This is standard Power Platform [ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm), but if you're coming from an M365 background, it's easy to miss.
+
+> This same pattern applies to [A2A (Agent-to-Agent) connectors](https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-agent-agent-to-agent). When you connect to an external agent over the A2A protocol, Copilot Studio creates a custom connector and connection reference in exactly the same way. Everything in this section applies to A2A.
+{: .prompt-info }
+
+## Resources
+
+If you're new to Power Platform and want to dig deeper into the concepts behind what the wizard created:
+
+- [Connect your agent to an MCP server](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent): the official wizard walkthrough
+- [Custom connectors overview](https://learn.microsoft.com/en-us/connectors/custom-connectors/): what custom connectors are and how they work
+- [Connection references in solutions](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-connection-reference): how connection references enable ALM across environments
+- [Solution concepts for ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm): the broader Power Platform solution lifecycle
+- [Connect to an A2A agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-agent-agent-to-agent): same pattern, different protocol
+- [DLP and custom connector parity](https://learn.microsoft.com/en-us/power-platform/admin/dlp-custom-connector-parity): governance controls for custom connectors including endpoint filtering
+
 ## What's Next?
 
-- **Build your own MCP server** — the [Copilot Studio MCP lab](https://devblogs.microsoft.com/powerplatform/microsoft-copilot-studio-mcp/) walks through creating a Jokes MCP server from scratch and connecting it
-- **Customize your connector** — once you need to pass headers, tokens, or user context, see [Adding Custom Headers to MCP Connectors]({% post_url 2025-10-22-mcp-custom-headers %}) to go deep with a full lab exercise
-- **Choose your integration pattern** — not sure whether to use MCP or a traditional connector? The [MCP vs Connectors decision guide]({% post_url 2026-01-29-compare-mcp-servers-pp-connectors %}) breaks down the trade-offs
+- **Build your own MCP server:** the [Copilot Studio MCP lab](https://devblogs.microsoft.com/powerplatform/microsoft-copilot-studio-mcp/) walks through creating a Jokes MCP server from scratch and connecting it
+- **Customize your connector:** once you need to pass headers, tokens, or user context, see [Adding Custom Headers to MCP Connectors]({% post_url 2025-10-22-mcp-custom-headers %}) to go deep with a full lab exercise
+- **Choose your integration pattern:** not sure whether to use MCP or a traditional connector? The [MCP vs Connectors decision guide]({% post_url 2026-01-29-compare-mcp-servers-pp-connectors %}) breaks down the trade-offs
 
 ---
 
