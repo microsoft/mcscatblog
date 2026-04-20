@@ -545,7 +545,7 @@ _The Activity tab reveals which tools the orchestrator selected and why_
 
 ## Wrapping Up
 
-This post started because I saw Karima and Bobby Chang walk through these five patterns in an internal session and thought: this is too useful to keep behind a firewall. Every Copilot Studio builder working with Dataverse hits the "which method do I use?" question at some point, and the answer is almost never just one method.
+Every Copilot Studio builder working with Dataverse hits the "which method do I use?" question at some point, and the answer is almost never just one method.
 
 Start simple. Hit the wall. Add another method. That's the pattern.
 
