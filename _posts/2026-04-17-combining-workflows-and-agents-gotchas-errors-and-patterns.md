@@ -247,7 +247,7 @@ If you've explored triggering agents from *outside* a workflow — say, from an 
 
 When the workflow runs, execution reaches the agent node, hands off to the agent, waits for the result, and then continues with the next workflow step automatically. The agent does its reasoning, returns a structured output, and the workflow continues as if nothing unusual happened.
 
-![A workflow with an agent node mid-sequence, showing the agent being invoked and its output used in subsequent workflow steps](/assets/posts/combining-workflows-and-agents-gotchas-errors-and-patterns/invoke-agent-from-workflow.jpg){: .shadow w="700" }
+![A workflow with an agent node mid-sequence, showing the agent being invoked and its output used in subsequent workflow steps](/assets/posts/combining-workflows-and-agents-gotchas-errors-and-patterns/invoke-agent-from-workflow.png){: .shadow w="700" }
 _An agent node inside a workflow — the workflow pauses, the agent reasons, the workflow continues with the result_
 
 > This is different from the async continuation pattern in #2. Here, the *workflow* is calling the *agent* — the flow of control is inverted. The workflow waits for the agent response before continuing.
