@@ -63,7 +63,7 @@ That's it. You have a working MCP connector configured as a tool for your agent.
 
 ## What happened under the hood?
 
-When you added the MCP server through the wizard, Copilot Studio created a **custom connector** in your Power Platform environment under the hood. This connector contains an OpenAPI specification that routes requests to the MCP server's `/mcp` endpoint using the Streamable HTTP protocol.
+When you added the MCP server through the wizard, Copilot Studio created a **custom connector** in your Power Platform environment under the hood. This connector contains an OpenAPI specification with a single action called **InvokeServer**. That action is the Streamable HTTP POST that Copilot Studio sends to the MCP server's `/mcp` endpoint whenever it needs to list available tools or call one. The payload follows the JSON-RPC format that MCP uses under the hood.
 
 You can view and edit this connector in the current solution. From the agent details page, click the **...** menu, select **View solution**, and then find the "DeepWiki" Custom Connector. If you want to inspect the generated spec or make changes, click on the custom connector, then click **Edit**. This is exactly what you'd do if you needed to [add custom headers]({% post_url 2025-10-22-mcp-custom-headers %}) to your connector.
 
