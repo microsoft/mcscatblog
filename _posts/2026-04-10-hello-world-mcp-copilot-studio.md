@@ -79,7 +79,7 @@ But the wizard created more than just a custom connector. Look at the solution c
 
 ### Why do the solution component details matter? 
 
-When you use pipelines or manual export/import to more your solution into another environment (say, test or production), the custom connector and connection reference are included in the solution. However the connection does not. Someone in the target environment will need to create a new connection and map it to the connection reference. This is standard Power Platform [ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm), but if you're coming from an M365 background, it's easy to miss.
+When you use pipelines or manual export/import to more your solution into another environment (say, test or production), the custom connector and connection reference are included in the solution. However the connection does not. When deploying via pipelines or importing the solution, you'll be prompted to create a connection for the connection reference in the target environment. This is standard Power Platform [ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm), but if you're coming from an M365 background, it's easy to miss.
 
 > This same pattern applies to [A2A (Agent-to-Agent) connectors](https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-agent-agent-to-agent). When you connect to an external agent over the A2A protocol, Copilot Studio creates a custom connector and connection reference in exactly the same way. Everything in this section applies to A2A.
 {: .prompt-info }
