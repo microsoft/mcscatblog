@@ -196,7 +196,7 @@ The agent receives the Base64 string (as `Topic.Base64output`) and can display i
 
 **Send as a message.** Set a variable to the following Power Fx expression and send it as a message:
 
-```javascript
+```text
 $"<img src='data:image/png;base64,{Topic.Base64output}'/>"
 ```
 
@@ -205,7 +205,7 @@ _Sending a simple message with an inline image_
 
 **Send as a message with a Basic card.** Use the following Power Fx expression as the image URL in the Basic card:
 
-```javascript
+```text
 "data:image/png;base64," & Topic.Base64output
 ```
 
