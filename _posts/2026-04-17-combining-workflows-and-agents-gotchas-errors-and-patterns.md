@@ -57,7 +57,7 @@ This is the one that catches teams most off guard. Agent-triggered workflows in 
 For many workflows this is fine — a few API calls, some data transformations, a quick response. But two of the most powerful features of workflows are, by definition, incompatible with a 100-second limit:
 
 - **Multistage and AI approvals** — a manager might approve in 2 minutes or 2 days.
-- **Request information from humans in the loop** — same story. A human waits for no timer.
+- **Request information from humans in the loop** — same story. 100 seconds is rarely enough for a human to read, think, and respond.
 
 Both of these pause the workflow and wait for human input before continuing. That's exactly what makes them useful, and exactly why they'll always exceed 100 seconds when triggered synchronously from a chat window.
 
