@@ -150,13 +150,10 @@ Not quite.
 
 Changing the credentials setting on agent side affects how the agent invokes the workflow, but it doesn't change how the actions *inside* the workflow authenticate. Each action in the workflow uses its own **Connection Reference**, and those are separate from the agent tool configuration.
 
-To make the actions inside the workflow actually run with maker credentials, you need to **update the Connection References in the workflow itself** to use the maker's connections. This setting is not available in Copilot Studio — you need to do it through the Power Automate portal at [make.powerautomate.com](https://make.powerautomate.com).
+To make the actions inside the workflow actually run with maker credentials, you need to **update the Connection References in the workflow itself** to use the maker's connections.
 
-![Connection References configuration in Power Automate showing maker connections assigned to each connector](/assets/posts/combining-workflows-and-agents-gotchas-errors-and-patterns/connection-references-maker.png){: .shadow w="500" }
-_Updating Connection References in the Power Automate portal to use the maker's own connections_
-
-> This is a common source of confusion because both settings exist in different places. The tool setting controls the invocation; the Connection References in the Power Automate portal control what happens inside the workflow.
-{: .prompt-warning }
+![Connection References configuration showing maker connections assigned to each connector](/assets/posts/combining-workflows-and-agents-gotchas-errors-and-patterns/connection-references-maker.png){: .shadow w="500" }
+_Updating Connection References to use the maker's own connections_
 
 ---
 
