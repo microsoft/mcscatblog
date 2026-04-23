@@ -226,7 +226,7 @@ This keeps your response payload small and gives you proper access control over 
 
 ## #7 Calling an agent from inside a workflow
 
-Sometimes you want to go the other direction: you have a deterministic workflow doing structured automation, and at one specific point you need AI reasoning. Rather than rebuilding the workflow as an agent or calling an external API, you can drop an agent node directly inside the workflow. The workflow stays fully in charge — the agent just handles the one step that needs it — so you don't give up the reliability and predictability of a structured flow.
+You have a deterministic workflow doing structured automation, and at one specific point you need AI reasoning. Rather than rebuilding the workflow as an agent or calling an external API, you can drop an agent node directly inside the workflow. The workflow stays fully in charge — the agent just handles the one step that needs it — so you don't give up the reliability and predictability of a structured flow.
 
 This is a great pattern when:
 - Most of your process is rule-based and reliable as a workflow
