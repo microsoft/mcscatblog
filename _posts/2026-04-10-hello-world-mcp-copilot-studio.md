@@ -81,6 +81,9 @@ But the wizard created more than just a custom connector. Look at the solution c
 
 When you use pipelines or manual export/import to more your solution into another environment (say, test or production), the custom connector and connection reference are included in the solution. However the connection does not. When deploying via pipelines or importing the solution, you'll be prompted to create a connection for the connection reference in the target environment. This is standard Power Platform [ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm), but if you're coming from an M365 background, it's easy to miss.
 
+> **Known limitation:** Power Platform requires custom connectors to be [in their own solution](https://learn.microsoft.com/en-us/connectors/custom-connectors/customconnectorssolutions#known-limitations) when moving across environments. The MCP wizard adds the connector to your agent's solution, so you'll need to separate it into its own solution before deploying to another environment.
+{: .prompt-warning }
+
 > This same pattern applies to [A2A (Agent-to-Agent) connectors](https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-agent-agent-to-agent). When you connect to an external agent over the A2A protocol, Copilot Studio creates a custom connector and connection reference in exactly the same way. Everything in this section applies to A2A.
 {: .prompt-info }
 
