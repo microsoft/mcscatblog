@@ -3,8 +3,10 @@
 <!-- Clean up GA cookies from before analytics was disabled -->
 <script>
   (function() {
-    var dominated = '; path=/; max-age=0; domain=.microsoft.github.io';
-    document.cookie = '_ga=' + dominated;
-    document.cookie = '_ga_M4M35T13NN=' + dominated;
+    var names = ['_ga', '_ga_M4M35T13NN'];
+    var domains = ['.microsoft.github.io', 'microsoft.github.io'];
+    for (var i = 0; i < names.length; i++)
+      for (var j = 0; j < domains.length; j++)
+        document.cookie = names[i] + '=; path=/; max-age=0; domain=' + domains[j];
   })();
 </script>
