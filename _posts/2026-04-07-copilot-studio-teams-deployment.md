@@ -3,7 +3,7 @@ layout: post
 title: "From DEV to PROD: Deploying Copilot Studio Agents to Teams and Microsoft 365 Copilot"
 date: 2026-04-07
 categories: [copilot-studio, teams, deployment]
-tags: [teams-deployment, admin-center, setup-policies, app-manifest, alm, environment-strategy, auto-install, microsoft-365-copilot]
+tags: [teams, teams-deployment, admin-center, setup-policies, app-manifest, alm, environment-strategy, auto-install, microsoft-365-copilot]
 description: "Master the three deployment paths for Copilot Studio agents in Teams and Microsoft 365 Copilot. Learn how to customize manifests for DEV/TEST environments, leverage Setup Policies for auto-install and pinning, and deploy to M365 Copilot through the Admin Center."
 author: henryjammes
 image:
