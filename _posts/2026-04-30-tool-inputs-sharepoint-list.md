@@ -3,7 +3,7 @@ layout: post
 title: "Conversational Filtering of SharePoint Lists in Copilot Studio: The One-Tool Agent"
 date: 2026-04-30
 categories: [copilot-studio, connectors]
-tags: [sharepoint, connectors, orchestration, retrieval-patterns, odata, tools, inputs, decision-guide]
+tags: [sharepoint, connectors, orchestration, retrieval-patterns, odata, tools, inputs, decision-guide, work-iq]
 description: "How to conversationally filter structured SharePoint list data from a Copilot Studio agent using the Get Items connector with dynamic OData filter inputs. No flows, no code, no knowledge, just one tool."
 author: KarimaKT
 image:
@@ -17,25 +17,37 @@ If you've ever tried to get a Copilot Studio agent to answer questions about **s
 
 The usual advice? "Just add SharePoint as a Knowledge source!" But here's the thing: Knowledge sources in Copilot Studio are designed for **unstructured content**, documents, pages, files. They're great for looking up policies, finding FAQs, searching through manuals. They're *not* designed for querying rows and columns in a structured list. And even if you try to force it, you hit the wall fast: truncated results, no filtering, and an agent that confidently summarizes three rows out of three thousand.
 
-## The Pain Is Real
+## But First: Do You Even Need This?
 
-If you've spent any time on forums, community posts, or other channels, you've seen the same questions over and over:
+Before you go configuring custom tools, there's a quicker option worth knowing about. The **Work IQ SharePoint** connector is available as a tool in Copilot Studio and does essentially the same thing this post describes: it wraps the SharePoint connector in an AI-friendly layer so your agent can converse over list data. The better you define your columns, the better it performs.
 
-- *"How do I get my Copilot Agent to query a SharePoint list with 10,000+ items?"*
-- *"My agent keeps returning the same 5 rows no matter what I ask."*
-- *"I built a Power Automate flow for every possible filter combination and now I have 15 flows."*
-- *"The agent can't even tell the difference between 'Pending' and 'In Transit' when filtering."*
-- *"I need my users to ask natural language questions about list data without building a custom app."*
+If your use case is straightforward, authenticated users querying a well-structured list, start there. It'll cover a lot of scenarios with minimal setup.
 
-People build elaborate workarounds: chaining Power Automate flows, exporting to Excel and re-importing, writing custom APIs that wrap SharePoint's REST endpoints, even building entire Power Apps just to give users a search interface. All because they assume there's no way to do filtered, structured retrieval from a SharePoint list inside Copilot Studio without writing code.
+**When you'll want the approach in this post instead:**
 
-But there is.
+- You need **unauthenticated access** (no user sign-in required)
+- You need **granular control** over which filters, columns, or views are exposed
+- You want **scoped tools** that constrain the LLM's decision space for specific query patterns
+- You need to **customize the AI wrapper**, the input descriptions, tool names, and output shaping, to match your exact use case
 
-## The Secret: Connector Tools With Dynamic Inputs
+This is the same trade-off as the [Dataverse retrieval patterns]({% post_url 2026-04-10-dataverse-retrieval-patterns-copilot-studio %}): an out-of-the-box tool like MCP or Work IQ gets you started fast, but configuring your own connector tools gives you precision when you need it. The rest of this post is about that second path.
 
-Here's the key insight: when you add a connector action as a **tool** in Copilot Studio, the orchestrator wraps it in an AI layer. It reads the tool's input descriptions, understands the user's natural language request, and generates the right parameter values automatically.
+## Where Work IQ Falls Short
 
-That means you can use the SharePoint connector's **Get Items** action, set the `$filter` parameter as a **dynamic input** with a rich description of your list's columns, and let the orchestrator generate OData filter queries from plain English.
+Work IQ handles the common case well. But once your requirements go beyond "authenticated user asks questions about a list," you start running into walls:
+
+- **No unauthenticated access.** External-facing agents or scenarios where users can't sign in aren't supported.
+- **Limited orchestration control.** You can't scope the tool to specific filter patterns, which means the LLM has to figure out the entire query every time. For high-volume or complex lists, that leads to inconsistent results.
+- **No tool specialization.** You can't create multiple versions of the same tool tuned for different query patterns (e.g., one for tracking lookups, another for regional summaries), a technique that dramatically improves first-shot accuracy.
+- **No output shaping.** You get what the connector returns. You can't restrict columns, cap row counts per tool, or pair the tool with a specific list view.
+
+When you need that level of control, you configure the SharePoint connector's **Get Items** action as a tool yourself and perhaps wrap it in a topic to create a scoped output with limited columns before exposing it to the orchestrator.
+
+## The Approach: Connector Tools With Dynamic Inputs
+
+The key insight: when you add a connector action as a **tool** in Copilot Studio, the orchestrator wraps it in an AI layer. It reads the tool's input descriptions, understands the user's natural language request, and generates the right parameter values automatically.
+
+That means you can use Get Items, set the `$filter` parameter as a **dynamic input** with a rich description of your list's columns, and let the orchestrator generate OData filter queries from plain English.
 
 No Power Automate flows. No custom code. No API wrappers. One tool. One agent.
 
@@ -219,7 +231,7 @@ If you've worked with the [Dataverse retrieval patterns]({% post_url 2026-04-10-
 
 ## Key Takeaways
 
-- **SharePoint Knowledge sources are for documents, not structured list data.** SharePoint list filter queries through Knowledge may disappoint, but a semantic unstructured search could return IDs that can then be used by Get Items to retrieve the rest of the data.  
+- **SharePoint Knowledge sources are for documents, not structured list data.** If you don't have Work IQ, you can approximate its combined semantic + structured retrieval by pairing a Knowledge source (for document search) with a Get Items tool (for list queries).
 - **The SharePoint connector's Get Items action + dynamic `$filter` input = natural language queries over lists.** No code, no flows, no custom APIs.
 - **The input description is your secret weapon.** The more specific you are about column names, data types, valid values, and example queries, the better the orchestrator performs.
 - **You can use M365 Copilot to generate the description.** Screenshot your list, ask for OData examples, and paste the result.
