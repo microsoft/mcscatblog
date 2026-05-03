@@ -60,9 +60,8 @@ The classic three-environment model is the backbone of a maintainable agent. Eac
 
 If you do not already have these environments, create them in the Power Platform Admin Center before proceeding. See: [Create and manage environments](https://learn.microsoft.com/en-us/power-platform/admin/create-environment)
 
-![Image](assets/posts/alm-guide-copilot-studio-power-platform/ppac_dev_test_prod_env.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/ppac_dev_test_prod_env.png)
 
-![Image]
 ---
 
 ## Solutions: The Unit of Deployment
@@ -79,11 +78,11 @@ There are two types of solutions:
 
 When you promote, you export a managed solution from Dev and import it into Test (and later Prod). The solution brings everything with it - except environment-specific values, which are set per environment independently.
 
-![Image](assets/posts/alm-guide-copilot-studio-power-platform/going_to_solutions_in_mcs.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/going_to_solutions_in_mcs.png)
 
 Create an unmanaged solution in your Dev environment, set it as your [preferred solution](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/preferred-solution), and work exclusively within it. Preferred solution is a per-user, per-session setting - easy to forget - so make a habit of verifying your solution context before creating anything. Any component created outside a solution is invisible to your deployment pipeline.
 
-![Image](assets/posts/alm-guide-copilot-studio-power-platform/creating_the_solution.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/creating_the_solution.png)
 
 > [!IMPORTANT]
 > If your agent or any of its flows were created outside a solution, they will not travel through the pipeline. See how to add existing components: [Add existing components to a solution](https://learn.microsoft.com/en-us/power-platform/alm/use-solutions-for-your-customizations)
@@ -96,11 +95,11 @@ A practical naming note: give your solution components a consistent prefix (e.g.
 
 Before going into configuration management, it is worth being precise about the type of flow used in a well-structured Copilot Studio agent.
 
-![Image](assets/posts/alm-guide-copilot-studio-power-platform/add_an_agent_flow_as_a_tool.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/add_an_agent_flow_as_a_tool.png)
 
 **Agent flows** are purpose-built to be invoked by the generative orchestrator as tools - not manually triggered, not called from a button, but selected and executed by the orchestrator as part of its plan to respond to a user message. They start with the **When an agent calls the flow** trigger and end with the **Respond to the agent** skill.
 
-![Image](assets/posts/alm-guide-copilot-studio-power-platform/agent_flow_designer.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/agent_flow_designer.png)
 
 
 > [!NOTE]
@@ -180,19 +179,19 @@ This separation is intentional and important. When you import your managed solut
 | Data source | SharePoint lists |
 | Secret | Azure Key Vault references |
 
-[!Image](assets/posts/alm-guide-copilot-studio-power-platform/creating_env_variables.png)
+[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/creating_env_variables.png)
 
-[!Image](assets/posts/alm-guide-copilot-studio-power-platform/env_var_types.png)
+[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/env_var_types.png)
 
 See how to create environment variables and use them in agent flows and topics here: [Environment variables overview](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables) and [Environment variables in Copilot Studio](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-variables-about?tabs=webApp#environment-variables)
 
 Environment variables can be invoked straight through **topics**: 
 
-[!Image](assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_mcs_agent.png)
+[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_mcs_agent.png)
 
 and, through **agent flows**:
 
-[!Image](assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_agent_flow.png)
+[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_agent_flow.png)
 
 ---
 
@@ -365,7 +364,7 @@ Power Platform's secret environment variables store a *reference* to a Key Vault
 - **No plaintext exposure** - makers see only the Key Vault reference, never the secret value
 - **Audit trail** - Key Vault logs every access
 
-![Image](assets/posts/alm-guide-copilot-studio-power-platform/secret_type_env_var.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/secret_type_env_var.png)
 
 > [!NOTE]
 > Learn more: [Use Azure Key Vault secrets in environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables-azure-key-vault-secrets)
