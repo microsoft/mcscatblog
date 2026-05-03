@@ -15,6 +15,9 @@ _site
 node_modules
 package-lock.json
 
+# Widget build artifacts
+**/widget/dist
+
 # IDE configurations
 .idea
 .vscode/

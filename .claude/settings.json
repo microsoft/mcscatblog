@@ -1,0 +1,45 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)",
+      "Bash(git config:*)",
+      "Bash(gh api:*)",
+      "Bash(gh.exe api:*)",
+      "Bash(where gh:*)",
+      "Bash(cmd.exe /c \"where gh\")",
+      "Bash(\"/c/Program Files/PowerShell/7/pwsh.exe\" -Command \"gh api user --jq '.id,.login'\")",
+      "Bash(\"/c/ProgramData/chocolatey/bin/gh.exe\" api:*)",
+      "Bash(cmd.exe /c \"gh api user --jq \\\\\".id,.login\\\\\"\")",
+      "Bash(git commit:*)",
+      "Read(//c/Program Files/GitHub CLI/**)",
+      "Read(//c/ProgramData/chocolatey/lib/gh/tools/**)",
+      "Bash(cmd.exe /c \"winget install GitHub.cli --accept-source-agreements --accept-package-agreements\")",
+      "Bash(cmd.exe /c \"winget install GitHub.cli --accept-source-agreements --accept-package-agreements 2>&1\")",
+      "Bash(\"/c/Program Files/PowerShell/7/pwsh.exe\" -Command \"winget install GitHub.cli --accept-source-agreements --accept-package-agreements 2>&1\")",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth status)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth login --hostname github.com --git-protocol https --web)",
+      "Bash('/c/Program Files/GitHub CLI/gh.exe' pr create --title 'Add Teams agent patterns post with solution download' --body ':*)",
+      "Bash('/c/Program Files/GitHub CLI/gh.exe' pr edit 252 --body ':*)",
+      "Bash(ls -la assets/posts/copilot-studio-teams-agent-patterns/*.png)",
+      "Read(//c/projects/mcscatblog/mcscatblog/**)",
+      "Bash(mkdir -p /tmp/docx_images)",
+      "Read(//tmp/**)",
+      "Bash(unzip -o \"/c/Users/hejammes/OneDrive - Microsoft/Desktop/Deploying to Microsoft Teams & Microsoft 365 Copilot best practices.docx\" \"word/media/*\")",
+      "Bash(ls -la /tmp/docx_images/word/media/*.png)",
+      "Read(//c/msys64/tmp/docx_images/word/media/**)",
+      "Bash(cygpath -w /tmp/docx_images/word/media/image1.png)",
+      "Bash('/c/Program Files/PowerShell/7/pwsh.exe' -Command 'Add-Type -AssemblyName System.Drawing; Get-ChildItem '\\\\''C:\\\\Users\\\\hejammes\\\\AppData\\\\Local\\\\Temp\\\\docx_images\\\\word\\\\media\\\\*.png'\\\\'' | ForEach-Object { $img = [System.Drawing.Image]::FromFile\\($_.FullName\\); Write-Output \"$\\($_.Name\\): $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\) }')",
+      "Bash('/c/Program Files/PowerShell/7/pwsh.exe' -Command 'Add-Type -AssemblyName System.Drawing; Get-ChildItem '\\\\''C:\\\\projects\\\\mcscatblog\\\\mcscatblog\\\\assets\\\\posts\\\\copilot-studio-teams-agent-patterns\\\\*.png'\\\\'' | ForEach-Object { $img = [System.Drawing.Image]::FromFile\\($_.FullName\\); Write-Output \"$\\($_.Name\\): $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\) }')",
+      "Bash('/c/Program Files/PowerShell/7/pwsh.exe' -Command 'Get-ChildItem '\\\\''C:\\\\Users\\\\hejammes\\\\OneDrive - Microsoft\\\\Desktop\\\\Deploying to Microsoft Teams & Microsoft 365 Copilot best practices\\\\word\\\\media\\\\*.png'\\\\'' | ForEach-Object { Write-Output \"$\\($_.Name\\): $\\($_.Length\\)\" }')",
+      "Bash('/c/Program Files/PowerShell/7/pwsh.exe' -Command 'Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\('\\\\''C:\\\\Users\\\\hejammes\\\\AppData\\\\Local\\\\Temp\\\\repo_image7_old.png'\\\\''\\); Write-Output \"Old repo: $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\); $img2 = [System.Drawing.Image]::FromFile\\('\\\\''C:\\\\Users\\\\hejammes\\\\OneDrive - Microsoft\\\\Desktop\\\\Deploying to Microsoft Teams & Microsoft 365 Copilot best practices\\\\word\\\\media\\\\image7.png'\\\\''\\); Write-Output \"Docx original: $\\($img2.Width\\)x$\\($img2.Height\\)\"; $img2.Dispose\\(\\)')",
+      "Bash(git mv:*)"
+    ],
+    "additionalDirectories": [
+      "\\tmp\\docx_images\\word\\media",
+      "C:\\Users\\hejammes\\OneDrive - Microsoft\\Desktop\\Deploying to Microsoft Teams & Microsoft 365 Copilot best practices\\word\\media",
+      "\\tmp",
+      "C:\\Users\\hejammes\\Downloads"
+    ]
+  }
+}
