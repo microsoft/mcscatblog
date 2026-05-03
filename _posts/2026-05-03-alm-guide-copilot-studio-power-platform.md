@@ -62,6 +62,7 @@ If you do not already have these environments, create them in the Power Platform
 
 ![Image](assets/posts/alm-guide-copilot-studio-power-platform/ppac_dev_test_prod_env.png)
 
+![Image]
 ---
 
 ## Solutions: The Unit of Deployment
@@ -463,4 +464,4 @@ That is what a clean ALM foundation buys you: the confidence to change things wi
 
 ## What's Next
 
-This post covers the foundation. In the next parts of this series, we go deeper into environment strategy - how to structure your environments around release cycles, how to protect production from platform updates before they arrive, and how to handle urgent fixes without disrupting work in progress.
+This post covers the foundation. The next parts of this series go deeper: environment topology aligned to release cycles, Preview environments on the First Release ring for regression detection, hotfix pipelines that bypass normal promotion, native Git integration and what a branch strategy looks like mapped to this environment model, and eventually breaking out of the monolithic solution model entirely - component collections, connected agents, and shipping tool changes without redeploying the full agent.
