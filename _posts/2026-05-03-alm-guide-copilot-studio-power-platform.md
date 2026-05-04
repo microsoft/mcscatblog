@@ -179,19 +179,19 @@ This separation is intentional and important. When you import your managed solut
 | Data source | SharePoint lists |
 | Secret | Azure Key Vault references |
 
-[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/creating_env_variables.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/creating_env_variables.png)
 
-[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/env_var_types.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/env_var_types.png)
 
 See how to create environment variables and use them in agent flows and topics here: [Environment variables overview](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables) and [Environment variables in Copilot Studio](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-variables-about?tabs=webApp#environment-variables)
 
 Environment variables can be invoked straight through **topics**: 
 
-[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_mcs_agent.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_mcs_agent.png)
 
 and, through **agent flows**:
 
-[!Image](/assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_agent_flow.png)
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/using_env_var_in_agent_flow.png)
 
 ---
 
@@ -200,6 +200,8 @@ and, through **agent flows**:
 Having environment variables is the prerequisite. Knowing *how to structure their use* across your topics and flows is where maintainability is actually won or lost. The following patterns address that structure. They are not mutually exclusive - a well-built agent will typically combine two or three of them.
 
 ### Pattern 1 - Separation of Concerns (The Baseline)
+
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/diagram_separation_of_concern.png)
 
 Topics own conversational logic. Agent flows own configuration resolution and data access. A topic that needs an endpoint URL or a feature flag calls a flow to retrieve it. The topic has no knowledge of where that value comes from or how it is stored.
 
@@ -210,6 +212,8 @@ This keeps topics readable without infrastructure knowledge and portable across 
 ---
 
 ### Pattern 2 - Session Initialisation
+
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/diagram_session_initialisation.png)
 
 A dedicated flow - typically named `InitialiseSession` - is invoked at the start of every conversation. It resolves all environment variables the agent will need and stores them in global conversation variables. Topics read from these globals throughout the session; they never invoke flows just to retrieve a config value mid-conversation.
 
@@ -226,6 +230,8 @@ Topics → read from Global.* throughout the session
 ---
 
 ### Pattern 3 - Configuration Facade
+
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/diagram_configuration_facade.png)
 
 A single flow whose sole responsibility is returning configuration values. No other flow calls `parameters()` directly - they all call this facade and receive the values they need as outputs.
 
@@ -244,6 +250,8 @@ This gives you one place to change when a variable is renamed, a new source is i
 
 ### Pattern 4 - Lazy Resolution with Caching
 
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/diagram_lazy_resolution_with_caching.png)
+
 Rather than resolving all configuration upfront, a value is resolved the first time it is needed and then cached in a global variable for the rest of the session. A sentinel check gates the resolution:
 
 ```
@@ -258,6 +266,8 @@ Else
 ---
 
 ### Pattern 5 - Feature Flags via Environment Variables
+
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/diagram_feature_flags.png)
 
 Use Yes/No environment variables to control which capabilities are enabled per environment. A capability under active development in Dev can be disabled in Test and Prod via a flag without any code change or solution update. When you are confident it is ready, flip the flag in Test. When it passes validation, flip it in Prod. The rollout requires no deployment.
 
@@ -282,6 +292,8 @@ This also gives you a kill switch. If a new capability causes unexpected behavio
 
 ### Pattern 6 - Fail-Fast Health Check
 
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/diagram_fail_fast_health_check.png)
+
 A dedicated flow invoked at session start that validates configuration *before* the user reaches any topic that depends on it. Rather than discovering a missing environment variable or an unreachable endpoint three turns into a conversation, the health check surfaces the misconfiguration immediately and lets the agent fail with a clear, actionable message.
 
 ```
@@ -305,6 +317,8 @@ A health check protects users from confusing mid-conversation failures ("I'm sor
 ---
 
 ### Pattern 7 - Contract-First Flow Design
+
+![Image](/assets/posts/alm-guide-copilot-studio-power-platform/diagram_contract_first_flow_design.png)
 
 Before building any flow, write its contract: what it takes as input, what it returns as output, and what it does when it cannot complete its work. Then write the flow description - which the orchestrator reads - from that contract, not the other way around.
 
