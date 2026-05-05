@@ -2,9 +2,9 @@
 layout: post
 title: "Sharing a Copilot Studio Agent: A Field Guide from Pilot to Full Rollout"
 date: 2026-05-04
-categories: [copilot-studio, governance, alm]
-tags: []
-description: ""
+categories: [copilot-studio, governance]
+tags: [sharing, governance, alm, permissions, authentication, dataverse, rollout]
+description: "Sharing a Copilot Studio agent is one operation, but its consequences span authoring, runtime sign-in, and channel discoverability. This field guide walks the misconception customers hit on the path from pilot to full rollout."
 author: kahlilfitz
 image:
   path: /assets/posts/sharing-agents-nuances/header.png
@@ -13,7 +13,7 @@ image:
 
 When an organization moves a Copilot Studio agent from a small pilot into broad production, sharing is one of the first controls makers reach for. It is also one of the most commonly misunderstood.
 
-A pattern recurs across customer engagements: a maker shares an agent with a specific security group, and weeks later discovers that users outside that group are also chatting with the agent. The maker's first instinct is to assume the share dialog has misbehaved. It has not. The share dialog is doing exactly what it was designed to do — which is something quite different from what the maker assumed.
+A pattern recurs across customer engagements: a maker shares an agent with a specific security group, and weeks later discovers that users outside that group are also chatting with the agent. The maker's first instinct is to assume the share dialog has misbehaved. It has not. The share dialog is doing exactly what it was designed to do, which is something quite different from what the maker assumed.
 
 The Microsoft Learn documentation describes the [share workflow procedurally](https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-share-bots) and is the right reference for click-paths. This post addresses the conceptual gap underneath: what sharing actually controls, what it does not control, and how those distinctions become more consequential at each stage of a rollout.
 
@@ -38,7 +38,7 @@ A more accurate mental model recognizes that runtime access to a Copilot Studio 
 | **Runtime sign-in** | Authentication settings + *Require users to sign in* | Determines whether a user is allowed to converse with the agent once they reach it |
 | **Discoverability and reach** | Channel configuration: Teams catalog, DirectLine, M365 Copilot publishing, link distribution | Determines how users find or connect to the agent in the first place |
 
-The share-for-chat option overlaps with the second gate, but only when the authentication configuration is set to manual Entra ID with sign-in required. In every other configuration — including the default *Authenticate with Microsoft* — the share-for-chat list is informational, not enforcing.
+The share-for-chat option overlaps with the second gate, but only when the [authentication configuration](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configuration-end-user-authentication) is set to manual Entra ID with sign-in required. In every other configuration, including the default *Authenticate with Microsoft*, the share-for-chat list is informational, not enforcing.
 
 ## What the share experience exposes in the current UI
 
@@ -49,10 +49,12 @@ Before following these gates through a rollout, it is worth grounding the model 
 For an agent configured to reach Microsoft Teams and Microsoft 365 Copilot, channel availability is configured separately from sharing. This is where the discoverability gate is defined.
 
 ![The Microsoft 365 and Microsoft Teams channel configuration panel, describing how publishing to Microsoft 365 Copilot enables discoverability via the Agent Store, and how Teams publishing makes the agent available in chats, meetings, and channels for users it has been shared with or that admins have approved](/assets/posts/sharing-agents-nuances/channel-dialog-main.png){: .shadow w="700" }
+_The Microsoft 365 and Microsoft Teams channel panel. Toggling availability here is independent of the share dialog._
 
 The Teams availability options expand the picture further. The maker can copy a link, download a Teams app package, or choose where the agent should appear in the in-tenant store.
 
-![The Teams availability dialog showing options to get a link, download a .zip file, and choose store visibility — either show to teammates and shared users, or show to everyone in the org subject to admin approval](/assets/posts/sharing-agents-nuances/channel-dialog-availability.png){: .shadow w="700" }
+![The Teams availability dialog showing options to get a link, download a .zip file, and choose store visibility, either show to teammates and shared users, or show to everyone in the org subject to admin approval](/assets/posts/sharing-agents-nuances/channel-dialog-availability.png){: .shadow w="700" }
+_The Teams availability sub-dialog. Store visibility, including org-wide visibility after admin approval, is decided here, not from the share dialog._
 
 Two store-visibility options are available:
 
@@ -63,9 +65,10 @@ Both options sit in the discoverability gate. Neither one is configured from the
 
 ### The share dialog
 
-The share dialog itself is reached from the agent's overflow menu. The first thing it displays — for an agent published to Teams or M365 Copilot — is a banner that telegraphs the misconception this post is addressing:
+The share dialog itself is reached from the agent's overflow menu. The first thing it displays, for an agent published to Teams or M365 Copilot, is a banner that telegraphs the misconception this post is addressing:
 
 ![The Share dialog for an agent named 'Weather Check Assistant', showing a banner that reads 'This agent is configured for Microsoft Teams and Microsoft 365 Copilot. Make sure your users are in security groups that can access the agent in Teams.' The dialog has a New Users search field, an Existing users list with the Owner and Everyone in organization, and an empty User permissions panel on the right](/assets/posts/sharing-agents-nuances/channel-dialog-manage.png){: .shadow w="700" }
+_The Share dialog. The banner at the top is the product itself acknowledging that share scope and Teams security are independent surfaces._
 
 > "This agent is configured for Microsoft Teams and Microsoft 365 Copilot. Make sure your users are in security groups that can access the agent in Teams."
 
@@ -77,33 +80,32 @@ When a user or group is added to the share list, the dialog exposes three indepe
 
 #### End user access
 
-![The Share dialog with a user added and granted End user access only — the permissions panel shows End user access checked with the description 'Can manage connections and configure the agent to either chat with it or allow it to operate autonomously on their behalf', along with unchecked Analytics viewer and Editor access options](/assets/posts/sharing-agents-nuances/channel-dialog-manage-add-end-user.png){: .shadow w="700" }
-
 End user access permits the user to chat with the agent or allow it to operate autonomously on their behalf, and to manage connections used by the agent. This last point is a meaningful expansion beyond the historical "share for chat" framing: an end user can take connection-related actions, not only send messages.
+
+![The Share dialog with a user added and granted End user access only. The permissions panel shows End user access checked with the description 'Can manage connections and configure the agent to either chat with it or allow it to operate autonomously on their behalf', along with unchecked Analytics viewer and Editor access options](/assets/posts/sharing-agents-nuances/channel-dialog-manage-add-end-user.png){: .shadow w="700" }
+_End user access. The role grants chat capability and connection management on the user's behalf, not just the ability to converse._
 
 #### Editor access
 
-![The Share dialog with a user being granted Editor access — the permissions panel shows End user access auto-checked, Analytics viewer auto-checked, and Editor access checked. The Editor description reads 'Can view, edit, configure, share and publish the agent but not delete it' and notes that Editors are automatically assigned to security roles required to use agents in the environment, including Power Automate user, Environment maker, and Agent transcript viewer](/assets/posts/sharing-agents-nuances/channel-dialog-manage-add-editor.png){: .shadow w="700" }
+Editor access grants full collaborative authoring: view, edit, configure, share, and publish (but not delete). Granting this role implicitly grants End user access and Analytics viewer. It also automatically assigns several [Dataverse security roles](https://learn.microsoft.com/en-us/power-platform/admin/security-roles-privileges) to the user, including Power Automate user, Environment maker, and Agent transcript viewer, since these are required to author agents in the environment.
 
-Editor access grants full collaborative authoring: view, edit, configure, share, and publish (but not delete). Granting this role implicitly grants End user access and Analytics viewer. It also automatically assigns several Dataverse security roles to the user — Power Automate user, Environment maker, and Agent transcript viewer — since these are required to author agents in the environment.
+This auto-assignment is consequential. Granting Editor access to a user who is not already an Environment Maker is not a localized action confined to one agent. It elevates the user's permissions across the entire environment.
 
-This auto-assignment is consequential. Granting Editor access to a user who is not already an Environment Maker is not a localized action confined to one agent: it elevates the user's permissions across the entire environment.
+![The Share dialog with a user being granted Editor access. The permissions panel shows End user access auto-checked, Analytics viewer auto-checked, and Editor access checked. The Editor description reads 'Can view, edit, configure, share and publish the agent but not delete it' and notes that Editors are automatically assigned to security roles required to use agents in the environment, including Power Automate user, Environment maker, and Agent transcript viewer](/assets/posts/sharing-agents-nuances/channel-dialog-manage-add-editor.png){: .shadow w="700" }
+_Editor access. Granting this role auto-assigns Power Automate user, Environment maker, and Agent transcript viewer security roles at the environment level._
 
 #### Analytics viewer
 
-![The Share dialog with a user being granted Analytics viewer access — the permissions panel shows End user access unchecked, Analytics viewer checked with the description 'Can view Analytics but not edit, configure, share, publish, or delete the agent', and an explanatory note that Analysts are automatically assigned the Agent Viewer security role and that admins can additionally assign the Agent transcript viewer role for chat session transcripts](/assets/posts/sharing-agents-nuances/channel-dialog-manage-add-analytics.png){: .shadow w="700" }
+Analytics viewer is a narrower role. It grants read-only access to the agent's Analytics page without granting any authoring or chat capability. It auto-assigns the Agent Viewer security role at the environment level, and admins can optionally assign [Bot Transcript Viewer](https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-share-bots#assign-the-bot-transcript-viewer-security-role-during-agent-sharing) to extend access to conversation drill-downs.
 
-Analytics viewer is a narrower role. It grants read-only access to the agent's Analytics page without granting any authoring or chat capability. It auto-assigns the Agent Viewer security role at the environment level, and admins can optionally assign Agent transcript viewer to extend access to conversation drill-downs.
+![The Share dialog with a user being granted Analytics viewer access. The permissions panel shows End user access unchecked, Analytics viewer checked with the description 'Can view Analytics but not edit, configure, share, publish, or delete the agent', and an explanatory note that Analysts are automatically assigned the Agent Viewer security role and that admins can additionally assign the Agent transcript viewer role for chat session transcripts](/assets/posts/sharing-agents-nuances/channel-dialog-manage-add-analytics.png){: .shadow w="700" }
+_Analytics viewer. Read-only access to Analytics with no chat or authoring capability._
 
 ### Mapping back to the three gates
 
-These controls map onto the gate model as follows:
+The two surfaces split cleanly across the gate model. The channel availability dialog drives **discoverability and reach**. The share dialog drives **authoring access** through its Editor and Analytics viewer roles. The End user role overlaps with **runtime sign-in** only when manual Entra ID authentication is configured with *Require users to sign in* enabled; in any other configuration, runtime sign-in is governed by the authentication settings elsewhere in the agent.
 
-- The **channel availability** dialog configures the **discoverability and reach** gate. Whether and where the agent appears in Teams and M365 Copilot is decided here, and the visibility scope can extend well beyond the share list.
-- The **share dialog**'s Editor and Analytics viewer roles configure **authoring access**. These roles also drive automatic Dataverse security role assignment in the environment.
-- The **share dialog**'s End user role overlaps with **runtime sign-in** for agents configured with manual Entra ID authentication and *Require users to sign in* enabled. For agents in any other authentication configuration, this role is effectively informational at runtime: the actual sign-in behavior is dictated by the **authentication settings** elsewhere in the agent configuration.
-
-With these surfaces in mind, the remainder of this post follows the lifecycle of a typical agent through three stages and shows how the failure modes of this model surface progressively as the audience expands.
+With these surfaces in mind, the remainder of this post follows the lifecycle of a typical agent through three stages and shows how each gate breaks down at different points in the rollout.
 
 ## Scenario 1 — Pilot stage
 
@@ -127,9 +129,9 @@ Pilots are too small and too homogeneous to expose sharing problems. Green-light
 
 ## Scenario 2 — Limited rollout stage
 
-**Profile:** An insurance carrier extends a claims-status lookup agent from a 10-person pilot in a Development environment to the full Claims operations team — approximately 400 users — in a Test environment. The team migrates the agent via a solution import, manually re-shares with the *Claims-Operations* security group in Test, and uploads the agent to the Microsoft Teams app catalog so it appears in the organization's approved apps list.
+**Profile:** An insurance carrier extends a claims-status lookup agent from a 10-person pilot in a Development environment to the full Claims operations team (approximately 400 users) in a Test environment. The team migrates the agent via a solution import, manually re-shares with the *Claims-Operations* security group in Test, and uploads the agent to the [Microsoft Teams app catalog](https://learn.microsoft.com/en-us/microsoftteams/manage-apps) so it appears in the organization's approved apps list.
 
-**Outcome:** Two days after rollout, an analyst from Underwriting — not in the share list, not on the Claims operations team — sends a message to the maker: "I tried the new claims agent today. It's useful, but it's surfacing data I should not have access to."
+**Outcome:** Two days after rollout, an analyst from Underwriting, who is not in the share list and not on the Claims operations team, sends a message to the maker: "I tried the new claims agent today. It's useful, but it's surfacing data I should not have access to."
 
 ### What is actually true
 
@@ -139,7 +141,7 @@ Three independent factors converged to produce this outcome:
 2. **Authentication configuration.** The agent was still configured for *Authenticate with Microsoft* without *Require users to sign in*. As established earlier, in this configuration the share list does not gate runtime access. Any signed-in tenant user who reached the agent was permitted to converse with it.
 3. **Connection-level data scope.** The connection to the claims database was a maker-owned personal connection that returned any record the underlying API would return. The connection had no awareness of the agent's intended audience and no row-level filtering scoped to the user. Once a non-claims user reached the agent, the connection happily served them claims data.
 
-Each of these is a different gate. Sharing the agent with *Claims-Operations* addressed none of them. The maker's mental model — that the share list defined the audience — was overridden three times over.
+Each of these is a different gate. Sharing the agent with *Claims-Operations* addressed none of them. The maker's mental model, that the share list defined the audience, was overridden three times over.
 
 ### The ALM dimension
 
@@ -153,7 +155,7 @@ As soon as an agent is published to a channel, that channel becomes the primary 
 
 ## Scenario 3 — Full rollout stage
 
-**Profile:** A healthcare organization rolls out a clinical-policy lookup agent to its full population of approximately 12,000 clinicians and administrative staff. Distribution is through both the Teams app catalog and Microsoft 365 Copilot publishing. The Production environment is configured as a Managed Environment with sharing limits, DLP policies, and audit enabled. The agent has been in production for six months and is treated as critical infrastructure.
+**Profile:** A healthcare organization rolls out a clinical-policy lookup agent to its full population of approximately 12,000 clinicians and administrative staff. Distribution is through both the Teams app catalog and Microsoft 365 Copilot publishing. The Production environment is configured as a [Managed Environment](https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-overview) with sharing limits, DLP policies, and audit enabled. The agent has been in production for six months and is treated as critical infrastructure.
 
 **Outcome:** Three separate incidents within a single quarter:
 
@@ -163,7 +165,7 @@ The maker who built the agent takes parental leave. Within 48 hours, the agent s
 
 Root cause: a custom connector connection that the maker owned silently expired. The agent depended on her individual identity to reach the policy backend. With her account inactive, the connection could no longer authenticate.
 
-The remediation requires re-establishing the connection under a service principal — a multi-day procurement and approval process — and updating the agent's connection reference to the new identity. During the remediation window, an organization-critical agent is non-functional.
+The remediation requires re-establishing the connection under a [service principal](https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals), which is a multi-day procurement and approval process, and updating the agent's connection reference to the new identity. During the remediation window, an organization-critical agent is non-functional.
 
 ### Incident B — ACL inheritance
 
@@ -175,7 +177,7 @@ This failure mode is particularly difficult to triage because it manifests as a 
 
 ### Incident C — Distribution beyond the share dialog
 
-The organization decides to extend access to a partner organization in a B2B arrangement. The team attempts to share the agent with the partner's tenant using "Everyone in *Organization*" — and finds that the operation is blocked by the Managed Environment sharing limit.
+The organization decides to extend access to a partner organization in a B2B arrangement. The team attempts to share the agent with the partner's tenant using "Everyone in *Organization*" and finds that the operation is blocked by the Managed Environment sharing limit.
 
 The team discovers, in the course of remediation, that distribution at this scale does not run through the share dialog at all. Cross-tenant Teams catalog publishing, M365 Copilot agent approval, and DirectLine-based custom integrations each have their own approval flows, license requirements, and governance gates. The share dialog was never the appropriate instrument for the operation.
 
@@ -199,7 +201,7 @@ Several patterns recur at every stage of the rollout, and recognizing them in ad
 | **Identity drift** | Works because users approximately equal maker | Works only if connections move to environment-level identity | Sustainable only with service-principal or shared identity |
 | **ACL inheritance** | Coincidental alignment with maker's footprint | Surfaces as inconsistent answer quality | Must be designed explicitly for the production audience |
 | **Environment crossing as a sharing reset** | Not yet relevant | First re-permissioning ritual | Pipelines or repeated manual re-sharing |
-| **Editor access scope** | Liberal, as the team is small | Deliberate, as authoring expands | Near zero in Production — authoring should occur in lower environments and ship via deployment, not casual sharing |
+| **Editor access scope** | Liberal, as the team is small | Deliberate, as authoring expands | Near zero in Production, as authoring should occur in lower environments and ship via [deployment pipelines](https://learn.microsoft.com/en-us/power-platform/alm/pipelines), not casual sharing |
 
 The throughline is that *sharing alone is never a complete control surface.* It is one input into a system whose actual access posture is determined by the combination of authentication configuration, channel publication, downstream dependency permissions, and identity continuity.
 
@@ -230,8 +232,6 @@ The following questions are worth answering before each transition. They are int
 
 ## Closing
 
-The share dialog in Copilot Studio is a useful instrument, but it is a narrower one than its name suggests. It governs collaboration and, in a specific authentication configuration, runtime sign-in. It does not govern channel discoverability, downstream data access, license enforcement, or identity continuity. Treating it as the master switch produces predictable failures — failures that scale with the audience.
-
-A more durable approach is to recognize sharing as one of several controls, and to validate the others explicitly at each stage of the rollout. Pilots should test the configuration that production will use. Limited rollouts should re-permission downstream dependencies as a first-class concern. Full rollouts should formalize identity continuity and channel-level governance.
+The share dialog is a useful instrument, but a narrower one than its name suggests. Treating it as the master switch produces failures that scale with the audience. The pre-flight questions above are the smallest investment that protects against them.
 
 What sharing-related surprises have you encountered on the path from pilot to production? If you have run into a failure mode not covered here, the comments are open.
