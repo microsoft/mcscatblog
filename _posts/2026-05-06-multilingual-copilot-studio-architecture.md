@@ -6,13 +6,16 @@ categories: [copilot-studio, architecture]
 tags: [multilingual, power-fx, adaptive-cards, orchestration, enterprise, system-topics]
 description: "A scalable architecture for building Copilot Studio agents that support eight languages from one topic, one prompt, zero duplication - using Global.UserLanguage as the single source of truth."
 author: emargot
+image:
+  path: /assets/posts/multilingual-copilot-studio-architecture/img5-topic-canvas.png
+  alt: "Copilot Studio topic canvas showing a Conversation Start topic with a Condition node branching on Global.UserLanguage"
 ---
 
 For enterprise developers, the out-of-the-box translation capabilities of LLMs are often insufficient for production-grade agents. Generative AI can translate on the fly, but enterprises need deterministic control over terminology, legal disclaimers, and brand voice across locales.
 
 The challenge is avoiding the maintenance nightmare: duplicating every topic for every language. With 10 topics and 4 languages, you do not want 40 topics to maintain.
 
-This post outlines a scalable architecture for runtime language switching, hardened on a production deployment for a global industrial client (English, French, Portuguese-BR, Czech). The same pattern is shown extended to **eight languages** in a public demo agent: English, French, Portuguese (BR), Czech, Spanish, Dutch, German, Italian. One agent, one topic per intent, one GPT prompt - no duplication.
+This post outlines a scalable architecture for runtime language switching, hardened on a production deployment for a global industrial client (English, French, Portuguese-BR, Czech). The screenshots below come from a single-agent build extended to **eight languages**: English, French, Portuguese (BR), Czech, Spanish, Dutch, German, Italian. One agent, one topic per intent, one GPT prompt - no duplication.
 
 > **Built-in vs. custom multilingual.** Copilot Studio has a [primary + secondary language feature](https://learn.microsoft.com/microsoft-copilot-studio/multilingual) with a Translation portal. If your only need is translating message strings, use it. The pattern in this post applies when you need *different business logic per region* (different regulations, different backend APIs, different compliance flows), not just translated text. The two approaches can coexist: native translation for static content, custom routing for region-specific logic.
 {: .prompt-info }
@@ -28,12 +31,15 @@ Copilot Studio exposes `System.User.Language` as a read-only system variable pop
 You have three primary options for initializing this variable at the start of a session:
 
 1. **User profile (Office 365 locale).** Fast, but often inaccurate. Users may be logged into a US tenant but prefer French.
-2. **URL parameters.** Excellent for embedded web chats where the parent page already knows the locale.
+2. **URL parameters.** Excellent for embedded web chats where the parent page already knows the locale. The host page can seed `Global.UserLanguage` before the conversation even starts using the WebChat Redux middleware pattern - see [How to Set Context Variables to Copilot Studio Agents Using WebChat]({% post_url 2026-04-28-webchat-context-variables %}) for the canonical implementation.
 3. **Explicit selection (recommended).** An Adaptive Card at the start of the conversation.
 
 **Why explicit selection?** In enterprise environments, reliability beats magic. An explicit choice ensures the user is comfortable with the language and provides a clear trigger to set the variable. In Microsoft Teams specifically, the browser `Accept-Language` header is frequently overridden by the tenant locale setting - so a French user on a US-based tenant gets English. Do not rely on it.
 
 Initialize all of this in the [`System - Conversation Start` topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics). Override the default to: (1) check if `Global.UserLanguage` is blank, (2) if blank, send the language selection Adaptive Card and capture the choice, (3) set `Global.UserLanguage`, (4) route to the actual greeting topic.
+
+![Language picker Adaptive Card at conversation start with eight language buttons](/assets/posts/multilingual-copilot-studio-architecture/img1-language-picker.png)
+_The language picker shown at conversation start. Buttons use `messageBack` so the selection is both displayed to the user and captured as a variable._
 
 When the user selects a language from the Adaptive Card, add a **Set Variable** action node in your topic. Set the variable to `Global.UserLanguage`. Set the value field to the card's output. In the "Ask with Adaptive Card" node, the captured response is exposed as `Topic.AdaptiveCardOutput` (or whatever output variable name you configured). For a card with a `selectedLanguage` choice input:
 
@@ -68,7 +74,7 @@ Switch(
 )
 ```
 
-In the eight-language demo agent, the language picker uses readable identifiers (`English`, `French`, `Portuguese_Brazilian`, `Czech`, `Spanish`, `Dutch`, `German`, `Italian`) rather than locale codes - friendlier to bind into card buttons and easier to read in `Switch()` expressions across topics. Pick the convention that fits your stack and stay consistent.
+In the eight-language build, the language picker uses readable identifiers (`English`, `French`, `Portuguese_Brazilian`, `Czech`, `Spanish`, `Dutch`, `German`, `Italian`) rather than locale codes - friendlier to bind into card buttons and easier to read in `Switch()` expressions across topics. Pick the convention that fits your stack and stay consistent.
 
 ## 2. Language-aware UI: Adaptive Cards and dynamic text
 
@@ -111,7 +117,10 @@ For simple text blocks, inline Power Fx works - **but with a critical caveat**. 
   activity: =Topic.Msg
 ```
 
-This pattern is what unlocks clean per-language replies in every system topic (Greeting, Goodbye, ThankYou, Escalate, Fallback, StartOver, EndOfConversation, ResetConversation) of the eight-language demo agent without duplicating any of them.
+This pattern is what unlocks clean per-language replies in every system topic (Greeting, Goodbye, ThankYou, Escalate, Fallback, StartOver, EndOfConversation, ResetConversation) of the eight-language build without duplicating any of them.
+
+![IT Helpdesk demo agent showing French IT question buttons after language selection](/assets/posts/multilingual-copilot-studio-architecture/img2-french-it-card.png)
+_After selecting French, the agent renders the per-language Adaptive Card with localized question buttons. The `Switch()` in a Set Variable node selected the correct card payload._
 
 > If you see `=Switch(...)` rendered as plain text in your bot, you put the expression in `SendActivity.activity` instead of computing it in a preceding `SetVariable.value`. The fix is mechanical: lift the expression up.
 {: .prompt-warning }
@@ -121,6 +130,9 @@ This pattern is what unlocks clean per-language replies in every system topic (G
 **The anti-pattern:** Creating `Topic_Refund_EN`, `Topic_Refund_FR`, `Topic_Refund_PT`, `Topic_Refund_CS`, ... This is an operational disaster. When a business rule changes, you update it in N places and miss at least one.
 
 **The recommended pattern:** Conditional branching within a single topic.
+
+![Copilot Studio topic canvas showing Start of Conversation with a Condition node checking Global.UserLanguage](/assets/posts/multilingual-copilot-studio-architecture/img5-topic-canvas.png)
+_One topic, eight languages. The Condition node checks whether `Global.UserLanguage` is blank - no topic duplication required._
 
 For simple topics, use inline `Switch` (with the SetVariable + SendActivity pattern above). For complex topics with different business logic per region (different regulations, different backend calls), add a Condition node at the start:
 
@@ -143,6 +155,9 @@ If a user is in an English session but asks a question in Czech, the [generative
 
 The pattern is: generative orchestration resolves *what*, deterministic variables control *how it is presented*.
 
+![Agent responding in French to an Outlook calendar sync question with structured HTML troubleshooting steps](/assets/posts/multilingual-copilot-studio-architecture/img3-french-gpt-response.png)
+_The agent responds in French with structured troubleshooting steps. GPT instructions bind to `Global.UserLanguage` as the single source of truth - no language detection logic in the response path._
+
 ## 4. Session management and inactivity reset
 
 When the [Reset Conversation system topic](https://learn.microsoft.com/microsoft-copilot-studio/authoring-system-topics) fires (or a session timeout configured under Settings > Session Management triggers), all conversation-scoped variables are cleared. Global variables persist for the session but are reset on conversation end. If a user returns after a break, `Global.UserLanguage` will be blank.
@@ -158,7 +173,7 @@ Also: do not store language in a persistent user-scoped variable unless you have
 
 ## Lessons from production
 
-The architecture above was first deployed for a global industrial client requiring EN, FR, PT-BR, and CS. The eight-language demo extends the same pattern to EN, FR, PT-BR, CS, ES, NL, DE, IT. Going from 4 to 8 languages cost a few extra entries in each `Switch()` and a few extra card payloads - not a refactor.
+The architecture above was first deployed for a global industrial client requiring EN, FR, PT-BR, and CS. The eight-language extension shown in the screenshots covers EN, FR, PT-BR, CS, ES, NL, DE, IT using the same pattern. Going from 4 to 8 languages cost a few extra entries in each `Switch()` and a few extra card payloads - not a refactor.
 
 Key takeaways:
 
