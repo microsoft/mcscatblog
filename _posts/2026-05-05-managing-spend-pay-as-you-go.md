@@ -5,7 +5,7 @@ date: 2026-05-05
 categories: [copilot-studio, licensing]
 tags: [pay-as-you-go, billing-policy, power-automate, governance, azure-automation, power-platform, licensing, powershell]
 description: "How do you manage Azure consumption when using Pay as you go with Copilot Studio?"
-author: rranjit,zekitekin
+author: [rranjit,zekitekin]
 image:
   path: /assets/posts/managing-spend-pay-as-you-go/header.png
   alt: "A person staring in horror at the bill ticker at a gas station"
