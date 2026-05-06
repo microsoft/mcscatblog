@@ -6,6 +6,9 @@ categories: [copilot-studio, mcp]
 tags: [mcp, atlassian, jira, oauth, dynamic-client-registration, authentication]
 description: "The Atlassian Remote MCP server uses Dynamic Client Registration. If you wire it up with Manual OAuth in Copilot Studio you'll waste an afternoon. Use Dynamic discovery and a few Atlassian admin toggles, and you're done in five minutes."
 author: hasharaf
+image:
+  path: /assets/posts/atlassian-jira-remote-mcp-copilot-studio/header.png
+  alt: "Copilot Studio connected to Jira via an MCP link labeled 'Dynamic discovery', with a 5-minute badge"
 ---
 
 I spent way longer than I'd like to admit getting Atlassian's Remote MCP server to talk to a Copilot Studio agent. The integration itself is dead simple — the issue is that the public docs (and a lot of well-meaning blog posts, including a draft I had on my own machine last week) push you straight at **Manual OAuth 2.0** in the Copilot Studio MCP wizard, and that path is a dead end for this particular server.
