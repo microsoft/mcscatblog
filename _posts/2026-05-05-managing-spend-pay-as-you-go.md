@@ -3,12 +3,12 @@ layout: post
 title: "Herding Clouds: Taming Pay-As-You-Go Billing Policies in Power Platform at Scale"
 date: 2026-05-05
 categories: [copilot-studio, licensing]
-tags: []
-description: ""
+tags: [consumption, azure-paygo, copilotstudio]
+description: "How do you manage Azure consumption when using Pay as you go with Copilot Studio?"
 author: rranjit
 image:
   path: /assets/posts/managing-spend-pay-as-you-go/header.png
-  alt: ""
+  alt: "A person staring in horror at the bill ticker at a gas station"
 ---
 
 
@@ -22,7 +22,7 @@ So. You've embraced Pay-As-You-Go (PAYG) for Power Platform and Copilot Studio. 
 
 And then the bill arrived.
 
-Not a *catastrophic* bill, necessarily. But enough to make you sit up straight, squint at your Azure Cost Management dashboard, and mutter something unprintable about Copilot Studio message packs.
+Not a *catastrophic* bill, necessarily. But enough to make you sit up straight, squint at your Azure Cost Management dashboard, and mutter something unprintable....
 
 This is the blog post for you.
 
@@ -54,6 +54,7 @@ Billing policies connect your environments to an Azure subscription for PAYG con
 - **Azure CLI** installed and authenticated (`az login`)
 - A user account with **Power Platform Admin**, **Global Admin**, or **Dynamics 365 Admin** role
 - Your environments in a CSV file
+- This nifty little script: [bulk-assign-billing-policy.ps1](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/scripts/bulk-assign-billing-policy.ps1)
 
 ### The CSV Format
 
@@ -154,14 +155,14 @@ We're going to show you how to do this using Azure Budgets as the tripwire, an A
 
 Here's the cast of characters:
 
-| Component | Role |
-|---|---|
-| **Azure Budget** | Watches your spending and fires an alert when a threshold is crossed |
-| **Azure Action Group** | Routes the alert as a webhook payload to your Automation Account |
-| **Azure Automation Account** | Hosts the runbook; bridges the Azure alerting world and the Power Platform world |
-| **Azure Automation Runbook** | Parses the alert payload, acquires a token, calls Power Automate |
-| **Power Automate HTTP Flow** | Receives the call from the runbook; delegates to the child flow |
-| **Power Automate Child Flow** | Finds the billing policy by name and unlinks all environments |
+| Component | Role |Link | 
+|---|---|---|
+| **Azure Budget** | Watches your spending and fires an alert when a threshold is crossed | [What is an Azure Budget?](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets?tabs=psbudget)
+| **Azure Action Group** | Routes the alert as a webhook payload to your Automation Account | [What is an Azure Action Group?](https://learn.microsoft.com/en-us/shows/azure-friday/azure-monitor-action-groups)
+| **Azure Automation Account** | Hosts the runbook; bridges the Azure alerting world and the Power Platform world | [What is an Azure Automation Account?](https://learn.microsoft.com/en-us/azure/automation/automation-security-overview)
+| **Azure Automation Runbook** | Parses the alert payload, acquires a token, calls Power Automate |[UnlinkBillingPolicyRunbook.ps1](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/scripts/UnlinkBillingPolicyRunbook.ps1)
+| **Power Automate HTTP Flow** | Receives the call from the runbook; delegates to the child flow |[Download Solution](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
+| **Power Automate Child Flow** | Finds the billing policy by name and unlinks all environments |[Download Solution](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
 
 Each component does exactly one thing. The whole chain is event-driven — no polling, no scheduled tasks, no hoping.
 
@@ -311,7 +312,7 @@ The whole chain from alert to unlinked takes under a minute.
 
 ### Testing Without Waiting for a Real Budget Breach
 
-You don't have to blow past an actual budget to test this. The repo includes a `Webhooktestdata.json` file — a realistic Azure Monitor Common Alert Schema payload pre-loaded with a simulated breach scenario (budget: $2.00, threshold: $1.60, spent: $4.00).
+You don't have to blow past an actual budget to test this. The repo includes a [Webhooktestdata.json](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/samples/Webhooktestdata.json) file — a realistic Azure Monitor Common Alert Schema payload pre-loaded with a simulated breach scenario (budget: $2.00, threshold: $1.60, spent: $4.00) and [script](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/scripts/TestRunbook.ps1) to trigger an alert.
 
 Trigger the runbook manually against it:
 
