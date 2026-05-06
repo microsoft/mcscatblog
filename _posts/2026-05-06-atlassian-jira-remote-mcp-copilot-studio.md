@@ -82,15 +82,30 @@ Click **Create**. Copilot Studio will spin for a few seconds while it discovers 
 > If the tool list comes up empty, the discovery probably hit a transient 5xx on Atlassian's side, or one of the Step 0 toggles isn't on yet. Check those, then refresh the tool detail page.
 {: .prompt-tip }
 
-### 3. Authorize from the test pane
+### 3. Create the connection (first-time consent)
 
-Open the test pane and ask the agent something Jira-shaped, like:
+Right after the tool is created, Copilot Studio drops you on the tool detail page and you'll see a yellow banner along the lines of *"You need a new connection to use this tool"*, with a **Create new connection** button. Click it.
+
+This pops the Power Platform connection dialog for the Atlassian MCP server. There are no credentials to type — Dynamic discovery already did the registration work. Just click **Create**, and a browser window opens to Atlassian's standard OAuth consent screen — the same UI you'd see authorizing any third-party Atlassian app, except the "app" here was registered a few seconds ago by Copilot Studio.
+
+Pick the Atlassian site you want to grant access to, accept the requested scopes, and the window closes itself.
+
+### 4. Activate the connection and "Add and configure"
+
+Back in Copilot Studio, the connection now shows in the dropdown but it isn't wired into the tool yet. Two things to do:
+
+1. **Activate the connection.** Select the new connection from the picker (it'll show your account/email next to a green dot). The status should flip to *Connected*.
+2. **Click "Add and configure".** This is the button that actually attaches the live connection to this tool *for this agent*. Until you click it, the tool exists but the agent can't call it. This trips people up because creating the connection feels like the finishing step — it isn't. Add and configure is.
+
+After Add and configure, the tool detail page should show the full list of Atlassian operations as available (no warning banners, no "needs connection" pills).
+
+### 5. Open the agent's test pane and verify
+
+Now switch back to the agent's main page and open the **Test your agent** pane on the right (or the **Test** button in the top bar, depending on your layout). Ask something Jira-shaped, like:
 
 > *"List the Jira sites I have access to."*
 
-The orchestrator picks `getAccessibleAtlassianResources`, sees there's no connection yet, and surfaces a consent card. Click through it; you'll be bounced to Atlassian's standard OAuth consent screen — the same UI you'd see authorizing any third-party Atlassian app, except the "app" here was registered ten seconds ago by Copilot Studio.
-
-Accept, get redirected back, and ask the question again. This time you should see something shaped like:
+The orchestrator picks `getAccessibleAtlassianResources` and uses the connection you just wired up. You should see something shaped like:
 
 ```json
 {
@@ -108,7 +123,7 @@ Now run a JQL search to confirm tool calls actually work past auth:
 
 You should get an HTTP 200 with a real (possibly empty) issue list — something like `{ "issues": [...], "isLast": true }`. Empty array is fine; what you're looking for is the 200 and a well-formed body. That's the whole game.
 
-### 4. Publish
+### 6. Publish
 
 Once the connection is healthy in test, publish the agent and add whatever channels you need. The connection moves with the agent — end users get prompted to consent the first time they trigger a Jira tool, and from then on it's transparent.
 
