@@ -10,6 +10,10 @@ image:
   path: /assets/posts/managing-spend-pay-as-you-go/header.png
   alt: ""
 ---
+
+
+
+# Herding Clouds: Taming Pay-As-You-Go Billing Policies in Power Platform at Scale
 *The pain (in the budget) will leave once it finishes teaching you…hang tight, this might be the last lesson....*
 
 ---
