@@ -3,9 +3,9 @@ layout: post
 title: "Herding Clouds: Taming Pay-As-You-Go Billing Policies in Power Platform at Scale"
 date: 2026-05-05
 categories: [copilot-studio, licensing]
-tags: [consumption, azure-paygo, copilotstudio]
+tags: [pay-as-you-go, billing-policy, power-automate, governance, azure-automation, power-platform, licensing, powershell]
 description: "How do you manage Azure consumption when using Pay as you go with Copilot Studio?"
-author: rranjit
+author: rranjit,zekitekin
 image:
   path: /assets/posts/managing-spend-pay-as-you-go/header.png
   alt: "A person staring in horror at the bill ticker at a gas station"
@@ -13,7 +13,6 @@ image:
 
 
 
-# Herding Clouds: Taming Pay-As-You-Go Billing Policies in Power Platform at Scale
 *The pain (in the budget) will leave once it finishes teaching you…hang tight, this might be the last lesson....*
 
 ---
