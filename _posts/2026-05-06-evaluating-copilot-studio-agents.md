@@ -45,7 +45,7 @@ flowchart LR
     B["<b>Generated Data</b><br/><i>Target the value</i><br/>━━━━━━━━━━<br/>Built-in generation<br/>or CSV import"]
     C["<b>Real Collected Data</b><br/><i>Deliver the value</i><br/>━━━━━━━━━━<br/>Production data<br/>from analytics"]
     A --> B --> C
-    C -.->|"Live data feeds<br/> tests"| A
+    C -.->|"Live data feeds<br/>new tests"| A
 
     style A fill:#9333ea,color:#fff,stroke:#6b21a8,stroke-width:2px
     style B fill:#2d7d46,color:#fff,stroke:#166534,stroke-width:2px
@@ -56,7 +56,7 @@ That dotted return line matters. Once production data is flowing, it becomes the
 
 ## Stage 1: Scope the value, agree on V1 and build the agent
 
-#### The Starter Set
+#### The starter set
 When you start a Copilot Studio project, the most valuable artifact you can produce is not a topic flow diagram or a knowledge-source list. It's a **starter test set**, written *jointly* by the business and the maker, that captures the high-value user stories the agent has to nail. Each test case is a value statement: "If a user asks *this*, the agent delivering *that* is value."
 
 That set does two jobs at once. It's your **acceptance contract for V1**: the scoreboard everyone agrees to look at when someone asks "what does V1 actually do?". And it's a **design brief** for the agent: every case in the set is a use case the agent's topics, tools, knowledge, and instructions need to cover. You aren't designing the agent then writing tests for it; you're agreeing on the use cases that count, and designing to cover them.
@@ -87,10 +87,11 @@ That leniency does **not** apply to terms of use, regulated content, refusals, o
 {: .prompt-warning }
 
 #### Do I have to write the expected value for each case?
-The biggest misconception about starter sets is that you have to hand-craft the prompt *and* hand-write the perfect expected answer for every case. That feels heavy, and it's the number-one reason teams postpone evaluation. 
 
+The biggest misconception about starter sets is that you have to hand-craft the prompt *and* hand-write the perfect expected answer for every case. That feels heavy, and it's the number-one reason teams postpone evaluation.
 
-
+> **Pro tip:** for a large portion of your starter surface, you can skip the expected answer entirely and let an **AI grader** ([General quality](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-overview#general-quality) or a [Custom rubric](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-overview#custom)) do the work. Reserve hand-written expected answers for your Must-Pass bucket, where they unlock the deterministic graders.
+{: .prompt-tip }
 
 ## Stage 2: Target the value, intentional tradeoffs
 
@@ -107,7 +108,7 @@ The performance range V1 eventually ships at is an outcome of those three. It's 
 A starter set of 5 or 10 cases is enough to align stakeholders and name buckets. It is **not** enough to confirm V1 holds up at scale. Two features get you there without weeks of authoring:
 
 - **Built-in generation**: Copilot Studio reads your agent's topics, tools, knowledge, and instructions, and generates a much larger test set against that surface. It gives you a first estimate of coverage across the agent's full scope.
-- **CSV import**: when you need cases the platform can't infer (regulatory phrasings, regional dialects, domain-expert edge cases), there's a CSV template you fill in offline and import. You can your ann external llm to generate these according to your test zone. 
+- **CSV import**: when you need cases the platform can't infer (regulatory phrasings, regional dialects, domain-expert edge cases), there's a CSV template you fill in offline and import. You can use an external LLM to generate these according to your test zone.
 
 Generated test sets are an accelerator, but they have a less-talked-about side effect.
 
@@ -126,10 +127,7 @@ _The Configure classification panel for a custom UX rubric. Each label is a Pass
 When the set runs, several rows come back like this:
 
 ![Test result row showing Pass on quality grader and missing ux Fail on the ux quality rubric](/assets/posts/evaluating-copilot-studio-agents/test-result.png){: .shadow w="700" }
-_Pass on quality. Fail on UX. The agent asked for a date range instead of producing the chart. Several other rows show the same pattern: the agent is technically responding well, but the response shape is wrong for the user's intent. The test generation discovered that my design was missing a default date range. 
-
-> **Pro tip:** for a large portion of your starter surface, you can skip the expected answer entirely and let an **AI grader** ([General quality](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-overview#general-quality) or a [Custom rubric](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-overview#custom)) do the work.
-{: .prompt-tip }
+_Pass on quality. Fail on UX. The agent asked for a date range instead of producing the chart. Several other rows show the same pattern: the agent is technically responding well, but the response shape is wrong for the user's intent. The test generation discovered that my design was missing a default date range._
 
 ### Tuning is a series of intentional tradeoffs
 
@@ -165,7 +163,7 @@ flowchart LR
     style GAP fill:#d97706,color:#fff,stroke:#9a3412,stroke-width:2px
 ```
 
-If the working set passes at 92% and the blind set passes at 64%, you didn't build a better agent, you **overfit** to the working set, and this type of discrepancy is essentiial to catch. 
+If the working set passes at 92% and the blind set passes at 64%, you didn't build a better agent, you **overfit** to the working set, and this type of discrepancy is essential to catch.
 
 ### Types of agent changes by a maker
 
@@ -281,7 +279,7 @@ _For each tool, you tell the suite what one successful invocation is worth. The 
 
 The value you *scoped* in Stage 1 (a hand-authored starter set, sorted into buckets), *targeted* in Stage 2 (volume, deliberate tradeoffs, working/blind split), is now *delivered and measured* in Stage 3 (real conversations + ROI). That's what you bring to the business review. Full reference in [Analyze time and cost savings](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-cost-savings).
 
-## Evaluations Features worth knowing about
+## Evaluation features worth knowing about
 {: #features-worth-knowing-about }
 
 
@@ -311,7 +309,7 @@ The deterministic graders catch regressions in *what the agent did*; the AI ones
 | [Tool use](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-overview#tool-use) | The right tool(s) or topic(s) were invoked | Tool chain validation, regardless of prose | Yes (capabilities) |
 | [Custom rubric](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-overview#custom) | Business-specific criteria you describe | Tone, format, citation, refusal language | No (rubric prompt) |
 
-#### A recommended evaluation pairing by bucket:
+#### A recommended evaluation pairing by bucket
 
 ```mermaid
 flowchart LR
