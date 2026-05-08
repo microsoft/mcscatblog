@@ -11,11 +11,11 @@ image:
   alt: Diagram showing Power Automate monitoring Azure consumption and unlinking environments when spend exceeds threshold
 ---
 
-*Or: Teaching Power Platform to be its own bouncer*
+*Or: Teaching Power Platform to be its own bouncer...also does every 4 hours count as real time 🤔*
 
 ---
 
-In the last post, we built a solid PAYG governance pipeline using Azure Budgets, Automation Accounts, and Power Automate. And we were honest about its limits. The most pointed one was this:
+In the [last post]({% post_url 2026-05-05-managing-spend-pay-as-you-go %}), we built a solid PAYG governance pipeline using Azure Budgets, Automation Accounts, and Power Automate. And we were honest about its limits. The most pointed one was this:
 
 > *Imagine a developer who accidentally builds a flow that reasons over a large PDF in an infinite loop. That flow starts burning through AI Builder credits at speed, and this solution won't catch it before serious damage is done. By the time the budget alert fires, the overspend has already happened.*
 
