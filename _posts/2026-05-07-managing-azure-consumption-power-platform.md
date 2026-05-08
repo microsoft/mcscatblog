@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "No Azure Required: Real-Time PAYG Overage Protection with Power Automate, Custom Connectors, and the Cost Management API"
+title: "Real-Time PAYG Overage Protection with Power Automate, Custom Connectors"
 date: 2026-05-07
 categories: [copilot-studio, power-platform]
-tags: []
-description: ""
+tags: [power-automate, custom-connector, azure-cost-management, billing-policy, payg, governance, power-platform]
+description: "Build a fully native Power Platform solution for real-time PAYG overage protection using a scheduled cloud flow, the Azure Cost Management API, and the Power Platform Admin V2 connector."
 author: rranjit
 image:
   path: /assets/posts/managing-azure-consumption-power-platform/manageazurespendpowerplatform.png
-  alt: ""
+  alt: Diagram showing Power Automate monitoring Azure consumption and unlinking environments when spend exceeds threshold
 ---
 
-*Or: Teaching Power Platform to be its own bouncer... also I exagerate, we need the Azure Cost API, but you get the spirit...*
+*Or: Teaching Power Platform to be its own bouncer*
 
 ---
 
