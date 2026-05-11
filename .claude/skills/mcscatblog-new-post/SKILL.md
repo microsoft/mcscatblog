@@ -35,7 +35,6 @@ author: <author-key>
 image:
   path: /assets/posts/<slug>/header.png
   alt: ""
-published: false
 ---
 
 <!-- Write your post here -->
@@ -54,7 +53,7 @@ published: false
 
 ## Notes
 
-- Set `published: false` so the post doesn't go live until it's ready
+- Do NOT set `published: false` — the post lives on a feature branch so there's no risk of it going live prematurely. Unpublished posts don't render on the local dev server, which makes previewing impossible.
 - Leave tags empty — they should be chosen during review to maximize Chirpy "Further Reading" overlap
 - Leave description empty — it should be written after the post content is finalized
 - Categories: always include `copilot-studio` as the first category
