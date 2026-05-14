@@ -9,6 +9,7 @@ author: rranjit
 image:
   path: /assets/posts/managing-azure-consumption-power-platform/manageazurespendpowerplatform.png
   alt: Diagram showing Power Automate monitoring Azure consumption and unlinking environments when spend exceeds threshold
+published: false
 ---
 
 *Or: Teaching Power Platform to be its own bouncer...also does every 4 hours count as real time 🤔*

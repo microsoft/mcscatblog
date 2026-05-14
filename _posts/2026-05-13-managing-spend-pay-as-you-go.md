@@ -1,14 +1,15 @@
 ---
 layout: post
 title: "Herding Clouds: Taming Pay-As-You-Go Billing Policies in Power Platform at Scale"
-date: 2026-05-05
+date: 2026-05-13
 categories: [copilot-studio, licensing]
 tags: [pay-as-you-go, billing-policy, power-automate, governance, azure-automation, power-platform, licensing, powershell]
-description: "How do you manage Azure consumption when using Pay as you go with Copilot Studio?"
+mermaid: true
+description: "Assigning billing policies to 50+ environments by hand doesn't scale, and nobody reads the budget alert email before Monday. This post walks through a bulk assignment script and an automated unlinking pipeline that solve both problems."
 author: [rranjit,zekitekin]
 image:
   path: /assets/posts/managing-spend-pay-as-you-go/header.png
-  alt: "A person staring in horror at the bill ticker at a gas station"
+  alt: "The pain (in the budget) will leave once it finishes teaching you...hang tight, this might be the last lesson..."
 ---
 
 
@@ -53,13 +54,13 @@ Billing policies connect your environments to an Azure subscription for PAYG con
 - **Azure CLI** installed and authenticated (`az login`)
 - A user account with **Power Platform Admin**, **Global Admin**, or **Dynamics 365 Admin** role
 - Your environments in a CSV file
-- This nifty little script: [bulk-assign-billing-policy.ps1](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/scripts/bulk-assign-billing-policy.ps1)
+- This nifty little script: [bulk-assign-billing-policy.ps1](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/scripts/bulk-assign-billing-policy.ps1)
 
 ### The CSV Format
 
 The script expects a simple four-column CSV:
 
-```csv
+```text
 EnvironmentName,EnvironmentID,BillingPolicyName,Status
 Sales-Production,,ProductionBillingPolicy,
 Marketing-Sandbox,a1b2c3d4-...,DevBillingPolicy,
@@ -128,11 +129,8 @@ The final summary tells you exactly where things stand:
   Skipped:      0
 ```
 
-### The "Only Production and Sandbox" Rule
-
-One thing worth knowing: only **Production** and **Sandbox** environments can be linked to PAYG billing policies. Developer, Trial, and Default environments are not eligible. If the script encounters an ineligible environment type, it marks the row as `Failed: EnvironmentType <type> not supported` and moves on without stopping the whole run.
-
-This is a platform constraint, not a script limitation. Plan your CSV accordingly.
+> Only **Production** and **Sandbox** environments can be linked to PAYG billing policies. Developer, Trial, and Default environments are not eligible. This is a platform constraint, not a script limitation. If the script encounters an ineligible environment type, it marks the row as `Failed: EnvironmentType <type> not supported` and moves on without stopping the whole run. Plan your CSV accordingly.
+{: .prompt-warning }
 
 ---
 
@@ -144,9 +142,9 @@ Assigning environments to billing policies is the easy direction. The harder que
 
 The honest answer, without automation, is: someone gets an email. That email may or may not be read before Monday. 
 
-The solution is to wire up an **automatic unlink** — when a budget threshold is breached, the system removes environments from the billing policy automatically, stopping further PAYG consumption. No human reaction time required.
+One effective way of handling this is to wire up an **automatic unlink** — when a budget threshold is breached, the system removes environments from the billing policy automatically, stopping further PAYG consumption. No human reaction time required.
 
-We're going to show you how to do this using Azure Budgets as the tripwire, an Azure Automation Account as the bridge, and Power Automate doing the actual Power Platform heavy lifting.
+We've put together a [ready-made sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/infrastructure/manage-paygo#unlinkbillingpolicyrunbookps1) that does exactly this, using Azure Budgets as the tripwire, an Azure Automation Account as the bridge, and Power Automate doing the actual Power Platform heavy lifting. The rest of this section walks through how the sample works and how to set it up.
 
 ---
 
@@ -159,9 +157,9 @@ Here's the cast of characters:
 | **Azure Budget** | Watches your spending and fires an alert when a threshold is crossed | [What is an Azure Budget?](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets?tabs=psbudget)
 | **Azure Action Group** | Routes the alert as a webhook payload to your Automation Account | [What is an Azure Action Group?](https://learn.microsoft.com/en-us/shows/azure-friday/azure-monitor-action-groups)
 | **Azure Automation Account** | Hosts the runbook; bridges the Azure alerting world and the Power Platform world | [What is an Azure Automation Account?](https://learn.microsoft.com/en-us/azure/automation/automation-security-overview)
-| **Azure Automation Runbook** | Parses the alert payload, acquires a token, calls Power Automate |[UnlinkBillingPolicyRunbook.ps1](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/scripts/UnlinkBillingPolicyRunbook.ps1)
-| **Power Automate HTTP Flow** | Receives the call from the runbook; delegates to the child flow |[Download Solution](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
-| **Power Automate Child Flow** | Finds the billing policy by name and unlinks all environments |[Download Solution](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
+| **Azure Automation Runbook** | Parses the alert payload, acquires a token, calls Power Automate |[UnlinkBillingPolicyRunbook.ps1](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/scripts/UnlinkBillingPolicyRunbook.ps1)
+| **Power Automate HTTP Flow** | Receives the call from the runbook; delegates to the child flow |[Download Solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
+| **Power Automate Child Flow** | Finds the billing policy by name and unlinks all environments |[Download Solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
 
 Each component does exactly one thing. The whole chain is event-driven — no polling, no scheduled tasks, no hoping.
 
@@ -283,26 +281,12 @@ From budget threshold breach to all environments unlinked — entirely automated
 
 ### The End-to-End Picture
 
-```
-Azure Budget Alert fires (spending threshold exceeded)
-        │
-        ▼
-Azure Action Group → Automation Account webhook receives alert payload
-        │
-        ▼
-Runbook: Extract subscription + resource group from alertId path
-Runbook: Authenticate via Managed Identity (no secrets)
-Runbook: POST to Power Automate HTTP trigger
-        │
-        ▼
-HTTP Flow: Receive subscription + resource group → resolve billing policy name
-Child Flow: List all billing policies → match by name
-Child Flow: List all linked environments
-Child Flow: Loop → unlink each environment
-Child Flow: Return operation log
-        │
-        ▼
-Environments unlinked — Copilot Studio messages stop billing to this policy
+```mermaid
+flowchart LR
+    A["🔔 Budget Alert"] --> B["Action Group"]
+    B --> C["Automation Runbook<br/><i>parse alert, get token</i>"]
+    C --> D["Power Automate<br/><i>resolve policy, unlink envs</i>"]
+    D --> E["✅ Environments unlinked"]
 ```
 
 The whole chain from alert to unlinked takes under a minute.
@@ -311,7 +295,7 @@ The whole chain from alert to unlinked takes under a minute.
 
 ### Testing Without Waiting for a Real Budget Breach
 
-You don't have to blow past an actual budget to test this. The repo includes a [Webhooktestdata.json](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/samples/Webhooktestdata.json) file — a realistic Azure Monitor Common Alert Schema payload pre-loaded with a simulated breach scenario (budget: $2.00, threshold: $1.60, spent: $4.00) and [script](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/scripts/TestRunbook.ps1) to trigger an alert.
+You don't have to blow past an actual budget to test this. The repo includes a [Webhooktestdata.json](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/samples/Webhooktestdata.json) file — a realistic Azure Monitor Common Alert Schema payload pre-loaded with a simulated breach scenario (budget: $2.00, threshold: $1.60, spent: $4.00) and [script](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/scripts/TestRunbook.ps1) to trigger an alert.
 
 Trigger the runbook manually against it:
 
@@ -333,27 +317,25 @@ Let's be honest about what you're signing up for.
 
 ### Pros
 
-| | |
-|---|---|
-| **No stored credentials** | The Managed Identity pattern means zero secrets to manage, rotate, or accidentally commit to git. The Azure-side identity is fully managed by the platform. |
-| **Event-driven** | Nothing polls. Nothing runs on a schedule hoping to catch a breach. The budget alert fires, the chain executes, and it's done. |
-| **Separation of concerns** | Azure handles budget watching; Power Platform handles environment management. Each service does what it's designed for. |
-| **Name-based, not GUID-based** | Both the assignment script and the unlinking flow work with human-readable policy names. No GUIDs in your CSV, no GUIDs in your runbook parameters. |
-| **Auditable at every layer** | The CSV from Part 1 is your linking receipt; the Power Automate run history is your unlinking receipt. Finance and compliance teams appreciate this. |
-| **Testable without real risk** | `-DryRun` for bulk assignment, `Webhooktestdata.json` for the alert chain. You can validate the entire pipeline end-to-end before anything is live. |
-| **Battle-tested infrastructure** | Azure Budgets, Automation Accounts, and Action Groups are mature, enterprise-grade services with SLAs and monitoring built in. |
+- **No stored credentials.** Managed Identity means zero secrets to manage, rotate, or accidentally commit to git.
+- **Event-driven.** Nothing polls. The budget alert fires, the chain executes, done.
+- **Separation of concerns.** Azure handles budget watching; Power Platform handles environment management.
+- **Name-based, not GUID-based.** Both the assignment script and the unlinking flow work with human-readable policy names.
+- **Auditable at every layer.** The CSV is your linking receipt; Power Automate run history is your unlinking receipt.
+- **Testable without real risk.** `-DryRun` for bulk assignment, `Webhooktestdata.json` for the alert chain.
+- **Battle-tested infrastructure.** Azure Budgets, Automation Accounts, and Action Groups are mature services with SLAs and monitoring built in.
 
 ### Cons
 
-| | |
-|---|---|
-| **Azure expertise required** | Setting up Automation Accounts, configuring Managed Identities, wiring Action Groups to webhooks — none of this is difficult, but it does require someone comfortable in the Azure portal. Your Power Platform admin and your Azure admin may be different people. |
-| **Multiple services to manage** | You now own an Automation Account, a runbook, an Action Group, a Budget alert, and a Power Automate solution. Each has its own lifecycle, update path, and failure mode. |
-| **Two permission boundaries** | The Managed Identity handles Azure-side auth; the Power Automate connection credentials handle the Power Platform side. Understanding where each layer's permissions live (as we covered above) is not immediately obvious. |
-| **Azure costs** | Automation Account job execution isn't free at scale. For low-frequency budget alerts it's negligible, but it's another line item to explain. |
-| **PowerShell for bulk assignment** | Part 1 still requires someone to run a PowerShell script locally. Not every Power Platform admin is equally comfortable at a terminal. |
-| **No self-service** | A maker or environment owner can't trigger or configure any of this themselves. It's an admin-only, infrastructure-level setup. |
-| **Budget alerts are not real-time** | For the vast majority of PAYG scenarios, this architecture is a robust and reliable spending guardrail. But Azure Cost Management data carries an 8–24 hour delay, and budget alert evaluation is periodic — not continuous. Now imagine a developer who accidentally builds a flow that reasons over a large PDF in an infinite loop. That flow starts burning through Copilot Studio messages or AI Builder credits at speed, and this solution won't catch it before serious damage is done. By the time the alert fires, the overspend has already happened. This is a known ceiling on the approach, not a bug — but it's worth knowing where that ceiling is. |
+- **Azure expertise required.** Automation Accounts, Managed Identities, Action Groups — not difficult, but it requires someone comfortable in the Azure portal.
+- **Multiple services to manage.** An Automation Account, a runbook, an Action Group, a Budget alert, and a Power Automate solution, each with its own lifecycle.
+- **Two permission boundaries.** Managed Identity handles Azure-side auth; Power Automate connection credentials handle the Power Platform side. Not immediately obvious.
+- **Azure costs.** Automation Account job execution isn't free at scale. Negligible for low-frequency alerts, but it's another line item.
+- **PowerShell for bulk assignment.** Part 1 requires running a script locally. Not every Power Platform admin is comfortable at a terminal.
+- **No self-service.** Makers and environment owners can't configure this themselves. Admin-only setup.
+
+> **Budget alerts are not real-time.** Azure Cost Management data carries an 8-24 hour delay, and budget alert evaluation is periodic, not continuous. A runaway flow burning through Copilot Studio messages or AI Builder credits at speed won't be caught before serious damage is done. This is a known ceiling on the approach, not a bug, but it's worth knowing where that ceiling is.
+{: .prompt-warning }
 
 ---
 
@@ -368,25 +350,7 @@ This is a solid, production-ready governance setup for PAYG billing in Power Pla
 
 ---
 
-## Coming Up Next: All the Pros. None of the Cons.
+## Coming Up Next
 
-Look back at that cons list. Nearly every item on it comes from the same root cause: **we brought Azure infrastructure into a Power Platform problem.**
-
-What if we didn't?
-
-What if the entire pipeline — cost monitoring, threshold evaluation, policy management, and environment unlinking — lived entirely within **Power Platform itself**? No Automation Accounts to provision. No runbooks to maintain. No Action Groups to wire up. No Azure portal navigation required. No PowerShell terminal. No permission boundary confusion between two different identity systems.
-
-In the next installment, we're going to build exactly that: a fully native Power Platform solution that uses scheduled cloud flows, the Azure Cost Management API, and the Power Platform Admin connector to create a self-contained, serverless PAYG governance system. Everything a maker or admin needs lives in one importable solution.
-
-Here's the teaser: every con on that list has an answer in the low-code version. The architecture is simpler. The setup is faster. The ongoing maintenance is lighter. And — perhaps most importantly — it puts control in the hands of Power Platform admins rather than requiring a collaboration with Azure infrastructure teams.
-
-Think of it as the citizen developer's revenge on operational complexity.
-
-Spoiler: it's more capable than you'd expect, and considerably more satisfying to demo to a room full of Azure engineers.
-
-Stay tuned.
-
----
-
-*Scripts, solution files, and sample data referenced in this article are available in the accompanying repository. All scripts include `-DryRun` support. Test in a non-production environment first — your billing team's mental health may depend on it.*
+Nearly every con on that list comes from the same root cause: **we brought Azure infrastructure into a Power Platform problem.** In the next post, we'll build the same pipeline entirely within Power Platform itself. No Automation Accounts, no runbooks, no PowerShell. Think of it as the citizen developer's revenge on operational complexity. Stay tuned.
 
