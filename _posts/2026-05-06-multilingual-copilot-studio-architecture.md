@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Architecting Runtime Multilingual Agents in Copilot Studio"
+title: "Robust Multilingual Pattern in Copilot Studio: Preselected Supported Languages with Custom Regional Behaviors"
 date: 2026-05-06 09:00:00 +0100
 categories: [copilot-studio, architecture]
 tags: [multilingual, power-fx, adaptive-cards, orchestration, enterprise, system-topics]
@@ -17,7 +17,10 @@ The challenge is avoiding the maintenance nightmare: duplicating every topic for
 
 This post outlines a scalable architecture for runtime language switching, hardened on a production deployment for a global industrial client (English, French, Portuguese-BR, Czech). The screenshots below come from a single-agent build extended to **eight languages**: English, French, Portuguese (BR), Czech, Spanish, Dutch, German, Italian. One agent, one topic per intent, one GPT prompt - no duplication.
 
-> **Built-in vs. custom multilingual.** Copilot Studio has a [primary + secondary language feature](https://learn.microsoft.com/microsoft-copilot-studio/multilingual) with a Translation portal. If your only need is translating message strings, use it. The pattern in this post applies when you need *different business logic per region* (different regulations, different backend APIs, different compliance flows), not just translated text. The two approaches can coexist: native translation for static content, custom routing for region-specific logic.
+> **Scope of this pattern.** This post covers one specific multilingual strategy: a **preselected set of supported languages** (English plus seven peers, including the four core production locales and four demo extensions) with **custom regional behaviors** layered on top - different greetings, different cards, different business logic per region. It is not the only valid approach, and it deliberately leaves space for two adjacent patterns the MSCAT blog covers separately: (a) **auto-detection** of the user's language, and (b) **production-grade support for languages Copilot Studio does not officially list** (an upcoming platform feature will make this easier).
+{: .prompt-info }
+
+> **When to use the OOB localization file workflow instead.** For pure string translation inside a topic - per-message text, per-question prompts, button labels - the standard Microsoft path is to [export the topic localization file, translate externally, and re-import](https://learn.microsoft.com/microsoft-copilot-studio/multilingual#localize-content). That workflow shines when a dedicated translation team owns the strings (working in CAT tooling) and the builder does not. The `Switch()` pattern in this post solves a different problem: **runtime logic that branches on language**, not just static substitution. The two approaches compose - use the OOB file workflow for static topic text, use `Switch()` for system-topic messages, conditional flows, and Adaptive Card payload selection. For Adaptive Cards specifically, the MSCAT blog has a dedicated playbook on plugging cards into the OOB localization pipeline: [The One Card: Build Once, Speak All Languages](https://microsoft.github.io/mcscatblog/posts/localize-adaptive-cards/).
 {: .prompt-info }
 
 ## 1. Establishing the Single Source of Truth
@@ -103,6 +106,9 @@ Switch(
 
 Two production constraints: (1) card JSON variables must be Global-scoped to persist across topics; (2) Power Fx string variables have a length cap that complex cards (especially with inline base64 images) will breach. For cards over the limit, fetch JSON from a Power Automate flow or Dataverse row instead of inlining as a variable.
 
+> **Alternative: single card + OOB localization.** The pattern above ships one card payload per language. If your cards are mostly static text with a few dynamic values, you can instead author **one card** and let the localization file workflow handle the strings - using the `SetTextVariable` trick to mix static text with variables inside a translatable string. That approach is covered in detail in [The One Card: Build Once, Speak All Languages](https://microsoft.github.io/mcscatblog/posts/localize-adaptive-cards/). Choose payload switching when each language needs a structurally different card (different fields, different layouts, different actions); choose single-card-plus-localization when the only thing that changes is the words.
+{: .prompt-tip }
+
 ### The `activity:` evaluation gotcha
 
 For simple text blocks, inline Power Fx works - **but with a critical caveat**. In a `SendActivity` node, the `activity:` field does **not** evaluate Power Fx expressions. A `=Switch(...)` expression placed directly in `activity:` will render as raw text in the bot. The fix is a two-step pattern: compute the localized string in a `SetVariable` node (where Power Fx **is** evaluated), then reference the resulting variable from `SendActivity`.
@@ -170,6 +176,22 @@ When the [Reset Conversation system topic](https://learn.microsoft.com/microsoft
 4. If set, preserve it and greet the user in their language.
 
 Also: do not store language in a persistent user-scoped variable unless you have a deliberate "save preferences" feature. Forcing a language from a session three months ago is jarring, especially for shared devices or travelling users.
+
+## Choosing between inline `Switch()` and the OOB localization file
+
+Both patterns are valid. Pick by audience and by what changes per language.
+
+| Decision factor | Inline `Switch()` (this post) | OOB localization file |
+| :--- | :--- | :--- |
+| What changes per language | Logic + text | Text only |
+| Who owns the strings | The builder (in the topic) | A translation team (in a `.resx`-style file) |
+| Source of truth | Topic YAML (Git-diffable) | Separate localization file |
+| Runtime branching on other variables (role, channel, tenant) | Yes | No - substitution only |
+| Languages outside the officially supported set | Works (any string identifier) | Constrained to platform-supported locales |
+| System topics, GPT instructions, conditional flows | Same `Switch()` shape everywhere | Mixed: file for messages, code for logic |
+| Adaptive Cards | Switch entire payload per language | One card + `SetTextVariable` (see [The One Card](https://microsoft.github.io/mcscatblog/posts/localize-adaptive-cards/)) |
+
+The two compose well. A production agent can use the OOB localization file for in-topic message strings owned by translators, and `Switch()` for runtime branching, system topics, and payload selection. The decision is not religious - it is about who owns which strings and which strings need to participate in conditional logic.
 
 ## Lessons from production
 
