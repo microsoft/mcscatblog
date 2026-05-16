@@ -1,91 +1,119 @@
 ---
 layout: post
-title: "Addressing Bulk File-Based Testing Limitations in Copilot Evals"
+title: "Bulk File-Based Testing for Copilot Studio: Beyond Standard Evals"
 date: 2026-05-12
-categories: [copilot-studio, evals]
-tags: []
-description: ""
+categories: [copilot-studio, testing]
+tags: [evals, testing, dataverse, power-automate, sharepoint, bulk-testing, power-bi, file-processing]
+description: "How to build a scalable bulk file-based testing framework for Copilot Studio agents using Dataverse, SharePoint, Power Automate, and Power BI when standard evals aren't enough."
 author: ashVancouver
 image:
   path: /assets/posts/bulk-file-testing-copilot-evals/header.png
-  alt: "File based bulk testing AI Framework"
+  alt: "Bulk file-based testing architecture for Copilot Studio agents"
+published: true
 ---
 
-<!-- Write your post here -->
-## Addressing Bulk File-Based Testing Limitations in Copilot Evals
-AI agents often perform well in controlled evaluations using curated prompts and representative samples, but a different challenge emerges when testing shifts to bulk file-based scenarios involving enterprise artifacts such as PDFs, spreadsheets, forms, and contracts. In these cases, the focus extends beyond isolated prompt-response evaluations to validating how consistently and reliably the agent processes large volumes of document-driven inputs at scale, exposing a gap that existing copilot evaluation capabilities do not natively address.
+We deployed an invoice-processing agent that scored beautifully on our [Copilot Studio eval suite](https://learn.microsoft.com/microsoft-copilot-studio/advanced-ai-evaluations). Then 500 real vendor invoices arrived: different templates, different scan qualities, different languages. Twenty-three percent failed silently. The eval metrics hadn't changed, but the agent wasn't production-ready.
 
-## The Role of Evals in AI Development
-In Microsoft Copilot Studio, evals are used to assess how well AI agents perform against defined expectations by measuring response quality, accuracy, relevance, safety, and consistency through predefined test datasets and conversational scenarios. Common capabilities include prompt-response testing, regression testing, quality scoring, automated benchmarking, safety validation, and multi-turn conversation simulation. These evals are highly effective for conversational and prompt-driven assessments, but are not natively designed for large-scale bulk file validation scenarios involving enterprise documents such as PDFs, invoices, forms, and contracts.
+If you've built agents that process enterprise documents (PDFs, contracts, spreadsheets, forms) you've likely hit the same wall. Standard evals measure prompt-response quality on curated samples. They don't tell you whether your agent can reliably process *thousands* of real-world files with the consistency your business requires.
 
-## The Specific Gap: Bulk Testing with File-Based Inputs
-While many agents can be validated effectively using curated prompts and representative conversational scenarios, a growing set of enterprise use cases requires large-scale file-based testing from the outset. In these scenarios, agents are expected to process business artifacts such as invoices, contracts, forms, reports, spreadsheets, PDFs, and JSON payloads as part of operational workflows. The challenge is no longer simply whether the model can generate a correct response in isolation, but whether it can consistently produce reliable, structured, and system-consumable outputs across large, diverse, and highly variable voluminous collections of real-world files.
+This post walks through a practical architecture for bulk file-based testing using components you probably already have: [Dataverse](https://learn.microsoft.com/power-apps/maker/data-platform/data-platform-intro), [SharePoint](https://learn.microsoft.com/sharepoint/introduction), [Power Automate](https://learn.microsoft.com/power-automate/getting-started), Copilot Studio, and [Power BI](https://learn.microsoft.com/power-bi/fundamentals/power-bi-overview).
 
-*Example:* Consider a finance operations copilot that receives vendor invoices in PDF format and must extract structured data such as vendor name, invoice number, invoice date, tax amount, currency, and line-item totals into JSON for an accounts payable system. A small curated test set may produce encouraging results, but that is not the same as proving production readiness. In a real enterprise environment, the solution may need to process thousands of invoices from different vendors, each using different templates, layouts, languages, and scan qualities. Some documents may contain multiple invoices, some may have missing or partially legible fields, and others may include handwritten notes or inconsistent tax formatting. What matters operationally is not whether the copilot succeeds on a handful of ideal samples, but whether it can perform reliably across that full range of variation. A robust bulk-testing approach therefore needs to run the copilot against a large library of real invoice files, compare every extracted field against a gold-standard output, flag mismatches such as missing invoice IDs or incorrect totals, and surface error patterns across the entire dataset. That is the core challenge: bringing production-grade rigor, repeatability, and visibility to file-based enterprise workflows in the same way traditional evals bring discipline to prompt-based testing.
+> This approach complements standard evals, it doesn't replace them. Use evals for prompt quality and response behavior. Use bulk testing for file processing and structured output validation.
+{: .prompt-info }
 
-## The Requirement: Extending Validation Beyond Evals
-To address this gap, validation must extend beyond prompt evaluation into system-level testing. The goal is to create a repeatable test bench that mirrors production conditions closely enough to answer a practical question: can this solution process real files at scale with the accuracy, consistency, and traceability the business requires?
+## Where Standard Evals Fall Short
 
-This includes the ability to:
+[Copilot Studio evaluations](https://learn.microsoft.com/microsoft-copilot-studio/advanced-ai-evaluations) excel at prompt-response testing, regression testing, quality scoring, and multi-turn conversation simulation. If you're already using them in your CI/CD pipeline (see [Quality Gates for Copilot Studio]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %})), that's great, keep doing it.
 
-- Execute large volumes of file-based test cases using a defined test matrix
-- Validate outputs against gold-standard expected results at a deterministic field level
-- Support scenario-specific prompts, configurations, and business rules
-- Replicate production-like execution patterns, including batching and repeat runs
-- Maintain traceability across inputs, outputs, versions, outcomes, and regressions over time
+But when your agent processes enterprise documents as part of operational workflows, you need answers to different questions:
 
-In practice, this introduces a complementary testing layer alongside existing eval capabilities: one focused on prompt quality and response behavior, and another focused on voluminous file processing and structured output validation.
+- Can it handle thousands of invoices from different vendors with different layouts?
+- Does it consistently extract the correct fields across scan qualities and languages?
+- Which specific failure patterns emerge at scale (missing IDs, incorrect totals, format mismatches)?
+- How does accuracy change across prompt versions or model updates?
 
-## A Practical Architecture for Bulk Testing
-A practical solution can be built using familiar Power Platform and Microsoft 365 components to create a repeatable system for running file-based tests at scale. In this model, Dataverse manages tests and results, SharePoint stores inputs and expected outputs, Power Automate orchestrates execution, Copilot performs the processing, and Power BI provides reporting and insight.
+A robust bulk-testing approach needs to:
 
-- Dataverse for test control and result tracking
-- Power Automate for orchestration
-- SharePoint for storing inputs, expected outputs, and prompts
-- Copilot for AI-driven processing
-- Power BI for reporting and insights
+- Execute large volumes of file-based test cases against a defined test matrix
+- Compare every extracted field against gold-standard expected results
+- Support scenario-specific prompts and business rules
+- Track regressions over time with full traceability
 
-##  Architecture Overview
-This workflow illustrates a scalable bulk file validation framework for AI agents using Microsoft Copilot Studio, Microsoft Power Automate, Microsoft SharePoint, and Microsoft Dataverse.
+## The Architecture
 
-![Overall Architecture](/assets/posts/bulk-file-testing-copilot-evals/MainSimple.png)
-_Figure 1. End-to-end bulk file-based testing architecture showing how test definitions, orchestration, copilot execution, result comparison work together._
+A practical solution uses components you probably already have in your tenant:
 
-## 1. Dataverse as the Control Plane and System of Record
-Dataverse serves as the control plane and system of record for the testing framework. Each test case is stored as a structured record containing the scenario definition, input file reference, expected output, prompt or configuration version, and supporting metadata such as status, category, and ownership. It also captures execution history for every run, including status, timestamps, output locations, comparison results, and pass/fail outcomes. By centralizing both test definitions and run history, teams can standardize scenario management, compare performance across versions, identify regressions, and maintain end-to-end traceability from input to output.
+| Component | Role |
+|-----------|------|
+| **Dataverse** | Control plane — test definitions, execution history, pass/fail outcomes |
+| **SharePoint** | Configuration layer — input files, gold-standard outputs, prompt assets |
+| **Power Automate** | Orchestration — retrieves tests, invokes agent, compares results |
+| **Copilot Studio** | Execution — processes files and returns structured output |
+| **Power BI** | Reporting — pass rates, error patterns, regression trends |
 
-![Dataverse Schema](/assets/posts/bulk-file-testing-copilot-evals/dataverseDig.png)
-_Figure 2. Dataverse control-plane view illustrating how structured test cases, execution history, metadata, and pass/fail outcomes are captured in a centralized system of record for traceable bulk validation._
+![Overall Architecture](/assets/posts/bulk-file-testing-copilot-evals/MainSimple.png){: .shadow }
+*End-to-end bulk file-based testing architecture showing how test definitions, orchestration, copilot execution, and result comparison work together.*
 
-## 2. SharePoint as the Configuration Layer
-SharePoint stores the file-based assets the framework depends on, including test inputs, gold-standard expected outputs, prompt assets, and other scenario-specific reference content. Keeping these artifacts separate from orchestration makes it easier to update prompts, swap datasets, add new files, or revise expected results without redesigning the automation.
+## Dataverse as the Control Plane
 
+Each test case is a [Dataverse row](https://learn.microsoft.com/power-apps/maker/data-platform/data-platform-intro) containing the scenario definition, input file reference, expected output, prompt version, and metadata (status, category, ownership). Execution history captures timestamps, output locations, comparison results, and pass/fail outcomes.
 
-![SharePoint Schema](/assets/posts/bulk-file-testing-copilot-evals/sharepointDig.png)
-_Figure 3. SharePoint configuration layer showing how input files, expected outputs, prompt assets, and scenario-specific references are organized to support reusable and configurable bulk test execution._
+This gives you version-over-version comparison, regression detection, and end-to-end traceability from input to outcome, similar to what you'd get with the [Dataverse retrieval patterns]({% post_url 2026-04-10-dataverse-retrieval-patterns-copilot-studio %}) post but applied to test management.
 
-## 3. Orchestration with Power Automate - Bulk File Based AI Testing 
-![SharePoint Schema](/assets/posts/bulk-file-testing-copilot-evals/secretSauce.png)
-_Figure 4. Power Automate orchestration flow showing how test cases are retrieved, files and expected outputs are loaded, copilot execution is triggered, results are compared, and outcomes are written back for repeatable bulk testing._
+![Dataverse control plane](/assets/posts/bulk-file-testing-copilot-evals/dataverseDig.png){: .shadow }
+*Dataverse control-plane view: structured test cases, execution history, metadata, and pass/fail outcomes in a centralized system of record.*
 
-Power Automate acts as the orchestration backbone of the architecture, connecting the control plane in Dataverse with the configuration assets in SharePoint, the execution layer in Copilot, and the downstream reporting loop. In practice, the flow begins by reading the next eligible test case from Dataverse, where the framework stores scenario definitions, run metadata, status, and version context. It then retrieves the associated input file, expected output, prompts, and any scenario-specific reference content from SharePoint. Using that context, Power Automate assembles the execution payload, invokes the AI agent with the correct prompt and file combination, and manages the full lifecycle of the run from initiation through completion. Once the response is returned, the flow can normalize the output, compare it against the gold-standard expected result, calculate pass/fail outcomes or field-level mismatches, and write the complete execution record back into Dataverse. This creates a closed-loop testing system where every run is traceable, repeatable, and tied back to a defined scenario, version, and result history.
+## SharePoint as the Configuration Layer
 
-Beyond simple sequencing, Power Automate provides the operational discipline needed to run bulk file-based validation at enterprise scale. It can support batching strategies for large test libraries, parallel execution for higher throughput, and controlled concurrency to avoid overwhelming downstream systems or exceeding service limits. It also enables retry logic, exception handling, and status-driven routing so failed runs, comparison mismatches, or incomplete outputs can be isolated and investigated systematically rather than lost in manual review. Because the orchestration is configuration-driven, teams can rerun the same scenarios across different prompt versions, model variants, business rules, or agent configurations and compare results over time. This makes the framework useful not only for one-time validation before go-live, but also for recurring regression testing, release validation, and production-readiness checks. In effect, Power Automate transforms the architecture from a collection of connected components into a governed and scalable testing engine that can continuously validate whether the copilot is performing reliably across real-world file-based scenarios.
+[SharePoint](https://learn.microsoft.com/sharepoint/introduction) stores the file-based assets: test inputs, gold-standard expected outputs, prompt assets, and scenario-specific reference content. Keeping artifacts separate from orchestration means you can update prompts, swap datasets, or revise expected results without touching the automation.
 
-##  4. Power BI reporting layer
-Power BI turns execution data into decision-ready insight for engineering, product, and business stakeholders. It enables teams to visualize pass/fail rates, spot error patterns, identify mismatch trends, and detect version-specific regressions over time. Rather than manually reviewing isolated outputs, teams can use dashboards to understand overall throughput, failure concentration, scenario performance, and comparative trends across execution cycles.
+![SharePoint configuration layer](/assets/posts/bulk-file-testing-copilot-evals/sharepointDig.png){: .shadow }
+*SharePoint configuration layer: input files, expected outputs, and prompt assets organized for reusable bulk test execution.*
 
-##  What This Enables
-This architecture addresses the specific gap around bulk file-based testing:
-- Validation across thousands of real-world scenarios
-- Support for file-driven inputs and structured outputs
-- Deterministic comparison against expected results
-- Traceability and regression tracking over time
-- Operational visibility through reporting
+## Orchestration with Power Automate
 
-##  Final Takeaway, Evals and Bulk Testing: Complementary Capabilities
-It is important to position this correctly: this is not an either-or choice between existing eval capabilities and a custom bulk-testing framework. They address different layers of the enterprise validation challenge. 
+This is where it all comes together. [Power Automate](https://learn.microsoft.com/power-automate/getting-started) connects Dataverse, SharePoint, and Copilot into a closed-loop testing system:
 
-This blog walked through a practical enterprise testing architecture spanning Dataverse, SharePoint, Power Automate, Copilot, and Power BI to demonstrate how organizations can build a scalable, repeatable, and traceable bulk file-based AI validation framework. The solution establishes a production-aligned testing approach capable of executing thousands of document-driven scenarios, comparing outputs against gold-standard results, detecting regressions over time, and providing operational visibility into AI reliability at enterprise scale.
+1. **Read** the next eligible test case from Dataverse
+2. **Retrieve** the input file, expected output, and prompt from SharePoint
+3. **Invoke** the Copilot agent with the assembled payload
+4. **Compare** the response against the gold-standard output (field-level)
+5. **Write** the execution record (pass/fail, mismatches, timestamps) back to Dataverse
 
-Stay tuned for an upcoming downloadable sample solution that implements this architecture in building a scalable bulk file-based AI automation framework. The reference implementation will provide a practical starting point for designing your own enterprise-grade bulk file based validation framework.
+![Power Automate orchestration flow](/assets/posts/bulk-file-testing-copilot-evals/secretSauce.png){: .shadow }
+*Power Automate orchestration flow: test retrieval → file loading → copilot execution → result comparison → outcome recording.*
+
+At scale, the flow supports batching, parallel execution with controlled concurrency (to stay within [service limits](https://learn.microsoft.com/power-automate/limits-and-config)), retry logic, and exception handling. Because everything is configuration-driven, you can rerun scenarios across different prompt versions or model variants and compare results over time.
+
+> If you're already using Power Automate to orchestrate agents, the patterns from [Combining Workflows and Agents]({% post_url 2026-04-17-combining-agent-flows-and-agents-gotchas-errors-and-patterns %}) apply here too, especially error handling and concurrency management.
+{: .prompt-tip }
+
+## Power BI Reporting Layer
+
+[Power BI](https://learn.microsoft.com/power-bi/fundamentals/power-bi-overview) turns execution data into decision-ready dashboards: pass/fail rates, error concentration by vendor template, mismatch trends across prompt versions, and regression detection over time.
+
+## What This Enables
+
+With this architecture in place, your team gains:
+
+- **Scale** — validation across thousands of real-world file scenarios
+- **Precision** — deterministic field-level comparison against expected results
+- **Traceability** — every run tied to a scenario, version, and outcome history
+- **Regression detection** — automatic identification of quality drops across versions
+- **Operational visibility** — Power BI dashboards for stakeholder confidence
+
+## Putting It All Together
+
+Standard evals and bulk file testing aren't competing approaches. They're complementary layers:
+
+| Layer | Validates | Tool |
+|-------|-----------|------|
+| Prompt quality | Response accuracy, safety, relevance | [Copilot Studio Evals](https://learn.microsoft.com/microsoft-copilot-studio/advanced-ai-evaluations) |
+| Integration quality | CI/CD gates, regression blocking | [Eval API in pipelines]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %}) |
+| File processing quality | Bulk document handling at scale | This architecture |
+
+A downloadable sample solution implementing this architecture is coming soon. It will provide a working starting point for building your own enterprise-grade bulk file validation framework.
+
+---
+
+Have you hit similar challenges testing document-heavy agents? What approaches have worked (or failed spectacularly) in your environment? Let us know in the comments.
