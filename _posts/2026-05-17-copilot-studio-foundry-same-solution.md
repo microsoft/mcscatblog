@@ -4,12 +4,12 @@ title: "Copilot Studio + Foundry in the Same Solution: How to Wire Them Up"
 date: 2026-05-17
 categories: [copilot-studio, azure-ai-foundry]
 tags: [mcp, orchestration, foundry, architecture, agents, a2a, custom-connectors]
-description: "When CS handles the channel and Foundry handles the hard part, here is what the wiring looks like: MCP bridge, generative orchestration prerequisite, Foundry Agent Service Threads/Runs, and the gotchas nobody documents."
+description: "When Copilot Studio handles the channel and Foundry handles the hard part, here is what the wiring looks like: MCP bridge, generative orchestration prerequisite, Foundry Agent Service Threads/Runs, and the gotchas nobody documents."
 author: emargot
 published: true
 ---
 
-People keep asking the wrong question. "CS or Foundry?" is not always the choice. After enough enterprise projects you notice the more common answer is *both*: Copilot Studio owns the orchestration, the Power Platform surface, and the channel plumbing; Foundry owns the reasoning that outgrows what CS can do natively. The official [multi-agent patterns guidance](https://learn.microsoft.com/microsoft-copilot-studio/guidance/architecture/multi-agent-patterns) frames the same idea: MCP and A2A are complementary, not competing.
+People keep asking the wrong question. "Copilot Studio or Foundry?" is not always the choice. After enough enterprise projects you notice the more common answer is *both*: Copilot Studio owns the orchestration, the Power Platform surface, and the channel plumbing; Foundry owns the reasoning that outgrows what Copilot Studio can do natively. The official [multi-agent patterns guidance](https://learn.microsoft.com/microsoft-copilot-studio/guidance/architecture/multi-agent-patterns) frames the same idea: MCP and A2A are complementary, not competing.
 
 The strategic decision framework is one thing. This post is the other: what you actually build when the answer is both, and how you wire them together without creating a maintenance problem.
 
@@ -17,13 +17,13 @@ The strategic decision framework is one thing. This post is the other: what you 
 
 You are at this decision point when:
 
-- A capability you need in CS (complex multi-step reasoning, a fine-tuned domain model, Python-based computation) pushes past what CS handles natively, and adding more topics or Power Automate flows is the wrong answer
+- A capability you need in Copilot Studio (complex multi-step reasoning, a fine-tuned domain model, Python-based computation) pushes past what Copilot Studio handles natively, and adding more topics or Power Automate flows is the wrong answer
 - You already have a Foundry agent and want to surface it through Teams, M365 Copilot, or a web channel without rebuilding the conversation layer
-- Your org has a clear ownership split: IT Pro manages the CS orchestration and channel layer, AI team owns the Foundry workloads
+- Your org has a clear ownership split: IT Pro manages the Copilot Studio orchestration and channel layer, AI team owns the Foundry workloads
 
 ## The Architecture
 
-The pattern that works: CS as orchestrator, Foundry as specialist worker. CS handles the conversation, topics, channel auth, and Power Platform surface. Foundry handles heavy computation and returns a result. The seam is a single tool call.
+The pattern that works: Copilot Studio as orchestrator, Foundry as specialist worker. Copilot Studio handles the conversation, topics, channel auth, and Power Platform surface. Foundry handles heavy computation and returns a result. The seam is a single tool call.
 
 <div style="margin: 2rem 0; overflow-x: auto;">
 <svg width="760" height="340" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-label="Architecture diagram: Channels feed into Copilot Studio, which calls Azure AI Foundry via MCP">
@@ -113,11 +113,11 @@ The pattern that works: CS as orchestrator, Foundry as specialist worker. CS han
 </svg>
 </div>
 
-The clean boundary matters. CS does not need to know what Foundry does internally. Foundry does not need to know where the conversation came from. Keeping that seam thin makes both sides easier to test, upgrade, and hand to different teams.
+The clean boundary matters. Copilot Studio does not need to know what Foundry does internally. Foundry does not need to know where the conversation came from. Keeping that seam thin makes both sides easier to test, upgrade, and hand to different teams.
 
 ## The MCP Bridge
 
-The most CS-native way to connect is through an MCP connector. If you have followed the [five-minute MCP connector quickstart]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}), you know the shape: CS adds an MCP server as a tool, the agent decides when to call it, the tool runs, the agent gets the result. The full extension model is documented in [Extend your agent with Model Context Protocol](https://learn.microsoft.com/microsoft-copilot-studio/agent-extend-action-mcp).
+The most Copilot Studio-native way to connect is through an MCP connector. If you have followed the [five-minute MCP connector quickstart]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}), you know the shape: Copilot Studio adds an MCP server as a tool, the agent decides when to call it, the tool runs, the agent gets the result. The full extension model is documented in [Extend your agent with Model Context Protocol](https://learn.microsoft.com/microsoft-copilot-studio/agent-extend-action-mcp).
 
 Two prerequisites that bite the first time:
 
@@ -129,10 +129,10 @@ Two prerequisites that bite the first time:
 
 For a Foundry agent, the MCP server is a thin Azure Function that translates MCP into a Foundry Agent Service call:
 
-1. CS calls the MCP tool with structured parameters
+1. Copilot Studio calls the MCP tool with structured parameters
 2. The Function gets a Microsoft Entra token for `https://ai.azure.com`
 3. It calls the [Foundry Agent Service](https://learn.microsoft.com/azure/foundry-classic/agents/quickstart) using the **Threads + Runs** pattern
-4. The agent response is shaped into MCP format and returned to CS
+4. The agent response is shaped into MCP format and returned to Copilot Studio
 
 ```typescript
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
@@ -166,7 +166,7 @@ app.http("mcp", {
         return ok(msg.id, {
           tools: [{
             name: "analyze_contract",
-            // Be specific. The CS orchestrator uses this description to decide whether to call
+            // Be specific. The Copilot Studio orchestrator uses this description to decide whether to call
             // the tool at runtime. Vague descriptions cause it to call Foundry on every message.
             description:
               "Analyzes a contract for obligations, risks, and key dates. " +
@@ -182,7 +182,7 @@ app.http("mcp", {
                 },
                 user_id: {
                   type: "string",
-                  description: "Authenticated CS user. Pass explicitly; not threaded by MCP."
+                  description: "Authenticated Copilot Studio user. Pass explicitly; not threaded by MCP."
                 }
               },
               required: ["document_text", "analysis_type"]
@@ -197,7 +197,7 @@ app.http("mcp", {
           return ok(msg.id, { content: [{ type: "text", text }] });
         } catch (err) {
           ctx.error("Foundry call failed", err);
-          // Return a user-readable message - CS surfaces this directly in the conversation.
+          // Return a user-readable message - Copilot Studio surfaces this directly in the conversation.
           return ok(msg.id, {
             content: [{ type: "text", text: "Analysis unavailable. Please try again or contact support." }],
             isError: true
@@ -281,26 +281,26 @@ function ok(id: string, result: unknown): HttpResponseInit {
 }
 ```
 
-To register this in CS: **Tools** > **Add a tool** > **Model Context Protocol**, paste your Azure Function URL (the route ending in `/api/mcp`), and follow the [onboarding wizard](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent). The wizard creates a custom connector for you with the required `x-ms-agentic-protocol: mcp-streamable-1.0` property set automatically. If you build the connector by hand instead (Power Apps > Custom connectors > Import OpenAPI), see the [Azure MCP Server sample](https://github.com/Azure-Samples/azmcp-copilot-studio-aca-mi/blob/main/custom-connector-swagger-example.yaml) for the OpenAPI definition. The full connection reference ALM pattern is covered in the [MCP quickstart post]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}).
+To register this in Copilot Studio: **Tools** > **Add a tool** > **Model Context Protocol**, paste your Azure Function URL (the route ending in `/api/mcp`), and follow the [onboarding wizard](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent). The wizard creates a custom connector for you with the required `x-ms-agentic-protocol: mcp-streamable-1.0` property set automatically. If you build the connector by hand instead (Power Apps > Custom connectors > Import OpenAPI), see the [Azure MCP Server sample](https://github.com/Azure-Samples/azmcp-copilot-studio-aca-mi/blob/main/custom-connector-swagger-example.yaml) for the OpenAPI definition. The full connection reference ALM pattern is covered in the [MCP quickstart post]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}).
 
-> The Function uses `authLevel: "function"`, which requires an `x-functions-key` header. CS handles this via the connection you create in the MCP wizard. Use OAuth 2.0 with Dynamic Client Registration discovery if your Function App is fronted by APIM and you want per-user delegated auth - see [OAuth options in the wizard docs](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent).
+> The Function uses `authLevel: "function"`, which requires an `x-functions-key` header. Copilot Studio handles this via the connection you create in the MCP wizard. Use OAuth 2.0 with Dynamic Client Registration discovery if your Function App is fronted by APIM and you want per-user delegated auth - see [OAuth options in the wizard docs](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent).
 {: .prompt-tip }
 
 ## The Context Problem
 
-Here is what does not cross the CS/Foundry boundary when you use MCP.
+Here is what does not cross the Copilot Studio/Foundry boundary when you use MCP.
 
 <div style="margin: 2rem 0; overflow-x: auto;">
-<svg width="760" height="224" viewBox="0 0 760 224" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-label="Two-column diagram: what does not cross the CS-Foundry boundary vs what to pass explicitly">
+<svg width="760" height="224" viewBox="0 0 760 224" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-label="Two-column diagram: what does not cross the Copilot Studio-Foundry boundary vs what to pass explicitly">
   <rect width="760" height="224" rx="12" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
 
   <rect x="12" y="12" width="358" height="200" rx="10" fill="#FEF2F2" stroke="#FECACA" stroke-width="1"/>
   <rect x="12" y="12" width="358" height="36" rx="10" fill="#FCA5A5" opacity="0.45"/>
   <text x="191" y="35" text-anchor="middle" font-size="11" font-weight="700" fill="#991B1B">MCP: does NOT cross automatically</text>
-  <text x="32" y="68" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; CS system prompt / agent instructions</text>
+  <text x="32" y="68" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; Copilot Studio system prompt / agent instructions</text>
   <text x="32" y="88" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; Conversation history / prior turns</text>
   <text x="32" y="108" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; Authenticated user identity</text>
-  <text x="32" y="128" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; CS environment / tenant config</text>
+  <text x="32" y="128" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; Copilot Studio environment / tenant config</text>
   <text x="32" y="148" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; Active topic context &amp; variables</text>
   <text x="32" y="168" font-size="10.5" fill="#7F1D1D">&#x2717;&#160; Power Platform connection state</text>
 
@@ -310,7 +310,7 @@ Here is what does not cross the CS/Foundry boundary when you use MCP.
   <rect x="390" y="12" width="358" height="200" rx="10" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1"/>
   <rect x="390" y="12" width="358" height="36" rx="10" fill="#86EFAC" opacity="0.45"/>
   <text x="569" y="35" text-anchor="middle" font-size="11" font-weight="700" fill="#14532D">Pass in tool parameters</text>
-  <text x="410" y="68" font-size="10.5" fill="#14532D">&#x2713;&#160; user_id&#160; (from CS auth token)</text>
+  <text x="410" y="68" font-size="10.5" fill="#14532D">&#x2713;&#160; user_id&#160; (from Copilot Studio auth token)</text>
   <text x="410" y="88" font-size="10.5" fill="#14532D">&#x2713;&#160; context_summary&#160; (1-3 sentences max)</text>
   <text x="410" y="108" font-size="10.5" fill="#14532D">&#x2713;&#160; analysis_type&#160; (scope the Foundry task)</text>
   <text x="410" y="128" font-size="10.5" fill="#14532D">&#x2713;&#160; tenant_id&#160; (if multi-tenant Foundry)</text>
@@ -319,11 +319,11 @@ Here is what does not cross the CS/Foundry boundary when you use MCP.
 </svg>
 </div>
 
-**User identity** does not cross unless you pass it. CS knows who the authenticated user is (if auth is configured), but the Foundry endpoint receives an anonymous call. Pass `user_id` as a tool parameter if Foundry needs it for personalization, filtering, or audit logging.
+**User identity** does not cross unless you pass it. Copilot Studio knows who the authenticated user is (if auth is configured), but the Foundry endpoint receives an anonymous call. Pass `user_id` as a tool parameter if Foundry needs it for personalization, filtering, or audit logging.
 
-**Conversation history** is CS's property. With MCP, Foundry gets a single tool call, not the transcript. If your Foundry agent needs prior context, summarize it in a `context_summary` parameter set earlier in the topic flow. (This is the main behavioral difference from A2A, where conversation history *is* passed by default - more on that below.)
+**Conversation history** is Copilot Studio's property. With MCP, Foundry gets a single tool call, not the transcript. If your Foundry agent needs prior context, summarize it in a `context_summary` parameter set earlier in the topic flow. (This is the main behavioral difference from A2A, where conversation history *is* passed by default - more on that below.)
 
-**The CS system prompt** stays in CS. Foundry's deployment prompt is separate. If both layers share policy (tone, scope, prohibited topics), maintain it in both places or reference a shared document.
+**The Copilot Studio system prompt** stays in Copilot Studio. Foundry's deployment prompt is separate. If both layers share policy (tone, scope, prohibited topics), maintain it in both places or reference a shared document.
 
 > Do not pass the full conversation transcript on every call. You will burn tokens and hit payload limits fast. Pass only what the Foundry task actually requires.
 {: .prompt-warning }
@@ -334,8 +334,8 @@ Here is what does not cross the CS/Foundry boundary when you use MCP.
 |---------|-----------|-----|
 | "Tool call failed" with no useful message | Foundry returned non-200 that the Function did not catch | Wrap the Foundry call in try/catch; return a human-readable `isError: true` MCP response |
 | Tool never gets called even though it is added | [Generative orchestration](https://learn.microsoft.com/microsoft-copilot-studio/advanced-generative-actions) is off | Turn it on in the agent's **Overview** settings; MCP tools only work with generative orchestration |
-| Latency spikes above 15s, or CS tool times out | Two orchestrators in series plus a thread/poll loop on the Foundry side - CS tool calls have their own execution ceiling (similar to the [100-second wall](https://learn.microsoft.com/microsoft-copilot-studio/advanced-flow-actions#asynchronous-flow-actions-using-the-continuation-pattern) on Power Automate actions) | Keep Foundry tasks narrow; for stateless single-turn analysis, prefer the simpler [hosted-agent endpoint](https://learn.microsoft.com/azure/foundry/agents/how-to/deploy-hosted-agent) (`/agents/{name}/endpoint/protocols/openai/responses`) over the Threads+Runs poll loop |
-| Foundry response cut off mid-sentence | CS context window overflowed on a large Foundry response | Instruct Foundry to return structured summaries, not full prose dumps |
+| Latency spikes above 15s, or Copilot Studio tool times out | Two orchestrators in series plus a thread/poll loop on the Foundry side - Copilot Studio tool calls have their own execution ceiling (similar to the [100-second wall](https://learn.microsoft.com/microsoft-copilot-studio/advanced-flow-actions#asynchronous-flow-actions-using-the-continuation-pattern) on Power Automate actions) | Keep Foundry tasks narrow; for stateless single-turn analysis, prefer the simpler [hosted-agent endpoint](https://learn.microsoft.com/azure/foundry/agents/how-to/deploy-hosted-agent) (`/agents/{name}/endpoint/protocols/openai/responses`) over the Threads+Runs poll loop |
+| Foundry response cut off mid-sentence | Copilot Studio context window overflowed on a large Foundry response | Instruct Foundry to return structured summaries, not full prose dumps |
 | Agent calls Foundry on every user message | Tool description is too broad | Tighten the description with explicit trigger conditions ("Use when the user asks to review a contract...") - the orchestrator reads this verbatim |
 | Works in DEV, breaks after solution import | Connection reference not mapped in target environment | After each pipeline deploy, map the connection reference per the [ALM guidance]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}) |
 
@@ -355,11 +355,11 @@ If you are connecting to another Copilot Studio agent rather than a Foundry one,
 
 Three questions before you commit:
 
-1. **Does the capability genuinely belong in Foundry?** If complex retrieval is the need, a Power Automate flow, CS knowledge source, or [Azure AI Search grounded Foundry tool](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/ai-search) often covers it. Fine-tuned models, Python-based agent tools, and multi-step agentic chains belong in Foundry.
+1. **Does the capability genuinely belong in Foundry?** If complex retrieval is the need, a Power Automate flow, Copilot Studio knowledge source, or [Azure AI Search grounded Foundry tool](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/ai-search) often covers it. Fine-tuned models, Python-based agent tools, and multi-step agentic chains belong in Foundry.
 
-2. **Is the team ready to maintain two systems?** The CS/Foundry split only scales when two teams own the two layers. One person owning both adds overhead without adding capacity. In that case, keep everything in one tool.
+2. **Is the team ready to maintain two systems?** The Copilot Studio/Foundry split only scales when two teams own the two layers. One person owning both adds overhead without adding capacity. In that case, keep everything in one tool.
 
-3. **Can the seam stay thin?** If Foundry needs full conversation state to function, you do not have a clean MCP boundary - you have a dependency. That is the signal to switch to A2A (where conversation history flows automatically) or to keep more of the logic in CS.
+3. **Can the seam stay thin?** If Foundry needs full conversation state to function, you do not have a clean MCP boundary - you have a dependency. That is the signal to switch to A2A (where conversation history flows automatically) or to keep more of the logic in Copilot Studio.
 
 ## Resources
 
@@ -387,4 +387,4 @@ Three questions before you commit:
 
 ---
 
-*Have you shipped a CS + Foundry hybrid in production? What did the context-passing look like in your case, and what surprised you about the boundary? Drop it in the comments.*
+*Have you shipped a Copilot Studio + Foundry hybrid in production? What did the context-passing look like in your case, and what surprised you about the boundary? Drop it in the comments.*
