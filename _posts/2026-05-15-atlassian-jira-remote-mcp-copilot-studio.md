@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Wiring up the Jira (Atlassian) Remote MCP server in Copilot Studio in 5 mins"
-date: 2026-05-06
+date: 2026-05-15
 categories: [copilot-studio, mcp]
 tags: [mcp, atlassian, jira, oauth, dynamic-client-registration, authentication]
 description: "The Atlassian Remote MCP server uses Dynamic Client Registration. If you wire it up with Manual OAuth in Copilot Studio you'll waste an afternoon. Use Dynamic discovery and a few Atlassian admin toggles, and you're done in five minutes."
@@ -11,7 +11,7 @@ image:
   alt: "Copilot Studio connected to Jira via an MCP link labeled 'Dynamic discovery', with a 5-minute badge"
 ---
 
-I spent way longer than I'd like to admit getting Atlassian's Remote MCP server to talk to a Copilot Studio agent. The integration itself is dead simple — the issue is that the public docs (and a lot of well-meaning blog posts, including a draft I had on my own machine last week) push you straight at **Manual OAuth 2.0** in the Copilot Studio MCP wizard, and that path is a dead end for this particular server.
+I spent way longer than I'd like to admit getting [Atlassian's Remote MCP server](https://support.atlassian.com/rovo/docs/getting-started-with-the-atlassian-remote-mcp-server/) to talk to a Copilot Studio agent. The integration itself is dead simple — the issue is that the public docs (and a lot of well-meaning blog posts, including a draft I had on my own machine last week) push you straight at **Manual OAuth 2.0** in the [Copilot Studio MCP wizard](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agent-extend-action-mcp), and that path is a dead end for this particular server.
 
 Short version: turn on the right things on the Atlassian side, pick **Dynamic discovery** in the MCP wizard, paste the streamable endpoint, consent once. That's it.
 
@@ -31,10 +31,10 @@ This is the part the OOTB Copilot Studio guidance can't help you with, because i
 
 **Pre-reqs on the Atlassian site:**
 
-1. **You're on Atlassian Cloud.** Remote MCP is Cloud-only — Server and Data Center are not in scope. If your URL is `*.atlassian.net`, you're fine.
-2. **Rovo is enabled for the site.** Atlassian's Remote MCP server is gated by Rovo. A site admin needs to enable it from **Atlassian Admin → Settings → Rovo** (or accept the Rovo terms if it's the first time). Without this, the MCP endpoint will respond, but every tool call returns "this site does not have Rovo enabled".
+1. **You're on [Atlassian Cloud](https://www.atlassian.com/cloud).** Remote MCP is Cloud-only — Server and Data Center are not in scope. If your URL is `*.atlassian.net`, you're fine.
+2. **[Rovo](https://www.atlassian.com/software/rovo) is enabled for the site.** Atlassian's Remote MCP server is gated by Rovo. A site admin needs to enable it from **Atlassian Admin → Settings → Rovo** (or accept the Rovo terms if it's the first time). Without this, the MCP endpoint will respond, but every tool call returns "this site does not have Rovo enabled".
 3. **The Remote MCP server is enabled.** In **Atlassian Admin → Settings → Products → Remote MCP server** (the exact path moves around as Atlassian iterates the UI), toggle the server on for the products you want exposed (Jira, Confluence, or both). This is per-site.
-4. **External app access is allowed.** Under **Security → External app policies**, make sure third-party OAuth apps are permitted for the users who will consent. Many enterprise tenants block this by default. If your org has a strict policy, you'll need either an exception or a policy that explicitly allows the Atlassian MCP client.
+4. **External app access is allowed.** Under **Security → [External app policies](https://support.atlassian.com/security-and-access-policies/docs/manage-external-apps/)**, make sure third-party OAuth apps are permitted for the users who will consent. Many enterprise tenants block this by default. If your org has a strict policy, you'll need either an exception or a policy that explicitly allows the Atlassian MCP client.
 5. **Your test user has product access.** Sounds obvious, but if the user signing the consent doesn't have a Jira or Confluence seat, the server returns an empty resource list and the agent has nothing to work with.
 
 Once those five are in place, everything below "just works".
@@ -49,6 +49,9 @@ When you click **Add a tool → Model Context Protocol → New tool** in Copilot
 | API key | Servers that take a static bearer token |
 | OAuth 2.0 | You have a pre-registered OAuth client (client ID, secret, fixed scopes) |
 | Dynamic discovery | The server publishes its own OAuth metadata and supports Dynamic Client Registration |
+
+![Copilot Studio MCP wizard showing the four authentication choices, with Dynamic discovery highlighted](/assets/posts/atlassian-jira-remote-mcp-copilot-studio/mcp-wizard-auth.png){: .shadow w="700" }
+_The MCP wizard's authentication picker — **Dynamic discovery** is the one you want for Atlassian._
 
 Picking **OAuth 2.0** for Atlassian feels right. There *is* an OAuth flow. There *are* endpoints. The form is right there asking for them.
 
@@ -82,12 +85,18 @@ From the agent's **Tools** tab, choose **Add a tool → Model Context Protocol �
 
 Click **Create**. Copilot Studio will spin for a few seconds while it discovers and registers, then drop you into the tool's detail view with the full list of Atlassian-provided tools (`getAccessibleAtlassianResources`, `searchJiraIssuesUsingJql`, `createJiraIssue`, the Confluence equivalents, etc.).
 
+![Atlassian MCP tool detail page showing the discovered tool list after creation](/assets/posts/atlassian-jira-remote-mcp-copilot-studio/tool-detail-tools.png){: .shadow w="700" }
+_Right after creation: the tool detail page lists every Jira and Confluence operation Atlassian's Remote MCP server exposes._
+
 > If the tool list comes up empty, the discovery probably hit a transient 5xx on Atlassian's side, or one of the Step 0 toggles isn't on yet. Check those, then refresh the tool detail page.
 {: .prompt-tip }
 
 ### 3. Create the connection (first-time consent)
 
 Right after the tool is created, Copilot Studio drops you on the tool detail page and you'll see a yellow banner along the lines of *"You need a new connection to use this tool"*, with a **Create new connection** button. Click it.
+
+![Tool detail page with the connection picker open showing the Create new connection option](/assets/posts/atlassian-jira-remote-mcp-copilot-studio/tool-detail-create-connection.png){: .shadow w="700" }
+_The connection picker on the tool detail page — **Create new connection** kicks off the first-time consent flow._
 
 This pops the Power Platform connection dialog for the Atlassian MCP server. There are no credentials to type — Dynamic discovery already did the registration work. Just click **Create**, and a browser window opens to Atlassian's standard OAuth consent screen — the same UI you'd see authorizing any third-party Atlassian app, except the "app" here was registered a few seconds ago by Copilot Studio.
 
@@ -130,7 +139,7 @@ You should get an HTTP 200 with a real (possibly empty) issue list — something
 
 Once the connection is healthy in test, publish the agent and add whatever channels you need. The connection moves with the agent — end users get prompted to consent the first time they trigger a Jira tool, and from then on it's transparent.
 
-## Things that bit me
+## Lessons learned
 
 A handful of footguns, in case you're hitting them right now:
 
@@ -151,4 +160,6 @@ Just to close the loop: Manual OAuth in the MCP wizard is the right pick when yo
 - Server URL: `https://mcp.atlassian.com/v1/sse`.
 - Consent once from the test pane, verify with a JQL search, publish.
 
-Five minutes, one radio button, and a few admin toggles — and you're done. Wish I'd known that on Monday.
+Five minutes, one radio button, and a few admin toggles — and you're done.
+
+What other Remote MCP servers are you hooking up to Copilot Studio? Drop a comment if you've found one that needs Manual OAuth instead — I'd love a list.
