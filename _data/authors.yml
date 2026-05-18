@@ -38,3 +38,8 @@ henryjammes:
   name: Henry Jammes
   email: hejammes@microsoft.com # Optional
   avatar: https://github.com/henryjammes.png # Optional: path to avatar image
+
+missbets:
+  name: Betty Le
+  email: Elizabeth.Le@microsoft.com # Optional
+  avatar: https://github.com/missbets.png # Optional: path to avatar image
