@@ -1,0 +1,61 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E1B4B"/>
+      <stop offset="0.5" stop-color="#312E81"/>
+      <stop offset="1" stop-color="#1E3A5F"/>
+    </linearGradient>
+    <marker id="arr-g" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#4ADE80"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <g stroke="#FFFFFF" stroke-opacity="0.04" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- title -->
+  <text x="600" y="110" text-anchor="middle" font-size="38" font-weight="700" fill="white">Copilot Studio + Foundry in the Same Solution</text>
+  <text x="600" y="152" text-anchor="middle" font-size="19" fill="#A5B4FC">How to Wire Them Up</text>
+
+  <!-- left box: Copilot Studio -->
+  <rect x="120" y="200" width="280" height="270" rx="20" fill="#5B21B6" fill-opacity="0.35" stroke="#A855F7" stroke-width="1.5"/>
+  <polygon points="260,240 300,262 300,308 260,330 220,308 220,262" fill="none" stroke="#C4B5FD" stroke-width="2" opacity="0.8"/>
+  <circle cx="260" cy="285" r="12" fill="#A855F7" opacity="0.9"/>
+  <text x="260" y="360" text-anchor="middle" font-size="18" font-weight="700" fill="#DDD6FE">Copilot Studio</text>
+  <text x="260" y="385" text-anchor="middle" font-size="12" fill="#A78BFA">Orchestration + Channels</text>
+  <text x="260" y="405" text-anchor="middle" font-size="12" fill="#A78BFA">Power Platform surface</text>
+  <text x="260" y="425" text-anchor="middle" font-size="12" fill="#A78BFA">Generative orchestration</text>
+
+  <!-- MCP bridge label + arrows -->
+  <line x1="405" y1="335" x2="458" y2="335" stroke="#4ADE80" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#arr-g)"/>
+  <line x1="542" y1="335" x2="595" y2="335" stroke="#4ADE80" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#arr-g)"/>
+  <rect x="460" y="320" width="80" height="30" rx="8" fill="#16A34A"/>
+  <text x="500" y="340" text-anchor="middle" font-size="13" font-weight="700" fill="white">MCP</text>
+
+  <!-- right box: Azure AI Foundry -->
+  <rect x="600" y="200" width="300" height="270" rx="20" fill="#1D4ED8" fill-opacity="0.3" stroke="#60A5FA" stroke-width="1.5"/>
+  <polygon points="750,240 790,263 790,309 750,332 710,309 710,263" fill="none" stroke="#93C5FD" stroke-width="2" opacity="0.8"/>
+  <circle cx="750" cy="286" r="6" fill="white" opacity="0.9"/>
+  <line x1="750" y1="240" x2="750" y2="280" stroke="white" stroke-width="1.5" opacity="0.6"/>
+  <line x1="750" y1="292" x2="750" y2="332" stroke="white" stroke-width="1.5" opacity="0.6"/>
+  <line x1="710" y1="263" x2="744" y2="281" stroke="white" stroke-width="1.5" opacity="0.6"/>
+  <line x1="790" y1="263" x2="756" y2="281" stroke="white" stroke-width="1.5" opacity="0.6"/>
+  <line x1="710" y1="309" x2="744" y2="291" stroke="white" stroke-width="1.5" opacity="0.6"/>
+  <line x1="790" y1="309" x2="756" y2="291" stroke="white" stroke-width="1.5" opacity="0.6"/>
+  <text x="750" y="360" text-anchor="middle" font-size="18" font-weight="700" fill="#BFDBFE">Azure AI Foundry</text>
+  <text x="750" y="385" text-anchor="middle" font-size="12" fill="#93C5FD">Specialist reasoning</text>
+  <text x="750" y="405" text-anchor="middle" font-size="12" fill="#93C5FD">Fine-tuned models</text>
+  <text x="750" y="425" text-anchor="middle" font-size="12" fill="#93C5FD">Python-based tools</text>
+</svg>
