@@ -192,6 +192,8 @@ CREATE USER IF NOT EXISTS SNOWSQL_DELEGATE_USER
   COMMENT = 'Delegate user for SnowSQL/MCP OAuth-based connectivity';
 
 GRANT ROLE SALESPROFESSIONAL TO USER SNOWSQL_DELEGATE_USER;
+
+-- Optional when the OAuth scope is session:role-any (any-role mode resolves the role via secondary roles below)
 ALTER USER SNOWSQL_DELEGATE_USER SET DEFAULT_ROLE       = SALESPROFESSIONAL;
 ALTER USER SNOWSQL_DELEGATE_USER SET DEFAULT_WAREHOUSE  = COMPUTE_WH;
 
@@ -398,7 +400,7 @@ Nine times out of ten the verbatim error string tells you exactly which step you
 | --- | --- | --- |
 | `MCP Server tool error: No tool result received calling Cortex Agent` | Cortex Agent disabled on this Snowflake account (often a trial). | Enable Cortex or use a paid account. See the prereq section. |
 | `AADSTS50011: redirect URI mismatch` during connection | Connector redirect URI not added to the Azure client app. | Step 7. |
-| `Schema validation error` on first invocation from the connector test pane | Known cosmetic warning. It does not block real calls. | Ignore if real calls work. |
+| `Operation failed (405)` with a `Schema validation` warning (`Property "" type mismatch, Expected: "object", Actual: "string"`) when running **Test operation** on the custom connector | Expected for MCP connectors. The connector test pane sends a plain GET that the MCP endpoint rejects with 405, and the response body is not the JSON object the connector schema expects. It does not affect real calls from the agent. | Ignore and validate end-to-end from the Copilot Studio test pane instead. |
 | `Insufficient privileges` from Snowflake | Role or grants missing, or the default role is not the granted role. | Re-run the `GRANT` statements in Step 3 and confirm both `DEFAULT_ROLE` and `DEFAULT_SECONDARY_ROLES = ('ALL')`. |
 | OAuth popup never appears, status stays "Not connected" | Browser blocked the popup, or you were silently signed in already. | Watch the button label. Silent SSO often skips the popup entirely. Refresh and check status. |
 | MCP tool list never populates after **Add and configure** | Server URL wrong, OAuth scope wrong, or Cortex Agent missing on the account. | Re-check the URL pattern from Step 6, then `DESCRIBE INTEGRATION external_oauth_azure_1`. |
@@ -412,6 +414,8 @@ When the agent will not even discover tools, drop down to the connector itself.
 2. Open your Snowflake MCP connector, go to the **Test** tab, pick the connection, and run the operation.
 3. If you get an IP-related error, check that Snowflake's network policies allow the Power Platform region's egress IPs.
 4. If you get a role or ACL error, verify the scope is `session:role-any` and that `EXTERNAL_OAUTH_ANY_ROLE_MODE = ENABLE`.
+
+Expect a red `Operation failed (405)` banner with a `Schema validation` warning the first time you hit **Test operation** on an MCP-backed connector. That is normal. The test pane issues a plain GET that the MCP endpoint refuses, so the response body does not match the connector's expected schema. As long as the OAuth handshake completes and the connection shows as connected, the connector is wired up correctly. Validate the actual tool call from the Copilot Studio test pane, not from here.
 
 The screenshots below show the underlying custom connector pages. They are useful when you need to inspect or re-test the OAuth round-trip outside the agent UI.
 
