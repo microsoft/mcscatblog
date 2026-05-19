@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "A Practical Guide to Configure a Snowflake-Managed MCP Tool in Copilot Studio"
-date: 2026-05-08
+title: "Wiring up a Snowflake-managed MCP server in Copilot Studio"
+date: 2026-05-13
 categories: [copilot-studio, mcp]
 tags: [mcp, snowflake, cortex, oauth, entra-id, copilot-studio, power-platform]
 description: "An end-to-end walkthrough for wiring a Snowflake-managed MCP server into a Microsoft Copilot Studio agent with delegated user OAuth through Microsoft Entra ID, including the Cortex Agent prerequisite, the manual OAuth path Snowflake actually requires, and the small details that make or break the setup."
 authors: [hasharaf, missbets]
+mermaid: true
 image:
   path: /assets/posts/snowflake-mcp-copilot-studio/header.png
   alt: "Copilot Studio agent connected to Snowflake through an MCP link"
@@ -204,17 +205,23 @@ SHOW GRANTS TO USER SNOWSQL_DELEGATE_USER;
 SHOW GRANTS TO ROLE SALESPROFESSIONAL;
 ```
 
+![CREATE USER and GRANT ROLE statements completing successfully for the delegate user in Snowsight](/assets/posts/snowflake-mcp-copilot-studio/04-create-delegate-user.png)
+*Creating the delegate user and binding the role in a single Snowsight worksheet.*
+
 The last `ALTER USER` line is the one we kept missing. With the `session:role-any` scope, Snowflake activates roles via secondary-role resolution at session start, and that resolution only works if `DEFAULT_SECONDARY_ROLES` is set to `('ALL')`.
 
 ![SHOW GRANTS TO USER output listing the SALESPROFESSIONAL role on the delegate user](/assets/posts/snowflake-mcp-copilot-studio/05-show-grants-user.png)
 *If the role is not on this list, the OAuth handshake will succeed and the tool call will still fail with "insufficient privileges".*
 
+![SHOW GRANTS TO ROLE output listing every USAGE grant on the SALESPROFESSIONAL role](/assets/posts/snowflake-mcp-copilot-studio/06-show-grants-role.png)
+*Confirm the role itself can see the database, schemas, Cortex Search services, and warehouse before moving on.*
+
 ## Step 4: Create the two Entra app registrations
 
 You need **two** app registrations in your Entra tenant. Follow Snowflake's official walkthroughs end to end:
 
-- *Snowflake Connector for Microsoft Power Platform: Create OAuth client in Microsoft Entra ID*
-- *Snowflake Connector for Microsoft Power Platform: Collect Azure AD information for Snowflake*
+- [Snowflake Connector for Microsoft Power Platform: Create OAuth client in Microsoft Entra ID](https://other-docs.snowflake.com/en/connectors/power-platform/install#create-oauth-client-in-microsoft-entra-id)
+- [Snowflake Connector for Microsoft Power Platform: Collect Azure AD information for Snowflake](https://other-docs.snowflake.com/en/connectors/power-platform/install#collect-azure-ad-information-for-snowflake)
 
 ### Resource app: `Snowflake OAuth Resource`
 
@@ -452,3 +459,5 @@ A few takeaways that surprised us along the way:
 ## Wrapping up
 
 With this in place, you have an agent that takes natural language, picks the right Cortex Search tool, runs as the signed-in user, and only sees the tables you granted to one Snowflake role. From here it is easy to add more tools to the same MCP server (Cortex Analyst, generic stored procedures, `SYSTEM_EXECUTE_SQL`) without touching anything in Copilot Studio or Entra, since discovery picks them up on the next connection.
+
+Are you wiring up other MCP tools on the same server (Cortex Analyst, generic stored procs, `SYSTEM_EXECUTE_SQL`)? Drop a comment with what combinations you have run and what surprised you.
