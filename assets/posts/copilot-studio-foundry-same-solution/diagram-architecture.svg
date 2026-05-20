@@ -1,0 +1,85 @@
+<svg width="760" height="340" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-label="Architecture diagram: Channels feed into Copilot Studio, which calls Azure AI Foundry via MCP">
+  <defs>
+    <marker id="arr-gray" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9CA3AF"/></marker>
+    <marker id="arr-green" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#16A34A"/></marker>
+    <filter id="sh" x="-8%" y="-8%" width="116%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.08"/></filter>
+    <linearGradient id="f-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2563EB"/><stop offset="1" stop-color="#0078D4"/></linearGradient>
+  </defs>
+  <rect width="760" height="340" rx="14" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+
+  <!-- ZONE 1: Channels -->
+  <rect x="12" y="12" width="148" height="316" rx="10" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1"/>
+  <text x="86" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="#4338CA" letter-spacing="1.2">CHANNELS</text>
+
+  <rect x="22" y="42" width="128" height="72" rx="8" fill="white" filter="url(#sh)"/>
+  <image href="https://res.cloudinary.com/dapoc7ekn/image/upload/v1779110310/mcscatblog/copilot-studio-foundry-same-solution/icon-teams.svg" x="30" y="50" width="32" height="32"/>
+  <text x="110" y="63" text-anchor="middle" font-size="11" font-weight="600" fill="#1F2937">Teams</text>
+  <text x="110" y="76" text-anchor="middle" font-size="9" fill="#6B7280">M365 Copilot</text>
+  <text x="110" y="88" text-anchor="middle" font-size="9" fill="#6B7280">Chat</text>
+
+  <rect x="22" y="124" width="128" height="60" rx="8" fill="white" filter="url(#sh)"/>
+  <rect x="30" y="132" width="32" height="32" rx="7" fill="#1F2937"/>
+  <text x="46" y="154" text-anchor="middle" font-size="17" fill="white">&#9745;</text>
+  <text x="110" y="148" text-anchor="middle" font-size="11" font-weight="600" fill="#1F2937">WebChat</text>
+  <text x="110" y="162" text-anchor="middle" font-size="9" fill="#6B7280">Direct Line / SDK</text>
+
+  <rect x="22" y="194" width="128" height="60" rx="8" fill="white" filter="url(#sh)"/>
+  <rect x="30" y="202" width="32" height="32" rx="7" fill="#374151"/>
+  <text x="46" y="223" text-anchor="middle" font-size="13" font-weight="700" fill="white">&#123;&#125;</text>
+  <text x="110" y="217" text-anchor="middle" font-size="11" font-weight="600" fill="#1F2937">Custom App</text>
+  <text x="110" y="231" text-anchor="middle" font-size="9" fill="#6B7280">REST / SDK</text>
+
+  <line x1="162" y1="174" x2="196" y2="174" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arr-gray)"/>
+
+  <!-- ZONE 2: Copilot Studio -->
+  <rect x="200" y="12" width="218" height="316" rx="10" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <text x="309" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="#6D28D9" letter-spacing="1.2">ORCHESTRATION</text>
+
+  <image href="https://res.cloudinary.com/dapoc7ekn/image/upload/v1779110312/mcscatblog/copilot-studio-foundry-same-solution/icon-copilot-studio.svg" x="285" y="42" width="48" height="48"/>
+  <text x="309" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#5B21B6">Copilot Studio</text>
+
+  <text x="212" y="127" font-size="9.5" fill="#374151">&#x2022; Topics &amp; conversation flow</text>
+  <text x="212" y="144" font-size="9.5" fill="#374151">&#x2022; Knowledge sources (RAG)</text>
+  <text x="212" y="161" font-size="9.5" fill="#374151">&#x2022; Generative orchestration</text>
+  <text x="212" y="178" font-size="9.5" fill="#374151">&#x2022; Channel auth &amp; governance</text>
+  <text x="212" y="195" font-size="9.5" fill="#374151">&#x2022; Power Platform integration</text>
+  <text x="212" y="212" font-size="9.5" fill="#374151">&#x2022; ALM &amp; usage analytics</text>
+
+  <line x1="421" y1="174" x2="455" y2="174" stroke="#16A34A" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#arr-green)"/>
+  <rect x="420" y="155" width="38" height="18" rx="5" fill="#16A34A"/>
+  <text x="439" y="168" text-anchor="middle" font-size="9" font-weight="700" fill="white">MCP</text>
+
+  <!-- ZONE 3: Foundry -->
+  <rect x="458" y="12" width="290" height="316" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>
+  <text x="603" y="31" text-anchor="middle" font-size="9" font-weight="700" fill="#1D4ED8" letter-spacing="1.2">SPECIALIST LAYER</text>
+
+  <rect x="579" y="42" width="48" height="48" rx="10" fill="url(#f-grad)"/>
+  <polygon points="603,48 619,57 619,75 603,84 587,75 587,57" fill="none" stroke="white" stroke-width="1.8" opacity="0.85"/>
+  <circle cx="603" cy="66" r="4" fill="white" opacity="0.95"/>
+  <line x1="603" y1="48" x2="603" y2="62" stroke="white" stroke-width="1.4" opacity="0.7"/>
+  <line x1="603" y1="70" x2="603" y2="84" stroke="white" stroke-width="1.4" opacity="0.7"/>
+  <line x1="587" y1="57" x2="599" y2="63.6" stroke="white" stroke-width="1.4" opacity="0.7"/>
+  <line x1="619" y1="57" x2="607" y2="63.6" stroke="white" stroke-width="1.4" opacity="0.7"/>
+  <line x1="587" y1="75" x2="599" y2="68.4" stroke="white" stroke-width="1.4" opacity="0.7"/>
+  <line x1="619" y1="75" x2="607" y2="68.4" stroke="white" stroke-width="1.4" opacity="0.7"/>
+  <circle cx="603" cy="48" r="2.5" fill="white" opacity="0.7"/>
+  <circle cx="619" cy="57" r="2.5" fill="white" opacity="0.7"/>
+  <circle cx="619" cy="75" r="2.5" fill="white" opacity="0.7"/>
+  <circle cx="603" cy="84" r="2.5" fill="white" opacity="0.7"/>
+  <circle cx="587" cy="75" r="2.5" fill="white" opacity="0.7"/>
+  <circle cx="587" cy="57" r="2.5" fill="white" opacity="0.7"/>
+  <text x="603" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#1E40AF">Azure AI Foundry</text>
+
+  <text x="470" y="127" font-size="9.5" fill="#374151">&#x2022; Foundry Agent Service</text>
+  <text x="470" y="144" font-size="9.5" fill="#374151">&#x2022; Custom / fine-tuned models</text>
+  <text x="470" y="161" font-size="9.5" fill="#374151">&#x2022; Python-based agent tools</text>
+  <text x="470" y="178" font-size="9.5" fill="#374151">&#x2022; Complex multi-step reasoning</text>
+  <text x="470" y="195" font-size="9.5" fill="#374151">&#x2022; Azure AI Search grounding</text>
+  <text x="470" y="212" font-size="9.5" fill="#374151">&#x2022; Tracing &amp; evals</text>
+  <text x="470" y="229" font-size="9.5" fill="#374151">&#x2022; Streaming &amp; multi-modal</text>
+
+  <line x1="530" y1="290" x2="552" y2="290" stroke="#16A34A" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="557" y="294" font-size="9" fill="#6B7280">MCP connector (AI-selected tool)</text>
+  <line x1="530" y1="308" x2="552" y2="308" stroke="#9CA3AF" stroke-width="2"/>
+  <text x="557" y="312" font-size="9" fill="#6B7280">Synchronous channel handoff</text>
+</svg>
