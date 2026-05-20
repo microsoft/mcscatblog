@@ -24,8 +24,19 @@ Instead of treating evaluations as a phase between "build" and "ship," start run
 
 The Copilot Studio **evaluation and analytics suite** has features lined up for each of these jobs, and the parts that surprise people most are the places features connect across stages. The rest of this post walks the loop end to end.
 
-> This post is a practitioner's companion to Microsoft Learn. For the canonical reference, start with the [Evaluation overview](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/evaluation-overview) and the [iterative evaluation framework](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/evaluation-iterative-framework).
-{: .prompt-info }
+
+> ### Evaluation Strategy in 60 seconds
+>
+> If you only remember one thing, make it this operating model:
+> 
+> 1. **Use three test set types from day one:** Must-Pass, Must-Fail, and Other Features.
+> 2. **Split every set in half before tuning:** one half for tuning, one half for blind validation.
+> 3. **Interpret results statistically, not anecdotally:** one failed row is a debugging clue, not a release decision.
+> 4. **Choose test data by lifecycle stage:** synthetic starter tests for scoping, generated tests for iteration, real utterances for benchmark and regression.
+> 5. **Monitor Analytics and flag real data to use for retuning:** align live analytics with evaluation criteria.
+> 
+> That is the strategy. The rest of this post shows how to run that strategy across Scope, Target, Deliver, then apply it with Copilot Studio features.
+{: .prompt-tip }
 
 ## The three questions, the three stages, the same loop
 
@@ -36,6 +47,9 @@ Those three lifecycle stages map to the three pain points most Copilot Studio pr
 | **Scope the value** | *What high-value use cases will V1 cover, and how do I design the agent to deliver them?* | Scope creep | Hand-authored test set, save test-pane chats as test cases, AI graders so you can skip expected answers |
 | **Target the value** | *Is V1 ready to deploy, and at what bar?* | Tuning, expectations, readiness | Built-in test generation from agent design, CSV import, custom rubrics, working/blind split |
 | **Deliver the value** | *Are my users getting the value I expected?* | Drift, regressions, ROI | Fetch sessions from analytics into evals, custom AI metrics on the dashboard, environment performance alert, per-tool ROI |
+
+>This section is the strategy lens. Product-level implementation details are grouped later in [Copilot Studio implementation details](#features-worth-knowing-about).
+{: .prompt-tip }
 
 The product was designed with this exact progression in mind. Each stage has features that put **the right kind of evaluation data at the right time**, so you're never blocked waiting for data you don't have yet:
 
@@ -52,7 +66,7 @@ flowchart LR
     style C fill:#d97706,color:#fff,stroke:#9a3412,stroke-width:2px
 ```
 
-That dotted return line matters. Once production data is flowing, it becomes the most valuable test data you'll ever have, and it goes right back into your starter set to harden the next release.
+That dotted return line links Evals and Analytics. Once production data is flowing, it becomes valuable test data that hardens the next release.
 
 ## Stage 1: Scope the value, agree on V1 and build the agent
 
@@ -69,17 +83,35 @@ The payoff is huge. Scope creep stops, because any use case that isn't in the te
 
 While you're agreeing on what V1 covers, sort each case into one of three buckets. The bucket sets up everything that follows: how much effort the case deserves, what bar it should pass at, and which graders make sense for it.
 
-| Bucket | What it tests | Effort | Threshold | Default graders |
+| Bucket | What it tests | Effort | Statistical target | Default graders |
 |---|---|---|---|---|
-| **Must-Pass** | Core business outcomes, transactions, regulated answers, refusals | Highest | Near 100% | Compare meaning + Tool use |
-| **Broader Use Cases** | Recommendations, decision support, research, persona behavior | Reasonable | What gets the user unblocked | General quality + Custom rubric |
-| **Guardrail** | Off-topic, sensitive, prohibited | Focused | Inverted, near 0% match | Keyword match |
+| **Must-Pass** | Core business outcomes, transactions, regulated answers | Highest | High pass rate (ex: 85%+) on blind set | Compare meaning + Tool use |
+| **Other Features** | Recommendations, decision support, research, persona behavior | Reasonable | Fit-for-purpose range agreed with business (often 60-85%) | General quality + Custom rubric |
+| **Must-Fail (Guardrail)** | Off-topic, sensitive, prohibited, policy-violating asks | Focused | High refusal/block rate (target depends on guardrail type) | Keyword match + Custom rubric |
 
 Most stakeholder disagreements about "agent quality" are really disagreements about which use case lives in which bucket. Once Must-Pass and Broader Use Cases are visibly different sets with different bars, the argument about *"why isn't it 100%?"* resolves itself.
 
 Broader Use Cases is the bucket that surprises people the most. Agents are not single-purpose tools; they have a persona, a goal, and a set of tools and knowledge they reason over to fulfill that goal. A 50–60% match rate on *"which credit card should I pick?"* or *"which travel package fits my criteria?"* can be a perfectly good V1, because the agent's real job is to move the conversation forward, surface a reasonable shortlist, and get the user one step closer to a decision. **Even partial coverage is real value being enabled.** V1 ships and starts delivering; V2 layers in code interpreter, better retrieval, or a smarter tool to push the rate higher.
 
-That leniency does **not** apply to terms of use, regulated content, refusals, or transactions. Those go in Must-Pass and stay there. 
+That leniency does **not** apply to terms of use, regulated content, refusals, or transactions. Those go in Must-Pass or Must-Fail and stay there.
+
+#### Tie each bucket to a statistical bar
+
+Treat every bucket as a percentage target over a representative test set, not a single-row pass/fail story.
+
+- **Must-Pass:** set a high blind-set pass-rate target and do not release if it drops below the agreed floor.
+- **Must-Fail:** set a high blind-set fail-safe target, where the agent correctly refuses, redirects, or blocks prohibited asks.
+- **Other Features:** set an explicit acceptable range based on user value and iteration cost.
+
+For Must-Fail, the threshold should reflect the guardrail implementation type:
+
+| Must-Fail guardrail type | Typical reliability profile | Practical target guidance |
+|---|---|---|
+| **Deterministic check** (keyword/pattern/rule gate) | Most stable and repeatable | Highest bar, typically 99%+ |
+| **AI instruction** (policy in system instructions) | Strong but phrasing-sensitive | High bar, typically 75-95% |
+| **Additional AI output test** (post-answer AI judge) | Flexible with phrasing & judgment variance | Additive guardrail, often 85-99% |
+
+Use this as a decision framework, not a universal law. The right threshold is the one your business signs up for, on a statistically meaningful blind set.
 
 > **Heads up: dev environments don't collect analytics data.** During design, your starter set has to be either **manually authored**, **generated** from the agent's design, or **imported** from another source. 
 >
@@ -207,9 +239,11 @@ After go-live, your agent is having conversations you couldn't have predicted. T
 
 You filter sessions in analytics by zone, by topic, by outcome, and **fetch them straight into a test set** ([Create a test set based on a theme](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-create#create-a-test-set-based-on-a-theme)). The expected response still has to be filled in by a human (the live transcript is the conversation, not the right answer), but the prompts are real and the distribution matches what your users are actually asking. That's how you move from *targeting* the value to *delivering and measuring* it.
 
-This is also where evaluations earn their keep as a **runtime safety net**.
+This is also where evaluations earn their keep as a **runtime safety net** for regression testing.
 
 ### Types of changes outside the maker's control:
+
+In a SaaS platform that uses outside sources and runs at high volume, there are many types of regressions that need to be monitored and tested. 
 
 - **The SaaS platform.** Model upgrades, planner improvements, new generative features land continuously. 
 - **The agent design.** MCP tool updates and  knowledge source updates happen at their own pace.
@@ -272,16 +306,20 @@ Now we can tie this back to the Eurozone agent from Stage 2. The very same *"is 
 
 ### ROI: the value you targeted, now measured in time and money
 
-When you've baselined your buckets and the agent is running in production, the suite lets you attach **time and money saved per each type of successful tool invocation**:
+When you've baselined your buckets and the agent is running in production, the suite lets you attach **time and money value for each type of successful tool invocation**:
 
 ![Calculate savings per tool dialog with hours saved and dollars saved per invocation](/assets/posts/evaluating-copilot-studio-agents/calculate-savings-per-tool.png){: .shadow w="700" }
 _For each tool, you tell the suite what one successful invocation is worth. The dashboard multiplies it against the evaluated successful runs in production._
 
 The value you *scoped* in Stage 1 (a hand-authored starter set, sorted into buckets), *targeted* in Stage 2 (volume, deliberate tradeoffs, working/blind split), is now *delivered and measured* in Stage 3 (real conversations + ROI). That's what you bring to the business review. Full reference in [Analyze time and cost savings](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-cost-savings).
 
-## Evaluation features worth knowing about
+## Copilot Studio implementation details
 {: #features-worth-knowing-about }
 
+Everything above this section is the operating model. Everything below is technical application in Copilot Studio.
+
+> Note that this post is a practitioner's companion to Microsoft Learn. For the canonical reference, start with the [Evaluation overview](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/evaluation-overview) and the [iterative evaluation framework](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/evaluation-iterative-framework).
+{: .prompt-info }
 
 ### DLP and the evaluation actions
 {: #dlp-and-the-evaluation-actions }
@@ -353,7 +391,8 @@ Once your test sets are stable and your buckets are dialed in, the next move is 
 - **Dev environments don't collect analytics**, so during design and early build you only have manual, generated, or imported data. The live-data loop kicks in later.
 - **Expected answers unlock the whole grader catalogue.** Pair a deterministic grader (Tool use, Keyword match, Exact match) with an AI grader (General quality, Compare meaning, Custom rubric) on the same row to validate path *and* answer at once.
 - **Generated test sets find questions you didn't think to ask.** Treat unexpected agent responses to generated prompts as a window into the assumptions hiding in your instructions.
-- **Bucket your use cases as you scope: Must-Pass, Broader Use Cases, Guardrail.** Most stakeholder disagreements about "agent quality" are really bucket disagreements in disguise.
+- **Bucket your use cases as you scope: Must-Pass, Must-Fail, and Other Features.** Most stakeholder disagreements about "agent quality" are really bucket disagreements in disguise.
+- **Set statistical targets per bucket on blind sets.** Must-Pass and Must-Fail should run at high rates, while Other Features should run in an agreed value range.
 - **Working set vs blind set is the cheapest safeguard against tuning bias.** Costs nothing. Catches the overfit every time.
 - **A single-turn test exercises the whole orchestration chain.** Plan, call, retrieve, call again, compose, all in one row, validated by stacked graders. Save multi-turn for state that genuinely accumulates.
 - **The same custom rubric runs in both surfaces.** What gates V1 in evaluations becomes a live custom metric in analytics, plotted on the dashboard with drill-down to the conversations behind each bar.
