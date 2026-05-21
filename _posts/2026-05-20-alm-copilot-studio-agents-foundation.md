@@ -46,6 +46,8 @@ Normal cycle:   Dev → Test → Prod
 Hotfix cycle:   Prod-Aligned Dev → Test → Prod
 ```
 
+![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm_env_flow_diagram.png)
+
 This is not overhead for day one. Add it when the agent is mature enough that production downtime has a real cost. But plan for it from the start - retrofitting emergency processes during an actual emergency is how mistakes happen.
 
 ### The Full Picture
@@ -66,13 +68,15 @@ Start with Dev, Test, and Prod. Add Preview and Prod-Aligned Dev as the agent ma
 
 ### Solutions as the Packaging
 
-Everything your agent depends on - the agent itself, its [workflows](https://learn.microsoft.com/en-us/microsoft-copilot-studio/flows-overview), its environment variables - must live inside a [solution](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm). This is what makes your agent portable. You export a managed solution from Dev and import it into Test, then Prod. The solution is the versioned, sealed artifact that travels through your pipeline.
+Everything your agent depends on - the agent itself, its tools, its [workflows](https://learn.microsoft.com/en-us/microsoft-copilot-studio/flows-overview), its environment variables - must live inside a [solution](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm). This is what makes your agent portable. You export a managed solution from Dev and import it into Test, then Prod. The solution is the versioned, sealed artifact that travels through your pipeline.
 
 Set your solution as the [preferred solution](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/preferred-solution) and create every asset inside it. Anything created outside a solution is invisible to your deployment pipeline.
 
 ### Pipelines Automate the Promotion
 
 [Power Platform Pipelines](https://learn.microsoft.com/en-us/power-platform/alm/pipelines) give you one-click promotion from Dev to Test to Prod. They handle the managed solution export and import automatically and maintain deployment history.
+
+![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm_solution_pipeline_flow.png)
 
 Two things to watch:
 
@@ -82,7 +86,8 @@ Two things to watch:
 
 ### Configuration and Secrets
 
-The principle is simple: nothing environment-specific gets hardcoded. API endpoints, SharePoint URLs, thresholds, feature flags - all go into [environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables). The variable *definition* (name, type) travels with the solution. The *value* is set per environment independently. The same agent flow works unchanged across Dev, Test, and Prod because it reads its configuration from the environment it runs in.
+The principle is simple: nothing environment-specific gets hardcoded. API endpoints, SharePoint URLs, thresholds, feature flags - all go into [environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables). The variable *definition* (name, type) travels with the solution. The *value* is set per environment independently. 
+e.g. The same workflow works unchanged across Dev, Test, and Prod because it reads its configuration from the environment it runs in.
 
 For secrets - API keys, tokens, credentials - [secret environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables-azure-key-vault-secrets) backed by Azure Key Vault provide a secure, auditable approach. The agent references a Key Vault secret rather than holding the value directly, and the platform resolves it at runtime. When a key rotates, you update Key Vault - no solution change or redeployment needed.
 
@@ -103,7 +108,9 @@ Where evaluations fit:
 - **On a schedule in Preview** - will the next platform update break us?
 - **After import in the target** - did the deployment land cleanly?
 
-Evaluations deserve their own deep-dive and will be covered separately. The key takeaway is that incorporating them early in your ALM strategy - rather than adding them later - gives you a reliable signal at every stage of promotion.
+![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm-evaluation-placement-diagram.png)
+
+The key takeaway is that incorporating them early in your ALM strategy - rather than adding them later - gives you a reliable signal at every stage of promotion.
 
 For more: [About agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro)
 
@@ -113,7 +120,7 @@ For more: [About agent evaluation](https://learn.microsoft.com/en-us/microsoft-c
 
 Copilot Studio supports [native Git integration](https://learn.microsoft.com/en-us/power-platform/alm/git-integration/connecting-to-git). You tie your solution to a Git repository for version history, change tracking, and collaboration across makers.
 
-This is where things become interesting for multi-person teams: branching, merging, pull request reviews, and visibility into who changed what and when. The setup itself is documented - the more practical question is how to structure workflows when multiple people are editing the same agent. That walkthrough is the subject of the next post in this series.
+This is where things become interesting for multi-person teams: branching, merging, pull request reviews, and visibility into who changed what and when. The setup itself is well documented - the more practical question is how to structure collaboration when multiple makers are editing the same agent simultaneously.
 
 ---
 
@@ -121,7 +128,7 @@ This is where things become interesting for multi-person teams: branching, mergi
 
 As an agent grows - hundreds of knowledge sources, multiple teams contributing, frequent tool updates - the single-solution model starts to strain. Component collections, layered solutions, and shipping pieces independently become relevant.
 
-This is a future concern for most teams. Get the foundation right first. Modular deployment strategies will be covered in a dedicated post once the basics are in place.
+This is a future concern for most teams. Get the foundation right first - modular strategies only pay off when the basics are solid.
 
 ---
 
@@ -131,10 +138,10 @@ This is a future concern for most teams. Get the foundation right first. Modular
 - [ ] No hardcoded environment-specific values anywhere
 - [ ] Secrets are in Key Vault, referenced via secret environment variables
 - [ ] Environment variable values are configured in the target environment
+- [ ] Solution connected to Git with YAML source control enabled
 - [ ] Solution exported as managed for Test and Prod
 - [ ] Evaluations pass
 - [ ] Smoke test passes in the target after import
-- [ ] Agent flow descriptions are accurate and specific
 
 ---
 
