@@ -303,14 +303,23 @@ DESCRIBE INTEGRATION external_oauth_azure_1;
 
 One quirk worth flagging: the Server URL field sometimes keeps showing *"Enter the complete server path to continue"* even when the URL is correct, and the **Create** button can look disabled. It is usually actually enabled. If it does not respond to a normal click, the field has just lost focus on a stale validation. Click outside the field, then click **Create** again.
 
-When you click **Create**, Copilot Studio auto-generates a custom connector in your Power Platform environment with the same name as the MCP tool. Copy the redirect URL that appears on the connector's authentication page. It looks like this:
+When you click **Create**, Copilot Studio auto-generates a custom connector in your Power Platform environment with the same name as the MCP tool. To find the redirect URL it generated:
+
+1. Open [Power Apps](https://make.powerapps.com), then use the environment switcher (top right) to switch to the **same environment** you used in Copilot Studio.
+2. In the left nav, go to **More > Custom connectors**.
+3. Find your Snowflake MCP connector in the list and open it (pencil/edit icon).
+4. Skip ahead to the **2. Security** tab.
+5. Scroll to the bottom of the OAuth 2.0 section and copy the **Redirect URL**. It looks like this:
 
 ```
 https://global.consent.azure-apim.net/redirect/<connector-slug>
 ```
 
-![Copilot Studio MCP tool detail view after creation, showing the generated connector and redirect URL](/assets/posts/snowflake-mcp-copilot-studio/12-cs-mcp-tool-created.png)
-*Grab the redirect URL from this page. You will paste it into the client app's Authentication blade in the next step.*
+![Power Apps Custom connectors list showing the auto-generated Snowflake MCP connector](/assets/posts/snowflake-mcp-copilot-studio/12a-powerapps-custom-connectors.png)
+*The connector appears in Power Apps under **More > Custom connectors**, in the same environment as your agent.*
+
+![Custom connector Security tab showing the OAuth 2.0 Redirect URL at the bottom](/assets/posts/snowflake-mcp-copilot-studio/12b-connector-security-redirect-url.png)
+*The **Redirect URL** field is at the bottom of the **Security** tab. Copy it — you will paste it into the client app's Authentication blade in the next step.*
 
 ## Step 7: Close the OAuth loop in Azure
 
