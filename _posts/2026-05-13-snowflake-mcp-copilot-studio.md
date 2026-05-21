@@ -21,15 +21,16 @@ We recently wired a Snowflake-managed MCP server into a Copilot Studio agent end
 A Copilot Studio agent that talks to Snowflake through a Snowflake-managed MCP server. Tokens flow through Entra ID using delegated user OAuth, so every query runs as the signed-in user, not as a service principal.
 
 ```mermaid
-flowchart LR
-    U[End user in Copilot Studio] --> A[Copilot Studio agent]
-    A --> C[Power Platform custom connector]
-    C -->|OAuth 2.0 auth code| E[Microsoft Entra ID]
-    E -->|Access token, upn claim| C
-    C -->|MCP over HTTPS, bearer token| S[Snowflake MCP server]
-    S --> CX[Cortex Agent runtime]
-    CX --> T1[Cortex Search: customers]
-    CX --> T2[Cortex Search: products]
+%%{init: {'theme':'default', 'themeVariables': {'fontSize': '20px', 'fontFamily': 'Segoe UI, Helvetica, Arial, sans-serif'}, 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 60, 'padding': 12}}}%%
+flowchart TB
+    U["End user<br/>(Copilot Studio)"] --> A["Copilot Studio<br/>agent"]
+    A --> C["Power Platform<br/>custom connector"]
+    C -- "OAuth 2.0 auth code" --> E["Microsoft<br/>Entra ID"]
+    E -- "Access token (upn claim)" --> C
+    C -- "MCP over HTTPS<br/>(bearer token)" --> S["Snowflake<br/>MCP server"]
+    S --> CX["Cortex Agent<br/>runtime"]
+    CX --> T1["Cortex Search:<br/>customers"]
+    CX --> T2["Cortex Search:<br/>products"]
 ```
 
 ## TL;DR
@@ -220,8 +221,8 @@ The last `ALTER USER` line is the one we kept missing. With the `session:role-an
 
 You need **two** app registrations in your Entra tenant. Follow Snowflake's official walkthroughs end to end:
 
-- [Snowflake Connector for Microsoft Power Platform: Create OAuth client in Microsoft Entra ID](https://other-docs.snowflake.com/en/connectors/power-platform/install#create-oauth-client-in-microsoft-entra-id)
-- [Snowflake Connector for Microsoft Power Platform: Collect Azure AD information for Snowflake](https://other-docs.snowflake.com/en/connectors/power-platform/install#collect-azure-ad-information-for-snowflake)
+- [Snowflake docs: Create an OAuth client in Microsoft Entra ID](https://docs.snowflake.com/en/user-guide/oauth-azure#create-an-oauth-client-in-microsoft-entra-id)
+- [Snowflake docs: Collect Azure AD information for Snowflake](https://docs.snowflake.com/en/user-guide/oauth-azure#collect-azure-ad-information-for-snowflake)
 
 ### Resource app: `Snowflake OAuth Resource`
 
@@ -238,6 +239,7 @@ You need **two** app registrations in your Entra tenant. Follow Snowflake's offi
 - Click **Grant admin consent for `<TENANT_NAME>`**.
 
 ![Client app registration Overview blade showing the application (client) ID and tenant](/assets/posts/snowflake-mcp-copilot-studio/07-client-app-overview.png)
+*Copy the **Application (client) ID** and **Directory (tenant) ID** from this Overview tab. You will paste both into the Copilot Studio MCP form in Step 6.*
 
 ![Client app registration API permissions blade showing the session:role-any delegated permission with admin consent granted](/assets/posts/snowflake-mcp-copilot-studio/08-client-app-api-permissions.png)
 *Without admin consent, the first user sign-in fails with the generic "needs admin approval" page.*
@@ -297,6 +299,7 @@ DESCRIBE INTEGRATION external_oauth_azure_1;
 5. Click **Create**.
 
 ![Copilot Studio "Add MCP" form with the fields filled in and OAuth 2.0 selected](/assets/posts/snowflake-mcp-copilot-studio/11-cs-create-mcp-form.png)
+*The Server URL is the only field most people get wrong. Use the exact pattern from the table above, including the `/api/v2/databases/.../mcp-servers/<MCP_SERVER_NAME>` suffix.*
 
 One quirk worth flagging: the Server URL field sometimes keeps showing *"Enter the complete server path to continue"* even when the URL is correct, and the **Create** button can look disabled. It is usually actually enabled. If it does not respond to a normal click, the field has just lost focus on a stale validation. Click outside the field, then click **Create** again.
 
@@ -307,6 +310,7 @@ https://global.consent.azure-apim.net/redirect/<connector-slug>
 ```
 
 ![Copilot Studio MCP tool detail view after creation, showing the generated connector and redirect URL](/assets/posts/snowflake-mcp-copilot-studio/12-cs-mcp-tool-created.png)
+*Grab the redirect URL from this page. You will paste it into the client app's Authentication blade in the next step.*
 
 ## Step 7: Close the OAuth loop in Azure
 
@@ -315,6 +319,7 @@ The redirect URL only exists once Power Platform has created the custom connecto
 Open the **Client app** registration, go to **Authentication**, choose **Add a platform > Web**, paste the redirect URL from the previous step, then click **Configure**. You should see *"Successfully updated <Client app name>"*.
 
 ![Client app registration Authentication blade showing the Power Platform redirect URI added under the Web platform](/assets/posts/snowflake-mcp-copilot-studio/16-azure-add-redirect-uri.png)
+*Add the redirect URI under the **Web** platform, not SPA or public client. Anything else fails silently at token exchange.*
 
 ## Step 8: Connect, discover tools, and (separately) connect again
 
@@ -330,8 +335,10 @@ Back in the agent's MCP tool details:
 4. Copilot Studio calls the MCP server and auto-discovers the tools (`customer_search`, `product_search`). They appear in the Tools blade with the descriptions from the YAML spec.
 
 ![Copilot Studio "Add tool" dialog with the MCP filter applied](/assets/posts/snowflake-mcp-copilot-studio/18-cs-add-tool-filter-mcp.png)
+*Filter the tool picker by **Model Context Protocol** to find your newly created MCP tool quickly.*
 
 ![Copilot Studio tool picker showing the discovered customer_search and product_search tools](/assets/posts/snowflake-mcp-copilot-studio/19-cs-add-tool-picker.png)
+*If the tool list is empty here, discovery failed. Re-check the Server URL and the connection status before going any further.*
 
 ![Copilot Studio agent Tools blade listing the Snowflake MCP tools](/assets/posts/snowflake-mcp-copilot-studio/20-cs-tools-in-agent.png)
 *Once tools show up here, the Snowflake side is correctly wired.*
@@ -340,7 +347,7 @@ Back in the agent's MCP tool details:
 
 The Copilot Studio test pane runs as the end user, not as the maker. The first time you ask the agent something that triggers an MCP tool, you will see:
 
-> *Let's get you connected first. [Open connection manager](#) to verify your credentials.*
+> *Let's get you connected first. **Open connection manager** to verify your credentials.*
 
 1. Click **Open connection manager**. It may briefly show *"TenantId mismatched"* if your browser's signed-in user differs from the agent's tenant.
 2. Sign out of the wrong account, then sign back in with the user whose UPN matches the Snowflake `LOGIN_NAME`.
@@ -355,16 +362,19 @@ Try a couple of prompts that map cleanly onto the tools:
 - *"What electronics products do we have?"* should invoke `product_search` with `query=electronics`.
 
 ![Copilot Studio test pane showing the agent answering by invoking the Snowflake MCP tool](/assets/posts/snowflake-mcp-copilot-studio/21-cs-agent-test.png)
+*The grounded answer plus the **Activity map** showing a tool call is what you want to see. A plain LLM answer with no tool activity means the agent did not actually hit Snowflake.*
 
 If the agent answers from general knowledge instead of calling the tools, open the **Overview** tab and add an instruction like:
 
 > When the user asks about customers or products, use the Snowflake MCP tools. Do not answer from general knowledge.
 
 ![Copilot Studio agent Overview tab showing the instruction telling the agent to use the Snowflake MCP tools](/assets/posts/snowflake-mcp-copilot-studio/22-cs-agent-instructions.png)
+*One explicit sentence in the instructions is usually enough to stop the model from answering from general knowledge.*
 
 You can also disable **Web search** and **Use general knowledge** in the agent's generative settings if you want to be strict.
 
 ![Copilot Studio agent generative settings with Web search and Use general knowledge toggled off](/assets/posts/snowflake-mcp-copilot-studio/23-cs-agent-knowledge-settings.png)
+*Belt-and-braces: turning these off forces the agent to ground every answer in its tools.*
 
 ### Verify it actually ran in Snowflake
 
@@ -427,14 +437,19 @@ Expect a red `Operation failed (405)` banner with a `Schema validation` warning 
 The screenshots below show the underlying custom connector pages. They are useful when you need to inspect or re-test the OAuth round-trip outside the agent UI.
 
 ![Power Apps custom connector General tab showing the connector scheme and host pointing at the Snowflake account](/assets/posts/snowflake-mcp-copilot-studio/13-custom-connector-general.png)
+*The auto-generated connector uses `HTTPS` and the Snowflake account host. Leave the scheme alone; only the host needs a sanity check.*
 
 ![Power Apps custom connector General tab with the Snowflake account host filled in](/assets/posts/snowflake-mcp-copilot-studio/14-custom-connector-host.png)
+*Confirm the host matches `<orgname>-<accountname>.snowflakecomputing.com` exactly — no trailing path, no protocol.*
 
 ![Power Apps custom connector Security tab configured for OAuth 2.0 with Azure AD, client ID, client secret, and resource URI](/assets/posts/snowflake-mcp-copilot-studio/15-custom-connector-security.png)
+*The Resource URL must match `api://<RESOURCE_APP_CLIENT_ID>` and the scope must be `session:role-any`. A wrong audience here is the most common cause of token rejection.*
 
 ![Power Apps custom connector Test tab showing a successful Invoke server call](/assets/posts/snowflake-mcp-copilot-studio/17-custom-connector-test.png)
+*A green "Invoke server" response means the OAuth handshake completed and the bearer token reached the MCP endpoint.*
 
 ![Power Apps custom connector Test tab showing the benign schema validation error response](/assets/posts/snowflake-mcp-copilot-studio/24-troubleshooting-test-section.png)
+*The 405 + schema validation warning is expected for MCP-backed connectors. Ignore it as long as the connection itself shows as connected.*
 
 ### Re-checking the OAuth round-trip
 
