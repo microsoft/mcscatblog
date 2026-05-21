@@ -21,13 +21,19 @@ This post lays out the ALM foundation for teams building Copilot Studio agents -
 
 ## Start With Environments
 
-The foundation of any ALM strategy is environment isolation. You need at least three environments: Development, Test, and Production. Dev is where makers author. Test is where you validate. Production is where users interact with the live agent. Changes flow in one direction: Dev to Test to Prod, keeping production stable and predictable.
+The foundation of any ALM strategy is environment isolation. One of the most tried and tested patterns in Power Platform, is three environments: Development, Test, and Production. Dev is where makers author. Test is where you validate. Production is where users interact with the live agent. Changes flow in one direction: Dev to Test to Prod, keeping production stable and predictable.
 
-Create environments in the [Power Platform Admin Center](https://learn.microsoft.com/en-us/power-platform/admin/create-environment). That setup is straightforward. What matters more is the environment *strategy* - the decisions that go beyond the basic three.
+This three-environment model is **not a hard requirement imposed by the platform**. It is a **best practice** that emerges naturally as soon as an agent is complex enough to warrant structured promotion. For a simple proof-of-concept, a single environment may suffice. For anything that serves real users, the separation between authoring, validation, and production is what prevents accidental breakage.
+
+Create environments in the [Power Platform Admin Center](https://learn.microsoft.com/en-us/power-platform/admin/create-environment). That setup is straightforward. What matters more is the environment *strategy* - the decisions that go beyond the baseline.
+
+### Beyond the Baseline: Optional Environments
+
+Once your Dev-Test-Prod foundation is working reliably, there are two additional environments worth considering depending on your specific circumstances. Neither is required from day one, but both solve problems that surface as an agent matures and its uptime becomes business-critical.
 
 ### Detecting Platform Regressions Early
 
-Power Platform ships updates continuously. The vast majority are seamless, but as with any evolving platform, it is good practice to validate your agent against upcoming changes before they reach your production environment.
+Power Platform and Copilot Studio updates ship continuously. It is a good practice to validate your agent against upcoming changes before they reach your production environment.
 
 A **Preview environment** on the [First Release ring](https://learn.microsoft.com/en-us/power-platform/admin/opt-in-early-access-updates) gives you exactly this capability. First Release receives platform updates weeks before the standard ring. You deploy your current production solution into this environment and run your [evaluations](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro) against it on a schedule.
 
@@ -64,34 +70,103 @@ Start with Dev, Test, and Prod. Add Preview and Prod-Aligned Dev as the agent ma
 
 ---
 
+## Solutions: The Unit of Deployment
+
+If environments are where your agent lives, solutions are how it travels between them. A solution is a container - a package that holds every component your agent depends on and makes the entire set portable and promotable as a single unit.
+
+For those unfamiliar with Power Platform: a solution is conceptually similar to a project in Visual Studio or a package in a package manager. It groups related assets together so they can be versioned, exported, and imported as one coherent artifact.
+
+### What Goes Inside a Solution
+
+Everything your agent depends on must live inside a single solution:
+
+- The agent itself
+- Its tools (APIs, connectors, external integrations, [workflows](https://learn.microsoft.com/en-us/microsoft-copilot-studio/flows-overview))
+- Its [environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables) (configuration that differs per environment)
+- Its knowledge source references
+
+Anything created outside a solution is invisible to your deployment pipeline and cannot be promoted cleanly. This is the single most common mistake teams make early on - building components in the default environment without a solution, then discovering they cannot move them.
+
+### Managed vs. Unmanaged
+
+Solutions exist in two forms:
+
+| Type | Where it lives | What you can do | Purpose |
+|---|---|---|---|
+| **Unmanaged** | Development | Add, edit, remove components freely | Active authoring |
+| **Managed** | Test, Production | Read-only. Cannot be edited directly. | Stable, sealed deployment artifact |
+
+![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm-solution-evolution-diagram.png)
+
+When you promote your agent, you export the solution from Dev as a **managed** package. This managed package is what gets imported into Test and later into Production. It is sealed - nobody can edit it in place. If a change is needed, it must be made in Dev, re-exported, and re-promoted. This one-way flow is what keeps Production stable.
+
+### Setting Up Your Solution
+
+Create your solution in the Dev environment **before** creating any agent assets. From that point on, every component must be created *inside* this solution.
+
+Set it as your [preferred solution](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/preferred-solution) so that new components are automatically added to it rather than floating in the default solution where they risk being forgotten.
+
+For more: [Solution concepts in Power Platform ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm)
+
+---
+
 ## Deploying With Confidence
-
-### Solutions as the Packaging
-
-Everything your agent depends on - the agent itself, its tools, its [workflows](https://learn.microsoft.com/en-us/microsoft-copilot-studio/flows-overview), its environment variables - must live inside a [solution](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm). This is what makes your agent portable. You export a managed solution from Dev and import it into Test, then Prod. The solution is the versioned, sealed artifact that travels through your pipeline.
-
-Set your solution as the [preferred solution](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/preferred-solution) and create every asset inside it. Anything created outside a solution is invisible to your deployment pipeline.
 
 ### Pipelines Automate the Promotion
 
-[Power Platform Pipelines](https://learn.microsoft.com/en-us/power-platform/alm/pipelines) give you one-click promotion from Dev to Test to Prod. They handle the managed solution export and import automatically and maintain deployment history.
+With your environments established and your solution containing all agent assets, the next question is: how does the solution actually move from Dev to Test to Prod?
+
+You could do this manually - export a .zip from Dev, navigate to Test, import it, repeat for Prod. This works, but it is error-prone, undocumented, and does not scale. It also leaves no trace of what was deployed, when, or by whom.
+
+[Power Platform Pipelines](https://learn.microsoft.com/en-us/power-platform/alm/pipelines) solve this. A pipeline is a pre-configured promotion path that connects your environments in sequence. Once set up, promoting your solution is a single action: select the solution, select the stage (Dev to Test, or Test to Prod), and deploy. The pipeline handles the managed export, the import into the target, and records the deployment in its history.
 
 ![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm_solution_pipeline_flow.png)
 
-Two things to watch:
+**What a pipeline gives you:**
 
-**Configuration should be in place before the solution arrives.** Pipelines bring solution definitions - not environment-specific values. [Environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables) need their values configured in the target environment prior to deployment so that flows can resolve them at runtime.
+- **Repeatability** - the same process every time, no manual steps to forget
+- **Audit trail** - who deployed what, when, and to which environment
+- **Rollback visibility** - deployment history shows exactly which version is in each environment
+- **Guardrails** - you can require approvals before a deployment proceeds to the next stage
 
-**Plan for variable coverage validation.** The pipeline focuses on solution transport. Verifying that every variable has a value in the target is a step worth including in your promotion process.
+**What a pipeline does not do:**
 
-### Configuration and Secrets
+- It does not validate that your agent works correctly after import - that is what evaluations are for
+- It does not set environment-specific configuration values - those must be in place before the solution arrives
+- It does not manage secrets - those live in Azure Key Vault, referenced through environment variables
 
-The principle is simple: nothing environment-specific gets hardcoded. API endpoints, SharePoint URLs, thresholds, feature flags - all go into [environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables). The variable *definition* (name, type) travels with the solution. The *value* is set per environment independently. 
-e.g. The same workflow works unchanged across Dev, Test, and Prod because it reads its configuration from the environment it runs in.
+For setup details: [Set up pipelines in Power Platform](https://learn.microsoft.com/en-us/power-platform/alm/set-up-pipelines)
+
+### Configuration: Environment Variables
+
+The principle is simple: nothing environment-specific gets hardcoded. API endpoints, SharePoint URLs, thresholds, feature flags - all go into [environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables).
+
+Environment variables have two layers that are important to understand:
+
+- **Definition** - the schema (name, data type, description). This travels with the solution.
+- **Value** - the actual content. This is set per environment and does *not* travel with the solution.
+
+This separation is what makes portability possible. When you import your managed solution into Test, it brings the variable definitions but not the values. The Test environment already has its own values configured. The same workflow runs unchanged across Dev, Test, and Prod because it reads its configuration from whichever environment it happens to be running in.
+
+**Supported types:**
+
+| Type | Use case |
+|---|---|
+| String | URLs, identifiers, configuration strings |
+| Number | Thresholds, limits, numeric config |
+| Boolean | Feature flags |
+| Data source | SharePoint lists, Dataverse tables |
+| Secret | Azure Key Vault references |
+
+**The critical mistake to avoid:** do not set a current value on an environment variable inside the solution definition if that value will differ across environments. Values baked into the solution definition will override environment-specific values and silently break your portability. Set values directly in each target environment after import.
+
+**Preparing variables before deployment:** When your pipeline promotes a solution to a new environment, the variable definitions arrive but the values do not. This means environment variable values must be configured in the target environment *before* the solution is imported - otherwise workflows that depend on those variables will fail at runtime. Include this as an explicit step in your promotion process: verify that every expected variable has a value in the target before deploying.
+
+### Secrets: Azure Key Vault Integration
 
 For secrets - API keys, tokens, credentials - [secret environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables-azure-key-vault-secrets) backed by Azure Key Vault provide a secure, auditable approach. The agent references a Key Vault secret rather than holding the value directly, and the platform resolves it at runtime. When a key rotates, you update Key Vault - no solution change or redeployment needed.
 
-Structure your vaults per environment tier (`kv-agent-dev`, `kv-agent-test`, `kv-agent-prod`) with identical secret names across them. Only the vault reference in each environment's variable value differs.
+Structure your vaults per environment tier (`kv-agent-dev`, `kv-agent-test`, `kv-agent-prod`) with identical secret names across them. Only the vault reference in each environment's variable value differs. The workflow logic is identical everywhere - it asks for a secret by name, and the environment resolves it to the correct vault.
 
 ---
 
@@ -99,34 +174,44 @@ Structure your vaults per environment tier (`kv-agent-dev`, `kv-agent-test`, `kv
 
 Deploying correctly does not guarantee behaving correctly. Evaluations close that gap.
 
-An evaluation is a defined set of test inputs and expected outputs that measures whether your agent is selecting the right tools, triggering the right logic, and producing acceptable responses. It serves as your quality gate - giving confidence that a promotion is safe.
+An [evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro) is a defined set of test inputs and expected outputs that measures whether your agent is selecting the right tools, triggering the right logic, and producing acceptable responses. It serves as your quality gate - giving confidence that a promotion is safe.
 
-Where evaluations fit:
+### Where Evaluations Fit in Your ALM Process
 
-- **After changes in Dev** - did anything regress?
-- **Before promotion to Test** - is this ready to ship?
-- **On a schedule in Preview** - will the next platform update break us?
-- **After import in the target** - did the deployment land cleanly?
+Evaluations are not a standalone activity. They integrate directly into the promotion lifecycle:
+
+- **After changes in Dev** - did anything regress? Run evals before exporting.
+- **Before promotion to Test** - evals passing is the signal that a solution is ready to move forward.
+- **On a schedule in Preview** - will the next platform update break us? Automated scheduled evals answer this continuously.
+- **After import in the target** - did the deployment land cleanly? A post-deployment smoke eval confirms the agent is functional in its new environment.
 
 ![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm-evaluation-placement-diagram.png)
 
-The key takeaway is that incorporating them early in your ALM strategy - rather than adding them later - gives you a reliable signal at every stage of promotion.
+### Automating Evaluations in Your Pipeline
 
-For more: [About agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro)
+Evaluations can be triggered programmatically, which means they can become an automated gate in your promotion pipeline. Rather than relying on a human to remember to run them, you configure the pipeline to execute evaluations after each deployment and block further promotion if results fall below a threshold.
+
+This transforms evaluations from a manual best practice into an enforced quality gate - no deployment reaches Production unless the agent demonstrably works.
+
+For implementation guidance, see:
+- [About agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro)
+- Also check: [Copilot Studio Kit - test capabilities](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-test-capabilities)
+
+The key takeaway is that incorporating evaluations early in your ALM strategy - rather than adding them later - gives you a reliable signal at every stage of promotion.
 
 ---
 
-## Version Control With Git
+## Additional Considerations
 
-Copilot Studio supports [native Git integration](https://learn.microsoft.com/en-us/power-platform/alm/git-integration/connecting-to-git). You tie your solution to a Git repository for version history, change tracking, and collaboration across makers.
+### Version Control With Git
 
-This is where things become interesting for multi-person teams: branching, merging, pull request reviews, and visibility into who changed what and when. The setup itself is well documented - the more practical question is how to structure collaboration when multiple makers are editing the same agent simultaneously.
+Copilot Studio supports [native Git integration](https://learn.microsoft.com/en-us/power-platform/alm/git-integration/connecting-to-git). You connect your solution to a Git repository where components are stored as individual files, giving you version history, change attribution, and collaboration capabilities across makers.
 
----
+This becomes particularly relevant for multi-person teams: branching, merging, pull request reviews, and visibility into who changed what and when. The setup itself is well documented - the more practical question is how to structure collaboration when multiple makers are editing the same agent simultaneously.
 
-## Breaking the Monolith (Eventually)
+### Modular Solutions
 
-As an agent grows - hundreds of knowledge sources, multiple teams contributing, frequent tool updates - the single-solution model starts to strain. Component collections, layered solutions, and shipping pieces independently become relevant.
+As an agent grows - hundreds of knowledge sources, multiple teams contributing, frequent tool updates - the single-solution model starts to strain. The platform supports component collections and layered solutions that allow teams to ship pieces independently without coupling unrelated changes.
 
 This is a future concern for most teams. Get the foundation right first - modular strategies only pay off when the basics are solid.
 
@@ -135,12 +220,13 @@ This is a future concern for most teams. Get the foundation right first - modula
 ## Before You Promote: A Checklist
 
 - [ ] All agent assets live inside the solution
+- [ ] Solution set as preferred solution in Dev
 - [ ] No hardcoded environment-specific values anywhere
+- [ ] Environment variable values configured in the target environment
 - [ ] Secrets are in Key Vault, referenced via secret environment variables
-- [ ] Environment variable values are configured in the target environment
-- [ ] Solution connected to Git with YAML source control enabled
+- [ ] Pipeline configured with correct stage sequence
 - [ ] Solution exported as managed for Test and Prod
-- [ ] Evaluations pass
+- [ ] Evaluations pass before and after deployment
 - [ ] Smoke test passes in the target after import
 
 ---
