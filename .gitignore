@@ -15,6 +15,9 @@ _site
 node_modules
 package-lock.json
 
+# Widget build artifacts
+**/widget/dist
+
 # IDE configurations
 .idea
 .vscode/
@@ -28,6 +31,10 @@ package-lock.json
 ehthumbs.db
 Thumbs.db
 
+# Worktrees
+.worktrees/
+
 # Misc
 _sass/vendors
 assets/js/dist
+CLAUDE.md

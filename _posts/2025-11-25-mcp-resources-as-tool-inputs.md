@@ -2,7 +2,7 @@
 layout: post    
 title: "Free Up Your Context Window: Pass MCP Resources, Not Raw Data"    
 date: 2025-11-24 23:50:00 +0100    
-categories: [copilot-studio, mcp, patterns]    
+categories: [copilot-studio, mcp, patterns]
 tags: [context-window, resources, mcp-server, tooling, scalability]    
 description: How to avoid context window saturation in Copilot Studio by passing MCP resources between tools when the tool output is too huge to fit into an agent context window.    
 author: giorgioughini    
@@ -129,7 +129,7 @@ No massive JSON in the context window and no token-heavy strings slowing everyth
 ## The sample scenario: random characters generator and counter  
   
 Let's use the sample MCP server from this repo:    
-[Github.com: Microsoft/CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/MCPSamples/pass-resources-as-inputs)  
+[Github.com: Microsoft/CopilotStudioSamples](https://microsoft.github.io/CopilotStudioSamples/extensibility/mcp/pass-resources-as-inputs)  
   
 It exposes two tools:  
   
@@ -291,7 +291,7 @@ A few practical tips when applying this pattern:
 To see this pattern live:  
   
 1. Clone the sample:    
-   [Github.com: Microsoft/CopilotStudioSamples](https://github.com/microsoft/CopilotStudioSamples/tree/main/MCPSamples/pass-resources-as-inputs)     
+   [Github.com: Microsoft/CopilotStudioSamples](https://microsoft.github.io/CopilotStudioSamples/extensibility/mcp/pass-resources-as-inputs)     
 2. Deploy the MCP server as described in the repo.    
 3. Connect it to your Copilot Studio agent.    
 4. Run your tests    
