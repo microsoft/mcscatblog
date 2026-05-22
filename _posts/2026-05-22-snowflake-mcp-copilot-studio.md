@@ -1,12 +1,11 @@
 ---
 layout: post
 title: "Wiring up a Snowflake-managed MCP server in Copilot Studio"
-date: 2026-05-13
+date: 2026-05-22
 categories: [copilot-studio, mcp]
 tags: [mcp, snowflake, cortex, oauth, entra-id, copilot-studio, power-platform]
 description: "An end-to-end walkthrough for wiring a Snowflake-managed MCP server into a Microsoft Copilot Studio agent with delegated user OAuth through Microsoft Entra ID, including the Cortex Agent prerequisite, the manual OAuth path Snowflake actually requires, and the small details that make or break the setup."
 authors: [hasharaf, missbets]
-mermaid: true
 image:
   path: /assets/posts/snowflake-mcp-copilot-studio/header.png
   alt: "Copilot Studio agent connected to Snowflake through an MCP link"
@@ -19,19 +18,6 @@ We recently wired a Snowflake-managed MCP server into a Copilot Studio agent end
 ## What we are building
 
 A Copilot Studio agent that talks to Snowflake through a Snowflake-managed MCP server. Tokens flow through Entra ID using delegated user OAuth, so every query runs as the signed-in user, not as a service principal.
-
-```mermaid
-%%{init: {'theme':'default', 'themeVariables': {'fontSize': '20px', 'fontFamily': 'Segoe UI, Helvetica, Arial, sans-serif'}, 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 60, 'padding': 12}}}%%
-flowchart TB
-    U["End user<br/>(Copilot Studio)"] --> A["Copilot Studio<br/>agent"]
-    A --> C["Power Platform<br/>custom connector"]
-    C -- "OAuth 2.0 auth code" --> E["Microsoft<br/>Entra ID"]
-    E -- "Access token (upn claim)" --> C
-    C -- "MCP over HTTPS<br/>(bearer token)" --> S["Snowflake<br/>MCP server"]
-    S --> CX["Cortex Agent<br/>runtime"]
-    CX --> T1["Cortex Search:<br/>customers"]
-    CX --> T2["Cortex Search:<br/>products"]
-```
 
 ## TL;DR
 
