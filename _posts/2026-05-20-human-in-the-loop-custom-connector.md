@@ -3,8 +3,8 @@ layout: post
 title: "Building a Custom Human-in-the-Loop Experience for Copilot Studio Workflows"
 date: 2026-05-20
 categories: [copilot-studio, connectors]
-tags: []
-description: ""
+tags: [custom-connector, power-automate, webhook, workflows, human-review, openapi]
+description: "When every workflow approval is another email in someone's inbox, something has gone wrong. A custom connector pattern that lets Copilot Studio workflows pause for human input and resume through any UI you want."
 author: adilei
 image:
   path: /assets/posts/human-in-the-loop-custom-connector/header.png
