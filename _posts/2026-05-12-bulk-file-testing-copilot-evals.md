@@ -12,7 +12,7 @@ image:
 published: true
 ---
 
-We deployed an invoice-processing agent that scored beautifully on our [Copilot Studio eval suite](https://learn.microsoft.com/microsoft-copilot-studio/advanced-ai-evaluations). Then 500 real vendor invoices arrived: different templates, different scan qualities, different languages. Twenty-three percent failed silently. The eval metrics hadn't changed, but the agent wasn't production-ready.
+We deployed an invoice-processing agent that scored beautifully on our [Copilot Studio eval suite](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro). voluminous real vendor invoices arrived: different templates, different scan qualities, different languages. a good percentage of them failed silently. The eval metrics hadn't changed, but the agent wasn't production-ready.
 
 If you've built agents that process enterprise documents (PDFs, contracts, spreadsheets, forms) you've likely hit the same wall. Standard evals measure prompt-response quality on curated samples. They don't tell you whether your agent can reliably process *thousands* of real-world files with the consistency your business requires.
 
@@ -23,7 +23,7 @@ This post walks through a practical architecture for bulk file-based testing usi
 
 ## Where Standard Evals Fall Short
 
-[Copilot Studio evaluations](https://learn.microsoft.com/microsoft-copilot-studio/advanced-ai-evaluations) excel at prompt-response testing, regression testing, quality scoring, and multi-turn conversation simulation. If you're already using them in your CI/CD pipeline (see [Quality Gates for Copilot Studio]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %})), that's great, keep doing it.
+[Copilot Studio evaluations](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro) excel at prompt-response testing, regression testing, quality scoring, and multi-turn conversation simulation. If you're already using them in your CI/CD pipeline (see [Quality Gates for Copilot Studio]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %})), that's great, keep doing it.
 
 But when your agent processes enterprise documents as part of operational workflows, you need answers to different questions:
 
@@ -65,7 +65,7 @@ This gives you version-over-version comparison, regression detection, and end-to
 
 ## SharePoint as the Configuration Layer
 
-[SharePoint](https://learn.microsoft.com/sharepoint/introduction) stores the file-based assets: test inputs, gold-standard expected outputs, prompt assets, and scenario-specific reference content. Keeping artifacts separate from orchestration means you can update prompts, swap datasets, or revise expected results without touching the automation.
+[SharePoint](https://learn.microsoft.com/sharepoint/introduction) It stores the file-based assets including test inputs, gold-standard expected outputs, prompt assets, and scenario-specific reference content. By separating artifacts from orchestration, prompts, datasets, and expected results can be updated independently, allowing non-developer and business users to easily manage changes through SharePoint, a platform they are already familiar and comfortable with.
 
 ![SharePoint configuration layer](/assets/posts/bulk-file-testing-copilot-evals/sharepointDig.png){: .shadow }
 *SharePoint configuration layer: input files, expected outputs, and prompt assets organized for reusable bulk test execution.*
@@ -92,6 +92,10 @@ At scale, the flow supports batching, parallel execution with controlled concurr
 
 [Power BI](https://learn.microsoft.com/power-bi/fundamentals/power-bi-overview) turns execution data into decision-ready dashboards: pass/fail rates, error concentration by vendor template, mismatch trends across prompt versions, and regression detection over time.
 
+![Automation Report](/assets/posts/bulk-file-testing-copilot-evals/pbiReport.png){: .shadow }
+*Automation report with detailed run statistics.*
+
+
 ## What This Enables
 
 With this architecture in place, your team gains:
@@ -108,7 +112,7 @@ Standard evals and bulk file testing aren't competing approaches. They're comple
 
 | Layer | Validates | Tool |
 |-------|-----------|------|
-| Prompt quality | Response accuracy, safety, relevance | [Copilot Studio Evals](https://learn.microsoft.com/microsoft-copilot-studio/advanced-ai-evaluations) |
+| Prompt quality | Response accuracy, safety, relevance | [Copilot Studio Evals](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro) |
 | Integration quality | CI/CD gates, regression blocking | [Eval API in pipelines]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %}) |
 | File processing quality | Bulk document handling at scale | This architecture |
 
