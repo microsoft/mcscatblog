@@ -74,3 +74,38 @@ rcalejo:
 psimolin:
   name: Petri Simolin
   avatar: https://github.com/psimolin.png
+
+KarimaKT:
+  name: Karima Kanji-Tajdin
+  email: kkanjitajdin@microsoft.com #Optional
+  avatar: https://github.com/KarimaKT.png
+
+PetrosFeleskouras:
+  name: Petros Feleskouras
+  avatar: https://github.com/PetrosFeleskouras.png
+
+dieterd-msft:
+  name: Dieter De Cock
+  avatar: https://github.com/dieterd-msft.png
+
+dikladc:
+  name: Dikla Dotan-Cohen
+  email: dikladc@microsoft.com
+
+rranjit:
+  name: Rahul Ranjit Kannathusseril
+  avatar: https://github.com/rranjit83.png
+
+zekitekin:
+  name: Zeki Tekin
+  email: zekitekin@microsoft.com
+  avatar: https://github.com/fs-dp.png
+
+missbets:
+  name: Betty Le
+  email: Elizabeth.Le@microsoft.com # Optional
+  avatar: https://github.com/missbets.png # Optional: path to avatar image
+
+ashVancouver:
+  name: Ashwin Raju Krishnamurthi
+  avatar: https://github.com/ashVancouver.png

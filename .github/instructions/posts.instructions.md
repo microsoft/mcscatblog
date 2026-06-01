@@ -4,38 +4,63 @@ applyTo: _posts/*.md
 
 # Blog Post Review
 
-## Purpose and scope
-Review the post included in the pull request, whether the file is created or updated.  Perform a full review of all file contents every time any change is made to the file.
-Each file is a post to be contained within an official Microsoft blog.  Content originates from the Microsoft Copilot Acceleration Team; a team of industry experts who provide guidance and insight related to Microsoft's Copilot Studio product.
-The blog uses US American language throughout, although it's consumed by readers across the world.
+## Purpose
 
-## Quality Review
-- Ensure there are no spelling mistakes
-- Assess the content across the following categories, and provide scores for each: Structure and Clarity, Technical Accuracy and Rigor, Audience Fit IT Pros, Tone and Voice, Depth and Practicality, Accessibility Compliance, Visuals and Media Quality, Grammar Spelling and Style, SEO and Metadata, Originality and Insight, Security and Safety Considerations, Consistency and Terminology, and Internationalization and Global Audience
-- **Problem-Solution Framing**: Every post must clearly articulate an issue, gap, problem, or need that readers face, and provide a clear path to address it. Posts should not document technical patterns simply because something is possible—they must demonstrate why the reader should care and how it solves a real-world challenge. Deduct points if the post lacks a clear problem statement or if the "why" is missing
-- Provide an overall score for the post
-- Make a handful of recommendations for improvements which would increase the overall score.  Recommend actions which will have the biggest possible impact on the score
-- Recommend whether the post is ready to publish, based on an overall score of 80% or greater
+Review posts for the Microsoft Copilot Studio CAT team blog (microsoft.github.io/mcscatblog/). Perform a full review every time a post file is created or updated. US American English. Audience: IT pros building with Copilot Studio.
 
-## Technical Review
-- Ensure the file name contains a date (in the form YYYY-MM-DD) and is named appropriately based on the contents of the post
-- Ensure the file contains a YAML front matter block, which contains a minimum:
-  - a title (appropriate for the content of the post)
-  - a date (in the form YYYY-MM-DD)
-  - a handful of categories appropriate for the content of the post, these should be lower case to prevent conflicts in site generation caused by case sensitivity
-  - a handful of tags appropriate for the content of the post, these should be lower case to prevent conflicts in site generation caused by case sensitivity
-  - a description appropriate for the post, generate a suggestion if this is missing
-  - an author handle, which should correspond to an author in the _data/authors.yaml file in most cases
-- Ensure all media contained within the post references files either within the assets/posts folder, or are publicly accessible.  Ensure all images have appropriate alt text
-- If the file contains a closing YAML Front Matter block, ensure it is appropriate for the post.  This will generally be a thought-provoking statement or question designed to spark public conversation, generate a suggestion if one is missing.
+## Priority 1: Narrative and Structure
+
+This is the most important part of the review. A post with perfect grammar but broken narrative flow will fail readers.
+
+- Does the intro clearly state the **problem** the reader has? Posts must not document technical patterns simply because something is possible. They must demonstrate why the reader should care.
+- Does the reader understand **why** before being shown **how**?
+- **Progressive disclosure**: basic concept → working implementation → optional enhancements. Never dump everything upfront. If the post shows a complete 100-line YAML before explaining any of it, flag this.
+- **Every section earns its place.** If you can't explain why a section exists, flag it for removal.
+- Alternatives dismissed in the intro should each have a clear, specific reason — not vague hand-waving.
+- **No redundant content.** If the same concept is explained twice in different sections (e.g., two overlapping tables, a glossary that restates callouts), flag the duplication.
+- Sections that are "valuable but tangential" should be flagged for a follow-up post, not included. Enterprise patterns, advanced scaling, troubleshooting matrices — these are common scope bloat.
+
+## Priority 2: Technical Accuracy
+
+- **Every technical claim should be verifiable.** Flag statements that sound authoritative but aren't linked to documentation or substantiated with evidence (e.g., "the search index chunks text at 512 characters" — says who?).
+- Code examples must be complete and working. No pseudocode unless explicitly labeled as such.
+- YAML/JSON blocks longer than 20 lines should be in collapsible `<details>` sections.
+- **Links to MS docs** for every product feature, API, or configuration step mentioned. If the post says "enable Dataverse Search," it should link to the doc that shows how.
+- **Internal links** using `post_url` to 2-3 related blog posts. Check `_posts/` for candidates with overlapping topics.
+- No credentials, secrets, or real environment URLs in code examples.
+
+## Priority 3: Reader Experience
+
+- Screenshots appear **after** their explanation, not before. The reader should understand what they're about to see.
+- Every image has an italic caption on the line immediately after: `_Caption text_`
+- Tall/narrow images (height > 2x width) need resizing to ~300px width.
+- Collapsible sections (`<details>`) for setup screenshots and long YAML blocks. Note: markdown inside `<details>` requires `<pre><code>` for code blocks — standard markdown fences won't render.
+- **No manual "Further Reading" section.** Chirpy auto-generates one from shared tags (1 point each) and categories (0.5 points each). Instead, verify the post's tags maximize overlap with related existing posts.
+- Callouts use Chirpy prompt boxes (`{: .prompt-tip }`, `{: .prompt-info }`, `{: .prompt-warning }`, `{: .prompt-danger }`), not emoji (no 💡, ⭐, ⚠️).
+- Be frugal with em-dashes. Prefer commas or restructuring.
+- Ends with an engagement question or thought-provoking closing statement.
+
+## Priority 4: Front Matter and Metadata
+
+- Filename: `YYYY-MM-DD-descriptive-slug.md` (date matches front matter date)
+- Required front matter: `title`, `date`, `categories` (lowercase, max 2), `tags` (lowercase, 5-8), `description`, `author`, `image` with `alt` text
+- Author matches a key in `_data/authors.yml`
+- Tags chosen to maximize useful Chirpy "Further Reading" overlap with existing posts — not generic terms like `search` or `agent-design` that match nothing
+- Description reflects what the post actually covers (not aspirational)
+- Consistent terminology: "agent" not "bot", "knowledge source" not "knowledge entry"
+
+## Priority 5: Scope and Length
+
+- Flag posts over 5,000 words. Most posts should be 2,000-4,000 words.
+- The post should do **one thing well**, not cover everything the author knows about the topic.
+- If a post covers 6 approaches at shallow depth, flag it — pick 2-3 and go deep.
 
 ## Output
-- State that a comprehensive, The Custom Engine blog post specific code review has been completed using Github Copilot with custom instructions
-- Compose a detailed review of the post, broken down into main sections for Quality and Technical Review.  Structure the quality section into subsections, corresponding to the aforementioned revew categories.
-- Ensure scores are output for each section of the quality review
-- If any mandatory post information is found to be missing in the Techincal Review, endure this is made clear to the user, using error message-like styling.
 
-Close the review with an overly uplifting quote to inspire the author to keep going!
+- List the **top 5-7 issues** ranked by impact on reader experience.
+- For each issue: **quote** the problematic text, explain **why** it's a problem, suggest a fix.
+- Do NOT score 14 categories. Do NOT provide percentage scores.
+- State whether the post is: **ready to publish**, **needs minor fixes**, or **needs structural revision**.
 
 ## Chirpy Markdown Reference
 
@@ -85,6 +110,16 @@ Options:
 - `{: file="path/to/file" }` - Show filename
 - `{: .nolineno }` - Hide line numbers
 - For PowerFX code, use `javascript` as the language identifier since Rouge does not have a PowerFX lexer
+
+### Collapsible Sections
+Markdown inside `<details>` blocks must use HTML, not markdown fences:
+```html
+<details>
+<summary>Click to expand</summary>
+<pre><code class="language-yaml">your code here
+</code></pre>
+</details>
+```
 
 ### File Paths
 ```markdown

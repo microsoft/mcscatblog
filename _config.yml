@@ -51,7 +51,7 @@ webmaster_verifications:
 # Web Analytics Settings
 analytics:
   google:
-    id: G-M4M35T13NN
+    id: # G-M4M35T13NN (disabled until cookie consent is resolved)
   goatcounter:
     id: # fill in your GoatCounter ID
   umami:
@@ -60,6 +60,8 @@ analytics:
   matomo:
     id: # fill in your Matomo ID
     domain: # fill in your Matomo domain
+  clarity:
+    id: wrvdi3rw3l
   cloudflare:
     id: # fill in your Cloudflare Web Analytics token
   fathom:
