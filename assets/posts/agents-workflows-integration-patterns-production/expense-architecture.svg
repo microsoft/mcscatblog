@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 960" width="1240" height="960" preserveAspectRatio="xMidYMid meet" style="max-width:100%; height:auto; background:#ffffff;">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#37474f"/>
+  </marker>
+  <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+    <feGaussianBlur stdDeviation="3"/>
+  </filter>
+</defs>
+<text x="620.0" y="38" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="700" fill="#0d47a1" text-anchor="middle">Expense Report Architecture</text>
+<text x="620.0" y="60" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#546e7a" text-anchor="middle">Pattern 2 (Conversation-First Automation) wrapping Pattern 1 (Reasoning-in-the-Loop)</text>
+<rect x="170.0" y="79.0" width="260" height="42" rx="21.0" ry="21.0" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+<text x="300.0" y="105.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">👤  User — Teams or WebChat</text>
+<rect x="60" y="200" width="480" height="300" rx="14" ry="14" fill="#f5fbff" stroke="#1565c0" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="76" y="224" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#1565c0">🗣️  COPILOT STUDIO AGENT — Expense Assistant</text>
+<rect x="84" y="256" width="432" height="44" rx="10" ry="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+<text x="300.0" y="283.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Understands natural-language requests</text>
+<rect x="84" y="312" width="432" height="44" rx="10" ry="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+<text x="300.0" y="339.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Gathers missing info conversationally</text>
+<rect x="84" y="368" width="432" height="44" rx="10" ry="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+<text x="300.0" y="395.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Calls agent flow to process the report</text>
+<rect x="84" y="424" width="432" height="44" rx="10" ry="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+<text x="300.0" y="451.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Summarizes results back to the user</text>
+<rect x="700" y="200" width="480" height="640" rx="14" ry="14" fill="#f3faf3" stroke="#2e7d32" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="716" y="224" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#2e7d32">⚙️  AGENT FLOW — Process Expense Report</text>
+<rect x="724" y="256" width="432" height="44" rx="10" ry="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+<text x="940.0" y="283.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#1b5e20" text-anchor="middle">1 · Validate inputs and normalize currency</text>
+<rect x="724" y="320" width="432" height="44" rx="10" ry="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+<text x="940.0" y="347.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#1b5e20" text-anchor="middle">2 · Load line items from Dataverse</text>
+<text x="940.0" y="396" text-anchor="middle" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-style="italic" font-weight="600" fill="#ef6c00">↓ Pattern 1: Reasoning-in-the-Loop ↓</text>
+<rect x="724" y="404" width="432" height="70" rx="10" ry="10" fill="#ffe0b2" stroke="#ef6c00" stroke-width="2"/>
+<text x="940.0" y="430.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#e65100" text-anchor="middle">3 · 🧠 Agent node: Policy Checker</text>
+<text x="940.0" y="451.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#e65100" text-anchor="middle">grounded in policy SharePoint • returns compliant / reason / risk_level / confidence</text>
+<polygon points="940.0,502.0 1050.0,544 940.0,586.0 830.0,544" fill="#fff9c4" stroke="#f9a825" stroke-width="2"/>
+<text x="940.0" y="549" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#f57f17" text-anchor="middle">4 · Branch on result</text>
+<rect x="724" y="628" width="200" height="60" rx="10" ry="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+<text x="824.0" y="649.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#1b5e20" text-anchor="middle">5a · Auto-approve</text>
+<text x="824.0" y="670.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#1b5e20" text-anchor="middle">policy-compliant path</text>
+<rect x="956" y="628" width="200" height="60" rx="10" ry="10" fill="#ffcdd2" stroke="#c62828" stroke-width="2"/>
+<text x="1056.0" y="649.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#b71c1c" text-anchor="middle">5b · 👥 Route to Approvals</text>
+<text x="1056.0" y="670.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#b71c1c" text-anchor="middle">human in the loop</text>
+<rect x="724" y="724" width="432" height="44" rx="10" ry="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+<text x="940.0" y="751.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#1b5e20" text-anchor="middle">6 · Post journal entry to AP system</text>
+<rect x="724" y="788" width="432" height="44" rx="10" ry="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+<text x="940.0" y="815.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#1b5e20" text-anchor="middle">7 · Return result to agent</text>
+<line x1="250.0" y1="121" x2="250.0" y2="200" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="118.8" y="152.5" width="102.4" height="20" rx="10" ry="10" fill="#ffffff" stroke="#37474f" stroke-width="1" opacity="0.96"/>
+<text x="170.0" y="167.5" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#37474f" text-anchor="middle">natural language</text>
+<line x1="350.0" y1="200" x2="350.0" y2="121" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="374.8" y="152.5" width="70.4" height="20" rx="10" ry="10" fill="#ffffff" stroke="#37474f" stroke-width="1" opacity="0.96"/>
+<text x="410.0" y="167.5" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#37474f" text-anchor="middle">explanation</text>
+<path d="M 540 390 L 620.0 390 L 620.0 392 L 700 392" fill="none" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="492.0" y="363.0" width="256.0" height="20" rx="10" ry="10" fill="#ffffff" stroke="#37474f" stroke-width="1" opacity="0.96"/>
+<text x="620.0" y="378.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#37474f" text-anchor="middle">Pattern 2: Conversation-First Automation</text>
+<path d="M 700 810 L 620.0 810 L 620.0 446 L 540 446" fill="none" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="565.6" y="600.0" width="108.80000000000001" height="20" rx="10" ry="10" fill="#ffffff" stroke="#37474f" stroke-width="1" opacity="0.96"/>
+<text x="620.0" y="615.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#37474f" text-anchor="middle">structured result</text>
+<line x1="940.0" y1="300" x2="940.0" y2="320" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="940.0" y1="364" x2="940.0" y2="404" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="940.0" y1="474" x2="940.0" y2="502" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 830.0 544 L 824.0 544 L 824.0 628" fill="none" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="797.0" y="522.0" width="60" height="20" rx="10" ry="10" fill="#ffffff" stroke="#37474f" stroke-width="1" opacity="0.96"/>
+<text x="827.0" y="537.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#37474f" text-anchor="middle">compliant</text>
+<path d="M 1050.0 544 L 1056.0 544 L 1056.0 628" fill="none" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1021.0" y="522.0" width="64.0" height="20" rx="10" ry="10" fill="#ffffff" stroke="#37474f" stroke-width="1" opacity="0.96"/>
+<text x="1053.0" y="537.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#37474f" text-anchor="middle">exceptions</text>
+<path d="M 824.0 688 L 824.0 702 L 940.0 702 L 940.0 724" fill="none" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 1056.0 688 L 1056.0 702 L 940.0 702 L 940.0 724" fill="none" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="940.0" y1="768" x2="940.0" y2="788" stroke="#37474f" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="60" y="860" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#263238" text-anchor="start">Color = LLM boundary</text>
+<rect x="60" y="870" width="20" height="20" rx="5" ry="5" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+<text x="88" y="885" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#263238" text-anchor="start">Conversation</text>
+<rect x="202.0" y="870" width="20" height="20" rx="5" ry="5" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+<text x="230.0" y="885" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#263238" text-anchor="start">Deterministic execution</text>
+<rect x="426.5" y="870" width="20" height="20" rx="5" ry="5" fill="#ffe0b2" stroke="#ef6c00" stroke-width="2"/>
+<text x="454.5" y="885" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#263238" text-anchor="start">Embedded reasoning</text>
+<rect x="613.5" y="870" width="20" height="20" rx="5" ry="5" fill="#fff9c4" stroke="#f9a825" stroke-width="2"/>
+<text x="641.5" y="885" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#263238" text-anchor="start">Deterministic branch</text>
+<rect x="815.5" y="870" width="20" height="20" rx="5" ry="5" fill="#ffcdd2" stroke="#c62828" stroke-width="2"/>
+<text x="843.5" y="885" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#263238" text-anchor="start">Human governance</text>
+</svg>
