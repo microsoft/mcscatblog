@@ -20,7 +20,7 @@ The fix isn't a smarter prompt. It's deciding, *deliberately*, which decisions b
 
 The question I keep getting: *when do I use a workflow, when do I use an agent, and how do I combine them without things going sideways?* There are really only three patterns. This post walks all three, gives you a decision matrix, and ends with a concrete expense-report example. For implementation gotchas and workarounds — same wiring underneath, same surprises — see the [companion post on gotchas, errors, and patterns]({% post_url 2026-04-17-combining-agent-flows-and-agents-gotchas-errors-and-patterns %}).
 
-> **Who this is for.** Process owners, makers, and fusion teams who already build automations in Power Platform and want to add agents without losing control of the process; architects deciding whether a workload even needs an agent in front of it. The framing is *workflow-first, agent-second*, because that's where most enterprise teams start. A full production blueprint (environments, ALM, monitoring, runbooks) is its own beast, and that's a follow-up post. Throughout, *workflow* covers both canvases: the GA agent flow designer and the new Workflows designer (preview) share the same execution model, and the patterns below apply identically to either.
+> **Who this is for.** Process owners, makers, and fusion teams who already build automations in Power Platform and want to add agents without losing control of the process; architects deciding whether a workload even needs an agent in front of it. The framing is *workflow-first, agent-second*, because that's where most enterprise teams start. A full production blueprint (environments, ALM, monitoring, runbooks) is its own beast, and that's a follow-up post.
 {: .prompt-info }
 
 ---
@@ -68,6 +68,9 @@ Microsoft describes [two canonical patterns](https://www.microsoft.com/en-us/mic
 
 Both enforce the same LLM boundary. They just start from different entry points. There's also a third pattern, **async continuation**, that you'll layer on top whenever a step doesn't fit inside a chat turn.
 
+> **A note on "workflow."** Copilot Studio has consolidated what used to be called *cloud flows* and *agent flows* under a single name: **workflows**. The new Workflows designer is the canonical authoring surface and is where the patterns below come to life (inline agent nodes, M365 Copilot nodes, native Human review). The previous designers still exist and the underlying runtime is shared, so the patterns map cleanly across them — but I'll use *workflow* throughout, and the screenshots are from the Workflows designer.
+{: .prompt-info }
+
 To make these easier to refer to throughout the rest of the post (and in design conversations with your team), I'm giving each one a short name:
 
 | Pattern | Short name | One-line mental model |
@@ -92,7 +95,7 @@ How each one maps to the patterns:
 - **Connector:** fires from an external service event ("when a new email arrives," "when a row is updated"). The canonical trigger for event-driven **Pattern 1** workflows.
 - **HTTP request:** webhook-style. This is the inbound side of the **Pattern 3 (Fire-and-Follow-up)** callback channel: your async worker posts back here with the final result.
 
-A fifth trigger fires when an agent invokes the workflow (the picker still labels it **When an agent calls the flow**, since the product UI predates the rename); this powers **Pattern 2 (Conversation-First Automation)**. You won't see it in the generic picker above; it's wired in for you when you create a workflow as an agent tool.
+A fifth trigger, the **agent-call trigger**, powers **Pattern 2 (Conversation-First Automation)**. You won't see it in the generic picker above; it's wired in for you when you create a workflow as an agent tool.
 
 > **Trigger choice picks identity.** Manual runs as the invoking user, Recurrence runs as the workflow owner, Connector/HTTP runs as the configured connection, and agent-call runs as the conversation user. Match the trigger to the identity you actually want crossing the first boundary; this is one of the easiest things to get wrong, and one of the hardest to debug after the fact.
 {: .prompt-tip }
