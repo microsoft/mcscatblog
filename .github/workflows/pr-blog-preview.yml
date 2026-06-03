@@ -102,7 +102,26 @@ jobs:
           const fs = require('fs');
           const path = require('path');
 
+          const siteBasePath = path.join('_site', 'mcscatblog');
+          const artifactBasePath = 'preview-html';
+
           fs.mkdirSync('preview-html', { recursive: true });
+          fs.writeFileSync(
+            path.join(artifactBasePath, 'README.txt'),
+            'Open the post HTML file from this folder. The assets directory is included so CSS, JavaScript, and images resolve locally.\n'
+          );
+
+          function rewriteAssetUrls(html) {
+            return html
+              .replace(/https:\/\/microsoft\.github\.io\/mcscatblog\/assets\//g, 'assets/')
+              .replace(/\/mcscatblog\/assets\//g, 'assets/')
+              .replace(/(["'(])\/assets\//g, '$1assets/');
+          }
+
+          const siteAssetsPath = path.join(siteBasePath, 'assets');
+          if (fs.existsSync(siteAssetsPath)) {
+            fs.cpSync(siteAssetsPath, path.join(artifactBasePath, 'assets'), { recursive: true });
+          }
 
           const posts = fs.readFileSync('added-posts.txt', 'utf8')
             .split(/\r?\n/)
@@ -125,8 +144,8 @@ jobs:
             }
 
             const slug = match[1];
-            const htmlPath = path.join('_site', 'mcscatblog', 'posts', slug, 'index.html');
-            const htmlArtifactPath = path.join('preview-html', `${slug}.html`);
+            const htmlPath = path.join(siteBasePath, 'posts', slug, 'index.html');
+            const htmlArtifactPath = path.join(artifactBasePath, `${slug}.html`);
 
             if (!fs.existsSync(htmlPath)) {
               missingPreviews.push({
@@ -137,7 +156,8 @@ jobs:
               continue;
             }
 
-            fs.copyFileSync(htmlPath, htmlArtifactPath);
+            const html = fs.readFileSync(htmlPath, 'utf8');
+            fs.writeFileSync(htmlArtifactPath, rewriteAssetUrls(html));
             previewPages.push({
               post,
               slug,
