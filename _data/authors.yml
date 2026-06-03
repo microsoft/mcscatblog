@@ -100,3 +100,12 @@ zekitekin:
   name: Zeki Tekin
   email: zekitekin@microsoft.com
   avatar: https://github.com/fs-dp.png
+
+missbets:
+  name: Betty Le
+  email: Elizabeth.Le@microsoft.com # Optional
+  avatar: https://github.com/missbets.png # Optional: path to avatar image
+
+ashVancouver:
+  name: Ashwin Raju Krishnamurthi
+  avatar: https://github.com/ashVancouver.png
