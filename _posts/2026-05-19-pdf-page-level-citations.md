@@ -454,7 +454,7 @@ If you're unsure which sample to use, it comes down to your knowledge source:
 - **SharePoint knowledge source** — use the [SharePoint PDF page citations sample](https://github.com/microsoft/CopilotStudioSamples/blob/main/authoring/snippets/topics/sharepoint-pdf-page-citations/sharepoint-pdf-citations.yml). Your citations already have URLs pointing to SharePoint, the topic just makes them page specific.
 - **Uploaded files** — use the [citation-swap sample](https://github.com/microsoft/CopilotStudioSamples/blob/main/authoring/snippets/topics/citation-swap/swap-citations.yml). You need to swap the citation URLs entirely and can add page precision as part of that.
 
-If you want to go further, handling knowledge and customised citations for custom platforms as an example, consider using [Azure AI Search as a knowledge source](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-add-existing-search) where you can map citation URLs at the index level.
+If you want to go further, handling knowledge and customised citations for custom platforms as an example, consider using [Azure AI Search as a knowledge source](https://learn.microsoft.com/en-us/microsoft-copilot-studio/knowledge-azure-ai-search) where you can map citation URLs at the index level.
 
 And if you want to remove citations entirely, Henry covered that in [Kill the \[1\]: How to Remove Citations from Copilot Studio Answers]({% post_url 2025-12-15-remove-citations-in-copilot-studio-answer %}).
 
