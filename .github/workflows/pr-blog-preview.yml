@@ -217,39 +217,39 @@ jobs:
 
             export NODE_PATH="$playwright_dir/node_modules"
             node <<'NODE'
-            const fs = require('fs');
-            const path = require('path');
-            const { chromium } = require('playwright');
+          const fs = require('fs');
+          const path = require('path');
+          const { chromium } = require('playwright');
 
-            const baseUrl = process.env.PREVIEW_BASE_URL;
-            const previewPages = JSON.parse(fs.readFileSync('preview-pages.json', 'utf8'));
+          const baseUrl = process.env.PREVIEW_BASE_URL;
+          const previewPages = JSON.parse(fs.readFileSync('preview-pages.json', 'utf8'));
 
-            (async () => {
-              const browser = await chromium.launch();
+          (async () => {
+            const browser = await chromium.launch();
 
-              try {
-                for (const previewPage of previewPages) {
-                  const page = await browser.newPage({
-                    viewport: { width: 1440, height: 1200 },
-                    deviceScaleFactor: 1
-                  });
+            try {
+              for (const previewPage of previewPages) {
+                const page = await browser.newPage({
+                  viewport: { width: 1440, height: 1200 },
+                  deviceScaleFactor: 1
+                });
 
-                  const url = new URL(previewPage.urlPath, baseUrl).toString();
-                  const screenshotPath = path.join('preview-screenshots', `${previewPage.slug}.png`);
+                const url = new URL(previewPage.urlPath, baseUrl).toString();
+                const screenshotPath = path.join('preview-screenshots', `${previewPage.slug}.png`);
 
-                  console.log(`Capturing ${url} -> ${screenshotPath}`);
-                  await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
-                  await page.screenshot({ path: screenshotPath, fullPage: true });
-                  await page.close();
-                }
-              } finally {
-                await browser.close();
+                console.log(`Capturing ${url} -> ${screenshotPath}`);
+                await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+                await page.screenshot({ path: screenshotPath, fullPage: true });
+                await page.close();
               }
-            })().catch((error) => {
-              console.error(error);
-              process.exit(1);
-            });
-            NODE
+            } finally {
+              await browser.close();
+            }
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
           } > screenshot.log 2>&1 || status=$?
 
           cat screenshot.log
