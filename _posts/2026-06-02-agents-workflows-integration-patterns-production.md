@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Agents and Workflows in Copilot Studio: Integration Patterns That Actually Hold Up in Production"
-date: 2026-06-02
+date: 2026-06-03
 categories: [copilot-studio, architecture]
 tags: [copilot-studio, agent-flows, workflows, classify-node, human-review, architecture]
 description: "Three patterns for combining Copilot Studio agents with agent flows and the new Workflows designer, when to use each, and a decision matrix to pick the right one."
