@@ -31,8 +31,8 @@ Here's what's covered:
 |---|---|---|
 | [1](#1-core-principle-the-llm-boundary) | The LLM Boundary | Where reasoning ends and<br>deterministic execution begins |
 | [2](#2-two-patterns-one-architecture) | Two Patterns,<br>One Architecture | Workflows that use agents vs.<br>agents that use workflows |
-| [3](#3-pattern-1-reasoning-in-the-loop-workflows-that-call-agents) | Pattern 1: **Reasoning-in-the-Loop**<br>(workflow calls agent) | Deterministic orchestration<br>with embedded intelligence |
-| [4](#4-pattern-2-conversation-first-automation-agents-that-call-workflows) | Pattern 2: **Conversation-First Automation**<br>(agent calls workflow) | Conversational front end<br>backed by reliable automation |
+| [3](#3-pattern-1-reasoning-in-the-loop-workflow-calls-agent) | Pattern 1: **Reasoning-in-the-Loop**<br>(workflow calls agent) | Deterministic orchestration<br>with embedded intelligence |
+| [4](#4-pattern-2-conversation-first-automation-agent-calls-workflow) | Pattern 2: **Conversation-First Automation**<br>(agent calls workflow) | Conversational front end<br>backed by reliable automation |
 | [5](#5-pattern-3-fire-and-follow-up-async-continuation) | Pattern 3: **Fire-and-Follow-up**<br>(async continuation) | When work won't finish<br>inside a chat turn |
 | [6](#6-combining-patterns) | Combining Patterns | How real solutions stack<br>the three patterns |
 | [7](#7-decision-framework) | Decision Framework | Picking the right pattern<br>under real constraints |
@@ -92,14 +92,14 @@ How each one maps to the patterns:
 - **Connector:** fires from an external service event ("when a new email arrives," "when a row is updated"). The canonical trigger for event-driven **Pattern 1** workflows.
 - **HTTP request:** webhook-style. This is the inbound side of the **Pattern 3 (Fire-and-Follow-up)** callback channel: your async worker posts back here with the final result.
 
-A fifth trigger, **When an agent calls the flow**, powers **Pattern 2 (Conversation-First Automation)**. You won't see it in the generic picker above; it's wired in for you when you create a workflow as an agent tool.
+A fifth trigger fires when an agent invokes the workflow (the picker still labels it **When an agent calls the flow**, since the product UI predates the rename); this powers **Pattern 2 (Conversation-First Automation)**. You won't see it in the generic picker above; it's wired in for you when you create a workflow as an agent tool.
 
 > **Trigger choice picks identity.** Manual runs as the invoking user, Recurrence runs as the workflow owner, Connector/HTTP runs as the configured connection, and agent-call runs as the conversation user. Match the trigger to the identity you actually want crossing the first boundary; this is one of the easiest things to get wrong, and one of the hardest to debug after the fact.
 {: .prompt-tip }
 
 ---
 
-## 3. Pattern 1: Reasoning-in-the-Loop (workflows that call agents)
+## 3. Pattern 1: Reasoning-in-the-Loop (workflow calls agent)
 
 **Use this when the process is primary.** The workflow owns sequence, branching, approvals, and system calls. At points that need *judgment* (document interpretation, exception classification, summarization), the workflow hands off to an agent.
 
@@ -142,7 +142,7 @@ A few things that'll save you pain:
 
 - **Treat agent input/output as an API contract**, not a free-text prompt. This is the single highest-leverage habit in Reasoning-in-the-Loop.
 - **Pick deterministic branch fields** in your output. Include things like `status`, `confidence`, and a `reason_code` so downstream steps don't have to parse prose.
-- **Know which identity the agent node runs as.** The agent node executes with the credentials of the *user who triggers the workflow*; if they don't have access to the referenced agent, the node fails at runtime. Helpful for least privilege, surprising when you don't expect it. Details in the [release plan](https://learn.microsoft.com/power-platform/release-plan/2026wave1/microsoft-copilot-studio/invoke-agents-as-workflow-steps-agent-node).
+- **Know which identity the agent node runs as.** The agent node inherits the workflow's run identity, which is whatever the trigger established (see §2 above). For Pattern 2 that's the conversation user; for a Recurrence-triggered batch job it's the workflow owner. Either way, if that identity doesn't have access to the referenced agent, the node fails at runtime. Helpful for least privilege, surprising when you don't expect it. Details in the [release plan](https://learn.microsoft.com/power-platform/release-plan/2026wave1/microsoft-copilot-studio/invoke-agents-as-workflow-steps-agent-node).
 - **Budget latency end-to-end.** Reasoning time *plus* downstream actions has to fit inside the synchronous limit; if it doesn't, jump straight to Pattern 3 (Fire-and-Follow-up).
 
 > **A word on `Prefer async`.** It's a routing *hint* to the orchestrator, not a hard switch. It doesn't turn a blocking node into a non-blocking one and it doesn't remove synchronous limits. For long-running work, design Pattern 3 explicitly. Don't rely on `Prefer async` to save you.
@@ -165,7 +165,7 @@ A few things that'll save you pain:
 
 ---
 
-## 4. Pattern 2: Conversation-First Automation (agents that call workflows)
+## 4. Pattern 2: Conversation-First Automation (agent calls workflow)
 
 **Use this when the conversation is primary.** The agent is the user interface: it understands language, gathers context, and decides what to do next. When it needs to do something deterministic (update a record, trigger approval, generate a document), it calls a workflow as a tool.
 
@@ -361,13 +361,13 @@ Here's the whole thing on one canvas. The colors map to the LLM boundary: **blue
 ![Expense workflow architecture: conversation agent feeds a deterministic workflow with one embedded agent node for policy reasoning.](/assets/posts/agents-workflows-integration-patterns/expense-architecture.svg){: .shadow w="1240" h="960" }
 _Pattern 2 wrapping Pattern 1, with a single amber agent node as the LLM boundary inside the deterministic workflow._
 
-What the colors are telling you at a glance:
+The diagram's built-in legend names the colors; here's what each one *means* for the architecture:
 
-- <span style="display:inline-block;width:0.9em;height:0.9em;background:#3b82f6;border-radius:2px;vertical-align:middle;margin-right:0.25em;"></span> **Blue (Agent layer):** everything that reasons about *user intent and language*. This is where the LLM is allowed to be flexible.
-- <span style="display:inline-block;width:0.9em;height:0.9em;background:#10b981;border-radius:2px;vertical-align:middle;margin-right:0.25em;"></span> **Green (Workflow steps):** deterministic execution. Same input, same output, every time. No surprises here.
-- <span style="display:inline-block;width:0.9em;height:0.9em;background:#f59e0b;border-radius:2px;vertical-align:middle;margin-right:0.25em;"></span> **Amber (Agent node):** the *one* place inside the deterministic workflow where you've deliberately invited reasoning back in. This is **Pattern 1 (Reasoning-in-the-Loop)** nested inside **Pattern 2 (Conversation-First Automation)**.
-- <span style="display:inline-block;width:0.9em;height:0.9em;background:#ef4444;border-radius:2px;vertical-align:middle;margin-right:0.25em;"></span> **Red (Approvals):** human governance. Some decisions stay with people on purpose. The **Human review** node handles this directly, no extra connector wiring needed. If the out-of-the-box Approvals connector doesn't fit your approval shape (custom payloads, non-Teams reviewers, signed callbacks), see [Human in the loop with a custom connector]({% post_url 2026-05-20-human-in-the-loop-custom-connector %}) for a hand-rolled pattern that does.
-- <span style="display:inline-block;width:0.9em;height:0.9em;background:#eab308;border-radius:2px;vertical-align:middle;margin-right:0.25em;"></span> **Yellow (Branch):** the deterministic switch that consumes the agent node's structured output. Schema-first design is what makes this branch reliable. A **Classify** node consumes the agent's `risk_level` field directly, no nested `If/Else` to maintain.
+- **Blue (Agent layer):** everything that reasons about *user intent and language*. This is where the LLM is allowed to be flexible.
+- **Green (Workflow steps):** deterministic execution. Same input, same output, every time. No surprises here.
+- **Amber (Agent node):** the *one* place inside the deterministic workflow where you've deliberately invited reasoning back in. This is **Pattern 1 (Reasoning-in-the-Loop)** nested inside **Pattern 2 (Conversation-First Automation)**.
+- **Red (Approvals):** human governance. Some decisions stay with people on purpose. The **Human review** node handles this directly, no extra connector wiring needed. If the out-of-the-box Approvals connector doesn't fit your approval shape (custom payloads, non-Teams reviewers, signed callbacks), see [Human in the loop with a custom connector]({% post_url 2026-05-20-human-in-the-loop-custom-connector %}) for a hand-rolled pattern that does.
+- **Yellow (Branch):** the deterministic switch that consumes the agent node's structured output. Schema-first design is what makes this branch reliable. A **Classify** node consumes the agent's `risk_level` field directly, no nested `If/Else` to maintain.
 
 If you can look at this diagram and immediately see *where AI is allowed to make decisions*, it's doing its job.
 
