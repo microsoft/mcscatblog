@@ -1,0 +1,379 @@
+name: PR Blog Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-blog-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  PREVIEW_BASE_URL: http://127.0.0.1:4000
+  HTML_ARTIFACT_NAME: pr-blog-preview-html
+  SCREENSHOT_ARTIFACT_NAME: pr-blog-preview-screenshots
+
+jobs:
+  build:
+    name: Build and capture previews
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check whether this run is still current
+        id: freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          latest_sha="$(gh api "repos/${REPOSITORY}/pulls/${PR_NUMBER}" --jq '.head.sha')"
+
+          if [[ "$latest_sha" != "$EVENT_HEAD_SHA" ]]; then
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+            echo "Skipping stale run for ${EVENT_HEAD_SHA}; latest PR head is ${latest_sha}."
+            exit 0
+          fi
+
+          echo "stale=false" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        if: steps.freshness.outputs.stale != 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ruby
+        if: steps.freshness.outputs.stale != 'true'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+
+      - name: Detect newly added posts
+        if: steps.freshness.outputs.stale != 'true'
+        id: detect-posts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          gh api --paginate "repos/${REPOSITORY}/pulls/${PR_NUMBER}/files" \
+            --jq '.[] | select(.status == "added" and (.filename | test("^_posts/.*\\.md$"))) | .filename' \
+            > added-posts.txt
+
+          post_count="$(grep -c . added-posts.txt || true)"
+          echo "count=${post_count}" >> "$GITHUB_OUTPUT"
+
+          if (( post_count > 0 )); then
+            echo "New posts detected:"
+            cat added-posts.txt
+          else
+            echo "No newly added posts were detected."
+          fi
+
+      - name: Build Jekyll site
+        if: steps.freshness.outputs.stale != 'true'
+        id: build-site
+        run: |
+          set +e
+          JEKYLL_ENV=production bundle exec jekyll build \
+            -d "_site/mcscatblog" \
+            --config _config.yml \
+            > build.log 2>&1
+          status=$?
+          set -e
+
+          cat build.log
+          echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Prepare rendered HTML previews
+        if: steps.build-site.outputs.exit_code == '0' && steps.detect-posts.outputs.count != '0'
+        id: html-previews
+        run: |
+          set +e
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+
+          fs.mkdirSync('preview-html', { recursive: true });
+
+          const posts = fs.readFileSync('added-posts.txt', 'utf8')
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter(Boolean);
+
+          const previewPages = [];
+          const missingPreviews = [];
+
+          for (const post of posts) {
+            const fileName = path.basename(post, '.md');
+            const match = fileName.match(/^\d{4}-\d{2}-\d{2}-(.+)$/);
+
+            if (!match) {
+              missingPreviews.push({
+                post,
+                reason: 'Post filename must use YYYY-MM-DD-slug.md format.'
+              });
+              continue;
+            }
+
+            const slug = match[1];
+            const htmlPath = path.join('_site', 'mcscatblog', 'posts', slug, 'index.html');
+            const htmlArtifactPath = path.join('preview-html', `${slug}.html`);
+
+            if (!fs.existsSync(htmlPath)) {
+              missingPreviews.push({
+                post,
+                slug,
+                reason: `Expected generated page was not found at ${htmlPath}.`
+              });
+              continue;
+            }
+
+            fs.copyFileSync(htmlPath, htmlArtifactPath);
+            previewPages.push({
+              post,
+              slug,
+              htmlPath,
+              htmlArtifactPath,
+              urlPath: `/mcscatblog/posts/${slug}/`
+            });
+          }
+
+          fs.writeFileSync('preview-pages.json', `${JSON.stringify(previewPages, null, 2)}\n`);
+          fs.writeFileSync('missing-previews.json', `${JSON.stringify(missingPreviews, null, 2)}\n`);
+
+          if (missingPreviews.length > 0) {
+            console.error('Some newly added posts did not produce rendered HTML previews.');
+            console.error(JSON.stringify(missingPreviews, null, 2));
+            process.exit(1);
+          }
+
+          console.log(`Prepared ${previewPages.length} rendered HTML preview(s).`);
+          NODE
+          status=$?
+          set -e
+
+          echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Capture post screenshots
+        if: steps.build-site.outputs.exit_code == '0' && steps.detect-posts.outputs.count != '0' && steps.html-previews.outputs.exit_code == '0'
+        id: screenshots
+        run: |
+          status=0
+          (
+            set -e
+            server_pid=""
+
+            cleanup() {
+              if [[ -n "$server_pid" ]]; then
+                kill "$server_pid" 2>/dev/null || true
+              fi
+            }
+            trap cleanup EXIT
+
+            mkdir -p preview-screenshots
+
+            python3 -m http.server 4000 --bind 127.0.0.1 --directory _site > static-server.log 2>&1 &
+            server_pid=$!
+
+            for attempt in {1..30}; do
+              if curl -fsS "${PREVIEW_BASE_URL}/mcscatblog/" > /dev/null; then
+                break
+              fi
+
+              if (( attempt == 30 )); then
+                echo "Static preview server did not become available."
+                cat static-server.log
+                exit 1
+              fi
+
+              sleep 1
+            done
+
+            playwright_dir="$(mktemp -d)"
+            npm install \
+              --prefix "$playwright_dir" \
+              --no-save \
+              --no-package-lock \
+              --no-audit \
+              --no-fund \
+              playwright@1.49.1
+            "$playwright_dir/node_modules/.bin/playwright" install --with-deps chromium
+
+            export NODE_PATH="$playwright_dir/node_modules"
+            node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { chromium } = require('playwright');
+
+          const baseUrl = process.env.PREVIEW_BASE_URL;
+          const previewPages = JSON.parse(fs.readFileSync('preview-pages.json', 'utf8'));
+
+          (async () => {
+            const browser = await chromium.launch();
+
+            try {
+              for (const previewPage of previewPages) {
+                const page = await browser.newPage({
+                  viewport: { width: 1440, height: 1200 },
+                  deviceScaleFactor: 1
+                });
+
+                const url = new URL(previewPage.urlPath, baseUrl).toString();
+                const screenshotPath = path.join('preview-screenshots', `${previewPage.slug}.png`);
+
+                console.log(`Capturing ${url} -> ${screenshotPath}`);
+                await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+                await page.screenshot({ path: screenshotPath, fullPage: true });
+                await page.close();
+              }
+            } finally {
+              await browser.close();
+            }
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+          ) > screenshot.log 2>&1 || status=$?
+
+          cat screenshot.log
+          echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload rendered HTML previews
+        if: steps.build-site.outputs.exit_code == '0' && steps.detect-posts.outputs.count != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.HTML_ARTIFACT_NAME }}
+          path: preview-html
+          if-no-files-found: ignore
+
+      - name: Upload screenshot previews
+        if: steps.build-site.outputs.exit_code == '0' && steps.detect-posts.outputs.count != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SCREENSHOT_ARTIFACT_NAME }}
+          path: preview-screenshots
+          if-no-files-found: ignore
+
+      - name: Write preview result
+        if: always() && steps.freshness.outputs.stale != 'true'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          BUILD_EXIT_CODE: ${{ steps.build-site.outputs.exit_code }}
+          HTML_EXIT_CODE: ${{ steps.html-previews.outputs.exit_code }}
+          SCREENSHOT_EXIT_CODE: ${{ steps.screenshots.outputs.exit_code }}
+          HTML_ARTIFACT_NAME: ${{ env.HTML_ARTIFACT_NAME }}
+          SCREENSHOT_ARTIFACT_NAME: ${{ env.SCREENSHOT_ARTIFACT_NAME }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          function readLines(filePath) {
+            if (!fs.existsSync(filePath)) {
+              return [];
+            }
+
+            return fs.readFileSync(filePath, 'utf8')
+              .split(/\r?\n/)
+              .map((line) => line.trim())
+              .filter(Boolean);
+          }
+
+          function readJson(filePath, fallback) {
+            if (!fs.existsSync(filePath)) {
+              return fallback;
+            }
+
+            return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          }
+
+          function tail(filePath, maxLines = 80, maxChars = 12000) {
+            if (!fs.existsSync(filePath)) {
+              return '';
+            }
+
+            const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/).slice(-maxLines);
+            const content = lines.join('\n');
+            return content.length > maxChars ? content.slice(content.length - maxChars) : content;
+          }
+
+          const buildExitCode = process.env.BUILD_EXIT_CODE || '0';
+          const htmlExitCode = process.env.HTML_EXIT_CODE || '0';
+          const screenshotExitCode = process.env.SCREENSHOT_EXIT_CODE || '0';
+
+          const result = {
+            prNumber: Number(process.env.PR_NUMBER),
+            prUrl: process.env.PR_URL,
+            repository: process.env.REPOSITORY,
+            headSha: process.env.HEAD_SHA,
+            baseSha: process.env.BASE_SHA,
+            runId: process.env.RUN_ID,
+            runAttempt: process.env.RUN_ATTEMPT,
+            runUrl: `https://github.com/${process.env.REPOSITORY}/actions/runs/${process.env.RUN_ID}`,
+            htmlArtifactName: process.env.HTML_ARTIFACT_NAME,
+            screenshotArtifactName: process.env.SCREENSHOT_ARTIFACT_NAME,
+            addedPosts: readLines('added-posts.txt'),
+            previewPages: readJson('preview-pages.json', []),
+            missingPreviews: readJson('missing-previews.json', []),
+            buildExitCode,
+            htmlExitCode,
+            screenshotExitCode,
+            buildSucceeded: buildExitCode === '0',
+            htmlSucceeded: htmlExitCode === '0',
+            screenshotSucceeded: screenshotExitCode === '0',
+            buildLogTail: tail('build.log'),
+            screenshotLogTail: tail('screenshot.log')
+          };
+
+          fs.writeFileSync('preview-result.json', `${JSON.stringify(result, null, 2)}\n`);
+          NODE
+
+      - name: Upload preview result
+        if: always() && steps.freshness.outputs.stale != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-blog-preview-result
+          path: |
+            preview-result.json
+            added-posts.txt
+            preview-pages.json
+            missing-previews.json
+            build.log
+            screenshot.log
+            static-server.log
+          if-no-files-found: ignore
+
+      - name: Fail if build or preview generation failed
+        if: always() && steps.freshness.outputs.stale != 'true'
+        env:
+          BUILD_EXIT_CODE: ${{ steps.build-site.outputs.exit_code }}
+          HTML_EXIT_CODE: ${{ steps.html-previews.outputs.exit_code }}
+          SCREENSHOT_EXIT_CODE: ${{ steps.screenshots.outputs.exit_code }}
+        run: |
+          build_exit="${BUILD_EXIT_CODE:-0}"
+          html_exit="${HTML_EXIT_CODE:-0}"
+          screenshot_exit="${SCREENSHOT_EXIT_CODE:-0}"
+
+          if [[ "$build_exit" != "0" || "$html_exit" != "0" || "$screenshot_exit" != "0" ]]; then
+            echo "Build exit code: ${build_exit}"
+            echo "HTML preview exit code: ${html_exit}"
+            echo "Screenshot preview exit code: ${screenshot_exit}"
+            exit 1
+          fi
