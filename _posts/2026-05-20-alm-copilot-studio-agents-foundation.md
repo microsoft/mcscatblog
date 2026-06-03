@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "ALM for Copilot Studio Agents: The Foundation"
-date: 2026-06-02
+date: 2026-06-03
 categories: [copilot-studio, alm]
 tags: [copilot-studio, power-platform, alm, environments, pipelines, evaluations]
 description: "A practical guide to setting up Application Lifecycle Management for Copilot Studio agents - from environment strategy to deployment confidence."
