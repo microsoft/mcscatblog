@@ -13,7 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  COOLDOWN_SECONDS: 180
   PREVIEW_BASE_URL: http://127.0.0.1:4000
   HTML_ARTIFACT_NAME: pr-blog-preview-html
   SCREENSHOT_ARTIFACT_NAME: pr-blog-preview-screenshots
@@ -25,13 +24,6 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Cool down for commit bursts
-        run: |
-          if [[ "$COOLDOWN_SECONDS" =~ ^[0-9]+$ ]] && (( COOLDOWN_SECONDS > 0 )); then
-            echo "Waiting ${COOLDOWN_SECONDS}s before starting the build..."
-            sleep "$COOLDOWN_SECONDS"
-          fi
-
       - name: Check whether this run is still current
         id: freshness
         env:
