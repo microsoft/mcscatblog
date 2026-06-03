@@ -169,19 +169,20 @@ jobs:
         id: screenshots
         run: |
           status=0
-          server_pid=""
+          (
+            set -e
+            server_pid=""
 
-          cleanup() {
-            if [[ -n "$server_pid" ]]; then
-              kill "$server_pid" 2>/dev/null || true
-            fi
-          }
-          trap cleanup EXIT
+            cleanup() {
+              if [[ -n "$server_pid" ]]; then
+                kill "$server_pid" 2>/dev/null || true
+              fi
+            }
+            trap cleanup EXIT
 
-          {
             mkdir -p preview-screenshots
 
-            ruby -run -e httpd -- --bind-address=127.0.0.1 --port=4000 _site > static-server.log 2>&1 &
+            python3 -m http.server 4000 --bind 127.0.0.1 --directory _site > static-server.log 2>&1 &
             server_pid=$!
 
             for attempt in {1..30}; do
@@ -191,6 +192,7 @@ jobs:
 
               if (( attempt == 30 )); then
                 echo "Static preview server did not become available."
+                cat static-server.log
                 exit 1
               fi
 
@@ -242,7 +244,7 @@ jobs:
             process.exit(1);
           });
           NODE
-          } > screenshot.log 2>&1 || status=$?
+          ) > screenshot.log 2>&1 || status=$?
 
           cat screenshot.log
           echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
