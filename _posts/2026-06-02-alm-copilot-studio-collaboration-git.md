@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "ALM for Copilot Studio Agents: Collaboration with Git"
-date: 2026-06-XX
+date: 2026-06-03
 categories: [copilot-studio, agents, alm]
 tags: [copilot-studio, power-platform, azure, devops, alm, git, source-control, collaboration, branching, yaml]
 description: "How multiple makers collaborate on the same Copilot Studio agent using native Git integration - branching, merging, pull requests, and practical guardrails."
