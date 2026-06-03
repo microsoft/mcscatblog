@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "ALM for Copilot Studio Agents: Collaboration with Git"
-date: 2026-06-XX
-categories: [copilot-studio, agents, alm]
+date: 2026-06-02
+categories: [copilot-studio, alm]
 tags: [copilot-studio, power-platform, azure, devops, alm, git, source-control, collaboration, branching, yaml]
 description: "How multiple makers collaborate on the same Copilot Studio agent using native Git integration - branching, merging, pull requests, and practical guardrails."
 author: jpapadimitriou
@@ -27,7 +27,8 @@ This is where source control stops being optional. Without it, the last person t
 
 Here is the end-to-end collaboration flow at a glance - the rest of this post breaks down each step:
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/end_to_end_collaboration_flow.png)
+![Side-by-side comparison of the two Microsoft-documented Git collaboration models for Copilot Studio](/assets/posts/alm-copilot-studio-collaboration-git/end_to_end_collaboration_flow.png){: .shadow w="700" }
+_On the left, the Shared Branch Model shows a simple cycle where both developers (Bruce and Alfred) connect to the same main branch - they pull latest changes, work in Copilot Studio, commit back to main, and pull again, repeating the cycle. A note indicates this is simple and lightweight, best for small teams with low change volume. On the right, the Feature Branch Model (Enterprise) shows each developer committing to their own isolated feature branch (feature/order-status-v2 for Bruce, feature/inventory-tool for Alfred), then opening pull requests that merge into main. Once merged, a pipeline automatically promotes the solution to Test and Prod environments. A step-by-step legend at the bottom summarises the flow: Create Feature Branch, Work and Commit, Open PR, Merge to main, Pipeline Runs, Promote to TEST and PROD. A note indicates this model is best for enterprise scenarios, providing isolation, review, and controlled promotion through environments._
 
 ---
 
@@ -74,7 +75,8 @@ Microsoft documents two approaches for multi-maker collaboration with Git integr
 
 Multiple development environments connect to the **same repository, branch, and folder**. Makers collaborate through a commit-and-pull cycle.
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/shared_branch_model.png)
+![Diagram showing the shared branch model's structure](/assets/posts/alm-copilot-studio-collaboration-git/shared_branch_model.png){: .shadow w="700" }
+_Two development environments (DEV1 and DEV2), each with their own maker, both connect to the same main branch in the same repository and same folder. This illustrates the Power Platform Git integration requirement that all connected environments must use identical binding settings - same repo, same branch, same Git folder._
 
 Microsoft's documentation states:
 
@@ -93,13 +95,15 @@ Microsoft's documentation states:
 3. Maker B selects "Check for updates" and pulls - Maker A's changes arrive in their environment
 4. If both modified the same file, conflicts surface in the Source Control panel and are [resolved there](https://learn.microsoft.com/en-us/power-platform/alm/git-integration/source-control-operations#conflict-resolution)
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/daily_workflow_cycle.png)
+![The Shared Branch Commit-Pull Cycle](/assets/posts/alm-copilot-studio-collaboration-git/daily_workflow_cycle.png){: .shadow w="700" }
+_Circular workflow diagram showing the shared branch collaboration cycle. DEV1 (Bruce) on the left commits changes to the central main branch represented by a vertical Git commit timeline, then DEV2 (Alfred) on the right pulls those changes. DEV2 then commits their own changes back to main, and DEV1 pulls them. Large curved arrows form a continuous loop around both environments, with a 'Repeat Continuously' indicator at the bottom, illustrating the ongoing commit-pull-commit-pull rhythm that keeps both makers in sync on the same branch._
 
 ### Model 2: Feature Branches (Enterprise)
 
 Each development environment connects to its **own feature branch**. Changes reach `main` only through reviewed and approved pull requests.
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/feature_branch_enterprise_flow.png)
+![The Feature Branch Pipeline Flow](/assets/posts/alm-copilot-studio-collaboration-git/feature_branch_enterprise_flow.png){: .shadow w="700" }
+_Feature branch model flow showing DEV1 connected to feature/order-status-v2 and DEV2 connected to feature/inventory-tool, both submitting pull requests that merge into the main branch. From main, a pipeline automatically promotes the solution through TEST and then to PROD environments._
 
 Microsoft's enterprise reference architecture states:
 
@@ -120,7 +124,8 @@ And further:
 5. Maker B merges `main` into their feature branch (in Azure DevOps), then pulls to get Maker A's changes
 6. `main` is promoted to TEST/PROD via [Pipelines in Power Platform](https://learn.microsoft.com/en-us/power-platform/alm/pipelines) as a managed solution
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/branch_strategy.png)
+![Git timeline diagram showing the feature branch model in action](/assets/posts/alm-copilot-studio-collaboration-git/branch_strategy.png){: .shadow w="700" }
+_The main branch runs horizontally with commits shown as blue dots. Bruce's feature/order-status-v2 branch (green) forks from main above, accumulates several commits, then merges back via a PR. Alfred's feature/inventory-tool branch (orange) forks below, accumulates its own commits, and merges back via a separate PR. After both PRs merge into main, the pipeline promotes the solution through TEST (gear icon) and then to PROD (rocket icon)._
 
 ### Which Model Should You Choose?
 
@@ -156,7 +161,8 @@ Bruce and Alfred both have their own development environments, connected to the 
 
 **The hard case:** both makers edit the same component. The Source Control panel surfaces this as a [conflict](https://learn.microsoft.com/en-us/power-platform/alm/git-integration/source-control-operations#conflict-resolution). For each conflict, the maker chooses to **keep existing changes** (theirs) or **accept incoming changes** (from Git). Because the format is YAML, the conflict is readable rather than opaque.
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/multi-maker_scenario_timeline.png)
+![Timeline diagram showing a typical Monday of shared branch collaboration](/assets/posts/alm-copilot-studio-collaboration-git/multi-maker_scenario_timeline.png){: .shadow w="700" }
+_Bruce (DEV1, blue) pulls at 9 AM, edits GetOrderStatus.yaml around 10 AM, checks for updates at noon, pulls Alfred's changes at 2 PM, then commits to main at 4 PM. Alfred (DEV2, green) pulls in the morning, creates CheckInventory.yaml, and commits to main around 1 PM. The main branch (grey) runs horizontally between them, showing commits accumulating over the day. A dotted line shows Alfred's commit becoming available to Bruce when he checks for updates. A legend distinguishes Bruce's actions (blue), Alfred's actions (green), main branch commits (grey), and the update flow (dotted line)._
 
 ### Feature Branch Model
 
@@ -268,7 +274,8 @@ This section walks through the setup and demonstrates both collaboration models.
 2. Select **New project** - give it a meaningful name (e.g., `contoso-agents`)
 3. In the new project, go to **Repos** and select **Initialize** to create the default `main` branch
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_1.png)
+![Creating a new Azure DevOps project](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_1.png){: .shadow w="700" }
+_Before starting an Azure DevOps project must be in place._
 
 ### Step 2: Connect Your First Environment to Git
 
@@ -282,9 +289,11 @@ This section walks through the setup and demonstrates both collaboration models.
 6. Enter a folder path (e.g., `/contoso-agent-v1`)
 7. Select **Connect**
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_2_connect_to_repo.png)
+![Connecting to Git](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_2_connect_to_repo.png){: .shadow w="700" }
+_When connecting to Git through Power Platform, you need to define a series of information, including the Connection Type, the Organization and the Repo you will be using._
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_2b_connect_to_repo.png)
+![Finalizing connection to Git](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_2b_connect_to_repo.png){: .shadow w="700" }
+_Once you have provided the respective information, you will be asked to confirm._
 
 ### Step 3: Initial Commit (establish your baseline)
 
@@ -295,13 +304,16 @@ Once connected, all existing components in your solution appear immediately in t
 3. Select **Commit**, enter a message like "Initial commit - baseline agent"
 4. Select **Commit** again to push
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_3a_commit.png)
+![Performing the first commit](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_3a_commit.png){: .shadow w="700" }
+_Your first commit will act as your baseline._
 
 Your first commit is now visible in Azure DevOps under **Repos > Commits**.
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_3b_devops_commits.png)
+![Commits in Azure DevOps](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_3b_devops_commits.png){: .shadow w="700" }
+_You can see all of the commit history in the respective Azure DevOps screen._
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_3c_devops_commit_diff.png)
+![Viewing diff](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_3c_devops_commit_diff.png){: .shadow w="700" }
+_You can see the respective changes (diff) by clicking on each commit._
 
 > [!NOTE]
 > From this point forward, only modified or new components appear in the Changes tab.
@@ -328,7 +340,8 @@ For the feature branch model, each environment gets its own branch:
 4. In the second environment, connect to Git selecting the branch `feature/Alfred-work`
 5. Both use the same organisation, project, repository, and folder - only the **branch** differs
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_4b_branches.png)
+![Multiple branches](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_4b_branches.png){: .shadow w="700" }
+_All of the branches are visible in the respective Azure DevOps page. Each developer should have their own working one._
 
 Each environment is now isolated. Commits in one environment do not affect the other. Changes reach `main` only through pull requests.
 
@@ -349,11 +362,13 @@ Regardless of which model you use, the commit process is identical:
 4. Review the **Files** tab - the YAML diff shows exactly what changed
 5. Assign a reviewer, then select **Create**
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_6_create_pr.png)
+![Creating a new PR](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_6_create_pr.png){: .shadow w="700" }
+_Pull requests are the gateway for merging changes from one branch (feature) to another (main). Descriptions should be thorough and clear._
 
 6. Once approved, select **Complete > Complete merge**
 
-![Image](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_6_pr_complete.png)
+![Completing a PR](/assets/posts/alm-copilot-studio-collaboration-git/alm_walkthrough_6_pr_complete.png){: .shadow w="700" }
+_Once a PR is approved it is merge time. Azure DevOps allows you to choose the Merge type._
 
 ### Step 7: Get Other Makers' Changes
 
