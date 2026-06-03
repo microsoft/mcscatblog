@@ -48,10 +48,9 @@
     <!-- Accent rule -->
     <rect x="0" y="118" width="80" height="5" rx="2" fill="url(#orange)"/>
     <!-- Subtitle -->
-    <text x="0" y="170" fill="#cbd5e1" font-size="26" font-weight="500">Integration Patterns That Hold Up</text>
-    <text x="0" y="205" fill="#cbd5e1" font-size="26" font-weight="500">in Production</text>
+    <text x="0" y="170" fill="#cbd5e1" font-size="28" font-weight="500">Three Integration Patterns</text>
     <!-- Author byline under subtitle -->
-    <text x="0" y="248" fill="#94a3b8" font-size="15" font-weight="600" letter-spacing="2">JAY PADIMITI</text>
+    <text x="0" y="213" fill="#94a3b8" font-size="15" font-weight="600" letter-spacing="2">JAY PADIMITI</text>
   </g>
 
   <!-- THREE PATTERN THUMBNAILS (right) -->
