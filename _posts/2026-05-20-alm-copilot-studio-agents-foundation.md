@@ -1,13 +1,13 @@
 ---
 layout: post
 title: "ALM for Copilot Studio Agents: The Foundation"
-date: 2026-05-XX
-categories: [copilot-studio, agents, alm]
+date: 2026-06-03
+categories: [agents, alm]
 tags: [copilot-studio, power-platform, alm, environments, pipelines, evaluations]
 description: "A practical guide to setting up Application Lifecycle Management for Copilot Studio agents - from environment strategy to deployment confidence."
 author: jpapadimitriou
 image:
-  path: /assets/posts/alm-copilot-studio-foundation/header.png
+  path: /assets/posts/alm-copilot-studio-agents-foundation/header.png
   alt: "ALM foundation for Copilot Studio agents"
 ---
 
@@ -52,7 +52,8 @@ Normal cycle:   Dev → Test → Prod
 Hotfix cycle:   Prod-Aligned Dev → Test → Prod
 ```
 
-![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm_env_flow_diagram.png)
+![Diagram illustrating a Power Platform ALM deployment strategy with two development cycles](/assets/posts/alm-copilot-studio-agents-foundation/alm_env_flow_diagram.png){: .shadow w="700" }
+_The Normal Cycle uses a standard Dev environment for regular feature work, while the Hotfix Cycle uses a Prod-Aligned Dev environment for urgent production fixes. Both paths feed into a central Test environment for validation, which then promotes changes to the Prod environment. A separate Preview environment sits above Prod and mirrors its state, providing a safe observation layer without affecting live users._
 
 This is not overhead for day one. Add it when the agent is mature enough that production downtime has a real cost. But plan for it from the start - retrofitting emergency processes during an actual emergency is how mistakes happen.
 
@@ -96,7 +97,8 @@ Solutions exist in two forms:
 | **Unmanaged** | Development | Add, edit, remove components freely | Active authoring |
 | **Managed** | Test, Production | Read-only. Cannot be edited directly. | Stable, sealed deployment artifact |
 
-![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm-solution-evolution-diagram.png)
+![Diagram explaining the Power Platform managed solution deployment model](/assets/posts/alm-copilot-studio-agents-foundation/alm-solution-evolution-diagram.png){: .shadow w="700" }
+_In the Dev environment, components like Agents, Workflows, and Variables live inside an unmanaged solution (shown as an open box), where makers can freely edit them. The solution is then exported as a managed package (versioned v1.0.0, shown as a sealed, locked box). This managed package is deployed to both the Test and Prod environments, where it arrives as a read-only managed solution - indicated by locked icons and crossed-out edit pencils - meaning no one can modify the components directly in those environments. A bottom arrow emphasises that changes flow in one direction only: from Dev through the package to downstream environments, never backwards._
 
 When you promote your agent, you export the solution from Dev as a **managed** package. This managed package is what gets imported into Test and later into Production. It is sealed - nobody can edit it in place. If a change is needed, it must be made in Dev, re-exported, and re-promoted. This one-way flow is what keeps Production stable.
 
@@ -120,7 +122,8 @@ You could do this manually - export a .zip from Dev, navigate to Test, import it
 
 [Power Platform Pipelines](https://learn.microsoft.com/en-us/power-platform/alm/pipelines) solve this. A pipeline is a pre-configured promotion path that connects your environments in sequence. Once set up, promoting your solution is a single action: select the solution, select the stage (Dev to Test, or Test to Prod), and deploy. The pipeline handles the managed export, the import into the target, and records the deployment in its history.
 
-![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm_solution_pipeline_flow.png)
+![Diagram showing the Power Platform Pipelines automated deployment process](/assets/posts/alm-copilot-studio-agents-foundation/alm_solution_pipeline_flow.png){: .shadow w="700" }
+_A solution in the Dev environment is exported as a managed package, which feeds into a central pipeline (represented by a conveyor belt with gears). The pipeline handles two key tasks shown below it: resolving environment variables for each target and maintaining deployment history. From the pipeline, the managed solution is automatically deployed to both the Test and Prod environments, where the package is unpacked and installed as a managed solution (shown as a locked box with a puzzle piece slotting into place). This illustrates how Pipelines automates the export, configuration, and deployment of solutions across environments without manual intervention._
 
 **What a pipeline gives you:**
 
@@ -162,6 +165,31 @@ This separation is what makes portability possible. When you import your managed
 
 **Preparing variables before deployment:** When your pipeline promotes a solution to a new environment, the variable definitions arrive but the values do not. This means environment variable values must be configured in the target environment *before* the solution is imported - otherwise workflows that depend on those variables will fail at runtime. Include this as an explicit step in your promotion process: verify that every expected variable has a value in the target before deploying.
 
+### How Values Are Supplied
+ 
+There are two models depending on how you deploy:
+ 
+*  **With Power Platform Pipelines (in-product):** When a solution containing environment variables is deployed, the pipeline prompts you to provide or confirm values for the target environment - just as a manual import would. If values already exist in the target, they are pre-filled. If they do not, you supply them at deployment time. For fully unattended scenarios, values must be pre-configured in the target environment before the pipeline runs.
+ 
+* **With CI/CD pipelines (Azure DevOps or GitHub Actions):** You use a [deployment settings file](https://learn.microsoft.com/en-us/power-platform/alm/conn-ref-env-variables-build-tools) - a JSON file that maps each variable's schema name to its target-specific value. This file is passed as a parameter to the solution import task, pre-populating values during import without manual intervention. Generate it with `pac solution create-settings`, populate it per environment, and store it in source control.
+
+```json
+{
+  "EnvironmentVariables": [
+    { "SchemaName": "contoso_ApiEndpoint", "Value": "https://api-test.contoso.com" },
+    { "SchemaName": "contoso_MaxRetries", "Value": "3" }
+  ]
+}
+```
+
+In both models, the principle is the same: the solution carries the variable definitions, and the target environment (or its settings file) supplies the values. The pipeline never embeds environment-specific configuration into the solution artifact itself.
+
+For complementary context on what happens with environment variables during any solution import (which is what pipelines do under the hood), see:
+
+- [Enter new values while importing solutions
+](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables#enter-new-values-while-importing-solutions) - explains definition vs. value separation
+- [Pre-populate connection references and environment variables](https://learn.microsoft.com/en-us/power-platform/alm/conn-ref-env-variables-build-tools) - covers the deployment settings file for CI/CD automation
+
 ### Secrets: Azure Key Vault Integration
 
 For secrets - API keys, tokens, credentials - [secret environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables-azure-key-vault-secrets) backed by Azure Key Vault provide a secure, auditable approach. The agent references a Key Vault secret rather than holding the value directly, and the platform resolves it at runtime. When a key rotates, you update Key Vault - no solution change or redeployment needed.
@@ -185,7 +213,8 @@ Evaluations are not a standalone activity. They integrate directly into the prom
 - **On a schedule in Preview** - will the next platform update break us? Automated scheduled evals answer this continuously.
 - **After import in the target** - did the deployment land cleanly? A post-deployment smoke eval confirms the agent is functional in its new environment.
 
-![Image](/assets/posts/alm-copilot-studio-agents-foundation/alm-evaluation-placement-diagram.png)
+![Diagram mapping quality evaluation checkpoints across the four-stage Power Platform deployment pipeline (Dev, Test, Preview, Prod)](/assets/posts/alm-copilot-studio-agents-foundation/alm-evaluation-placement-diagram.png){: .shadow w="700" }
+_Each stage has a corresponding quality gate shown on a timeline below. In Dev, quality evaluations run after changes are made, producing a quality report and results. In Test, a quality gate runs before promotion to the next stage, outputting a pass/fail result. In Preview, scheduled regression evaluations run periodically, generating regression reports and trend data. In Prod, a post-import smoke test verifies critical functionality immediately after deployment, producing a smoke test report and alerts. The diagram emphasises that quality is validated at every stage of the promotion flow, not just at the end._
 
 ### Automating Evaluations in Your Pipeline
 
