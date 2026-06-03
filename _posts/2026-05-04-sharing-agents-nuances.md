@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Sharing a Copilot Studio Agent: A Field Guide from Pilot to Full Rollout"
-date: 2026-05-04
+date: 2026-06-03
 categories: [copilot-studio, governance]
 tags: [sharing, governance, alm, permissions, authentication, dataverse, rollout]
 description: "Sharing a Copilot Studio agent is one operation, but its consequences span authoring, runtime sign-in, and channel discoverability. This field guide walks the misconception customers hit on the path from pilot to full rollout."
