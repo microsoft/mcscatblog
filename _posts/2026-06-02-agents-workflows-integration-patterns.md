@@ -68,7 +68,7 @@ Microsoft describes [two canonical patterns](https://www.microsoft.com/en-us/mic
 
 Both enforce the same LLM boundary. They just start from different entry points. There's also a third pattern, **async continuation**, that you'll layer on top whenever a step doesn't fit inside a chat turn.
 
-> **A note on "workflow."** Copilot Studio has consolidated what used to be called *cloud flows* and *agent flows* under a single name: **workflows**. The new Workflows designer is the canonical authoring surface and is where the patterns below come to life (inline agent nodes, M365 Copilot nodes, native Human review). The previous designers still exist and the underlying runtime is shared, so the patterns map cleanly across them — but I'll use *workflow* throughout, and the screenshots are from the Workflows designer.
+> **A note on "workflow."** Copilot Studio now has two flow formats that live side-by-side on the **Workflows** page: **agent flows** (GA, the original designer) and **workflows** (public preview, a revamped designer with native AI actions, agent handoffs, and node-level testing). Both share the same underlying runtime, and the patterns below apply to either. I'll use *workflow* as a generic term throughout, and the screenshots are from the new Workflows designer.
 {: .prompt-info }
 
 To make these easier to refer to throughout the rest of the post (and in design conversations with your team), I'm giving each one a short name:
