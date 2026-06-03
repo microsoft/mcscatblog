@@ -19,11 +19,11 @@
 <rect x="84" y="312" width="432" height="44" rx="10" ry="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
 <text x="300.0" y="339.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Gathers missing info conversationally</text>
 <rect x="84" y="368" width="432" height="44" rx="10" ry="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
-<text x="300.0" y="395.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Calls agent flow to process the report</text>
+<text x="300.0" y="395.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Calls workflow to process the report</text>
 <rect x="84" y="424" width="432" height="44" rx="10" ry="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
 <text x="300.0" y="451.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#0d47a1" text-anchor="middle">Summarizes results back to the user</text>
 <rect x="700" y="200" width="480" height="640" rx="14" ry="14" fill="#f3faf3" stroke="#2e7d32" stroke-width="2" stroke-dasharray="6 4"/>
-<text x="716" y="224" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#2e7d32">⚙️  AGENT FLOW — Process Expense Report</text>
+<text x="716" y="224" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#2e7d32">⚙️  WORKFLOW — Process Expense Report</text>
 <rect x="724" y="256" width="432" height="44" rx="10" ry="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
 <text x="940.0" y="283.0" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#1b5e20" text-anchor="middle">1 · Validate inputs and normalize currency</text>
 <rect x="724" y="320" width="432" height="44" rx="10" ry="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>

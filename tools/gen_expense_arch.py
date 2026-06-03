@@ -173,7 +173,7 @@ def build():
     a_steps = [
         "Understands natural-language requests",
         "Gathers missing info conversationally",
-        "Calls agent flow to process the report",
+        "Calls workflow to process the report",
         "Summarizes results back to the user",
     ]
     for i, step in enumerate(a_steps):
@@ -183,7 +183,7 @@ def build():
     # Flow group (right column)
     flow_x, flow_y, flow_w, flow_h = 700, 200, 480, 640
     body.append(group(flow_x, flow_y, flow_w, flow_h, "group_flow",
-                      "⚙️  AGENT FLOW — Process Expense Report"))
+                      "⚙️  WORKFLOW — Process Expense Report"))
 
     # Flow steps
     step_w = flow_w - 48
