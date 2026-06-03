@@ -85,8 +85,9 @@ Everything your agent depends on must live inside a single solution:
 - Its tools (APIs, connectors, external integrations, [workflows](https://learn.microsoft.com/en-us/microsoft-copilot-studio/flows-overview))
 - Its [environment variables](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables) (configuration that differs per environment)
 - Its knowledge source references
+- And everything else it needs to function
 
-Anything created outside a solution is invisible to your deployment pipeline and cannot be promoted cleanly. This is the single most common mistake teams make early on - building components in the default environment without a solution, then discovering they cannot move them.
+Anything created outside a solution is invisible to your deployment pipeline and cannot be promoted cleanly. This is the single most common mistake teams make early on - building components in the default environment without a solution, then discovering they cannot move them. Luckily this is easy to avoid: create your solution first, then create everything else inside it, [here's how](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-overview).
 
 ### Managed vs. Unmanaged
 
@@ -100,7 +101,7 @@ Solutions exist in two forms:
 ![Diagram explaining the Power Platform managed solution deployment model](/assets/posts/alm-copilot-studio-agents-foundation/alm-solution-evolution-diagram.png){: .shadow w="700" }
 _In the Dev environment, components like Agents, Workflows, and Variables live inside an unmanaged solution (shown as an open box), where makers can freely edit them. The solution is then exported as a managed package (versioned v1.0.0, shown as a sealed, locked box). This managed package is deployed to both the Test and Prod environments, where it arrives as a read-only managed solution - indicated by locked icons and crossed-out edit pencils - meaning no one can modify the components directly in those environments. A bottom arrow emphasises that changes flow in one direction only: from Dev through the package to downstream environments, never backwards._
 
-When you promote your agent, you export the solution from Dev as a **managed** package. This managed package is what gets imported into Test and later into Production. It is sealed - nobody can edit it in place. If a change is needed, it must be made in Dev, re-exported, and re-promoted. This one-way flow is what keeps Production stable.
+When you export a solution, you can choose to do it as a managed or unmanaged package. The best practice when promoting your agent is to export the solution from Dev as a **managed** package. This managed package is what then gets imported into Test and later into Production. It is sealed - **nobody can edit it in place** without going back to the dev environment. If a change is needed, it must be made in Dev, re-exported, and re-promoted. This one-way flow is what keeps Production stable.
 
 ### Setting Up Your Solution
 
@@ -223,8 +224,9 @@ Evaluations can be triggered programmatically, which means they can become an au
 This transforms evaluations from a manual best practice into an enforced quality gate - no deployment reaches Production unless the agent demonstrably works.
 
 For implementation guidance, see:
-- [About agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro)
-- Also check: [Copilot Studio Kit - test capabilities](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-test-capabilities)
+- [About manual agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro)
+- Also check: [Copilot Studio Kit - test capabilities](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-test-capabilities) and [automatic test and deployment with the kit](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-automate-test-deploy)
+
 
 The key takeaway is that incorporating evaluations early in your ALM strategy - rather than adding them later - gives you a reliable signal at every stage of promotion.
 
