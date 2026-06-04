@@ -102,7 +102,48 @@ jobs:
           const fs = require('fs');
           const path = require('path');
 
+          const siteBasePath = path.join('_site', 'mcscatblog');
+          const artifactBasePath = 'preview-html';
+          const assetUrls = new Set();
+
           fs.mkdirSync('preview-html', { recursive: true });
+          fs.writeFileSync(
+            path.join(artifactBasePath, 'README.txt'),
+            'Open the post HTML file from this folder. Only assets referenced by the generated preview HTML are included.\n'
+          );
+
+          function rewriteAssetUrls(html) {
+            return html
+              .replace(/https:\/\/microsoft\.github\.io\/mcscatblog\/assets\//g, 'assets/')
+              .replace(/\/mcscatblog\/assets\//g, 'assets/')
+              .replace(/(["'(])\/assets\//g, '$1assets/');
+          }
+
+          function collectAssetUrls(html) {
+            for (const match of html.matchAll(/assets\/[^"')\s<>]+/g)) {
+              assetUrls.add(match[0].replace(/[?#].*$/, ''));
+            }
+          }
+
+          function copyReferencedAssets() {
+            for (const assetUrl of assetUrls) {
+              const normalizedAssetPath = path.normalize(assetUrl);
+              const assetPrefix = `assets${path.sep}`;
+
+              if (!normalizedAssetPath.startsWith(assetPrefix)) {
+                continue;
+              }
+
+              const sourcePath = path.join(siteBasePath, normalizedAssetPath);
+              if (!fs.existsSync(sourcePath) || !fs.statSync(sourcePath).isFile()) {
+                continue;
+              }
+
+              const targetPath = path.join(artifactBasePath, normalizedAssetPath);
+              fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+              fs.copyFileSync(sourcePath, targetPath);
+            }
+          }
 
           const posts = fs.readFileSync('added-posts.txt', 'utf8')
             .split(/\r?\n/)
@@ -125,8 +166,8 @@ jobs:
             }
 
             const slug = match[1];
-            const htmlPath = path.join('_site', 'mcscatblog', 'posts', slug, 'index.html');
-            const htmlArtifactPath = path.join('preview-html', `${slug}.html`);
+            const htmlPath = path.join(siteBasePath, 'posts', slug, 'index.html');
+            const htmlArtifactPath = path.join(artifactBasePath, `${slug}.html`);
 
             if (!fs.existsSync(htmlPath)) {
               missingPreviews.push({
@@ -137,7 +178,10 @@ jobs:
               continue;
             }
 
-            fs.copyFileSync(htmlPath, htmlArtifactPath);
+            const html = fs.readFileSync(htmlPath, 'utf8');
+            const rewrittenHtml = rewriteAssetUrls(html);
+            collectAssetUrls(rewrittenHtml);
+            fs.writeFileSync(htmlArtifactPath, rewrittenHtml);
             previewPages.push({
               post,
               slug,
@@ -146,6 +190,8 @@ jobs:
               urlPath: `/mcscatblog/posts/${slug}/`
             });
           }
+
+          copyReferencedAssets();
 
           fs.writeFileSync('preview-pages.json', `${JSON.stringify(previewPages, null, 2)}\n`);
           fs.writeFileSync('missing-previews.json', `${JSON.stringify(missingPreviews, null, 2)}\n`);
