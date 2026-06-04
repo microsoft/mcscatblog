@@ -13,7 +13,7 @@ image:
 
 ## The Problem This Solves
 
->[!INFO]
+> [!NOTE]
 > This is part of the ALM series for Copilot Studio. For the other parts check here: 
 > - [ALM for Copilot Studio Agents: The Foundation](https://microsoft.github.io/mcscatblog/posts/alm-copilot-studio-agents-foundation/) 
 
