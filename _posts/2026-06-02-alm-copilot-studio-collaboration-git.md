@@ -13,9 +13,9 @@ image:
 
 ## The Problem This Solves
 
-> [!Note]
+> [!INFO]
 > This is part of the ALM series for Copilot Studio. For the other parts check here: 
-> - [ALM for Copilot Studio Agents: The Foundation]() 
+> - [ALM for Copilot Studio Agents: The Foundation](https://microsoft.github.io/mcscatblog/posts/alm-copilot-studio-agents-foundation/) 
 
 Your foundation is in place. Environments are isolated. Solutions travel through pipelines. Configuration is externalised. The agent works.
 
