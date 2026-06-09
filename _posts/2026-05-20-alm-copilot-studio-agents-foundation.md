@@ -17,11 +17,7 @@ Copilot Studio makes it remarkably fast to go from idea to working agent. That s
 
 That is what Application Lifecycle Management (ALM) gives you. This post lays out the **fundamentals**: the safe baseline every maker should have in place before an agent matters to anyone but themselves. It is deliberately not exhaustive. It is the set of decisions that keep you out of trouble, explained for people who do not come from a Power Platform background.
 
-> This is the first post in a short series. The goal here is the safe baseline, not every advanced pattern. Later posts go deeper:
-> - **The Foundation** (this post) - environments, solutions, publishers, pipelines
-> - **Configuration** - environment variables, connection references, and secrets in depth
-> - **Resilience** - early-release validation and hotfix environments for business-critical agents
-> - **Automating ALM** - source control, CI/CD, and quality gates (see [automated evaluations in Azure DevOps]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %}) for a head start)
+> This is the first post in a short series. The goal here is the safe baseline, not every advanced pattern. Later posts will go deeper with a soon-to-be-announced agenda.
 {: .prompt-info }
 
 ---
