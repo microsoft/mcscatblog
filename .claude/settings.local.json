@@ -1,7 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(python *)",
+      "Bash(curl *)",
+      "Bash(bundle check *)",
+      "PowerShell(bundle *)",
+      "PowerShell(winget *)",
+      "PowerShell(gem install *)",
+      "PowerShell(bundle install *)",
+      "PowerShell(bundle exec *)",
+      "PowerShell(Start-Process \"http://127.0.0.1:4000/mcscatblog/posts/sharing-agents-nuances/\")",
+      "Bash(git add *)",
+      "Bash(gh pr *)",
+      "PowerShell(gh *)",
+      "Bash(powershell -Command '& { $env:Path += '\\\\'';C:\\\\Program Files\\\\GitHub CLI'\\\\''; gh --version 2>&1 | Select-Object -First 1 }')",
+      "PowerShell(gh auth *)"
     ]
   }
 }
