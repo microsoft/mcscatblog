@@ -8,7 +8,7 @@ description: "Build a fully native Power Platform solution for real-time PAYG ov
 author: rranjit
 image:
   path: /assets/posts/managing-azure-consumption-power-platform/manageazurespendpowerplatform.png
-  alt: Diagram showing Power Automate monitoring Azure consumption and unlinking environments when spend exceeds threshold
+  alt: "Power Automate moonlighting as a bouncer, politely showing runaway spend the door before the bill ever notices."
 mermaid: true
 published: true
 ---
@@ -42,6 +42,7 @@ The result is a detection window that shrinks from up to 24 hours down to 4 hour
 The solution wraps this in a scheduled cloud flow that runs every 4 hours: it calls the Cost Management Query API for current month-to-date spend, compares the result against a threshold you define, and unlinks all environments from the billing policy the moment that threshold is crossed. Scope, threshold, and interval are all flow variables, configurable after import, with no code changes required.
 
 > For the full details on API rate limits, QPU quotas, and throttling behaviour, see the [Azure Cost Management automation limits documentation](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/manage-automation).
+{: .prompt-info }
 
 ---
 
@@ -54,13 +55,13 @@ The solution wraps this in a scheduled cloud flow that runs every 4 hours: it ca
 | **Power Platform Admin V2 Connector** | Lists billing policies, retrieves linked environments, and unlinks them when the threshold is crossed. |
 | **Flow Variables** | Hold the subscription ID, resource group, billing policy name, spend threshold, and audit log. No external config store needed. |
 
-Everything is importable as a single Power Platform solution. One environment. One connection setup. Done.
+Everything is importable as a single Power Platform solution. One environment. One connection setup. Done. You can grab the solution package, including the custom connectors described below, here: [Billing Policy Management solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip).
 
 ---
 
 ## Prerequisites
 
-Before you import and configure the solution, make sure you have the following in place.
+Before you import and configure the [Billing Policy Management solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip) linked above, make sure you have the following in place.
 
 ### 1. An App Registration (Service Principal) in Entra ID
 
@@ -69,7 +70,8 @@ The custom connector needs to authenticate against the Azure Resource Manager AP
 - A **client secret** (or certificate)
 - The **Cost Management Reader** role assigned on the target subscription or resource group
 
-> **Note on Admin V2 authentication:** The Power Platform Admin V2 connector does *not* support Service Principal authentication for billing policy operations — it requires an **OAuth (delegated) connection**. This means the Admin V2 connection runs as a named user account that holds the **Power Platform Admin**, **Global Admin**, or **Dynamics 365 Admin** role. Plan your connection credentials accordingly.
+> **Note on Admin V2 authentication:** The Power Platform Admin V2 connector does *not* support Service Principal authentication for billing policy operations; it requires an **OAuth (delegated) connection**. This means the Admin V2 connection runs as a named user account that holds the **Power Platform Admin**, **Global Admin**, or **Dynamics 365 Admin** role. Plan your connection credentials accordingly.
+{: .prompt-warning }
 
 ### 2. A Premium Power Automate License
 
@@ -164,7 +166,7 @@ The [Power Platform for Admins V2 connector](https://learn.microsoft.com/en-us/c
 This connector uses an **OAuth (delegated) connection**: it runs as a named user. That user must hold the Power Platform Admin, Global Admin, or Dynamics 365 Admin role. Create the connection once in your solution environment and it will be reused across flow runs.
 
 A companion custom connector, Power Platform Billing Policy, lets you list all billing policies within the tenant so you can retrieve the billing policy ID you need for the actions exposed by the [Power Platform for Admins V2 connector](https://learn.microsoft.com/en-us/connectors/powerplatformadminv2/).
-You can download the solution with this connector here: [Billing Policy Management](https://github.com/rranjit83/AgentDemoSamples/blob/main/CustomEngineBlogPosts/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
+You can download the solution with this connector here: [Billing Policy Management](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip)
 
 ---
 
