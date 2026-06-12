@@ -31,7 +31,9 @@ Here's the fastest path to getting it running, followed by how each piece works.
 
 ---
 
-## Architecture Overview
+## What the Solution Contains
+
+The solution packages four pieces that work together:
 
 | Component | Role |
 |---|---|
