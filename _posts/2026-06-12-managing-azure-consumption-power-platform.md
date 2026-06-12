@@ -27,22 +27,7 @@ So let's fix it, and do it without leaving Power Platform.
 
 This post builds a **fully native Power Platform solution** for real-time PAYG overage protection. No Azure Automation Accounts. No runbooks. No Action Groups. No Azure portal at all. Just a scheduled cloud flow, a custom connector talking to the Azure Cost Management API, and the Power Platform Admin V2 connector doing the unlinking.
 
-Here's how it works.
-
----
-
-## The Core Idea
-
-The limitation in the previous post wasn't just that budget alerts are slow, it's *why* they're slow. Azure Budget alerts are evaluated roughly **once every 24 hours**. Even if cost data has already been ingested and your threshold crossed hours ago, the alert won't fire until the next evaluation cycle completes. That 24-hour evaluation window is the ceiling on how quickly the previous solution could respond.
-
-The Cost Management Query API removes that ceiling entirely. Instead of waiting for Azure to run its evaluation cycle, we query the API directly, on our own schedule. And the right schedule is dictated by how often Azure actually refreshes cost data: **every 4 hours**. That's the cadence at which new spend information becomes available. Poll more frequently and you're reading the same numbers; poll every 4 hours and you're acting on every new data point the moment it exists.
-
-The result is a detection window that shrinks from up to 24 hours down to 4 hours, not because the underlying data arrives faster, but because we've replaced Azure's evaluation cycle with our own.
-
-The solution wraps this in a scheduled cloud flow that runs every 4 hours: it calls the Cost Management Query API for current month-to-date spend, compares the result against a threshold you define, and unlinks all environments from the billing policy the moment that threshold is crossed. Scope, threshold, and interval are all flow variables, configurable after import, with no code changes required.
-
-> For the full details on API rate limits, QPU quotas, and throttling behaviour, see the [Azure Cost Management automation limits documentation](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/manage-automation).
-{: .prompt-info }
+Here's the fastest path to getting it running, followed by how each piece works.
 
 ---
 
@@ -84,6 +69,40 @@ You'll need the Azure subscription ID and resource group name associated with yo
 ### 4. Your Spending Threshold
 
 Decide what spend level should trigger unlinking. This doesn't have to match your formal Azure Budget — it can be lower, and it should be. Given that this solution checks frequently rather than waiting for a batch alert, you can set a tighter threshold with confidence that it will be caught quickly.
+
+---
+
+## Get It Running (The Short Path)
+
+If you just want the guardrail in place, here's the fastest route. Everything below is already built into the [Billing Policy Management solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip); the sections after this explain how each piece works if you want to customize or rebuild it.
+
+1. **Import the solution.** Download the [Billing Policy Management solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip) and import it into your target environment (**Solutions → Import solution**).
+2. **Create the two connections** the solution prompts for during import:
+   - **Azure Cost Management custom connector** — an OAuth 2.0 connection backed by your App Registration from the [Prerequisites](#prerequisites). The exact OAuth values are in [Component 1](#component-1-the-custom-connector-for-azure-cost-management).
+   - **Power Platform Admin V2** — an OAuth (delegated) connection signed in as a user holding the Power Platform Admin, Global Admin, or Dynamics 365 Admin role.
+3. **Set the flow variables** at the top of the flow: `SubscriptionId`, `ResourceGroupName`, `BillingPolicyName`, and `SpendThreshold`.
+4. **Confirm the recurrence** is set to every 4 hours (the reasoning is in [The Core Idea](#the-core-idea)).
+5. **Turn the flow on.**
+
+> Want to confirm it works without waiting for a real overage? In a non-production environment, temporarily set `SpendThreshold` below your current month-to-date spend, run the flow once, and watch it unlink, then set the threshold back. Don't test this against environments you can't afford to have unlinked.
+{: .prompt-tip }
+
+The rest of this post unpacks how each piece works.
+
+---
+
+## The Core Idea
+
+The limitation in the previous post wasn't just that budget alerts are slow, it's *why* they're slow. Azure Budget alerts are evaluated roughly **once every 24 hours**. Even if cost data has already been ingested and your threshold crossed hours ago, the alert won't fire until the next evaluation cycle completes. That 24-hour evaluation window is the ceiling on how quickly the previous solution could respond.
+
+The Cost Management Query API removes that ceiling entirely. Instead of waiting for Azure to run its evaluation cycle, we query the API directly, on our own schedule. And the right schedule is dictated by how often Azure actually refreshes cost data: **every 4 hours**. That's the cadence at which new spend information becomes available. Poll more frequently and you're reading the same numbers; poll every 4 hours and you're acting on every new data point the moment it exists.
+
+The result is a detection window that shrinks from up to 24 hours down to 4 hours, not because the underlying data arrives faster, but because we've replaced Azure's evaluation cycle with our own.
+
+The solution wraps this in a scheduled cloud flow that runs every 4 hours: it calls the Cost Management Query API for current month-to-date spend, compares the result against a threshold you define, and unlinks all environments from the billing policy the moment that threshold is crossed. Scope, threshold, and interval are all flow variables, configurable after import, with no code changes required.
+
+> For the full details on API rate limits, QPU quotas, and throttling behaviour, see the [Azure Cost Management automation limits documentation](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/manage-automation).
+{: .prompt-info }
 
 ---
 
