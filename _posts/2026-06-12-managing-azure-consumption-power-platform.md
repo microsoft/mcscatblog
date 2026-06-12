@@ -79,8 +79,12 @@ Decide what spend level should trigger unlinking. This doesn't have to match you
 If you just want the guardrail in place, here's the fastest route. Everything below is already built into the [Billing Policy Management solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip); the sections after this explain how each piece works if you want to customize or rebuild it.
 
 1. **Import the solution.** Download the [Billing Policy Management solution](https://github.com/microsoft/CopilotStudioSamples/blob/main/infrastructure/manage-paygo/solution/BillingPolicyManagement_1_0_0_3.zip) and import it into your target environment (**Solutions → Import solution**).
-2. **Create the two connections** the solution prompts for during import:
-   - **Azure Cost Management custom connector** — an OAuth 2.0 connection backed by your App Registration from the [Prerequisites](#prerequisites). The exact OAuth values are in [Component 1](#component-1-the-custom-connector-for-azure-cost-management).
+2. **Configure the two connections** the solution prompts for during import:
+   - **Azure Cost Management custom connector** — an OAuth 2.0 connection backed by your App Registration from the [Prerequisites](#prerequisites). Fill in:
+     - **Authorization URL:** `https://login.microsoftonline.com/{tenantId}/oauth2/authorize`
+     - **Token URL:** `https://login.microsoftonline.com/{tenantId}/oauth2/token`
+     - **Resource / Audience:** `https://management.azure.com/`
+     - **Client ID and Secret:** from your App Registration
    - **Power Platform Admin V2** — an OAuth (delegated) connection signed in as a user holding the Power Platform Admin, Global Admin, or Dynamics 365 Admin role.
 3. **Set the flow variables** at the top of the flow: `SubscriptionId`, `ResourceGroupName`, `BillingPolicyName`, and `SpendThreshold`.
 4. **Confirm the recurrence** is set to every 4 hours (the reasoning is in [The Core Idea](#the-core-idea)).
@@ -163,14 +167,7 @@ The cost value lives at `rows[0][0]`. That's the number the flow compares agains
 
 ### Authentication
 
-The custom connector uses **OAuth 2.0** against Azure Active Directory:
-
-- **Authorization URL:** `https://login.microsoftonline.com/{tenantId}/oauth2/authorize`
-- **Token URL:** `https://login.microsoftonline.com/{tenantId}/oauth2/token`
-- **Resource / Audience:** `https://management.azure.com/`
-- **Client ID and Secret:** from your App Registration
-
-The connector connection is created once and reused by the flow. The App Registration needs at minimum **Cost Management Reader** on the target subscription or resource group.
+The custom connector authenticates with **OAuth 2.0** against Azure Active Directory, requesting a token for the Azure Resource Manager audience (`https://management.azure.com/`). The connection is created once during import, using the values listed in [Get It Running](#get-it-running-the-short-path), and reused by the flow. The App Registration needs at minimum **Cost Management Reader** on the target subscription or resource group.
 
 ---
 
