@@ -79,7 +79,7 @@ Custom connectors require a premium license on the flow's owner account. The Pow
 
 ### 3. Your Subscription ID and Resource Group
 
-You'll need the Azure subscription ID and resource group name associated with your billing policy. These are the same values you used when setting up the billing policy itself, and the same ones the Cost Management API uses to scope its cost query.
+You'll need the Azure subscription ID and resource group name associated with your billing policy. These are the same values you used when setting up the billing policy itself, as covered in [the previous post]({% post_url 2026-05-13-managing-spend-pay-as-you-go %}#a-quick-refresher-what-are-billing-policies), and the same ones the Cost Management API uses to scope its cost query.
 
 ### 4. Your Spending Threshold
 
