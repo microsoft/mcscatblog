@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Copilot Studio Skills: The Procedural Memory Layer for Enterprise Agents"
+title: "Copilot Studio Skills: Procedural Memory and Just-in-Time Guidance"
 date: 2026-06-08
 categories: [copilot-studio, skills]
 tags: [copilot-studio, skills, orchestration, testing, agent-development, mcp]
-description: "An introduction to Copilot Studio Skills as reusable procedural instructions that help enterprise agents apply the right playbook at the right moment."
+description: "An introduction to Copilot Studio Skills as reusable instructions that help enterprise agents load the right guidance, procedure, and tool-use context at the right moment."
 author: roels
 image:
   path: /assets/posts/copilot-studio-skills-procedural-memory/header.png
@@ -12,7 +12,7 @@ image:
 mermaid: true
 ---
 
-Enterprise agents rarely fail because they lack facts. They fail because the organization has a specific way of doing the work, and that procedure is usually scattered across prompts, policy pages, tool descriptions, and maker intuition.
+Enterprise agents rarely fail only because they lack facts. They fail because the organization has a specific way of doing the work, and that guidance is usually scattered across prompts, policy pages, tool descriptions, topic logic, and maker intuition.
 
 Copilot Studio Skills give makers a dedicated place to package that procedure.
 
@@ -22,7 +22,7 @@ Not just what the agent should know.
 Not just which tools it can call.
 Not just what tone it should use.
 
-Skills are where repeatable procedure lives.
+Skills are where task-specific guidance can live until the agent actually needs it.
 
 ## The short version
 
@@ -182,6 +182,16 @@ to:
 
 That is a big difference for maintainability.
 
+## Copilot Studio Skills and coding-agent skills are related, but not identical
+
+If you have used skills in coding agents, the idea will feel familiar: package instructions so the agent can load the right guidance only when it is relevant.
+
+The important difference is the degree of freedom. Coding-agent skills often live close to a developer's local environment. They may include repository conventions, helper scripts, command patterns, file templates, or automation that assumes the agent can inspect files, run commands, and change code.
+
+Copilot Studio Skills are more constrained. They are added through the Copilot Studio authoring experience, scoped to the agent, and used by the orchestrator as part of that agent's runtime behavior. In the current experience, treat them as reusable instructions, not arbitrary executable bundles.
+
+In a coding agent, a skill might say, "Run this script and patch this module." In Copilot Studio, a Skill is closer to, "When this kind of user task appears, load this guidance so the agent asks the right questions and uses available knowledge and tools correctly."
+
 ## Where Skills fit in Copilot Studio
 
 Skills sit between knowledge and actions.
@@ -196,13 +206,27 @@ For example:
 - A flow may create an HR case.
 - A skill tells the agent which clarifying questions to ask, when to check the policy, when to create the case, and when to avoid making a final determination.
 
-That distinction matters.
-
 A Skill can instruct the orchestrator to use available tools, actions, flows, connectors, or MCP servers. But a Skill does not grant capabilities by itself. If the agent does not already have access to the tool, the Skill cannot magically call it.
 
 Good mental model:
 
 > MCP and tools provide reach. Knowledge provides facts. Skills provide the operating procedure: both the business procedure and the tool-use procedure.
+
+## When to use a Skill
+
+Use a Skill when the agent needs task-specific guidance that should not live in the global instructions all the time.
+
+That includes procedural knowledge, but not only procedural knowledge.
+
+Good Skill candidates include:
+
+- **Business procedure**: the task has a repeatable sequence, such as triage, eligibility checks, exception handling, or escalation.
+- **Tool-use procedure**: the agent has the right tool, but needs guidance on when to call it, which parameters matter, and what to do with the result.
+- **Context economy**: the instructions are important for some conversations, but irrelevant noise for most conversations.
+- **Scenario-specific output format**: a particular task needs a specific response structure, such as an incident intake summary, a refund decision explanation, or a readiness checklist.
+- **Governance and boundaries**: the scenario has approvals, compliance constraints, privacy limits, or handoff rules that the agent must follow.
+
+The output-format point is easy to overuse. If every answer from the agent should follow the same format, put that in the agent's general instructions. If only one class of work needs a particular structure, put that structure in the Skill for that class of work.
 
 ## Skills can also improve tool-use success
 
@@ -223,6 +247,18 @@ For example, an MCP server may expose tools that search customer records, create
 A Skill can package those instructions. It does not grant access to the MCP server, but it can improve the quality and consistency of how the agent uses that MCP server.
 
 This is where Skills become valuable for pro-code and maker teams working together. Pro-code teams can expose robust tools. Makers and subject matter experts can use Skills to describe the right operating procedure around those tools.
+
+## When to avoid a Skill
+
+Do not create a Skill just because you can describe a scenario. An agent should often be able to interact with a well-described tool without extra guidance. If the action, flow, connector, or MCP tool has a clear name, precise description, strong parameter names, and useful response shape, the orchestrator may already have enough signal.
+
+Before creating a Skill, ask:
+
+1. Is this guidance needed only sometimes, or should it be global?
+2. Is the failure caused by missing procedure, or by a poorly described tool or knowledge source?
+3. Would a Skill make the agent more reliable, or duplicate instructions the agent can already infer?
+
+This is where evals matter. Do not create one Skill for every eval scenario by default. Create a Skill when failures show a repeatable missing procedure or task-specific guidance that should be loaded on demand.
 
 ## Skills are part of the agent
 
@@ -278,54 +314,27 @@ Here are three examples. Each one uses Skills for procedure, not for raw knowled
 <details>
 <summary><strong>Expand example 1:</strong> HR leave eligibility triage — collect context, check policy, and escalate exceptions before answering.</summary>
 
-<p>Leave questions are rarely answered well by policy lookup alone. The agent often needs to know:</p>
+<p>Leave questions are rarely answered well by policy lookup alone. The agent may need country, leave type, worker type, whether the user is asking a general or personal question, and whether HR escalation is required.</p>
 
-<ul>
-  <li>Which country or region applies?</li>
-  <li>What type of leave is being discussed?</li>
-  <li>Is the person a full-time employee, contractor, intern, or something else?</li>
-  <li>Is the employee asking a general policy question or describing a personal case?</li>
-  <li>Does the situation require HR escalation?</li>
-</ul>
-
-<p>A Skill can define that procedure. It can instruct the agent to ask for missing context before answering, check the relevant policy knowledge source, avoid making legal or final HR determinations, and escalate exceptions to HR.</p>
-
-<p>This is a strong Skills use case because the work is repeatable, sensitive, and procedural. The value is not just in retrieving the policy. The value is in applying the right process before responding.</p>
+<p>A Skill can define that procedure: ask for missing context, check the right policy source, avoid legal or final HR determinations, and escalate exceptions. The value is not just retrieving the policy. The value is applying the right process before responding.</p>
 
 </details>
 
 <details>
 <summary><strong>Expand example 2:</strong> Customer service refund and exception handling — apply policy windows, exception rules, and tool guidance before promising anything.</summary>
 
-<p>Refund handling is another good example. The agent may need to identify:</p>
+<p>Refund handling often depends on product, purchase date, channel, reason, policy window, exception rules, abuse signals, and whether order lookup is available.</p>
 
-<ul>
-  <li>Product or service.</li>
-  <li>Purchase date.</li>
-  <li>Purchase channel.</li>
-  <li>Refund reason.</li>
-  <li>Policy window.</li>
-  <li>Exception rules.</li>
-  <li>Abuse or fraud signals.</li>
-  <li>Whether order lookup is available.</li>
-</ul>
-
-<p>A refund Skill can guide the agent through that sequence. It can tell the agent when to use an order lookup action, when to avoid promising approval, when to escalate high-value exceptions, and how to write a customer-safe response.</p>
-
-<p>Again, the Skill is not the refund tool. It is the playbook for using policy, context, and tools correctly.</p>
+<p>A refund Skill can guide the sequence: when to use order lookup, when not to promise approval, when to escalate high-value exceptions, and how to write a customer-safe response. The Skill is not the refund tool. It is the playbook for using policy, context, and tools correctly.</p>
 
 </details>
 
 <details>
 <summary><strong>Expand example 3:</strong> IT incident intake and routing — classify the issue, ask the right triage questions, and escalate risky cases.</summary>
 
-<p>IT support often starts with classification. Is the issue about access, device health, network connectivity, an application, data loss, or suspected compromise?</p>
+<p>IT support often starts with classification: access, device health, network connectivity, application issue, data loss, or suspected compromise.</p>
 
-<p>A Skill can instruct the agent to ask the right triage questions, suggest safe self-service steps only for low-risk issues, create a ticket when the ITSM action is available, and escalate immediately for security-sensitive scenarios.</p>
-
-<p>This is where Skills help reduce the number of specialized agents you need. Instead of building separate agents for every support path, you can equip one agent with focused procedures for common classes of work.</p>
-
-<p>That does not mean one mega-agent should do everything. Boundaries still matter. But Skills make it easier to build agents that are modular instead of fragmented.</p>
+<p>A Skill can ask the right triage questions, suggest safe self-service steps only for low-risk issues, create a ticket when the ITSM action is available, and escalate security-sensitive scenarios. This can reduce agent sprawl without turning one agent into a boundaryless mega-agent.</p>
 
 </details>
 
@@ -576,27 +585,33 @@ If the same agent can serve the same audience, use the same knowledge boundary, 
 
 That is the shift.
 
+## From classic topics and flows to Skills and code-first development
+
+Classic Copilot Studio agents often start with topics and flows. Topics are still useful for deterministic paths, explicit trigger phrases, or designed dialogs. Flows are still useful for business process automation.
+
+Skills do not make topics or flows obsolete. They change where some of the guidance should live.
+
+Instead of putting every variation into topic branching, or adding more global instructions each time the agent learns a new process, move repeatable task guidance into Skills. The agent can use orchestration to decide when that guidance is relevant, while still using topics for deterministic experiences and flows or actions for execution.
+
+As agent development matures, more teams want agent assets to be reviewable, repeatable, and testable. Topics, actions, knowledge configuration, Skills, and eval scenarios should increasingly be treated as source-controlled assets. Code generation can help produce or update those assets; evals decide whether the generated behavior is good enough.
+
+A practical transition path looks like this:
+
+1. Keep existing topics and flows where deterministic routing or automation is still the right fit.
+2. Identify instructions that only apply to specific classes of work.
+3. Move those instructions into focused Skills instead of growing the global prompt.
+4. Improve tool, action, and knowledge descriptions before assuming a Skill is needed.
+5. Add eval scenarios that prove the right knowledge, tools, topics, flows, and Skills are selected.
+6. Store the resulting assets in source control so changes can be reviewed like code.
+
+The destination is a cleaner architecture: topics for designed conversations, tools and flows for capabilities, knowledge for facts, Skills for just-in-time guidance, and evals to prove the pieces work together.
+
 ## What to watch next
 
-Skills are early, and the current implementation is intentionally focused.
+Skills are early, and the current implementation is intentionally focused. Watch the areas that turn Skills from a promising authoring feature into a mature enterprise building block: better authoring ergonomics, clearer trace visibility, stronger versioning patterns, richer package support, and deeper evaluation workflows.
 
-The areas to watch are the ones that turn Skills from a promising authoring feature into a mature enterprise building block: better authoring ergonomics, clearer trace visibility, stronger versioning patterns, richer package support, and deeper evaluation workflows that prove the right Skill was selected at the right moment.
+Skills are not magic. They are not tools, knowledge sources, or a replacement for good agent design.
 
-For now, the most important thing is to understand the concept correctly.
+They are reusable instructions that the orchestrator can select when a task needs extra guidance: sometimes procedural knowledge, sometimes tool-use guidance, sometimes just context that should not live in the global prompt all the time.
 
-Skills are not magic.
-They are not tools.
-They are not knowledge sources.
-They are not a replacement for good agent design.
-
-They are reusable instructions that the orchestrator can select when a task needs procedural knowledge.
-
-That is why they matter.
-
-The next generation of Copilot Studio agents will not only be grounded in enterprise knowledge and connected to enterprise systems. They will also be equipped with enterprise procedures.
-
-And for makers, that changes the craft.
-
-Writing better prompts still matters. But designing better Skills may become just as important: clear names, precise descriptions, focused procedures, explicit boundaries, and evals that prove the agent uses them at the right moment.
-
-That is the procedural memory layer.
+That is why they matter. The next generation of Copilot Studio agents will be grounded in enterprise knowledge, connected to enterprise systems, and equipped with the right instructions at the right moment.
