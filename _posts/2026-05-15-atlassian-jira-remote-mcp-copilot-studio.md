@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Wiring up the Jira (Atlassian) Remote MCP server in Copilot Studio in 5 mins"
 date: 2026-05-15

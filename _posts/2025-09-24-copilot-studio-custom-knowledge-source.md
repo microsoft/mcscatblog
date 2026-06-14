@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Connecting to Custom Knowledge Sources in Copilot Studio"
 date: 2025-09-24

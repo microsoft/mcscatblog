@@ -48,6 +48,36 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Validate agent_edition front matter
+        if: steps.freshness.outputs.stale != 'true'
+        run: |
+          # Mirrors _plugins/validate-agent-edition.rb so contributors get a
+          # fast, clear failure on the PR before the full Jekyll build runs.
+          # Every post must declare: agent_edition: classic | modern | both
+          allowed_regex='^agent_edition:[[:space:]]*(classic|modern|both)[[:space:]]*$'
+          offenders=()
+
+          for post in _posts/*.md; do
+            [ -e "$post" ] || continue
+            value_line="$(grep -m1 -E '^agent_edition:' "$post" || true)"
+
+            if [[ -z "$value_line" ]]; then
+              offenders+=("  - ${post}: missing \`agent_edition\`")
+            elif ! grep -qiE "$allowed_regex" <<<"$value_line"; then
+              offenders+=("  - ${post}: invalid \`${value_line}\`")
+            fi
+          done
+
+          if (( ${#offenders[@]} > 0 )); then
+            echo "::error::Every post must set 'agent_edition' to one of: classic | modern | both"
+            printf '%s\n' "${offenders[@]}"
+            echo ""
+            echo "Add 'agent_edition: classic' (or 'modern' / 'both') to the front matter of each post listed above."
+            exit 1
+          fi
+
+          echo "All posts declare a valid agent_edition."
+
       - name: Setup Ruby
         if: steps.freshness.outputs.stale != 'true'
         uses: ruby/setup-ruby@v1

@@ -1,4 +1,5 @@
 ---  
+agent_edition: classic
 layout: post  
 title: "Showing Agent Reasoning in Custom UIs (Anthropic + Agents SDK)"  
 date: 2025-11-04 22:00:00 +0100  

@@ -1,4 +1,5 @@
 ---      
+agent_edition: classic
 layout: post      
 title: "VIDEO: Retrieve Meeting Transcripts in Copilot Studio & Block Focus Time"      
 date: 2026-01-26 9:00:00 +0100      

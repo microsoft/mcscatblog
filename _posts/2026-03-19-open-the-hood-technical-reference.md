@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Open the Hood: Technical Reference for Copilot Studio Transcripts"
 description: "Data model deep-dive, Dataverse vs Application Insights comparison, and all six transcript access methods with code examples."

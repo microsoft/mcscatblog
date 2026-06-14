@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "The One Card: Build Once, Speak All Languages"
 date: 2026-01-08

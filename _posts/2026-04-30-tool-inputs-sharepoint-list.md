@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Get Answers Over SharePoint Lists and Other Structured Data — Turning Natural Language into Dynamic Queries in Copilot Studio"
 date: 2026-04-30

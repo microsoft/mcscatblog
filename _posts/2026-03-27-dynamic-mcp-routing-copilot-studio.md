@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Dynamic MCP Routing in Copilot Studio: One Connector, Many Endpoints"
 date: 2026-03-27

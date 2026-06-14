@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Page-Level PDF Citations in Copilot Studio"
 date: 2026-06-02
