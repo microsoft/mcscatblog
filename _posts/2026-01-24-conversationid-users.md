@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "How to Get Your Conversation ID When Chatting with Agents"
 date: 2026-01-24 00:00:00 +0000

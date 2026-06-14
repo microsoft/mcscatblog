@@ -1,4 +1,5 @@
 ---
+agent_edition: both
 layout: post
 title: "Herding Clouds: Taming Pay-As-You-Go Billing Policies in Power Platform at Scale"
 date: 2026-05-13

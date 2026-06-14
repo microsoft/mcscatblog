@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Handing Over to Live Agents Without Losing Control"
 date: 2025-12-14

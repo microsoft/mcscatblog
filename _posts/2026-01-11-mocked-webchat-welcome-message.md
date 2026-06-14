@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "The Welcome Message That Never Was: Mocking Agent Greetings in WebChat"
 date: 2026-01-11

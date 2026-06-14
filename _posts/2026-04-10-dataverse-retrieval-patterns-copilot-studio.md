@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Dataverse Retrieval Patterns for Structured Data in Copilot Studio Agents"
 date: 2026-04-10

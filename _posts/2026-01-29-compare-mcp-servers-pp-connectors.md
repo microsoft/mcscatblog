@@ -1,4 +1,5 @@
 ---
+agent_edition: both
 layout: post
 title: "MCP Servers or Connectors in Copilot Studio? A Maker's Guide"
 date: 2026-02-13 12:00:00 +0100

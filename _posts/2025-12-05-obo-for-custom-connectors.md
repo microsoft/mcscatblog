@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Seamless SSO with Custom Connectors (Yes It's Possible!)"
 date: 2025-12-05

@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Closing the Loop: Automated Agent Improvement with Publish and Test"
 date: 2026-03-29
