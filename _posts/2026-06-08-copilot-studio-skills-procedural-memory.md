@@ -8,7 +8,7 @@ description: "An introduction to Copilot Studio Skills as reusable instructions 
 author: roels
 image:
   path: /assets/posts/copilot-studio-skills-procedural-memory/header.png
-  alt: "Copilot Studio agent using skills as procedural memory"
+  alt: "Copilot Studio agent using Skills for procedural memory and just-in-time guidance"
 mermaid: true
 ---
 
@@ -16,7 +16,7 @@ Enterprise agents rarely fail only because they lack facts. They fail because th
 
 Copilot Studio Skills give makers a dedicated place to package that procedure.
 
-That is why Skills matter more than their simple shape suggests. The new Copilot Studio authoring experience is the visible change. The new orchestrator is the architectural change. Skills are the maker-facing building block that lets that orchestrator bring the right instructions into the conversation when a task needs them.
+That is why Skills matter more than their simple shape suggests. The modern Copilot Studio authoring experience is the visible change. The modern orchestrator is the architectural change. Skills are the maker-facing building block that lets that orchestrator bring the right instructions into the conversation when a task needs them.
 
 Not just what the agent should know.
 Not just which tools it can call.
@@ -26,9 +26,9 @@ Skills are where task-specific guidance can live until the agent actually needs 
 
 ## The short version
 
-A Copilot Studio Skill is an instructional asset based on the [Agent Skills open format](https://agentskills.io/), an open standard originally developed by Anthropic and covered well in this [overview](https://www.unite.ai/anthropic-opens-agent-skills-standard-continuing-its-pattern-of-building-industry-infrastructure/). It uses the `SKILL.md` pattern, with metadata and instructions that describe what the skill is for, when it should be used, and how the agent should approach the task.
+A Copilot Studio Skill is an instructional asset based on the [Agent Skills open format](https://agentskills.io/home), an open standard originally developed by Anthropic and covered well in this [overview](https://www.unite.ai/anthropic-opens-agent-skills-standard-continuing-its-pattern-of-building-industry-infrastructure/). It uses the `SKILL.md` pattern, with metadata and instructions that describe what the skill is for, when it should be used, and how the agent should approach the task.
 
-In the current Copilot Studio experience, Skills are primarily **instructional and procedural**. They are not executable script bundles today. Script and executable asset support should not be assumed until it is officially available.
+In the current Copilot Studio experience, Skills are primarily **instructional and procedural**. Richer script and executable asset support is not available at the time of writing, but it is already being tested and is an area to watch.
 {: .prompt-info }
 
 A Skill starts with metadata that helps the orchestrator decide when to use it, then adds the procedural instructions the agent should follow when that Skill is selected.
@@ -45,6 +45,11 @@ flowchart LR
     Upload --> AgentSkill
     AgentSkill --> Runtime[Available to the orchestrator]
     Runtime --> Selected[Selected when relevant]
+
+    classDef skill fill:#f5f3ff,stroke:#7c3aed,color:#2e1065
+    classDef runtime fill:#ecfdf5,stroke:#059669,color:#064e3b
+    class SkillsTab,Choice,Blank,Upload,AgentSkill skill
+    class Runtime,Selected runtime
 ```
 
 _In Copilot Studio, Skills are added through the builder experience. The authoring entry point is simple, but the metadata and instructions still matter because they influence when the orchestrator selects the Skill._
@@ -138,9 +143,9 @@ That sequence is not just a fact. It is a procedure.
 
 Skills are a way to give that procedure to the agent without stuffing it into every prompt or every global instruction.
 
-## The new orchestrator changes why this works
+## The modern orchestrator changes why this works
 
-The new Copilot Studio experience is tied to a new orchestrator. The important concept is the agent loop.
+The modern Copilot Studio experience is tied to a modern orchestrator. The important concept is the agent loop.
 
 At a high level, an agent loop works like this:
 
@@ -166,19 +171,28 @@ flowchart TB
     Result --> Context
 
     Decision -- Ready to answer --> Response[Final response]
+
+    classDef skill fill:#f5f3ff,stroke:#7c3aed,color:#2e1065
+    classDef response fill:#f8fafc,stroke:#475569,color:#0f172a
+    class Skill,Procedure skill
+    class Response response
 ```
 
-_The new orchestrator runs the loop: the model reasons, the orchestrator executes the requested step, the result returns to context, and the loop continues until the agent is ready to answer._
+_The modern orchestrator runs the loop: the model reasons, the orchestrator executes the requested step, the result returns to context, and the loop continues until the agent is ready to answer._
 
 That loop is what makes Skills useful. The agent does not need every procedure loaded all the time. The orchestrator can select the relevant skill based on the skill name, description, and instructions, then bring that procedure into context when the task calls for it.
 
+This does not mean general instructions go away. Use general instructions for behavior the agent must always follow: identity, tone, safety boundaries, audience, escalation principles, and default response style.
+
+Use Skills for guidance that is only relevant to a class of work.
+
 Think of it as moving from:
 
-> "Put everything the agent might ever need into the system instructions."
+> "Put every process the agent might ever need into the general instructions."
 
 to:
 
-> "Give the agent a library of task-specific procedures and let the orchestrator bring in the right one at the right time."
+> "Keep always-on behavior in general instructions, and give the agent a library of task-specific Skills the orchestrator can select when needed."
 
 That is a big difference for maintainability.
 
@@ -186,19 +200,21 @@ That is a big difference for maintainability.
 
 If you have used skills in coding agents, the idea will feel familiar: package instructions so the agent can load the right guidance only when it is relevant.
 
-The important difference is the degree of freedom. Coding-agent skills often live close to a developer's local environment. They may include repository conventions, helper scripts, command patterns, file templates, or automation that assumes the agent can inspect files, run commands, and change code.
+The important difference is the degree of freedom. Coding-agent skills often live close to a developer workspace. They may include repository conventions, helper scripts, command patterns, file templates, or automation that assumes the agent can inspect files, run commands, and change code.
 
-Copilot Studio Skills are more constrained. They are added through the Copilot Studio authoring experience, scoped to the agent, and used by the orchestrator as part of that agent's runtime behavior. In the current experience, treat them as reusable instructions, not arbitrary executable bundles.
+Copilot Studio makes a different tradeoff on purpose. Skills are added through the authoring experience, scoped to the agent, governed by the environment, and selected by the orchestrator at runtime.
 
-In a coding agent, a skill might say, "Run this script and patch this module." In Copilot Studio, a Skill is closer to, "When this kind of user task appears, load this guidance so the agent asks the right questions and uses available knowledge and tools correctly."
+Copilot Studio can run code such as Bash or Python in its managed runtime, but that code runs inside a containerized boundary and cannot call outside that boundary by itself. If the agent needs to call business systems or services, model those integrations through Power Platform managed connectors, actions, flows, MCP servers, or other capabilities allowed by policy and configured by the maker.
+
+That is the key design difference. In Copilot Studio, the Skill explains how and when to use configured capabilities. It does not bring arbitrary local scripts, files, or execution assets into runtime yet the way some coding-agent skills can. Richer Skill resources, such as bundled Python scripts, are already being tested and are an area to watch.
 
 ## Where Skills fit in Copilot Studio
 
-Skills sit between knowledge and actions.
+Skills sit beside knowledge and actions as a selectable extension of the agent's instructions.
 
 They do not replace either.
 
-Knowledge sources tell the agent what information is available. Actions, flows, connectors, and [MCP servers](https://microsoft.github.io/mcscatblog/posts/hello-world-mcp-copilot-studio/) tell the agent what it can do. Skills tell the agent how to approach a class of work.
+Knowledge sources tell the agent what information is available. Actions, flows, connectors, and [MCP servers]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}) tell the agent what it can do. Skills tell the agent how to approach a class of work.
 
 For example:
 
@@ -260,6 +276,13 @@ Before creating a Skill, ask:
 
 This is where evals matter. Do not create one Skill for every eval scenario by default. Create a Skill when failures show a repeatable missing procedure or task-specific guidance that should be loaded on demand.
 
+Also avoid these patterns:
+
+- **Do not use Skills as a dumping ground.** Keep factual reference material in knowledge sources and use the Skill to explain how to apply that knowledge.
+- **Do not create overlapping Skills with vague descriptions.** If you create three Skills called "HR Help," "Employee Questions," and "Policy Support," the orchestrator has little signal to work with.
+- **Do not reference tools the agent does not have.** A Skill can instruct an agent to use an action or flow, but it does not make that action or flow available.
+- **Do not treat Skills as a security bypass.** Review Skills copied from community sources, generated by AI, or reused from another environment for prompt injection, unsafe instructions, tool misuse, stale procedures, and hidden assumptions.
+
 ## Skills are part of the agent
 
 In the current Copilot Studio experience, Skills are scoped to an agent.
@@ -268,7 +291,7 @@ There is a **Skills** tab in the authoring experience where makers can create a 
 
 Skills are also solution-aware at the agent level. If you add a Skill to an agent and add that agent to a [Power Platform solution](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-solutions-overview), the Skill transfers with the agent. That is the right level of ALM framing for now: Skills move as part of the agent asset in the solution.
 
-If you are already thinking about environment promotion, managed solutions, and production-safe deployment, the same foundation still applies. Skills do not remove the need for agent ALM; they become one more part of the agent asset you move through that lifecycle. For the broader foundation, see [ALM for Copilot Studio Agents: The Foundation](https://microsoft.github.io/mcscatblog/posts/alm-copilot-studio-agents-foundation/).
+If you are already thinking about environment promotion, managed solutions, and production-safe deployment, the same foundation still applies. Skills do not remove the need for agent ALM; they become one more part of the agent asset you move through that lifecycle. For the broader foundation, see [ALM for Copilot Studio Agents: The Foundation]({% post_url 2026-05-20-alm-copilot-studio-agents-foundation %}).
 
 This is important because it keeps Skills close to the thing they influence: the agent's behavior.
 
@@ -299,6 +322,11 @@ flowchart LR
 
     Tools --> Response[Grounded answer or action]
     Knowledge --> Response
+
+    classDef skill fill:#f5f3ff,stroke:#7c3aed,color:#2e1065
+    classDef capability fill:#ecfdf5,stroke:#059669,color:#064e3b
+    class SkillIndex,Skill,Procedure skill
+    class Knowledge,Tools capability
 ```
 
 _The orchestrator does not need every procedure in context all the time. It can use skill metadata to select the relevant procedure, then combine that guidance with knowledge and tools._
@@ -444,7 +472,7 @@ Once selected, the Skill should guide behavior. If the procedure says the agent 
 Add adversarial cases as well: user attempts to override the Skill, bypass escalation, force an unavailable tool, or make the agent ignore required checks. Skills are procedural instructions, so evals should prove the procedure is followed under pressure, not only in the happy path.
 {: .prompt-warning }
 
-For more on testing patterns, see [Closing the Loop: Automated Agent Improvement with Publish and Test]({% post_url 2026-03-29-agentic-improvement-loop %}), [Bulk File-Based Testing for Copilot Studio: Beyond Standard Evals](https://microsoft.github.io/mcscatblog/posts/bulk-file-testing-copilot-evals/), and [Quality Gates for Copilot Studio: Automated Evaluations in Azure DevOps](https://microsoft.github.io/mcscatblog/posts/copilot-studio-eval-gate-azure-devops/).
+For more on testing patterns, see [Closing the Loop: Automated Agent Improvement with Publish and Test]({% post_url 2026-03-29-agentic-improvement-loop %}), [Bulk File-Based Testing for Copilot Studio: Beyond Standard Evals]({% post_url 2026-05-12-bulk-file-testing-copilot-evals %}), and [Quality Gates for Copilot Studio: Automated Evaluations in Azure DevOps]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %}).
 
 Testing tells you whether a Skill works. The next step is using failed scenarios to decide which Skills to create or improve.
 
@@ -482,6 +510,11 @@ flowchart LR
     Converse --> Skill[Convert procedure into a Skill]
     Skill --> Upload[Upload Skill to agent]
     Upload --> Run
+
+    classDef eval fill:#eef6ff,stroke:#2563eb,color:#172554
+    classDef skill fill:#f5f3ff,stroke:#7c3aed,color:#2e1065
+    class Specs,Run eval
+    class Skill skill
 ```
 
 When a scenario fails, do not immediately add another paragraph to the agent instructions. Work through the scenario with the agent. Ask it to reason through what information it needed, which tools or knowledge sources should have been used, what sequence should have been followed, and what the final answer should have looked like.
@@ -512,32 +545,6 @@ If you want to inspect the full conversation transcript, turn on user feedback u
 
 For more background on how the Copilot Studio orchestrator reasons through a request, see [Open the hood: Copilot Studio transcripts]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}).
 
-## Anti-patterns to avoid
-
-### Do not use Skills as a dumping ground
-
-If everything goes into a Skill, nothing is really a Skill.
-
-Keep Skills focused on repeatable procedures. Do not copy entire policy manuals into them. Put factual reference material in knowledge sources and use the Skill to explain how to apply that knowledge.
-
-### Do not create overlapping Skills with vague descriptions
-
-If you create three Skills called "HR Help," "Employee Questions," and "Policy Support," the orchestrator has little signal to work with.
-
-Skill descriptions should be precise enough that two reasonable makers would agree on when each Skill applies.
-
-### Do not reference tools the agent does not have
-
-A Skill can instruct an agent to use an action or flow, but it does not make that action or flow available.
-
-If the Skill says "look up the order in Dynamics" and the agent has no order lookup tool, the instruction cannot be fulfilled.
-
-### Do not treat Skills as a security bypass
-
-Skills influence agent behavior. That makes them powerful, but it also means they need review.
-
-Be especially careful with Skills copied from community sources, generated by AI, or reused from another environment. Review them for prompt injection, unsafe instructions, tool misuse, stale procedures, and hidden assumptions.
-
 ## Versioning and ownership
 
 Skills should be treated as living procedural assets.
@@ -564,27 +571,6 @@ This is not about adding bureaucracy. It is about avoiding stale procedures.
 
 Enterprise processes change. Policies change. Escalation paths change. Tool availability changes. If the Skill is procedural memory, then outdated Skills become outdated memory.
 
-## Why this reduces agent sprawl
-
-Before Skills, it was tempting to solve every complex process by creating another specialized agent.
-
-One agent for HR leave.
-One agent for HR benefits.
-One agent for IT incidents.
-One agent for device support.
-One agent for refund handling.
-One agent for order status.
-
-Sometimes that separation is correct. Security boundaries, audience boundaries, and business ownership still matter.
-
-But many times, the real need is not a new agent. The real need is a new procedure.
-
-Skills make that distinction clearer.
-
-If the same agent can serve the same audience, use the same knowledge boundary, and access the same toolset, then a Skill may be the better unit of modularity. You are not building another agent; you are teaching the existing agent another repeatable way of working.
-
-That is the shift.
-
 ## From classic topics and flows to Skills and code-first development
 
 Classic Copilot Studio agents often start with topics and flows. Topics are still useful for deterministic paths, explicit trigger phrases, or designed dialogs. Flows are still useful for business process automation.
@@ -605,6 +591,27 @@ A practical transition path looks like this:
 6. Store the resulting assets in source control so changes can be reviewed like code.
 
 The destination is a cleaner architecture: topics for designed conversations, tools and flows for capabilities, knowledge for facts, Skills for just-in-time guidance, and evals to prove the pieces work together.
+
+## Why this reduces agent sprawl
+
+Before Skills, it was tempting to solve every complex process by creating another specialized agent.
+
+One agent for HR leave.
+One agent for HR benefits.
+One agent for IT incidents.
+One agent for device support.
+One agent for refund handling.
+One agent for order status.
+
+Sometimes that separation is correct. Security boundaries, audience boundaries, and business ownership still matter.
+
+But many times, the real need is not a new agent. The real need is a new procedure.
+
+Skills make that distinction clearer.
+
+If the same agent can serve the same audience, use the same knowledge boundary, and access the same toolset, then a Skill may be the better unit of modularity. You are not building another agent; you are teaching the existing agent another repeatable way of working.
+
+That is the shift.
 
 ## What to watch next
 
