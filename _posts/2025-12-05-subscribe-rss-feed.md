@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "How to Subscribe to the Custom Engine Blog via RSS"
 date: 2025-12-05

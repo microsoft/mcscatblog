@@ -1,4 +1,5 @@
 ---  
+agent_edition: classic
 layout: post
 title: "Best Practices for Deploying Copilot Studio Agents in Microsoft Teams"
 date: 2025-11-14 17:30:00 +0100

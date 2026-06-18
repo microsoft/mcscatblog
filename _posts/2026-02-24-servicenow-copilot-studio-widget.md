@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Embedding Copilot Studio Directly in ServiceNow (And Why Auth Was the Easy Part)"
 date: 2026-02-24

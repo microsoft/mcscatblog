@@ -1061,3 +1061,99 @@ html[data-mode="dark"] {
     }
   }
 }
+
+/* =========================================================================
+   Classic / Modern Copilot Studio "edition" pill
+   Rendered by the LOCAL override in _layouts/post.html (driven by the
+   `agent_edition` front-matter field). Subtle, but clearly visible under
+   the post title. See README "Theme customizations".
+   ========================================================================= */
+
+.agent-edition {
+  /* keeps the pill on its own line, tight under the title */
+  line-height: 1;
+}
+
+.agent-edition-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.22em 0.7em;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  i {
+    font-size: 0.85em;
+  }
+}
+
+/* Classic: warm, archival amber */
+.agent-edition--classic {
+  color: #8a6d1f;
+  background-color: rgba(255, 193, 7, 0.12);
+  border-color: rgba(255, 193, 7, 0.40);
+}
+
+/* Modern: the site's blue→purple brand accent */
+.agent-edition--modern {
+  color: #6a2bd6;
+  background-color: rgba(127, 57, 251, 0.10);
+  border-color: rgba(127, 57, 251, 0.35);
+}
+
+/* Both: bright teal, distinct from classic amber and modern purple */
+.agent-edition--both {
+  color: #0e8a86;
+  background-color: rgba(20, 184, 166, 0.12);
+  border-color: rgba(20, 184, 166, 0.45);
+}
+
+/* Dark mode (Chirpy toggle) */
+html[data-mode="dark"] {
+  .agent-edition--classic {
+    color: #f0c14b;
+    background-color: rgba(255, 193, 7, 0.14);
+    border-color: rgba(255, 193, 7, 0.35);
+  }
+
+  .agent-edition--modern {
+    color: #c4a4ff;
+    background-color: rgba(127, 57, 251, 0.18);
+    border-color: rgba(127, 57, 251, 0.45);
+  }
+
+  .agent-edition--both {
+    color: #5eead4;
+    background-color: rgba(20, 184, 166, 0.18);
+    border-color: rgba(20, 184, 166, 0.50);
+  }
+}
+
+/* Dark mode via system preference (when no explicit toggle) */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode="light"]) {
+    .agent-edition--classic {
+      color: #f0c14b;
+      background-color: rgba(255, 193, 7, 0.14);
+      border-color: rgba(255, 193, 7, 0.35);
+    }
+
+    .agent-edition--modern {
+      color: #c4a4ff;
+      background-color: rgba(127, 57, 251, 0.18);
+      border-color: rgba(127, 57, 251, 0.45);
+    }
+
+    .agent-edition--both {
+      color: #5eead4;
+      background-color: rgba(20, 184, 166, 0.18);
+      border-color: rgba(20, 184, 166, 0.50);
+    }
+  }
+}

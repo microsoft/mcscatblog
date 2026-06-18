@@ -1,4 +1,5 @@
 ---      
+agent_edition: classic
 layout: post      
 title: "VIDEO TUTORIAL: Add Custom APIs and MCP Servers to Declarative Agents"      
 date: 2025-12-10 9:00:00 +0100      

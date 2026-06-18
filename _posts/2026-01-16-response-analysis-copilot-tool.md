@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Agentic Tooling: Making Agent Performance Transparent and Measurable"
 date: 2026-01-16

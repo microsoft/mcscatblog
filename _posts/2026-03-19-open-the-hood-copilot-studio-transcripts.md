@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Open the Hood: What Your Copilot Studio Agent Is Really Doing"
 description: "How to extract, read, and understand Copilot Studio conversation transcripts so you know what your agent is doing and why."

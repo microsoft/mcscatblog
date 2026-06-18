@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "From DEV to PROD: Deploying Copilot Studio Agents to Teams and Microsoft 365 Copilot"
 date: 2026-04-07

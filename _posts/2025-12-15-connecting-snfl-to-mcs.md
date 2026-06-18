@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Connecting Snowflake to Copilot Studio: Step-by-Step Guide"
 date: 2025-12-15 17:30:00 +0100
