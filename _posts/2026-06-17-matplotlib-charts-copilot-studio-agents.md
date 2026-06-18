@@ -6,6 +6,7 @@ categories: [copilot-studio, mcp]
 tags: [charts, matplotlib, mcp, adaptive-cards, mermaid, azure-functions, data-visualization]
 description: "A practical guide to rendering charts and graphs from AI agents, comparing Mermaid, Adaptive Card charts, Matplotlib through Azure Functions and MCP, and the new Copilot Studio charting experience."
 authors: [NicoPilot-dev, dbellingeri]
+agent_edition: both
 mermaid: true
 published: true
 image:
