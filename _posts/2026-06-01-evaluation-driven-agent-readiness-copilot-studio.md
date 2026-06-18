@@ -102,9 +102,13 @@ An edge case is still a request the agent should *try* to handle, usually by cla
 
 ## Generate realistic tests
 
-Now you build the test set. Copilot Studio's [agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro), in the Evaluate tab, can generate a starter set straight from your agent definition. You can also hand-write rows, but generating then curating is faster. Two inputs make generated tests dramatically more usable: the agent's real boundaries, and realistic sample data.
+Now you build the test set, and this is where you can move fast without cutting corners. Copilot Studio's [agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro), in the Evaluate tab, can generate a starter set straight from your agent definition. The rows it produces are generic, a flat list rather than the coverage buckets you just defined, but you get two useful things: the request-and-expected-response format you'll reuse, and a starting set whose quality tracks how well your agent is described.
 
-Here's a starter-set prompt that produces bucketed rows:
+That second point is a lever most makers miss. A tool left with a generic name that simply reads a SharePoint list produces generic list questions. Rename that same tool to something like shipping info retrieval and describe its fields, and the generator produces shipping-relevant questions instead. The better your tools and knowledge are named and described, the better the starter set you get back.
+
+To turn that flat list into bucketed rows, generate them yourself with an LLM you already have on hand like M365 Copilot or Scout. Give it three things: the format from the Evaluate tab, a description of your test use cases, and concrete detail about the agent's tools, data, and knowledge, so the rows land in the buckets you care about.
+
+Here's a prompt that turns your boundaries into bucketed rows:
 
 ```text
 Generate 20 single-turn test requests for an internal shipping
@@ -134,18 +138,14 @@ add lower-priority coverage.
 ```
 
 ![Generating a test set from the agent definition](/assets/posts/evaluation-driven-agent-readiness/03-generate-test-set.png){: .shadow }
-_Generating a starter set in the Evaluate tab. The richer the context you provide, the less cleanup the rows need._
+_The Evaluate tab generates a generic starter set and, just as useful, the row format you'll reuse when you generate bucketed rows with your own LLM._
 
-> Made-up requests have their place: they show what a third party *assumes* the agent should do. But your realistic requests should come from two stronger sources: in-product generation from a well-defined agent, and external generation using your use-case description plus sample business data.
+> The handful of requests you wrote during use-case scoping are a great starting point. Use them to seed the larger generated sets, so every evaluation run feeds rapid, evidence-based improvement instead of guesswork.
 {: .prompt-tip }
 
 #### Combine generated rows with must-work rows
 
-Generated rows expand coverage, but they don't know which scenarios you cannot afford to get wrong. Keep a small hand-curated set of must-work rows alongside the generated ones, and quickly prune generated rows that are irrelevant, repetitive, or out of scope before you run anything. Generating the set two ways, once from the role description and once from specific knowledge snippets and sample records, tends to surface different failure shapes.
-
-#### Add real usage as a third source
-
-Manual and generated rows get you to launch, but they aren't the whole picture. The third source only shows up after real use: once the agent is in UAT or production, the conversations people actually have tell you where requests concentrate, which is exactly where tuning pays off most. Capture the most representative of those as regression tests and rerun them before every future change. Manual rows define the scope, generated rows stretch it, and real ones keep it honest over time.
+Whether rows come from the Evaluate tab or your own LLM, treat them as a draft, not a finished set. Both kinds need curation: prune rows that are irrelevant, repetitive, or out of scope, and fix the expected answers before you run anything. Generated rows also don't know which scenarios you cannot afford to get wrong, so keep a small hand-curated set of must-work rows alongside them. Generating the set two ways, once from the role description and once from specific knowledge snippets and sample records, tends to surface different failure shapes.
 
 Here's what a slice of the **Foundational core** set looks like once curated:
 
@@ -178,16 +178,16 @@ A test row is only as good as the grader judging it. Copilot Studio's graders fa
 | **Deterministic** (path and fact checks) | Exact match, Keyword match, Tool use | Usually yes (the expected value, keyword, or tool) |
 | **AI** (quality and meaning checks) | General quality, Compare meaning, Text similarity, Custom | Mixed: Compare and Text similarity need one; General quality does not |
 
-So which family do you pick? It depends on the answer. Some answers are too important to leave to generation. For the few that must be identical every time, a compliance line, a fixed escalation contact, the agent's own identity, make the response deterministic and check it with **Exact match** rather than asking an AI grader whether it came close enough.
+So which family do you pick? It depends on the answer. Some answers are too important to grade on quality or meaning alone. For the few that must be identical every time, a compliance line, a fixed escalation contact, the agent's own identity, make the response deterministic and check it with **Exact match** rather than asking an AI grader whether it came close enough.
 
 Match the grader to the kind of answer, too. Transactional answers, a status, a date, a number, check cleanly with **Exact match** or **Keyword match**. Analytical or generated answers, a summary or an explanation, need meaning-based checks like **Compare meaning** or **General quality**, and sometimes a structural check on length or format. The shipping agent is mostly transactional, which is why its core sets lean deterministic, but the moment an agent starts summarizing or reasoning, the grader mix has to shift with it.
 
-So always grade twice:
+Analytical answers are where a single grader is most likely to mislead you. A knowledge-grounded summary can read perfectly and still be wrong, or right for the wrong reason, so check both the path the agent took and the answer it produced:
 
-> Stack at least two graders on every set: one that checks the **path** the agent took, and one that checks the **answer** it gave.
+> For a knowledge-grounded analytical answer, stack two graders: one that checks the **path** (did the agent retrieve and use the right knowledge or tool?), and one that checks the **answer** (is it correct and grounded in what it retrieved?).
 {: .prompt-tip }
 
-For a status lookup, that means pairing **Tool use** (did the agent actually call `GetShipmentStatus` instead of guessing?) with **General quality** or **Compare meaning** (was the answer right and useful?). One grader alone can lie to you: a great-sounding answer built without the tool is still a bug.
+You can stack graders on any test, and it's worth choosing the combination per use case and per coverage bucket rather than applying one grader everywhere. A transactional status row might pair **Tool use** with **Compare meaning**, while a Guardrails row might pair **Tool use** with a check that the agent refused or escalated. One grader alone can lie to you: a great-sounding answer built without the tool is still a bug.
 
 ![A single test row with two graders attached](/assets/posts/evaluation-driven-agent-readiness/04-stacked-graders.png){: .shadow }
 _A stacked grader setup: Tool use confirms the path, Compare meaning confirms the answer._
@@ -220,10 +220,10 @@ The Chicago-to-Dubai failure is about design, not the test. The agent needs to d
 > A wall of instructions is rarely the fix. Goal-based, intentional guidance generalizes better than a growing list of special cases, and it's far easier to test. Make one targeted change, rerun, and let the results tell you whether it worked before you add another.
 {: .prompt-tip }
 
-Then rerun the **same** set and compare versions row by row.
+Then rerun the **same** set and use the [**Compare with**](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-results#compare-test-results) tool to line the two runs up row by row.
 
 ![Before and after comparison across two versions](/assets/posts/evaluation-driven-agent-readiness/06-version-compare.png){: .shadow }
-_The row-level before/after view: which rows moved from fail to pass, and which regressed._
+_Comparing two runs of the same set: arrows mark the rows that moved from fail to pass, and the ones that regressed from pass to fail._
 
 The Chicago-to-Dubai row now passes, with the agent asking for the tracking number. Just as importantly, scan for regressions: did any row that used to pass now fail because the agent over-asks for clarification on unambiguous lookups? That pass-to-fail column is where over-correction hides.
 
@@ -274,7 +274,7 @@ So when is the agent ready? Not when a percentage clears some line you picked. I
 - **see** that coverage represented in tests, weighted toward what's frequent, valuable, and risky
 - **explain** the known gaps, and show that each version moved the right rows in the right direction
 
-Put plainly, readiness is a sentence you can say out loud to a stakeholder: "For requests like these, here's what we handle well. For these, here's what we don't cover yet, and that's planned for a later version. And for these, we won't answer at all, on purpose, because we've guardrailed them." An agent you can describe that precisely is one you can deploy with your eyes open.
+Readiness, then, is something you can state precisely: "For requests like these, here's what we handle well. For these, here's what we don't cover yet, and that's planned for a later version. And for these, we won't answer at all, on purpose, because we've guardrailed them." An agent you can describe that precisely is one you can deploy with your eyes open.
 
 That's a far more defensible answer than "it hit 90%." And it's repeatable: every time you change instructions, update a topic or flow, add a tool or knowledge source, or tweak configuration, you rerun the same sets and check the row-level diff. Evaluation isn't a one-time gate, it's how you design.
 
