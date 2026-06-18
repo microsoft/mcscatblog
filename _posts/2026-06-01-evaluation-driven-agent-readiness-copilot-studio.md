@@ -195,7 +195,7 @@ _A stacked grader setup: Tool use confirms the path, Compare meaning confirms th
 > Copilot Studio ships [seven graders](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-overview) in the Evaluate tab. You only need a couple to drive this loop, so don't try to wire up all of them at once. Pick one path grader and one answer grader per set, and add more only when a scenario genuinely needs it.
 {: .prompt-info }
 
-## Run it, then read the failures
+## Run the Evals and focus on grader justifications
 
 Now run the sets and resist the urge to stare at the summary number. The value is in the rows, and specifically in the explanation attached to each one. That explanation, not the pass/fail flag, is the most useful thing an evaluation produces: it names *why* the agent behaved the way it did, which is exactly what you act on.
 
