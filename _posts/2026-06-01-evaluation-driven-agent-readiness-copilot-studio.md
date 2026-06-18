@@ -4,6 +4,7 @@ title: "Evaluation-Driven Agent Readiness in Copilot Studio"
 date: 2026-06-01
 categories: [copilot-studio, evaluation]
 tags: [evaluation, agents, test-sets, graders, tool-use, copilot-studio-evaluate, design-set]
+agent_edition: both
 description: "A maker-focused walkthrough of using evaluations to improve a real Copilot Studio agent in short loops: generate realistic test sets, bucket your coverage, stack graders, read the failures, fix the design, and rerun to prove it."
 author: KarimaKT
 image:
