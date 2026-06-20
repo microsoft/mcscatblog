@@ -9,7 +9,7 @@ description: "How Skills work in modern Copilot Studio agents: instructions and 
 author: roels
 image:
   path: /assets/posts/modern-mcs-agent-skills/header.png
-  alt: "A whimsical illustration of an AI agent at a giant wall of labeled drawers marked Skills, Knowledge, and Tools, its Core Instructions glowing in its head while it cheerfully pulls a single SKILL.md card from one open drawer"
+  alt: "Our agent, calmly grabbing exactly the one Skill it needs while ignoring the other 47 drawers. We should all be so organized."
 mermaid: true
 ---
 
