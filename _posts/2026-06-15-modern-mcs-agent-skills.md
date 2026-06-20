@@ -4,7 +4,7 @@ agent_edition: modern
 title: "Modern Agents Have Skills Now — Here's How They Work in Copilot Studio"
 date: 2026-06-15
 categories: [copilot-studio, skills]
-tags: [copilot-studio, skills, orchestration, agent-development, mcp, best-practices]
+tags: [copilot-studio, skills, orchestration, agent-development, best-practices]
 description: "How Skills work in modern Copilot Studio agents: instructions and resources loaded on demand for specific scenarios, why you would modularize instructions into Skills, and when to use Skills versus instructions."
 author: roels
 image:
@@ -17,7 +17,7 @@ LLMs are good at the common cases, the ones that don't need any specific knowled
 
 If you have spent time with coding agents recently, you have probably already met them. At its core, a Skill is just instructions (and optionally resources like examples, templates, or scripts) that the agent loads **on demand**, only when a specific kind of task comes up. A `SKILL.md` file carries a name, a description, and the instructions themselves. The name and description are what tell the agent when the Skill is relevant.
 
-That same idea has now arrived in the modern Copilot Studio agent experience. This post is about what Skills are, why an agent builder should care, and how they work in Copilot Studio specifically.
+That same idea has now arrived in the [modern Copilot Studio agent experience](https://techcommunity.microsoft.com/blog/copilot-studio-blog/meet-the-new-copilot-studio-rebuilt-for-more-complex-multi-step-work/4526488). This post is about what Skills are, why an agent builder should care, and how they work in Copilot Studio specifically.
 
 ## Why an agent builder should care
 
@@ -58,8 +58,6 @@ flowchart TB
 ```
 
 _This context model isn't specific to Skills. Knowledge sources, tools, and Skills are all registered the same way: only their metadata sits in context by default, and the full content, a knowledge source's rows, a tool's result, or a Skill's instructions, is pulled in only when the prompt calls for it. The agent's own instructions are the exception, always loaded in full._
-
-There are a couple of things specific to how Skills work in Copilot Studio, which I come back to below.
 
 ## Working with Skills in Copilot Studio
 
@@ -110,20 +108,6 @@ Copilot Studio supports this full shape today. A Skill carries its `SKILL.md` in
 ## How to think about a Skill
 
 A Skill can take whatever shape the job in front of the agent needs. Think of a Skill as any of these:
-
-```mermaid
-flowchart TB
-    S(("A Skill"))
-    S --- A[Reference manual]
-    S --- B[Specialist you call in]
-    S --- C[Playbook]
-    S --- D[Standard operating procedure]
-    S --- E[Briefing pack]
-    S --- F[Checklist]
-    S --- G[Protocol]
-    S --- H[Runbook]
-    S --- I[Template]
-```
 
 | Think of a Skill as a… | Useful when the job is… | For example |
 | --- | --- | --- |
@@ -176,7 +160,7 @@ Before Skills arrived in Copilot Studio, the instinct for every distinct task wa
 Two things still point to a separate agent:
 
 - **It would stand on its own.** An HR assistant and an IT support agent are not one agent with two Skills. They serve different audiences, sit behind different security boundaries, and each makes sense as a standalone agent someone would use on its own. When a capability is standalone like that, build the agent. (Standalone is not the same as reusable; sharing a *Skill* across agents is a separate question, and the kind of thing a Skill catalog in the product would address down the line.)
-- **One agent has taken on too many tools.** Accuracy and speed degrade as an agent's toolset grows, and past some point adding more Skills will not save it. When you hit that wall, the move is to split the work out into a separate agent and delegate to it, rather than pile everything onto one.
+- **One agent has taken on too many tools.** There is some data suggesting that accuracy can degrade as more is loaded into an agent's context, and a growing toolset is part of that load. Past some point, adding more Skills will not save it. As always, evaluate this for your own agent rather than assume it. When you hit that wall, the move is to split the work out into a separate agent and delegate to it, rather than pile everything onto one.
 
 So the heuristic is simple: keep related tasks as Skills on one agent until either the work could stand on its own, or the tool count starts dragging the agent down. That is how Skills cut down on agent sprawl, without pretending every job belongs on a single agent.
 
@@ -190,3 +174,5 @@ Because a Skill shapes how the agent behaves, and can now bundle scripts, it is 
 If you want to go deeper, [Influencing Agent Planning with Contextual Instructions]({% post_url 2025-11-11-influence-orchestration-knowledge %}) covers how always-on instructions steer the orchestrator, [Open the Hood: What Your Copilot Studio Agent Is Really Doing]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}) shows how to inspect the reasoning that decides when a Skill fires, and [Closing the Loop]({% post_url 2026-03-29-agentic-improvement-loop %}) covers how to evaluate that the right Skill fires at the right moment.
 
 Skills are early in Copilot Studio, and intentionally focused. But the core idea is already worth internalizing: keep instructions for what is true in every conversation, and move everything situational into Skills the agent can pull in on demand, whether that is a reference manual, a checklist, a runbook, or a playbook.
+
+Skills are new to Copilot Studio, and I would love to hear how everyone is putting them to use. What is the first thing you would pull out of your instructions and turn into a Skill?
