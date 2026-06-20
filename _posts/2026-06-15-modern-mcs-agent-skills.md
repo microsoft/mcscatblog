@@ -1,5 +1,6 @@
 ---
 layout: post
+agent_edition: modern
 title: "Modern Agents Have Skills Now — Here's How They Work in Copilot Studio"
 date: 2026-06-15
 categories: [copilot-studio, skills]
@@ -12,7 +13,7 @@ image:
 mermaid: true
 ---
 
-Enterprise agents are good at recalling facts. Where they struggle is the things that are specific to *your* organization: the context, conventions, data, and know-how an LLM cannot infer on its own. Some of that is true in every conversation, so it belongs in the agent's instructions. But a lot of it only matters in specific situations, and cramming all of it into one ever-growing system prompt is exactly where agents get bloated and unpredictable. Modern agents have a cleaner place to put the situational part: **Skills**.
+LLMs are good at the common cases, the ones that don't need any specific knowledge of *your* organization. Where they might do less well is everything that does: the context, conventions, data, and know-how a model cannot infer on its own. Procedural know-how especially, the step-by-step way *your* organization does something, is the kind of thing an LLM is not all that good at figuring out on its own, so you end up writing it down. But pile all of it into the agent's context, all the time, and that is exactly where agents get bloated and unpredictable. Modern agents have a cleaner place to put the situational part: **Skills**.
 
 If you have spent time with coding agents recently, you have probably already met them. At its core, a Skill is just instructions (and optionally resources like examples, templates, or scripts) that the agent loads **on demand**, only when a specific kind of task comes up. A `SKILL.md` file carries a name, a description, and the instructions themselves. The name and description are what tell the agent when the Skill is relevant.
 
@@ -20,18 +21,17 @@ That same idea has now arrived in the modern Copilot Studio agent experience. Th
 
 ## Why an agent builder should care
 
-Skills are based on the [Agent Skills open format](https://agentskills.io/), an open standard originally developed by Anthropic. The shape is deliberately simple. A Skill is just instructions, so the real question is why you would break instructions out into a discrete Skill at all. It comes down to four things:
+Skills are based on the [Agent Skills open format](https://agentskills.io/), an open standard originally developed by Anthropic. The shape is deliberately simple. A Skill is just instructions, so the real question is why you would break instructions out into a discrete Skill at all. It comes down to three things:
 
 - **Manageability.** Instead of one ever-growing instruction blob, each Skill is a focused, self-contained unit you can reason about, review, and version one at a time.
 - **Context management.** Skills load *on demand*. The agent keeps only the names and descriptions in view by default, and pulls the full instructions into context only when a task matches. Ten Skills cost you ten short descriptions, not ten full sets of instructions, in every turn, so the context window stays lean.
-- **Accuracy.** Use-case dependent, but real. A Skill can carry detailed tool-use guidance: which tool to reach for, which parameters matter, how to shape a query, what to validate before calling, and what to do when a tool returns nothing. With large or overlapping toolsets, bringing that guidance into context only when it is relevant can make the agent call tools more reliably. It is not a guarantee, so evaluate it rather than assume it.
-- **Speed.** A Skill that points the agent straight at what to do means fewer exploratory loops, and less context for the model to weigh on each turn. Both can shave latency, and cost, off a response.
+- **Accuracy.** Use-case dependent, but real. A Skill can carry detailed tool-use guidance: which tool to reach for, which parameters matter, how to shape a query, what to validate before calling, and what to do when a tool returns nothing. With large or overlapping toolsets, bringing that guidance into context only when it is relevant can make the agent call tools more reliably. It is not a guarantee, so evaluate it rather than assume it. *It may even help speed:* when the agent reaches for the right tool first, it does not burn turns on trial and error.
 
-That is the short version. Manageability and context management are structural and apply almost everywhere. Accuracy and speed depend on your agent.
+That is the short version. Manageability and context management are structural and apply almost everywhere. Accuracy depends on your agent.
 
 ## The same benefits show up in Copilot Studio
 
-The good news is that the modern Copilot Studio orchestrator works the same way: it can reason over a set of available Skills, select the relevant one, and bring its instructions into context only when the conversation calls for it. So the manageability and context benefits carry over directly, and the accuracy and speed questions are still yours to evaluate.
+The good news is that the modern Copilot Studio orchestrator works the same way: it can reason over a set of available Skills, select the relevant one, and bring its instructions into context only when the conversation calls for it.
 
 ```mermaid
 flowchart TB
@@ -57,17 +57,15 @@ flowchart TB
     classDef act fill:#8250df,stroke:#a371f7,color:#fff;
 ```
 
-_This is how a modern agent manages its context in general, not something specific to Skills. Knowledge sources, tools, and Skills are all registered the same way: only their metadata (name and description) sits in context by default, just enough for the agent to know what is available. The agent's own instructions are the exception, always loaded in full. When a prompt comes in, the agent evaluates it against that metadata, then pulls in the full content of whatever it actually needs, the rows of a knowledge source, the result of a tool, or the full instructions of a Skill (and optionally that Skill's examples and resources). It then acts on its general instructions, the matched Skill's instructions, and whatever knowledge or tools the task requires. Loading full content only on demand is what keeps the context window lean, no matter how many Skills, tools, or knowledge sources you add._
+_This context model isn't specific to Skills. Knowledge sources, tools, and Skills are all registered the same way: only their metadata sits in context by default, and the full content, a knowledge source's rows, a tool's result, or a Skill's instructions, is pulled in only when the prompt calls for it. The agent's own instructions are the exception, always loaded in full._
 
 There are a couple of things specific to how Skills work in Copilot Studio, which I come back to below.
 
 ## Working with Skills in Copilot Studio
 
-From a maker's perspective, this is intentionally lean.
-
 ### Add a Skill
 
-Skills live in the **Skills** tab of the agent. There are two entry points today: create a Skill from blank, or upload an existing Skill (a `SKILL.md` file, together with any bundled resources or scripts).
+Skills live in the **Skills** tab of the agent. There are two entry points today: create a Skill from blank, or upload an existing Skill. An upload can be a standalone `SKILL.md` file, or a `.zip` that bundles the `SKILL.md` together with additional resources, such as Python scripts the Skill can refer to.
 
 ![The Create from blank dialog in the Copilot Studio Skills tab, asking for name, description, and instructions](/assets/posts/modern-mcs-agent-skills/add-skill-create-from-blank.png){: .shadow }
 _Create from blank asks for the three pieces that matter: name, description, and instructions. An uploaded Skill carries the same fields in the `SKILL.md` front matter and body, plus any files it bundles alongside it._
@@ -104,16 +102,14 @@ my-skill/
 └── assets/           # optional templates, resources
 ```
 
-Copilot Studio supports this full shape today. A Skill carries its `SKILL.md` instructions and can bundle resources (reference files, examples, templates) and executable scripts, all loaded on demand when the Skill is selected. A couple of things are still worth calling out:
+Copilot Studio supports this full shape today. A Skill carries its `SKILL.md` instructions and can bundle resources (reference files, examples, templates) and executable scripts, all loaded on demand when the Skill is selected. Putting those resources and scripts to work deserves its own walkthrough, and that is coming in a follow-up post. For now, two things about how Copilot Studio handles the bundle are worth calling out:
 
-- **Distribution is per-agent.** Coding-agent ecosystems let you distribute Skills as plugins across products and tenants. In Copilot Studio, a Skill is scoped to its agent and travels with that agent through solutions and ALM, rather than through a shared, cross-product catalog.
-- **Skills can soft-point at the agent's tools, not just bundled scripts.** A Skill can run its own bundled script, but it can also *soft-point* at the agent's existing capabilities: actions, flows, connectors, and MCP servers. The Skill can say "use the order-lookup action here," but it does not grant that capability. If the agent does not already have the tool, the instruction cannot be fulfilled.
-
-So the mental model is: **a Skill provides the instructions and resources; the agent provides the reach.**
+- **Distribution is per-agent, for now.** Coding-agent ecosystems let you distribute Skills as plugins across products and tenants. As of June 2026, a Skill in Copilot Studio is scoped to its agent and travels with that agent through solutions and ALM, rather than through a shared, cross-product catalog. That's the current state, not the end state: a more catalog-like way to share Skills is being worked on.
+- **Skills can soft-point at the agent's tools, not just bundled scripts.** A Skill can run its own bundled script, but it can also *soft-point* at the agent's existing capabilities: actions, flows, connectors, and MCP servers. It's a *soft* pointer because the Skill only references the capability, it doesn't bind to it or grant it. The Skill can say "use the order-lookup action here," but there's no guarantee: if the agent doesn't already have that tool, the instruction can't be fulfilled, and even when it does, the orchestrator still decides whether to follow the pointer.
 
 ## How to think about a Skill
 
-Skills are new to most makers, and "instructions loaded on demand" is accurate but abstract. It helps to have a few mental models, because a Skill can take whatever shape the job needs. Think of a Skill as any of these:
+A Skill can take whatever shape the job in front of the agent needs. Think of a Skill as any of these:
 
 ```mermaid
 flowchart TB
@@ -128,8 +124,6 @@ flowchart TB
     S --- H[Runbook]
     S --- I[Template]
 ```
-
-_One feature, many shapes. The right analogy depends on the job in front of the agent._
 
 | Think of a Skill as a… | Useful when the job is… | For example |
 | --- | --- | --- |
@@ -147,9 +141,7 @@ The common thread: each one is **context-specific guidance the LLM cannot infer 
 
 ## Instructions, or a Skill?
 
-Start with one gate that applies to both: **can the agent figure this out on its own?** Give it a well-described tool or knowledge source and it can usually decide how to use it from the description alone. You do not need to hand-hold the obvious. Only the things the agent *cannot* infer, your organization's context, conventions, data, and rules, need to be written down at all.
-
-Once you have decided something does need to be written down, the choice between instructions and a Skill is simple:
+By the time you are weighing instructions against a Skill, one thing is already settled: there is something here the agent cannot infer on its own. (Give it a well-described tool or knowledge source and it can usually work out how to use it from the description alone, so the obvious does not need writing down at all.) What is left, your organization's context, conventions, data, and rules, is the part you genuinely have to put into words. The only question is where it goes, and that choice is simple:
 
 - **Is it true in every conversation, for every scenario?** Put it in the agent's **instructions**. Tone, the agent's role, always-on guardrails: these are valid 100% of the time, so they should always be in context.
 - **Does it only apply to specific scenarios?** Make it a **Skill**. If a piece of guidance is not relevant to every turn, keeping it out of the default context and loading it only when its scenario comes up is exactly what Skills are for.
@@ -171,13 +163,22 @@ flowchart TB
 
 _Two questions decide it: can the agent infer it, and if not, is it always true or only situational?_
 
-That is the whole distinction. Instructions are the always-on baseline; Skills are everything situational, named and described so the agent can reach for the right one at the right moment.
+That is the whole distinction. Instructions are the always-on baseline; Skills are everything situational, named and described so the agent can reach for the right one at the right moment. And splitting things this way is where the benefits from earlier pay off:
+
+- **Context management.** Situational guidance stays out of the default context, so the context window is less likely to saturate.
+- **Manageability.** Each Skill is a self-contained unit, so you have an easier time managing the agent and making changes.
+- **Accuracy and speed.** In some cases these improve too, when the right guidance lands at the right moment instead of the agent wading through everything at once. This one is per-case, so validate it rather than assume it.
 
 ## A Skill, or a new agent?
 
-Before Skills, the instinct for every distinct task was to build another specialized agent: one for password resets, one for software-request approvals, one for incident triage. Sometimes a separate agent really is right: security boundaries, distinct audiences, and clear business ownership still justify one.
+Before Skills arrived in Copilot Studio, the instinct for every distinct task was to build another specialized agent: one for password resets, one for software-request approvals, one for incident triage. But often those are not three agents, they are one IT support agent with three Skills. If the same agent serves the same audience and shares the same knowledge boundary, a Skill is the better unit of modularity: you are not building another agent to maintain, you are teaching the existing one another way of working.
 
-But often those are not three agents, they are one IT support agent with three Skills. If the same agent serves the same audience, shares the same knowledge boundary, and already has the right tools, a Skill is the better unit of modularity. You are not building another agent to maintain; you are teaching the existing one another way of working. That is how Skills cut down on agent sprawl.
+Two things still point to a separate agent:
+
+- **It would stand on its own.** An HR assistant and an IT support agent are not one agent with two Skills. They serve different audiences, sit behind different security boundaries, and each makes sense as a standalone agent someone would use on its own. When a capability is standalone like that, build the agent. (Standalone is not the same as reusable; sharing a *Skill* across agents is a separate question, and the kind of thing a Skill catalog in the product would address down the line.)
+- **One agent has taken on too many tools.** Accuracy and speed degrade as an agent's toolset grows, and past some point adding more Skills will not save it. When you hit that wall, the move is to split the work out into a separate agent and delegate to it, rather than pile everything onto one.
+
+So the heuristic is simple: keep related tasks as Skills on one agent until either the work could stand on its own, or the tool count starts dragging the agent down. That is how Skills cut down on agent sprawl, without pretending every job belongs on a single agent.
 
 ## A word on trust
 
