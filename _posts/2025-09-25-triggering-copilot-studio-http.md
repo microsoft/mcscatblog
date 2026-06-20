@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Triggering Copilot Studio Agents with HTTP Calls"
 date: 2025-09-25

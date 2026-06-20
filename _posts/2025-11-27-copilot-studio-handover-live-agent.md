@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Handing Over to Live Agents Without Losing Control"
 date: 2025-12-14
@@ -33,7 +34,8 @@ It's architectural redundancy that adds complexity without adding value.
 
 What if Copilot Studio could stay in control of its native channels while still enabling bidirectional communication with your customer service system? 
 
-That's exactly why we published a sample with a new pattern: [Copilot Studio Handover Sample](https://microsoft.github.io/CopilotStudioSamples/contact-center/servicenow/HandoverToLiveAgentUsingSkill)
+That's exactly why we published a sample with a new pattern: [Copilot Studio Handover Sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/contact-center/skill-handoff)
+
 
 Using M365 Agents SDK skills and Microsoft Teams proactive messaging, this approach lets you:
 
@@ -87,7 +89,7 @@ The magic here is **Microsoft Teams proactive messaging**, which enables live ag
 
 ## The Sample
 
-The [Copilot Studio Handover Sample](https://microsoft.github.io/CopilotStudioSamples/contact-center/servicenow/HandoverToLiveAgentUsingSkill) includes three components:
+The [Copilot Studio Handover Sample](https://github.com/microsoft/CopilotStudioSamples/tree/main/contact-center/skill-handoff) includes three components:
 
 **1. HandoverToLiveAgentSample** - An M365 Agents SDK skill that acts as the message broker between Copilot Studio and your live chat system. It handles:
 - Authentication with both Copilot Studio and your live chat platform
@@ -109,7 +111,7 @@ Think of this as a stand-in for your actual ServiceNow, Salesforce, Genesys, or 
 
 ## Getting Started
 
-The [GitHub repository](https://microsoft.github.io/CopilotStudioSamples/contact-center/servicenow/HandoverToLiveAgentUsingSkill) includes everything you need to try this pattern.
+The [GitHub repository](https://github.com/microsoft/CopilotStudioSamples/tree/main/contact-center/skill-handoff) includes everything you need to try this pattern.
 
 At a high level, you'll need to:
 
@@ -122,7 +124,7 @@ The README provides detailed step-by-step instructions for local development, te
 
 ## Try It Out
 
-Ready to explore this pattern? Check out the [complete sample on GitHub](https://microsoft.github.io/CopilotStudioSamples/contact-center/servicenow/HandoverToLiveAgentUsingSkill).
+Ready to explore this pattern? Check out the [complete sample on GitHub](https://github.com/microsoft/CopilotStudioSamples/tree/main/contact-center/skill-handoff).
 
 Have questions or built something cool with this pattern? Drop a comment below—I'd love to hear about it!
 

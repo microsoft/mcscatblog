@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Live Demo: Using the Claude Code Plugin to Author a Copilot Studio Agent"
 date: 2026-03-26 9:00:00 +0100

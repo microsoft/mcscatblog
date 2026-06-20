@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "From Dad Jokes to A2A: Building Python Agents That Talk to Copilot Studio"
 date: 2025-12-13

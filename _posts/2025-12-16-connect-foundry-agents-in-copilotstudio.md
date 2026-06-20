@@ -1,4 +1,5 @@
 ---  
+agent_edition: classic
 layout: post  
 title: "Video Demo: Connect a Microsoft Foundry agent in Copilot Studio"  
 date: 2025-12-16 14:32:00 +0100  

@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "(Nearly) Seamless Sign-In for Custom APIs in Copilot Studio"
 date: 2025-11-11

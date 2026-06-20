@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "You Probably Don't Need Manual Authentication (And Didn't Even Know It)"
 date: 2025-11-18

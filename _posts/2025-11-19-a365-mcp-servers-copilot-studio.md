@@ -1,4 +1,5 @@
 ---  
+agent_edition: classic
 layout: post  
 title: "Bringing Microsoft 365 Copilot into Copilot Studio with Agent 365 MCP Servers"  
 date: 2025-11-19 09:00:00 +0100  

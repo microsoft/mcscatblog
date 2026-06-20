@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Using MCP Resources in Copilot Studio"
 date: 2025-10-29

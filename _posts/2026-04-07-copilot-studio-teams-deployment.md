@@ -1,10 +1,11 @@
 ---
+agent_edition: classic
 layout: post
-title: "From DEV to PROD: Auto-Install and Pinning for Copilot Studio Agents"
+title: "From DEV to PROD: Deploying Copilot Studio Agents to Teams and Microsoft 365 Copilot"
 date: 2026-04-07
 categories: [copilot-studio, teams, deployment]
-tags: [teams-deployment, admin-center, setup-policies, app-manifest, alm, environment-strategy, auto-install]
-description: "Master the three deployment paths for Copilot Studio agents in Teams. Learn how to customize manifests for DEV/TEST environments and leverage Setup Policies for automated production rollouts with auto-install and pinning."
+tags: [teams-deployment, admin-center, setup-policies, app-manifest, alm, environment-strategy, auto-install, microsoft-365-copilot]
+description: "Master the three deployment paths for Copilot Studio agents in Teams and Microsoft 365 Copilot. Learn how to customize manifests for DEV/TEST environments, leverage Setup Policies for auto-install and pinning, and deploy to M365 Copilot through the Admin Center."
 author: henryjammes
 image:
   path: /assets/posts/copilot-studio-teams-deployment/header.png
@@ -23,14 +24,17 @@ This isn't a discoverability problem, it's an ALM (Application Lifecycle Managem
 
 The solution? Environment-based deployment strategies that differentiate your agents and give you precise control over distribution, auto-installation, and pinning in the Teams sidebar.
 
-> If you haven't optimized your agent for Teams yet, start with [Deploying Copilot Studio Agents in Teams (Because Test Chat Was Too Easy)]({% post_url 2026-04-07-copilot-studio-teams-agent-patterns %}) for production patterns covering reinstalls, inactivity, error handling, and diagnostic cards.
+> **Update (April 2026):** Copilot Studio now has a built-in answer to the identity crisis. The [Channel display name suffix](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-agent-display-name-suffix) feature (preview) lets you append an environment variable to your agent's display name in Teams and M365 Copilot, so "Support Agent" automatically becomes "Support Agent (DEV)" or "Support Agent (TEST)" depending on the environment — no manifest editing required. If environment differentiation is all you need, start there. The manifest customization approach in this post remains useful for additional branding (custom icons, accent colors) and for scenarios where you need full control over the Teams app package.
+{: .prompt-tip }
+
+> If you haven't optimized your agent for Teams yet, start with [Design Copilot Studio Agents for Teams (Because Test Chat Was Too Easy)]({% post_url 2026-04-07-copilot-studio-teams-agent-patterns %}) for production patterns covering reinstalls, inactivity, error handling, and diagnostic cards.
 {: .prompt-info }
 
 ## Why Standard Deployment Falls Short
 
 Copilot Studio's [1-click deploy to Teams](https://learn.microsoft.com/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams) works great for single-environment scenarios. Click "Add to Teams," publish, and you're done. But it doesn't account for:
 
-- **Environment differentiation** - DEV, TEST, and PROD agents look identical
+- **Environment differentiation** - DEV, TEST, and PROD agents look identical (the new [display name suffix feature](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-agent-display-name-suffix) addresses this specific gap — see note above)
 - **Teams app distribution** - [Sharing in Copilot Studio](https://learn.microsoft.com/microsoft-copilot-studio/admin-share-bots) controls who can chat with the agent, but it doesn't control the Teams app itself: who sees it, where it's pinned, or whether it auto-installs
 - **Professional rollouts** - No auto-install or pinning capabilities
 
@@ -136,7 +140,10 @@ This is the most controlled and scalable option for production rollouts. The abi
 
 ## Manifest Customization for DEV and TEST
 
-For DEV and TEST environments, you'll customize the Teams app manifest to differentiate from production. This prevents confusion and makes it immediately obvious which environment users are working with.
+> **Prefer the built-in approach first.** Copilot Studio's [Channel display name suffix](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-agent-display-name-suffix) (preview) handles environment differentiation natively. You configure a string environment variable as a suffix, and the agent's display name in Teams and M365 Copilot updates automatically per environment — no manifest editing, no repackaging. The manual manifest customization below is still valuable when you need to go further: custom icons, accent colors, or other manifest properties that the suffix feature doesn't cover.
+{: .prompt-info }
+
+For DEV and TEST environments, you can also customize the Teams app manifest to differentiate from production. This prevents confusion and makes it immediately obvious which environment users are working with.
 
 ### Step 1: Download the Manifest
 
@@ -309,7 +316,7 @@ This is professional, enterprise-grade deployment. No training required, no supp
 
 ## Deploying to Microsoft 365 Copilot
 
-Agents can be made available in [Microsoft 365 Copilot](https://learn.microsoft.com/microsoft-365-copilot/extensibility/overview-agents) alongside Teams.
+Agents can be made available in [Microsoft 365 Copilot](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams) alongside Teams. And no, your users don't need a Microsoft 365 Copilot license for this — [Copilot Chat is enough]({% post_url 2026-04-17-no-copilot-license-m365-channel %}).
 
 ![M365 Copilot availability](/assets/posts/copilot-studio-teams-deployment/image27.png)
 *M365 Admin Center - Agent availability with specific users/groups option*
@@ -417,7 +424,7 @@ Copilot Studio makes building conversational agents accessible, but production d
 
 The real differentiator is Setup Policies in Option 3. When you can auto-install and pin agents directly in user sidebars, you transform adoption from "find and install this tool" to "here's a tool that's already installed for you."
 
-Pair this with manifest customization for DEV/TEST environments, and you have a complete ALM strategy: clear environment differentiation during development, governed release processes, and zero-friction production deployment.
+And with the new [Channel display name suffix](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-agent-display-name-suffix) feature (preview), environment differentiation is even easier — configure an environment variable once and the agent's display name updates automatically across DEV, TEST, and PROD, no manifest editing needed. For additional branding (custom icons, accent colors), the manifest customization approach still has you covered.
 
 **What deployment challenges have you faced with Copilot Studio agents?** Drop a comment below—I'd love to hear how you're handling environment strategies and distribution in your organization.
 
@@ -434,6 +441,7 @@ Before you ship to production, Remi Dyon's [best practices for deploying agents 
 
 **Manifest Documentation:**
 - [Teams app manifest schema](https://learn.microsoft.com/microsoftteams/platform/resources/schema/manifest-schema)
+- [Add a display name suffix to identify agents across environments (preview)](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-agent-display-name-suffix)
 
 **Admin Documentation:**
 - [Assign policies to groups](https://learn.microsoft.com/microsoftteams/assign-policies-users-and-groups)

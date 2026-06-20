@@ -47,6 +47,45 @@ How to contribute:
 
 Learn about writing new posts in Chirpy: [Writing a New Post](https://chirpy.cotes.page/posts/write-a-new-post/)
 
+## Theme customizations (read before upgrading Chirpy)
+
+This site is built on the **upstream `jekyll-theme-chirpy` gem** (see `Gemfile`). The
+items below are **local additions on top of the theme**. They are not part of Chirpy and
+will **not** receive upstream updates automatically.
+
+> ⚠️ **Use at your own peril.** These customizations are maintained by us, not by the
+> Chirpy project. When bumping the `jekyll-theme-chirpy` version in the `Gemfile`, review
+> each item below against the new gem version. Anything that overrides or copies a theme
+> file is the most likely thing to break.
+
+### Classic / Modern agent edition pill
+
+Shows a small pill under the post title indicating whether a post is about a **Classic**
+or **Modern** Copilot Studio agent. **Every post must set this field — the build fails
+otherwise** (enforced by `_plugins/validate-agent-edition.rb`). Set it in front matter:
+
+```yaml
+agent_edition: classic   # one of: classic | modern | both
+```
+
+- `classic` — applies to classic agents
+- `modern` — applies to modern (rebuilt) agents
+- `both` — applies to both; renders a neutral "Classic & Modern" pill
+
+| File | What it is | Upgrade risk |
+| ---- | ---------- | ------------ |
+| `_layouts/post.html` | **Full copy** of the gem's `post.html` with a pill block added in `<header>` (look for the `LOCAL OVERRIDE` comment). | **High.** This is a frozen copy. If Chirpy changes its own `post.html` (new meta, TOC, image handling, etc.), those changes are silently lost. On each upgrade, diff our copy against `$(bundle show jekyll-theme-chirpy)/_layouts/post.html` and re-apply the pill block onto the new version. |
+| `assets/css/jekyll-theme-chirpy.scss` | `.agent-edition-pill` styles appended at the end. | **Low.** Self-contained classes appended after the theme import; unlikely to collide. Verify the `@use 'main...'` import line at the top still matches the gem. |
+| `_plugins/validate-agent-edition.rb` | Build-time validator that fails the build if any post is missing a valid `agent_edition`. | **Low.** Plugin-only; runs because `pages-deploy.yml` builds with our own Jekyll (not GitHub Pages safe mode). If you ever switch to safe mode, custom plugins won't run and this check is silently skipped. |
+
+To re-sync the layout after an upgrade:
+
+```shell
+diff _layouts/post.html "$(bundle show jekyll-theme-chirpy)/_layouts/post.html"
+```
+
+Re-apply the `LOCAL OVERRIDE` block to the new layout, then rebuild.
+
 ## Chirpy Theme Info
 
 [![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)][gem]&nbsp;

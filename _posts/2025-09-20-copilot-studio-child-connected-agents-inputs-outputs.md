@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Using Inputs and Outputs in Child and Connected Agents"
 date: 2025-09-20
