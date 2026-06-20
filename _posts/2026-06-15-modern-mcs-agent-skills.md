@@ -146,6 +146,7 @@ flowchart TB
 ```
 
 _Two questions decide it: can the agent infer it, and if not, is it always true or only situational?_
+{: .text-center }
 
 That is the whole distinction. Instructions are the always-on baseline; Skills are everything situational, named and described so the agent can reach for the right one at the right moment. And splitting things this way is where the benefits from earlier pay off:
 
@@ -160,9 +161,7 @@ Before Skills arrived in Copilot Studio, the instinct for every distinct task wa
 Two things still point to a separate agent:
 
 - **It would stand on its own.** An HR assistant and an IT support agent are not one agent with two Skills. They serve different audiences, sit behind different security boundaries, and each makes sense as a standalone agent someone would use on its own. When a capability is standalone like that, build the agent. (Standalone is not the same as reusable; sharing a *Skill* across agents is a separate question, and the kind of thing a Skill catalog in the product would address down the line.)
-- **One agent has taken on too many tools.** There is some data suggesting that accuracy can degrade as more is loaded into an agent's context, and a growing toolset is part of that load. Past some point, adding more Skills will not save it. As always, evaluate this for your own agent rather than assume it. When you hit that wall, the move is to split the work out into a separate agent and delegate to it, rather than pile everything onto one.
-
-So the heuristic is simple: keep related tasks as Skills on one agent until either the work could stand on its own, or the tool count starts dragging the agent down. That is how Skills cut down on agent sprawl, without pretending every job belongs on a single agent.
+- **One agent has taken on too many tools.** There is some data suggesting that accuracy can degrade as more is loaded into an agent's context, and a growing toolset is part of that load. Past some point, adding more Skills will not save it. As always, evaluate this for your own agent rather than assume it. When you hit that wall, the move can be to split the work out into a separate agent and delegate to it, rather than pile everything onto one.
 
 ## A word on trust
 
