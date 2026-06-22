@@ -26,7 +26,7 @@ Skills are based on the [Agent Skills open format](https://agentskills.io/), an 
 - **Manageability.** Instead of one ever-growing instruction blob, each Skill is a focused, self-contained unit you can reason about, review, and version one at a time.
 - **Context management.** Skills load *on demand*. The agent keeps only the names and descriptions in view by default, and pulls the full instructions into context only when a task matches. Ten Skills cost you ten short descriptions, not ten full sets of instructions, in every turn, so the context window stays lean.
 - **Accuracy.** Use-case dependent, but real. A Skill can carry detailed tool-use guidance: which tool to reach for, which parameters matter, how to shape a query, what to validate before calling, and what to do when a tool returns nothing. With large or overlapping toolsets, bringing that guidance into context only when it is relevant can make the agent call tools more reliably. It is not a guarantee, so evaluate it rather than assume it.
-- **Speed and credits.** A Skill nudges the agent toward the right approach instead of leaving it to work everything out from scratch. That can mean fewer knowledge searches, fewer exploratory tool calls, and fewer reasoning loops to reach an answer — which both shortens response time and trims the Copilot credits a conversation spends. Like accuracy, it's use-case dependent, so validate it rather than assume it.
+- **Speed and cost.** A Skill nudges the agent toward the right approach instead of leaving it to work everything out from scratch. Fewer knowledge searches, tool calls, and reasoning loops mean fewer round-trips before the agent answers — which cuts response latency, lifts throughput under load, and lowers the cost of a conversation. Like accuracy, it's use-case dependent, so validate it rather than assume it.
 
 That is the short version. Manageability and context management are structural and apply almost everywhere. Accuracy and speed depend on your agent.
 
@@ -58,7 +58,7 @@ flowchart TB
     classDef act fill:#8250df,stroke:#a371f7,color:#fff;
 ```
 
-_This context model isn't specific to Skills. Knowledge sources, tools, and Skills are all registered the same way: only their metadata sits in context by default, and the full content, a knowledge source's rows, a tool's result, or a Skill's instructions, is pulled in only when the prompt calls for it. The agent's own instructions are the exception, always loaded in full._
+This isn't specific to Skills: knowledge sources, tools, and Skills are all registered the same way — only their metadata sits in context by default, and the full content is pulled in only when the prompt calls for it (the agent's own instructions are the exception, always loaded in full). Because Copilot Studio loads Skills on demand like this, the benefits from earlier — manageability, context management, accuracy, and speed — carry over directly.
 
 ## Working with Skills in Copilot Studio
 
