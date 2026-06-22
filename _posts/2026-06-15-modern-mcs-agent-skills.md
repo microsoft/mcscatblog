@@ -21,13 +21,14 @@ That same idea has now arrived in the [modern Copilot Studio agent experience](h
 
 ## Why an agent builder should care
 
-Skills are based on the [Agent Skills open format](https://agentskills.io/), an open standard originally developed by Anthropic. The shape is deliberately simple. A Skill is just instructions, so the real question is why you would break instructions out into a discrete Skill at all. It comes down to three things:
+Skills are based on the [Agent Skills open format](https://agentskills.io/), an open standard originally developed by Anthropic. The shape is deliberately simple. A Skill is just instructions, so the real question is why you would break instructions out into a discrete Skill at all. It comes down to four things:
 
 - **Manageability.** Instead of one ever-growing instruction blob, each Skill is a focused, self-contained unit you can reason about, review, and version one at a time.
 - **Context management.** Skills load *on demand*. The agent keeps only the names and descriptions in view by default, and pulls the full instructions into context only when a task matches. Ten Skills cost you ten short descriptions, not ten full sets of instructions, in every turn, so the context window stays lean.
-- **Accuracy.** Use-case dependent, but real. A Skill can carry detailed tool-use guidance: which tool to reach for, which parameters matter, how to shape a query, what to validate before calling, and what to do when a tool returns nothing. With large or overlapping toolsets, bringing that guidance into context only when it is relevant can make the agent call tools more reliably. It is not a guarantee, so evaluate it rather than assume it. *It may even help speed:* when the agent reaches for the right tool first, it does not burn turns on trial and error.
+- **Accuracy.** Use-case dependent, but real. A Skill can carry detailed tool-use guidance: which tool to reach for, which parameters matter, how to shape a query, what to validate before calling, and what to do when a tool returns nothing. With large or overlapping toolsets, bringing that guidance into context only when it is relevant can make the agent call tools more reliably. It is not a guarantee, so evaluate it rather than assume it.
+- **Speed and cost.** A Skill nudges the agent toward the right approach instead of leaving it to work everything out from scratch. Fewer knowledge searches, tool calls, and reasoning loops mean fewer round-trips before the agent answers — which cuts response latency, lifts throughput under load, and lowers the cost of a conversation. Like accuracy, it's use-case dependent, so validate it rather than assume it.
 
-That is the short version. Manageability and context management are structural and apply almost everywhere. Accuracy depends on your agent.
+That is the short version. Manageability and context management are structural and apply almost everywhere. Accuracy and speed depend on your agent.
 
 ## The same benefits show up in Copilot Studio
 
@@ -57,7 +58,7 @@ flowchart TB
     classDef act fill:#8250df,stroke:#a371f7,color:#fff;
 ```
 
-_This context model isn't specific to Skills. Knowledge sources, tools, and Skills are all registered the same way: only their metadata sits in context by default, and the full content, a knowledge source's rows, a tool's result, or a Skill's instructions, is pulled in only when the prompt calls for it. The agent's own instructions are the exception, always loaded in full._
+This isn't specific to Skills: knowledge sources, tools, and Skills are all registered the same way — only their metadata sits in context by default, and the full content is pulled in only when the prompt calls for it (the agent's own instructions are the exception, always loaded in full). Because Copilot Studio loads Skills on demand like this, the benefits from earlier — manageability, context management, accuracy, and speed — carry over directly.
 
 ## Working with Skills in Copilot Studio
 
@@ -152,7 +153,8 @@ That is the whole distinction. Instructions are the always-on baseline; Skills a
 
 - **Context management.** Situational guidance stays out of the default context, so the context window is less likely to saturate.
 - **Manageability.** Each Skill is a self-contained unit, so you have an easier time managing the agent and making changes.
-- **Accuracy and speed.** In some cases these improve too, when the right guidance lands at the right moment instead of the agent wading through everything at once. This one is per-case, so validate it rather than assume it.
+- **Accuracy.** When the right guidance lands at the right moment instead of the agent wading through everything at once, it can make better calls. Per-case, so validate it rather than assume it.
+- **Speed and credits.** Fewer searches, tool calls, and reasoning loops can shorten responses and reduce credit spend — also per-case.
 
 ## A Skill, or a new agent?
 
