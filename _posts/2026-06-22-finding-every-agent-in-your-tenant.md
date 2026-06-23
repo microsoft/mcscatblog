@@ -3,6 +3,7 @@ layout: post
 title: "Finding every agent in your tenant (and separating the ones you actually built)"
 date: 2026-06-22
 categories: [copilot-studio, governance]
+agent_edition: both
 tags: [copilot-studio, azure-resource-graph, power-platform-admin, inventory, governance, kql, power-apps, dynamics-365]
 description: "How to get an accurate count of custom Copilot Studio agents in your tenant by filtering out the 35+ pre-built system agents that Dynamics 365 and Power Platform auto-provision, using Azure Resource Graph, the Power Platform API, Power Automate, and a shareable Power Apps canvas app."
 author: mmonisha
