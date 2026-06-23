@@ -21,7 +21,7 @@ That gap sounds like a reporting nuisance. It isn't. Every governance review, ev
 
 [Power Platform Admin Center](https://learn.microsoft.com/en-us/power-platform/admin/power-platform-inventory) (PPAC) inventory counts _everything_. Every environment running Dynamics 365 Sales, Customer Service, or Contact Center comes pre-loaded with system agents: sub-agents for research, outreach, email validation, quality evaluation, and more. Nobody on your team built them, but they all land in the inventory. Multiply that by every D365 environment in the tenant and the count balloons long before a single real agent enters the picture.
 
-The math gets ugly fast. Picture a tenant with roughly 2,500 environments. Every one running D365 carries up to 35 of these pre-built agents, and that alone throws thousands of phantom entries into the count. It's how you end up staring at ~23,000 agents in PPAC, of which only ~7,867 are Copilot Studio agents to begin with, and only a fraction of *those* are anything your team actually built.
+The math gets ugly fast (the numbers below are illustrative, from one representative large tenant). Picture a tenant with roughly 2,500 environments. Every one running D365 carries up to 35 of these pre-built agents, and that alone throws thousands of phantom entries into the count. It's how you end up staring at ~23,000 agents in PPAC, of which only ~7,867 are Copilot Studio agents to begin with, and only a fraction of *those* are anything your team actually built.
 
 There is no "system vs. custom" toggle in the Admin Center today. No `agentType` column, no flag to filter on. So the inflated number is the only one it will hand you. To get a real one, you have to ask the data yourself.
 
