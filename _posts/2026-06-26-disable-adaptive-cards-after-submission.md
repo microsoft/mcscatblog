@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Disabling Adaptive Cards After Submission in Copilot Studio Agents"
-date: 2026-06-11
+date: 2026-06-26
 categories: [copilot-studio, tutorial]
 agent_edition: both
 tags: [adaptive-cards, teams, webchat, universal-actions, ux, action-execute, botframework]
@@ -37,8 +37,8 @@ The fix depends on where your agent is surfaced:
 
 | Channel | Pattern | Mechanism |
 |---|---|---|
-| Custom web portals (WebChat) | Attachment middleware | Client-side: disables the card after submission |
-| Microsoft Teams | Universal Actions | Server-side: replaces the card with a confirmation |
+| Web portals (WebChat) | Attachment middleware | Disable card client-side |
+| Microsoft Teams | Universal Actions | Replace card server-side |
 
 Let's walk through both.
 
@@ -238,14 +238,14 @@ The complete walkthrough with screenshots is in [Nghiem Doan's repo](https://git
 
 ## Comparing the two patterns
 
-| Aspect | Web Portal (Pattern 1) | Teams (Pattern 2) |
+| Aspect | Web Portal | Teams |
 |---|---|---|
-| **Mechanism** | Client-side middleware disables the card | Server-side replacement swaps the card |
-| **User sees** | Greyed-out card with blue "done" buttons | Completely new confirmation card |
-| **Complexity** | Moderate (React/JS in WebChat) | Moderate (Copilot Studio topic + schema) |
-| **Resubmission** | Blocked in UI | Impossible (card replaced) |
+| **Mechanism** | Client-side middleware | Server-side card swap |
+| **User sees** | Greyed-out, buttons disabled | A fresh confirmation card |
+| **Complexity** | Moderate (React/JS) | Moderate (topic + schema) |
+| **Resubmission** | Blocked in UI | Impossible (replaced) |
 | **Works in Teams** | ❌ | ✅ |
-| **Works in WebChat** | ✅ | ❌ (not applicable) |
+| **Works in WebChat** | ✅ | ❌ (n/a) |
 
 ## Key takeaways
 
