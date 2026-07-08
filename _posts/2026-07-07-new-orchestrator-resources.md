@@ -7,7 +7,7 @@ categories: [copilot-studio, orchestration]
 tags: [copilot-studio, modern-agents, orchestration, migration, skills, agent-development]
 mermaid: true
 description: "A practical starting point for learning the new Copilot Studio orchestrator: the technical deep dive deck, the runnable sample mini-site, and the Copilot Studio plugin migration skill."
-author: giorgioughini
+author: [giorgioughini, roels, adilei, henryjammes, chrisgarty, lewisdoesdev, adrianatruji]
 image:
   path: /assets/posts/new-orchestrator-resources/header.png
   alt: ""
