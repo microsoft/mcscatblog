@@ -73,6 +73,8 @@ _The meta-lesson: codify what the agentic loop discovers into a reusable script.
 
 Every interesting constraint in this project traces back to one fact, the new Copilot Studio runtime does not let you install Python packages. What ships in the container is what you get. While `pdf2docx` might have been great to convert PDF to DOCX it was not available. It isn't there, and there's no `pip install`.
 
+Here's the path we took before shipping, every PDF-to-DOCX approach we tried and where each one landed:
+
 ![Table of Python packages researched for PDF to DOCX conversion](/assets/posts/redlining-documents-new-copilot-studio-experience/pdf-approach.png){: .shadow }
 _The approaches we tried for turning a PDF into a redline. Converting to DOCX either failed or wasn't available; reading the PDF's text with `pdfplumber` and diffing against the template was the approach that worked._
 
@@ -114,7 +116,15 @@ Here is the final file structure:
 > Treat a PDF redline as a best-effort draft to review, not a character-perfect compare. A `.docx` submission is the high-fidelity path, because its words and tables carry real structure.
 {: .prompt-warning }
 
-![Direct results redlining a document.](/assets/posts/redlining-documents-new-copilot-studio-experience/document-redlined.png){: .shadow }_This skill was tested on up to 50 page documents._
+![Direct results redlining a document.](/assets/posts/redlining-documents-new-copilot-studio-experience/document-redlined.png){: .shadow }_This skill was tested on over 100 page documents._
+
+## But Is This For Copilot Studio or Cowork?
+
+At a high level, it comes down to whether there's a business process wrapped around the task. If the job really is just "compare these two documents and redline them," with no larger workflow attached, Cowork is probably the better match, you point it at the files and let it work.
+
+But the moment you're operating in the context of specific documents and a specific process, Copilot Studio pulls ahead. Think of a fixed template you always redline against, or the need to intercept incoming submissions from email, route them, apply your rules, and hand back a tracked-changes document every time. That's not a one-off, it's a repeatable pipeline, and that's exactly where an authored MCS skill shines.
+
+So this one is Copilot Studio, on purpose. We let the agentic loop do the Cowork-style discovery once during development, then froze it into a deterministic skill that runs the same way on every request. That said, nothing stops you from taking this same approach into Cowork if that's your preferred method, use whichever fits your business needs.
 
 ## Key Takeaways
 
