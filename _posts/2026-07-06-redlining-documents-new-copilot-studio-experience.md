@@ -15,7 +15,7 @@ published: true
 mermaid: false
 ---
 
-"What changed?" A vendor emails you a contract with their edits buried somewhere inside, and you want to see every one clearly, marked up with Track Changes you can Accept or Reject. Sounds like a five-minute job. By hand it can take hours. The first working Agent version took over fifteen minutes per document. The version we built as an Agent with a Skill does it in fifteen seconds.
+"What changed?" A vendor emails you a contract with their edits buried somewhere inside, and you want to see every difference clearly, marked up with Track Changes you can Accept or Reject. Sounds easy, right? By hand it can take hours. The first working Agent version took over fifteen minutes per document to run. The version we built as an Agent with a Skill did a 100-page document in under fifteen seconds.
 
 First, how Track Changes actually works. A Word `.docx` file is really just a zip full of XML, text wrapped in tags that describe it. When you turn on Track Changes and edit, Word doesn't just change the text; it wraps your edits in special XML tags: `w:ins` around anything you added, and `w:del` around anything you removed (the deleted words are kept, just marked as struck out). Each tag also records who made the change and when. 
 
@@ -32,7 +32,7 @@ This is the story of building that redlining-content [skill]({% post_url 2026-03
 
 ## How the Loop Wrote Its Own Python Reference Script
 
-The most important thing I built wasn't the Python. It was the *process that discovered* the Python. I never sat down and authored a redline engine from a blank file. I let the agentic loop do it, then codified what survived.
+The most important thing we built wasn't the Python. It was the *process that discovered* the Python. We never sat down and authored a redline engine from a blank file. We let the agentic loop do it, then codified what survived.
 
   
 It went in four distinct phases, and each one taught the next.
@@ -116,7 +116,7 @@ Here is the final file structure:
 > Treat a PDF redline as a best-effort draft to review, not a character-perfect compare. A `.docx` submission is the high-fidelity path, because its words and tables carry real structure.
 {: .prompt-warning }
 
-![Direct results redlining a document.](/assets/posts/redlining-documents-new-copilot-studio-experience/document-redlined.png){: .shadow }_This skill was tested on over 100 page documents._
+![Direct results redlining a document.](/assets/posts/redlining-documents-new-copilot-studio-experience/document-redlined.png){: .shadow }_This skill was tested on documents over 100 pages._
 
 ## But Is This For Copilot Studio or Cowork?
 
@@ -137,4 +137,4 @@ So this one is Copilot Studio, on purpose. We let the agentic loop do the Cowork
 
 - **Don't convert what's already perfect.** The template is a flawless Word document. Injecting revisions or converting isn't always necessary and it beats reconstructing it every time.
 
-Have you tried letting an agentic loop write your script instead of authoring it yourself? I'd love to hear how it went in the comments.
+Have you tried letting an agentic loop write your script instead of authoring it yourself? We'd love to hear how it went in the comments.
