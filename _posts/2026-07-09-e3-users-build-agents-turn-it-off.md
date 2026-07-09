@@ -8,7 +8,7 @@ description: "A recent redirect change surfaced classic agent creation in the Co
 author: emdarcy
 agent_edition: both
 image:
-  path: /assets/posts/e3-users-can-build-agents/restrict-classic-agents-hero.png
+  path: /assets/posts/e3-users-can-build-agents/classic-agents-governance-hero.png
   alt: "Disabling the Power Virtual Agents for Office 365 service plan"
 ---
 
