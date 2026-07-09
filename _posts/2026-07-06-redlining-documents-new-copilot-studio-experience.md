@@ -32,6 +32,7 @@ This is the story of building that redlining-content [skill]({% post_url 2026-03
 
 ## How the Loop Wrote Its Own Python Reference Script
 
+We needed a process that could compare a `.docx` or a `.dotx` file to either a `.docx` or a `.pdf` file. To do that we used Python.
 The most important thing we built wasn't the Python. It was the *process that discovered* the Python. We never sat down and authored a redline engine from a blank file. We let the agentic loop do it, then codified what survived.
 
   
@@ -50,7 +51,7 @@ We have a template either in DOCX or DOTX, just use that initial template and up
 
 ### Phase 2: Let It Loop
 
-Once we knew conversion was detrimental, we turned the agent loose to **write Python that redlines directly**, and just let it loop. This is where the agentic loop earns its name. The agent writes a script, runs it, hits an error, reads the traceback, rewrites, and runs again, over and over, with no intervention from me. Each failure was a teacher. It looped through crashes from `lxml`, malformed XML, wrong element nesting, and revision IDs that collided. The whole fail/rewrite cycle took about **fifteen minutes**. Then a run finally emitted a `.docx` that opened cleanly, with real tracked changes and a redline that was actually correct.
+Once we knew conversion was detrimental, we turned the agent loose to **write Python that redlines directly**, and just let it loop. This is where the agentic loop earns its name. The agent writes a script, runs it, hits an error, reads the traceback, rewrites, and runs again, over and over, with no intervention from us. Each failure was a teacher. It looped through crashes from `lxml`, malformed XML, wrong element nesting, and revision IDs that collided. The whole fail/rewrite cycle took about **fifteen minutes**. Then a run finally emitted a `.docx` that opened cleanly, with real tracked changes and a redline that was actually correct.
 
 > The failures aren't waste, they're the iteration. Every traceback the loop reads narrows the space of correct code. Our job wasn't to write the engine; it was to give the loop a clear target and let it converge on the implementation by trial and error.
 {: .prompt-info }
@@ -133,7 +134,7 @@ So this one is Copilot Studio, on purpose. We let the agentic loop do the Cowork
 
 - **Then de-hardcode and codify.** A working script is hardcoded to one input. Strip every literal into logic, then upload the generalized pseudocode into the skill so the agent executes instead of re-derives. **That's what turns fifteen minutes into fifteen seconds.**
 
-- **Using Native Accept/Reject.** Every change is redlined by "Copilot Studio AI" and can be accepted or rejected.
+- **Using native Accept/Reject.** Every change is redlined by "Copilot Studio AI" and can be accepted or rejected.
 
 - **Don't convert what's already perfect.** The template is a flawless Word document. Injecting revisions or converting isn't always necessary and it beats reconstructing it every time.
 
