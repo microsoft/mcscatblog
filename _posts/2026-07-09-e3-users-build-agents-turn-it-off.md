@@ -8,15 +8,13 @@ description: "A recent redirect change surfaced classic agent creation in the Co
 author: emdarcy
 agent_edition: both
 image:
-  path: /assets/posts/e3-users-can-build-agents/classic-agents-governance-hero.png
+  path: /assets/posts/e3-users-build-agents-turn-it-off/classic-agents-governance-hero.png
   alt: "Disabling the Power Virtual Agents for Office 365 service plan"
 ---
 
 If your help desk has started fielding questions about agents that users built themselves — or you've spotted a *create an agent for Teams* experience showing up in the **Copilot Studio web app** for people who only hold a basic Microsoft 365 license such as **E3** — you're not imagining it, and no, you didn't accidentally buy anything.
 
 This post will explain *why* it happened, what changed recently to make it so visible, and the single license **service plan** you can disable to remove access to building agents.
-
-This is not the same governance conversation as the Teams app deployment guidance in [Best Practices for Deploying Copilot Studio Agents in Microsoft Teams]({% post_url 2025-11-11-copilot-studio-teams-deployment-ux %}) or the connection access controls in [Unlocking Seamless Access for Copilot Studio Agents]({% post_url 2025-11-14-unlocking-seamless-access-how-to-ensure-users-can-create-connections-for-copilot-studio-agents %}).
 
 ## So what changed?
 
@@ -41,7 +39,7 @@ Before we panic and turn everything off, it's important to remember the followin
 {: .prompt-info }
 
 
-It's also worth noting these Teams-plan agents **don't consume Copilot Credits** when used in Teams. So this should be treated more as a **governance and environment-sprawl** concern, rather than a billing one.
+It's also worth noting these Teams-plan agents **don't consume Copilot Credits** when used in Teams. So this should be treated more as a **governance and environment-sprawl** concern, rather than a billing one. It's a good reminder that a basic Microsoft 365 license already entitles users to more Copilot capability than many admins realize, much like how [you don't actually need a Copilot license to deploy agents to Microsoft 365 Copilot]({% post_url 2026-04-17-no-copilot-license-m365-channel %}).
 
 ## The control: disable the `Power Virtual Agents for Office 365` service plan
 
@@ -55,7 +53,7 @@ To stop affected users from **creating and editing** classic agents in **both** 
 4. Uncheck **Power Virtual Agents for Office 365**.
 5. **Save changes**.
 
-![Power Virtual Agents for Office 365](/assets/posts/e3-users-can-build-agents/Licence2.png){: .shadow h="300"}
+![Power Virtual Agents for Office 365](/assets/posts/e3-users-build-agents-turn-it-off/Licence2.png){: .shadow h="300"}
 _Disable the Power Virtual Agents for Office 365 service plan on the user license._
 ### Option 2 — Group-based licensing.
 
