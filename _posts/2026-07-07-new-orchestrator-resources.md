@@ -203,7 +203,7 @@ The third resource is the new, revamped version of the Copilot Studio plugin for
 
 If you saw the earlier [Claude Code plugin demo]({% post_url 2026-03-26-claude-copilot-skills-copilot-studio-plugin-demo %}), the idea will be familiar: use your AI coding agent to work against Copilot Studio assets locally, reason over the structure, make changes, and push them back.
 
-What is new here is support for the new orchestrator, and specifically a new **migration Skill**.
+What is new here is support for the new orchestrator, and specifically a new **migration Skill**. Using it is simple: just install the plugin and send the `/migrate` command, followed by some details: the agent to migrate (environment, tenant, name, or simply its Copilot Studio URL), if you want additional features, any constraints, etc...
 
 ![A sample screenshot from the plugin migration flow](assets\posts\new-orchestrator-resources\plugin.png){: .shadow }
 _A screenshot of the Copilot Studio plugin migration flow. The plugin analyzes a classic agent, proposes a modern architecture, and generates a migrated agent for testing._
@@ -211,6 +211,9 @@ _A screenshot of the Copilot Studio plugin migration flow. The plugin analyzes a
 The migration flow is meant for the moment every customer eventually reaches: "We have a classic agent. We know the new orchestrator would probably handle this better. But what do we actually build?"
 
 The plugin's migration command is designed to help with that first jump. You trigger the migration workflow from your AI coding agent. The plugin pulls the classic agent from the web, analyzes its current structure, proposes a modern architecture, and creates a new migrated agent that you can test.
+
+> Here's my migration starter prompt: `/mcs-assistant:migrate Can you migrate this agent to modern orchestration please? https://copilotstudio.microsoft.com/environments/<ENV_ID>/bots/<BOT_ID> from my tenant <TENANT_ID>?` Make sure to use a good AI Model.
+{: .prompt-info }
 
 ### What the migration workflow does
 
