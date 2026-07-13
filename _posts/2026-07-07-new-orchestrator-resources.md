@@ -6,6 +6,7 @@ date: 2026-07-07
 categories: [copilot-studio, orchestration]
 tags: [copilot-studio, modern-agents, orchestration, migration, skills, agent-development]
 mermaid: false
+pin: true
 description: "The new Copilot Studio experience is a big shift. We shipped three resources so you can understand it, see it run, and migrate to it. Here's how to use each one."
 author: [giorgioughini, roels, adilei, henryjammes, chrisgarty, lewisdoesdev, adrianatruji]
 image:
