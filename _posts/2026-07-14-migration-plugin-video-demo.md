@@ -33,7 +33,7 @@ If you saw my [earlier video about authoring an agent with the plugin]({% post_u
 
 {% include embed/video.html
   src='https://github.com/GiorgioUghini/WebVideos/releases/download/video-6-1.0.0/Video.Project.23.mp4'
-  poster='/assets/posts/migration-plugin-video-demo/header.png'
+  poster='/assets/posts/migration-plugin-video-demo/header-video.png'
   title='Video: Migrating a Classic Copilot Studio Agent to Modern Orchestration'
   autoplay=false
   loop=false
