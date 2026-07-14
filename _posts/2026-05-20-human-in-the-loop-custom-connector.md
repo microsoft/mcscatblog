@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Building a Custom Human-in-the-Loop Experience for Copilot Studio Workflows"
 date: 2026-05-20

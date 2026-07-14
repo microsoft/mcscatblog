@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Wiring up a Snowflake-managed MCP server in Copilot Studio"
 date: 2026-05-22

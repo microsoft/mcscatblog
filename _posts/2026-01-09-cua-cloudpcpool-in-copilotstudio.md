@@ -1,4 +1,5 @@
 ---  
+agent_edition: classic
 layout: post  
 title: "Video Demo: Implement Cloud PC Pool for Computer Use in Microsoft Copilot Studio"  
 date: 2026-01-09 16:44:00 +0100  

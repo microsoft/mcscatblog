@@ -101,6 +101,11 @@ zekitekin:
   email: zekitekin@microsoft.com
   avatar: https://github.com/fs-dp.png
 
+lewisdoesdev:
+  name: Lewis Baybutt
+  email: lewisbaybutt@microsoft.com
+  avatar: https://github.com/lewisdoesdev.png
+  
 missbets:
   name: Betty Le
   email: Elizabeth.Le@microsoft.com # Optional
@@ -109,3 +114,10 @@ missbets:
 ashVancouver:
   name: Ashwin Raju Krishnamurthi
   avatar: https://github.com/ashVancouver.png
+
+adrianatruji:
+  name: Adriana Trujillo
+
+emdarcy:
+  name: Em D'Arcy
+  avatar: https://github.com/EmDarcy.png

@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Kill the [1]: How to Remove Citations from Copilot Studio Answers"
 date: 2025-12-15

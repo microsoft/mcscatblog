@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "The Orchestrator’s Secrets: Chain-of-Thought & Transcript on Demand"
 date: 2026-03-17 00:00:00 +0000

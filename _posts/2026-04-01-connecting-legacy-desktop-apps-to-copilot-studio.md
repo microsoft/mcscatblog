@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "Bridging the Gap: Connecting Legacy Desktop Applications to Copilot Studio Agents"
 date: 2026-04-15

@@ -1,4 +1,5 @@
 ---
+agent_edition: classic
 layout: post
 title: "{Brace Yourself} - or Let Copilot Do It! Zero-100 with Adaptive Cards"
 date: 2026-01-02
