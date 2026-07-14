@@ -15,6 +15,9 @@ published: true
 mermaid: false
 ---
 
+> **Get the skill:** Download and install [redlining-content](https://microsoft.github.io/cat-agent-skills/skills/redlining-content/) from the CAT Agent Skills gallery.
+{: .prompt-tip }
+
 "What changed?" A vendor emails you a contract with their edits buried somewhere inside, and you want to see every difference clearly, marked up with Track Changes you can Accept or Reject. Sounds easy, right? By hand it can take hours. The first working Agent version took over fifteen minutes per document to run. The version we built as an Agent with a Skill did a 100-page document in under fifteen seconds.
 
 First, how Track Changes actually works. A Word `.docx` file is really just a zip full of XML, text wrapped in tags that describe it. When you turn on Track Changes and edit, Word doesn't just change the text; it wraps your edits in special XML tags: `w:ins` around anything you added, and `w:del` around anything you removed (the deleted words are kept, just marked as struck out). Each tag also records who made the change and when. 
