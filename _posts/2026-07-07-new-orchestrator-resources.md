@@ -11,7 +11,7 @@ description: "The new Copilot Studio experience is a big shift. We shipped three
 author: [giorgioughini, roels, adilei, henryjammes, chrisgarty, lewisdoesdev, adrianatruji]
 image:
   path: /assets/posts/new-orchestrator-resources/header.png
-  alt: "Three new resources to get started with modern agents: upgrades, samples, and a deep-dive deck for the new stack"
+  alt: "Three new resources to get started with modern agents: migrations, samples, and a deep-dive deck for the new stack"
 ---
 
 The new Copilot Studio experience, and the orchestration stack underneath it, is a big shift. It's a new paradigm for agents and workflows: agents are far more adaptive and sophisticated, and workflows let you build automated processes on a visual canvas with much more control over which steps are handled by AI. That's a lot of new capability, and it changes how you design.
