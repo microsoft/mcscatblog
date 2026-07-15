@@ -24,7 +24,7 @@ Our [new orchestrator resources post]({% post_url 2026-07-07-new-orchestrator-re
 The recording runs for roughly 10–20 minutes and follows one fictional travel agency scenario:
 
 1. **Tour the classic agent.** It has a child agent that advises customers about Italian cities and travel destinations, plus capabilities for ordering pizza and requesting a refund when an order is incorrect or missing.
-2. **Run the full upgrade.** I invoke the upgrade command and comment on every step as the plugin retrieves the classic agent, analyzes its capabilities, proposes a modern design, and generates the upgraded agent.
+2. **Run the full upgrade.** I invoke the migrate command and comment on every step as the plugin retrieves the classic agent, analyzes its capabilities, proposes a modern design, and generates the upgraded agent.
 3. **Inspect the result.** I open the modern agent and review the ported Skills and tools to see where each original capability landed.
 
 If you saw my [earlier video about authoring an agent with the plugin]({% post_url 2026-03-26-claude-copilot-skills-copilot-studio-plugin-demo %}), this is the next step: instead of starting from an empty agent, we begin with an existing classic implementation and redesign it for modern orchestration.
@@ -42,7 +42,7 @@ If you saw my [earlier video about authoring an agent with the plugin]({% post_u
 
 ## The important architectural choice
 
-In this upgrade, the classic travel-advice child agent becomes a **Skill** in the modern agent. That is the best fit the plugin selected for this specific capability, not a universal rule that every child agent should become a Skill.
+In this migration, the classic travel-advice child agent becomes a **Skill** in the modern agent. That is the best fit the plugin selected for this specific capability, not a universal rule that every child agent should become a Skill.
 
 The plugin upgrades the agent by focusing on **capabilities and outcomes**, not components one for one. It examines what a capability does and proposes where that responsibility belongs in the modern model. Depending on the scenario, a different child agent could require a different design.
 
@@ -57,7 +57,7 @@ The demo starts after setup. To follow along, install [Power Platform CLI](https
 /plugin install mcs-assistant@copilot-studio-plugin
 ```
 
-Use a capable AI model and invoke the upgrade with placeholders for your own environment, agent, and tenant IDs:
+Use a capable AI model and invoke the migration with placeholders for your own environment, agent, and tenant IDs:
 
 ```text
 /mcs-assistant:migrate Upgrade this agent to modern orchestration: https://copilotstudio.microsoft.com/environments/<ENV_ID>/bots/<BOT_ID> from tenant <TENANT_ID>
