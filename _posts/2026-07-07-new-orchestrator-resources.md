@@ -26,7 +26,7 @@ New design space, new stack, new questions: What changed? What do I build? What 
 
 ## Understand it: the Technical Deep Dive deck
 
-**Use it when** you need to learn, or explain, *what* changed and *why*. Grab the [Copilot Studio Technical Deep Dive deck](https://aka.ms/CopilotStudioDeepDiveDeck). It's built for agent and workflow builders and architects, and it works as a decision framework more than a feature tour. It walks through where to build what (agent vs. workflow, and which pieces belong where), how to upgrade from classic to modern without just porting the old design, and an honest read on what's improved and what isn't supported yet.
+**Use it when** you need to learn, or explain, *what* changed and *why*. Grab the [Copilot Studio Technical Deep Dive deck](https://aka.ms/CopilotStudioDeepDiveDeck). It's built for agent and workflow builders and architects, and it works as a decision framework more than a feature tour. It walks through where to build what (agent vs. workflow, and which pieces belong where), how to build modern agents and workflows, how to upgrade from classic to modern without just porting the old design, and an honest read on what's improved and what isn't supported yet.
 
 **The one idea to take away:** every behavior belongs in the smallest component that makes it reliable and inspectable. Instructions carry what's always true, Knowledge the searchable facts, Tools the system actions, Memory the persistent context, Skills the situational procedures, and connected agents the real specialist domains.
 
