@@ -4,7 +4,7 @@ layout: post
 title: "Redlining Documents with the New Copilot Studio Experience"
 date: 2026-07-15
 categories: [copilot-studio, tutorial]
-tags: [orchestration, pdf, document-comparison, track-changes, docx, redlining]
+tags: [orchestration, pdf, document-comparison, track-changes, docx, redlining, agent-development]
 description: "Compare documents using Microsoft Word's Native Redlining Track Changes."
 author: [AndrewHessMSFT, raemone]
 image:
@@ -18,9 +18,9 @@ mermaid: false
 > **Get the skill:** Download and install [redlining-content](https://microsoft.github.io/cat-agent-skills/skills/redlining-content/) from the CAT Agent Skills gallery.
 {: .prompt-tip }
 
-"What changed?" A vendor emails you a contract with their edits buried somewhere inside, and you want to see every difference clearly, marked up with Track Changes you can Accept or Reject. Sounds easy, right? By hand it can take hours. The first working Agent version took over fifteen minutes per document to run. The version we built as an Agent with a Skill did a 100-page document in under fifteen seconds.
+"What changed?" A vendor emails you a contract with their edits buried somewhere inside, and you want to see every difference clearly, marked up with Track Changes you can Accept or Reject. Sounds easy, right? By hand it can take hours, and even our first automated attempt was painfully slow. We eventually got a 100-page document down to seconds.
 
-First, how Track Changes actually works. A Word `.docx` file is really just a zip full of XML, text wrapped in tags that describe it. When you turn on Track Changes and edit, Word doesn't just change the text; it wraps your edits in special XML tags: `w:ins` around anything you added, and `w:del` around anything you removed (the deleted words are kept, just marked as struck out). Each tag also records who made the change and when. 
+First, how Track Changes actually works. A Word `.docx` file is really just a zip full of XML, text wrapped in tags that describe it. When you turn on Track Changes and edit, Word doesn't just change the text; it wraps your edits in special XML tags: `w:ins` around anything you added, and `w:del` around anything you removed (the deleted words are kept, just marked as struck out). Each tag also records who made the change and when.
 
 ![OOXML markup showing w:ins and w:del tracked-change tags in a .docx file](/assets/posts/redlining-documents-new-copilot-studio-experience/xml_for_redlining.png){: .shadow }
 _Inside a `.docx`, a tracked change is just text wrapped in `w:ins` and `w:del` tags._
@@ -31,14 +31,14 @@ Simple to describe, brutal to build. The output has to be a `.docx` where each e
 
 This is the story of building that redlining-content [skill]({% post_url 2026-03-10-skills-for-copilot-studio %}) for the [new Copilot Studio orchestrator](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/overview). The first working version took fifteen minutes per document. The version we landed on takes fifteen seconds. Here's how the [agentic loop]({% post_url 2026-03-29-agentic-improvement-loop %}) got us from one to the other.
 
-  
+
 
 ## How the Loop Wrote Its Own Python Reference Script
 
 We needed a process that could compare a `.docx` or a `.dotx` file to either a `.docx` or a `.pdf` file. To do that we used Python.
 The most important thing we built wasn't the Python. It was the *process that discovered* the Python. We never sat down and authored a redline engine from a blank file. We let the agentic loop do it, then codified what survived.
 
-  
+
 It went in four distinct phases, and each one taught the next.
 
 ![The four phases of building the redlining skill](/assets/posts/redlining-documents-new-copilot-studio-experience/phases.png){: .shadow }
@@ -46,9 +46,9 @@ _The four phases that took the Skill from a blank file to a codified reference s
 
 ### Phase 1: Run with No Code
 
-The best move was starting with **no code**. 
+The best move was starting with **no code**.
 
-The agent tried to produce the redline directly, reasoning over the two files with no script to lean on. It got the redlines wrong. The worst failure was that it tried to bridge the two file types by *converting* to PDF, pushing both the DOCX template and the uploaded PDF through a format conversion. Going from DOCX to PDF and back destroyed the formatting entirely. The layout shifted, spacing changed, and when Track Changes ran on top of that mangled result, it "redlined" paragraph breaks and spacing differences that no human ever made. The output was full of noise and nothing a reviewer could trust. This is not what we wanted, but it showed us exactly what to avoid: don't convert between formats at all. 
+The agent tried to produce the redline directly, reasoning over the two files with no script to lean on. It got the redlines wrong. The worst failure was that it tried to bridge the two file types by *converting* to PDF, pushing both the DOCX template and the uploaded PDF through a format conversion. Going from DOCX to PDF and back destroyed the formatting entirely. The layout shifted, spacing changed, and when Track Changes ran on top of that mangled result, it "redlined" paragraph breaks and spacing differences that no human ever made. The output was full of noise and nothing a reviewer could trust. This is not what we wanted, but it showed us exactly what to avoid: don't convert between formats at all.
 
 We have a template either in DOCX or DOTX, just use that initial template and update with the changes!
 
@@ -79,16 +79,24 @@ Every interesting constraint in this project traces back to one fact, the new Co
 
 Here's the path we took before shipping, every PDF-to-DOCX approach we tried and where each one landed:
 
-![Table of Python packages researched for PDF to DOCX conversion](/assets/posts/redlining-documents-new-copilot-studio-experience/pdf-approach.png){: .shadow }
+| Approach | Formatting | Tables | Alignment | Verdict |
+|---|---|---|---|---|
+| Extract text → rebuild doc | Lost | Flat text | Lost | Fail |
+| `pdf2docx` | N/A | N/A | N/A | Not available |
+| `pymupdf` | N/A | N/A | N/A | Not available |
+| `python-docx` (build output) | Good | OK | Wiped on style | Too abstracted |
+| `pypdfium2` + rebuild | Exact | Real tables | Exact | Image only |
+| **Use template + word diff** (`pdfplumber` reads PDFs, no conversion) | Byte-perfect | Cell-level | Native | **Shipped** |
+
 _The approaches we tried for turning a PDF into a redline. Converting to DOCX either failed or wasn't available; reading the PDF's text with `pdfplumber` and diffing against the template was the approach that worked._
 
 As we were iterating we went through multiple Python packages trying to convert PDF to DOCX. But the obvious answer was there all along: `pdfplumber` *is* available, and it reads a PDF's text directly. So keep it simple: don't convert the initial template at all. Keep it DOTX or DOCX, use `pdfplumber` to pull the submission's words, and update the template with the redlining changes.
-  
 
-> NOTE: The skills that are available in Copilot Studio today may change in the future. 
+
+> The skills that are available in Copilot Studio today may change in the future.
 {: .prompt-info }
 
-  
+
 We kept trying to *convert* a PDF into a Word document. That looked like the problem at first, until we realized we don't have to convert at all. What *is* there is `pdfplumber`, a layout-aware text extractor (the same building block behind [page-level PDF citations]({% post_url 2026-05-19-pdf-page-level-citations %})), and that turned out to be all we needed. The skill never converts anything. It uses `pdfplumber` to read the submission's *words*, then builds the redline directly on the Word template you already own.
 
 ## After the Breakthrough
@@ -99,24 +107,22 @@ That reframing became the skill as it ships today. The output *is* the actual in
 _The final folder structure of the redlining-content Skill._
 
 Here is the final file structure:
-- Assets Folder
-    1. template.dotx
-- References Folder
-    1. docx-submissions.md
-    2. pdf-submissions.md
-- Scripts Folder
-    1. redline.py
-- SKILL.MD
-    1. Uses two files: a template (either DOTX or DOCX) which is the baseline, bundled in the Skill Assets Folder, then a user uploads a submission (DOCX or PDF).
-    2. The agent then reads the words out of each file — straight paragraph text for Word files, and `pdfplumber` text extraction for PDFs (never converts the PDF to Word).
-    3. The agent is directed to read one of the two included references, `docx-submissions.md` or `pdf-submissions.md`, depending on the submitted document type.
-    4. Compares them once as two flat word lists using `difflib.SequenceMatcher`, so line wraps and page breaks don't create false differences — only real word changes count.
-    5. Keeps unchanged paragraphs byte-for-byte (all original formatting intact) and only rebuilds the paragraphs that actually changed.
-    6. Marks every difference as a Word tracked change — insertions wrapped in `<w:ins>`, deletions in `<w:del>`.
-    7. Every change is authored by "Copilot Studio AI".
-    8. Handles tables (for DOCX submissions) by diffing cell-by-cell while preserving each cell's width/borders/shading; PDF tables pass through untouched.
-    9. Outputs a normal DOCX with Track Changes turned on — marking all changes and deletions.
-  
+- **Assets folder** — `template.dotx`
+- **References folder** — `docx-submissions.md`, `pdf-submissions.md`
+- **Scripts folder** — `redline.py`
+- **SKILL.MD** — the instructions that tie it all together
+
+And here's what the skill actually does at runtime:
+1. Uses two files: a template (either DOTX or DOCX) which is the baseline, bundled in the Skill Assets Folder, then a user uploads a submission (DOCX or PDF).
+2. The agent then reads the words out of each file — straight paragraph text for Word files, and `pdfplumber` text extraction for PDFs (never converts the PDF to Word).
+3. The agent is directed to read one of the two included references, `docx-submissions.md` or `pdf-submissions.md`, depending on the submitted document type.
+4. Compares them once as two flat word lists using `difflib.SequenceMatcher`, so line wraps and page breaks don't create false differences — only real word changes count.
+5. Keeps unchanged paragraphs byte-for-byte (all original formatting intact) and only rebuilds the paragraphs that actually changed.
+6. Marks every difference as a Word tracked change — insertions wrapped in `<w:ins>`, deletions in `<w:del>`.
+7. Every change is authored by "Copilot Studio AI".
+8. Handles tables (for DOCX submissions) by diffing cell-by-cell while preserving each cell's width/borders/shading; PDF tables pass through untouched.
+9. Outputs a normal DOCX with Track Changes turned on — marking all changes and deletions.
+
 > Treat a PDF redline as a best-effort draft to review, not a character-perfect compare. A `.docx` submission is the high-fidelity path, because its words and tables carry real structure.
 {: .prompt-warning }
 
@@ -124,7 +130,7 @@ Here is the final file structure:
 
 ## But Is This For Copilot Studio or Cowork?
 
-At a high level, it comes down to whether there's a business process wrapped around the task. If the job really is just "compare these two documents and redline them," with no larger workflow attached, Cowork is probably the better match, you point it at the files and let it work.
+At a high level, it comes down to whether there's a business process wrapped around the task. If the job really is just "compare these two documents and redline them," with no larger workflow attached, [Cowork](https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/) is probably the better match, you point it at the files and let it work.
 
 But the moment you're operating in the context of specific documents and a specific process, Copilot Studio pulls ahead. Think of a fixed template you always redline against, or the need to intercept incoming submissions from email, route them, apply your rules, and hand back a tracked-changes document every time. That's not a one-off, it's a repeatable pipeline, and that's exactly where an authored MCS skill shines.
 
@@ -132,7 +138,7 @@ So this one is Copilot Studio, on purpose. We let the agentic loop do the Cowork
 
 ## Key Takeaways
 
-  
+
 - **Let the loop write the correct code.** Run without code first, then let the agent fail-loop its way to a working script. The failures are the key to this iterative approach.
 
 - **Then de-hardcode and codify.** A working script is hardcoded to one input. Strip every literal into logic, then upload the generalized pseudocode into the skill so the agent executes instead of re-derives. **That's what turns fifteen minutes into fifteen seconds.**
