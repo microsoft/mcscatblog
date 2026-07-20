@@ -101,6 +101,6 @@ None of this is the point of the post, but it's a useful footnote: when someone 
 
 ## Where this leaves us
 
-The short version: your agent has a computer now. It's a boring, network-isolated container with a decent set of Python libraries and no way to phone home, and that combination is most of why the new agents can do so much more than talk. For users, it means the loop can finish the job. For makers, it's a large toolbox that ships in the base. For admins, it's a contained, ephemeral space with the outside world routed through the controls you already run. If you want the background on packaging code for it, start with [Skills for Copilot Studio]({% post_url 2026-03-10-skills-for-copilot-studio %}).
+The short version: your agent has a computer now. It's a network-isolated container with a decent set of Python libraries, and that combination is most of why the new agents can do so much more. For users, it means the loop can finish the job. For makers, it's a large toolbox that ships in the base. For admins, it's a contained, ephemeral space with the outside world routed through the controls you already run. If you want the background on packaging code for it, start with [Skills for Copilot Studio]({% post_url 2026-03-10-skills-for-copilot-studio %}).
 
 So here's the question we'll leave you with. If you had a throwaway container and a stocked Python install sitting inside your agent, what's the first job you'd hand it?
