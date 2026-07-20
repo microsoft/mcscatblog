@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Your Agent Has a Computer Now: A Look at the Copilot Studio Agent Sandbox"
+title: "The New Copilot Studio Agent Sandbox"
 date: 2026-07-20
 categories: [copilot-studio, agents]
 tags: [copilot-studio, skills, agent-sandbox, code-execution, python, agent-development]
@@ -19,7 +19,7 @@ The Skill and its script run in the agent's sandbox and it's worth a few minutes
 
 ## So what is the sandbox?
 
-The sandbox is a small container with a Python runtime and a set of shell tools. Every agent in the [modern Copilot Studio experience](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/overview) gets one, it's on by default, and it's thrown away when the run ends. Think of it as a scratch computer the agent can use for work that reasoning alone can't finish: read a file, do the math, build a spreadsheet, draw a chart. When the conversation is over, the container and everything the agent wrote in it are gone. Nothing carries over to the next run, which is a useful property when you remember that any file the agent creates lives inside those walls and only those walls.
+The sandbox is a small container with a Python runtime and a set of shell tools. Every agent in the [modern Copilot Studio experience](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/overview) gets one, it's on by default, and it's thrown away when the run ends. Think of it as a scratch workspace the agent can use for work that reasoning alone can't finish: read a file, do the math, build a spreadsheet, draw a chart. When the conversation is over, the container and everything the agent wrote in it are gone. Nothing carries over to the next run, which is a useful property when you remember that any file the agent creates lives inside those walls and only those walls.
 
 People sometimes use "harness" and "sandbox" as if they mean the same thing but they don't. The harness is the workshop, the interpreter, libraries and tools the agent works with. The sandbox is the walls around it, the container that keeps that work isolated. The two are complementary, and both matter to the rest of this discussion, but for the sake of readability we'll just say sandbox and mean the whole box.
 
@@ -67,7 +67,7 @@ The rough rule: if the work is novel, let the agent improvise. If it's repeatabl
 
 ## Where the edges are
 
-Once you accept that your agent has a computer, a few honest questions follow, and it's better to name them than to pretend the box is magic.
+Once you accept that your agent has a sandbox to work in, a few honest questions follow, and it's better to name them than to pretend the box is magic.
 
 **Libraries move.** The preinstalled set is a snapshot, and snapshots change between releases. A version bump can shift behavior, and a library you relied on today might be organized differently tomorrow. If a script depends on a specific library doing a specific thing, treat that like any other dependency and test it when the platform updates, rather than assuming the floor stays put.
 
@@ -101,6 +101,6 @@ None of this is the point of the post, but it's a useful footnote: when someone 
 
 ## Where this leaves us
 
-The short version: your agent has a computer now. It's a network-isolated container with a decent set of Python libraries, and that combination is most of why the new agents can do so much more. For users, it means the loop can finish the job. For makers, it's a large toolbox that ships in the base. For admins, it's a contained, ephemeral space with the outside world routed through the controls you already run. If you want the background on packaging code for it, start with [Skills for Copilot Studio]({% post_url 2026-03-10-skills-for-copilot-studio %}).
+The short version: your agent has a sandbox now. It's a network-isolated container with a decent set of Python libraries, and that combination is most of why the new agents can do so much more. For users, it means the loop can finish the job. For makers, it's a large toolbox that ships in the base. For admins, it's a contained, ephemeral space with the outside world routed through the controls you already run. If you want the background on packaging code for it, start with [Skills for Copilot Studio]({% post_url 2026-03-10-skills-for-copilot-studio %}).
 
-So here's the question we'll leave you with. If you had a throwaway container and a stocked Python install sitting inside your agent, what's the first job you'd hand it?
+So here's the question we'll leave you with. Now that these Copilot Studio agents are so much more capable, what new agents are you going to build?
