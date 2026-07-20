@@ -23,13 +23,13 @@ The sandbox is a small container with a Python runtime and a set of shell tools.
 
 People sometimes use "harness" and "sandbox" as if they mean the same thing but they don't. The harness is the workshop, the interpreter, libraries and tools the agent works with. The sandbox is the walls around it, the container that keeps that work isolated. The two are complementary, and both matter to the rest of this discussion, but for the sake of readability we'll just say sandbox and mean the whole box.
 
-## Why should you care about the sandbox? 
+## Why should you care about the sandbox?
 
 That depends on who you are:
 
-- If you're **using** an agent, the loop can now finish jobs instead of describing them. Ask for a summary table from a messy CSV and you get the table back, not a recipe for making it yourself. The range of problems an agent can actually close out, rather than talk about, gets a lot wider once it has somewhere to do the work.
-- If you're a **maker**, you got a large toolbox for free. A lot of scenarios that used to need a connector, an API, and a bad afternoon are now a few lines of Python the agent writes on the spot, or a script you package once and reuse. You spend less time plumbing and more time on the part of the problem that's actually yours.
-- If you're an **admin**, the word to notice is "isolated." Code runs in a throwaway container with no open door to the internet, and it disappears at the end of the run. That's a comfortable place to start, and it also raises some fair questions about libraries, governance, and lifecycle that we'll come back to.
+- If you're a **user** of an agent, the loop can now finish jobs instead of describing them. Ask for a summary table from a messy CSV and you get the table back, not a recipe for making it yourself. The range of problems an agent can actually complete, rather than talk about, gets a lot wider once it has somewhere to do the work.
+- If you're a **maker**, you get a large toolbox for free. A lot of scenarios that used to need a connector, an API, and a full afternoon are now a few lines of Python the agent writes on the spot, or a script you package once and reuse, or a skill you can download and add to the agent. You spend less time plumbing and more time on the part of the problem that's actually yours.
+- If you're an **admin**, the keyword is "isolated". Code runs in a throwaway container with no open door to the internet. That's a comfortable place to start, and it also raises some fair questions about libraries, governance, and lifecycle that we'll come back to.
 
 ## What's in the sandbox
 
@@ -57,35 +57,30 @@ Pair that with the throwaway nature of the container and you get a fairly calm s
 
 ## Live code, or a script you packed yourself
 
-There are two ways code ends up running in the sandbox, and knowing which one you want is most of the job.
+There are two ways code ends up running in the sandbox, and knowing which one you want is most of the job:
 
-The first is the agent writing code on the fly. You ask, it reasons, it writes a bit of Python, and it runs it right there. This is what you want when the task is a one-off, or when you can't predict its shape in advance. Parse this oddly formatted export. Reconcile these two lists. Chart whatever ends up in this file. The agent adapts to the specifics in front of it, which is the whole appeal, and it also means the code will be a little different every time. That's fine when the job is exploratory. It's less fine when someone downstream needs the same answer twice.
+- **Code the agent writes on the fly.** You ask, it reasons, it writes a bit of Python, and runs it right there. This is what you want for a one-off, or when you can't predict the task's shape in advance: parse this oddly formatted export, reconcile these two lists, chart whatever ends up in this file. The agent adapts to the specifics in front of it, which is the appeal, and it means the code is a little different every time. That's fine when the job is exploratory, and less fine when someone downstream needs the same answer twice.
+- **A script you packaged into a Skill.** Same runtime, same libraries, but the code is fixed. You get the same steps in the same order on every run, which is what you want when the work is repeatable and somebody needs to trust the output. A packaged script is something you can read, test, version, and sign off on, the way you would any other code your team ships. The agent still decides when to reach for it, but it can't quietly rewrite what's inside.
 
-The second is a script you wrote, reviewed, and packed into a Skill. Same runtime, same libraries, but now the code is fixed. You get the same steps in the same order on every run, which is exactly what you want when the work is repeatable and somebody needs to trust the output. A packaged script is something you can read, test, version, and sign off on, the way you would any other code your team ships. The agent still decides when to reach for it, but it can't quietly rewrite what's inside.
-
-The rough rule: if the work is novel, let the agent improvise. If it's repeatable and has to be predictable, hand it a script. In practice most real agents do both, improvising around the edges and leaning on packaged scripts for the parts that matter. That's the tie back to our earlier post on Skills. A Skill is how you package the script and the capabilities it needs. The sandbox is where it runs.
+The rough rule: if the work is novel, let the agent improvise; if it's repeatable and has to be predictable, hand it a script. In practice most real agents do both, improvising around the edges and leaning on packaged scripts for the parts that matter. That's the tie back to our earlier post on Skills. A Skill is how you package the script and the capabilities it needs. The sandbox is where it runs.
 
 ## Where the edges are
 
-Once you accept that your agent has a sandbox to work in, a few honest questions follow, and it's better to name them than to pretend the box is magic.
+Once you accept that your agent has a sandbox to work in, a few honest questions follow, and it's better to name them than to pretend the box is magic:
 
-**Libraries move.** The preinstalled set is a snapshot, and snapshots change between releases. A version bump can shift behavior, and a library you relied on today might be organized differently tomorrow. If a script depends on a specific library doing a specific thing, treat that like any other dependency and test it when the platform updates, rather than assuming the floor stays put.
-
-**Not every capability is yours to reach for.** The presence of a library tells you what's technically available, not what your organization wants agents doing. That's a governance conversation, and it's a good one to have early. The isolation model gives admins a strong default, and the routing through Tools and Knowledge gives them the place to draw lines, but somebody still has to decide where those lines go.
-
-**Skills travel, and travel needs a plan.** A packaged Skill is an asset that has to move between environments the same way the rest of your solution does. As you lean on scripts for the dependable work, you inherit the ordinary lifecycle questions that come with any code: how it's reviewed, how it's promoted from a test environment to production, and how you keep the version running in front of customers matching the one you actually approved.
+- **Libraries move.** The preinstalled set is a snapshot, and snapshots change between releases. A version bump can shift behavior, and a library you relied on today might be organized differently tomorrow. If a script depends on a specific library doing a specific thing, treat that like any other dependency and test it when the platform updates, rather than assuming the floor stays put.
+- **Not every capability is yours to reach for.** The presence of a library tells you what's technically available, not what your organization wants agents doing. That's a governance conversation, and it's a good one to have early. The isolation model gives admins a strong default, and the routing through Tools and Knowledge gives them the place to draw lines, but somebody still has to decide where those lines go.
+- **Skills travel, and travel needs a plan.** A packaged Skill is an asset that has to move between environments the same way the rest of your solution does. As you lean on scripts for the dependable work, you inherit the ordinary lifecycle questions that come with any code: how it's reviewed, how it's promoted from a test environment to production, and how you keep the version running in front of customers matching the one you actually approved.
 
 None of these are reasons to hold back. They're the reasons to treat sandbox-backed agents as software, which is what they are, rather than as a chat box that happens to be clever.
 
 ## What this actually gets you
 
-A few examples from conversations we keep having with customers.
+A few examples from conversations we keep having with customers:
 
-A document-generation agent, the kind that turns a pile of data into a formatted report. With python-docx and python-pptx already sitting in the box, that's a normal Tuesday, not a research project. The agent assembles the document in the sandbox and hands back the finished file.
-
-A content-review agent that reads submitted PDFs or web content, pulls out the text, checks it against a set of rules, and flags the problems. pdfplumber, BeautifulSoup, and pandas cover most of it before you write a single custom tool, and the parts specific to your rules are exactly the parts worth packaging into a script.
-
-An analysis agent that takes a messy spreadsheet, cleans it with pandas, works out the numbers, and returns a chart from matplotlib alongside a short written read of what the numbers say. That combination, compute plus narrative, is awkward to do with connectors alone and natural when the agent has a place to run code.
+- **Document generation.** The kind of agent that turns a pile of data into a formatted report. With python-docx and python-pptx already sitting in the box, that's a normal Tuesday, not a research project. The agent assembles the document in the sandbox and hands back the finished file.
+- **Content review.** An agent that reads submitted PDFs or web content, pulls out the text, checks it against a set of rules, and flags the problems. pdfplumber, BeautifulSoup, and pandas cover most of it before you write a single custom tool, and the parts specific to your rules are exactly the parts worth packaging into a script.
+- **Data analysis.** An agent that takes a messy spreadsheet, cleans it with pandas, works out the numbers, and returns a chart from matplotlib alongside a short written read of what the numbers say. That combination, compute plus narrative, is awkward to do with connectors alone and natural when the agent has a place to run code.
 
 The point isn't that any one of these is clever. It's that you can look a customer in the eye and say "yes, that's doable, and here's roughly how," instead of hoping it is.
 
