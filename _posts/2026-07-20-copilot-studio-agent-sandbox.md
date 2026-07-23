@@ -29,7 +29,7 @@ That depends on who you are:
 
 - If you're a **user** of an agent, the loop can now finish jobs instead of describing them. Ask for a summary table from a messy CSV and you get the table back, not a recipe for making it yourself. The range of problems an agent can actually complete, rather than talk about, gets a lot wider once it has somewhere to do the work.
 - If you're a **maker**, you get a large toolbox for free. A lot of scenarios that used to need a connector, an API, and a full afternoon are now a few lines of Python the agent writes on the spot, or a script you package once and reuse, or a skill you can download and add to the agent. You spend less time plumbing and more time on the part of the problem that's actually yours.
-- If you're an **admin**, the keyword is "isolated". Code runs in a throwaway container with no open door to the internet. That's a comfortable place to start, and it also raises some fair questions about libraries, governance, and lifecycle that we'll come back to.
+- If you're an **admin**, the keyword is "isolated". Code runs in a throwaway container with no open door to the internet. That's a comfortable place to start, and it also raises some fair questions about lifecycle and governance that we'll come back to.
 
 ## What's in the sandbox
 
@@ -44,7 +44,7 @@ The sandbox ships with close to a hundred Python libraries already installed. Th
 
 Alongside the libraries are the ordinary shell tools you'd expect on a machine like this. The agent can create a file, run a command, read the output, and decide what to do next, all in the same container for the length of the conversation. This is the part that's easy to underrate. The agent isn't limited to one clever function call. It works the way you would at a terminal: try something, look at the result, adjust, and try again. That read-run-read loop is where a lot of the new capability actually comes from, because the agent can react to what its own code produced instead of guessing.
 
-> These libraries are preinstalled today. The exact list and versions will change over time. You can check the current list using the agent-harness-explorer that is described below.
+> These libraries are preinstalled today. The exact list and versions will change over time. You can check the current list using the [agent-harness-explorer](https://microsoft.github.io/cat-agent-skills/skills/agent-harness-explorer/) that is described below.
 {: .prompt-info }
 
 ## The sandbox doesn't call home
@@ -66,13 +66,10 @@ The rough rule: if the work is novel, let the agent improvise; if it's repeatabl
 
 ## Where the edges are
 
-Once you accept that your agent has a sandbox to work in, a few honest questions follow, and it's better to name them than to pretend the box is magic:
+Once you realize that your agent has a sandbox to work in there are a few next-level considerations worth knowing about:
 
-- **Libraries move.** The preinstalled set is a snapshot, and snapshots change between releases. A version bump can shift behavior, and a library you relied on today might be organized differently tomorrow. If a script depends on a specific library doing a specific thing, treat that like any other dependency and test it when the platform updates, rather than assuming the floor stays put.
-- **Not every capability is yours to reach for.** The presence of a library tells you what's technically available, not what your organization wants agents doing. That's a governance conversation, and it's a good one to have early. The isolation model gives admins a strong default, and the routing through Tools and Knowledge gives them the place to draw lines, but somebody still has to decide where those lines go.
-- **Skills travel, and travel needs a plan.** A packaged Skill is an asset that has to move between environments the same way the rest of your solution does. As you lean on scripts for the dependable work, you inherit the ordinary lifecycle questions that come with any code: how it's reviewed, how it's promoted from a test environment to production, and how you keep the version running in front of customers matching the one you actually approved.
-
-None of these are reasons to hold back. They're the reasons to treat sandbox-backed agents as software, which is what they are, rather than as a chat box that happens to be clever.
+- **Libraries change.** The preinstalled set of libraries is a snapshot, and snapshots change between releases. A version bump can shift behavior, and a library you relied on today might be organized differently tomorrow. If a script depends on a specific library doing a specific thing, treat that like any other dependency and test it [with evals](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/analytics-agent-evaluation-intro).
+- **Skills are part of the agent.** A Skill is an asset that will move between environments inside the agent. As you lean on scripts for the dependable work, you inherit the ordinary lifecycle questions that come with any code: how it's moved from a dev environment to production and how you keep the version running in front of customers matching the one you actually approved. Copilot Studio provides broad [application lifecycle management (ALM) support](https://learn.microsoft.com/power-platform/architecture/reference-architectures/enterprise-power-platform-alm) through [Power Platform Pipelines](https://learn.microsoft.com/power-platform/alm/pipelines) for movement of solutions and [evals](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/analytics-agent-evaluation-intro) for regression testing.
 
 ## What this actually gets you
 
@@ -86,7 +83,7 @@ The point isn't that any one of these is clever. It's that you can look a custom
 
 ## "How do I know which libraries are in the sandbox?"
 
-You look, because guessing wrong costs you an afternoon and the list changes between releases. Rather than trust a doc that may already be stale, we built a small Skill for exactly this, the agent-harness-explorer, that inspects the running sandbox and writes down what it actually finds.
+You look, because guessing wrong costs you an afternoon and the list changes between releases. Rather than trust a doc that may already be stale, we built a small Skill for exactly this, the [agent-harness-explorer](https://microsoft.github.io/cat-agent-skills/skills/agent-harness-explorer/), that inspects the running sandbox and writes down what it actually finds.
 
 It works the way a good auditor would. It captures a snapshot of the live environment, checks the installed Python libraries against a curated catalog so it can name and group them, enumerates the tools and Skills the agent can see, and renders the whole thing as a single self-contained HTML report you can open in a browser or hand to a colleague. Run it again next week and it will compare the two snapshots and tell you what was added, removed, or bumped to a new version. Its guiding rule is "observe, don't assume," so it reports what it saw rather than what the platform is supposed to do, and it leaves anything it couldn't confirm marked as unverified instead of guessing.
 
