@@ -50,13 +50,13 @@ The fix isn't a cleverer prompt. It's to let the LLM judge small, concrete thing
 
 Before you measure anything, answer one question: **what will you do with this score?** Ship or hold? Pick between two models? Decide whether a change is real progress? Find out which part is weak?
 
-This sounds obvious, and it's the step most people skip. It matters because the decision quietly sets everything that follows: which things you measure, how you score them, and how you add them up. Write it in one sentence.
+This sounds obvious, and it's the step most people skip. It matters because the decision largely determines what follows: which things you measure, how you score them, and how you add them up. Write it in one sentence.
 
-For the funding panel, that sentence is: *decide whether each proposal moves to the funded shortlist, gets sent back for rework, or is declined*. Three outcomes, not a number. Everything else in this post is built around producing that call, not around producing a 4.2.
+For the project funding panel, that sentence is: *decide whether each proposal moves to the funded shortlist, gets sent back for rework, or is declined*. Three outcomes, not a number. Everything else in this post is built around producing that call, not around producing a 4.2.
 
 ## 2. Break "quality" into a few concrete checks
 
-First name the few dimensions that actually matter, then turn each into a specific, checkable condition rather than a vague quality. "Is it good?" becomes "Does every claim cite a source that actually supports it?" Draw the checks from real failures you've seen, keep them few and non-overlapping, and mark which ones are dealbreakers.
+First name the few dimensions that actually matter, then turn each into a specific, checkable condition rather than a vague quality assessment. "Is it good?" becomes "Does every claim cite a source that actually supports it?" Draw the checks from real failures you've seen, keep them few and non-overlapping, and mark which ones are dealbreakers.
 
 For the project proposals, "quality" splits into a handful of things a reader can actually verify:
 
@@ -74,19 +74,19 @@ Six checks, non-overlapping, each one a specific question a person can answer wi
 There's no single right method. Work down this ladder and stop at the first one that fits the check:
 
 - **Can a script check it?** Then don't use an LLM at all. Format validity, a required field, a present citation, a correct tool call, these are the cheapest and most reliable signals, so run them first.
-- **Otherwise, ask the judge a yes/no question, with evidence.** This is your default. Breaking a fuzzy quality into a few binary questions is the single biggest reliability win available.
-- **Use *pass / minor / major / fail* labels only when partial credit genuinely matters** and the in-between states are clearly defined. It buys you nuance at the cost of bringing back some of the 3-vs-4 fuzziness, so use it sparingly.
-- **Comparing two systems or versions?** Don't score each in isolation, ask the judge *which one is better, A or B*. Head-to-head calls are noticeably steadier than absolute scores.
-- **If your model can report how confident it was** across the options, you can turn that into a finer score, useful when everything bunches up near the top.
+- **Otherwise, ask the judge a yes/no question, with evidence.** This is your default. Breaking a fuzzy judgment into a few binary questions is the single biggest reliability win available.
+- **Use *pass / minor / major / fail* labels only when graded judgment genuinely matters to your final decision** and the in-between states are clearly defined. It buys you nuance at the cost of bringing back some of the 3-vs-4 fuzziness, so use it sparingly.
+- **Comparing two systems or versions?** Don't score each in isolation, ask the judge *which one is better, A or B*. Head-to-head calls are noticeably more stable than absolute scores.
+- **If your model can report how confident it was** across the options, that confidence can be used as a weight on the score, which helps when everything bunches up near the top.
 
-Here's how each of the six proposal checks lands. Whether the **required sections are present** never needs the LLM: that's just checking each mandatory section is filled in.
+For those same proposals, here's how each of the [six checks](#2-break-quality-into-a-few-concrete-checks) lands on the ladder:
 
-1. **Problem clarity** becomes one yes/no question with a quote for evidence: does this proposal describe a real user in a real situation, with a current cost? This item could be further broken down if more detail is needed.
-2. **Evidence** works the same way, one call per citation: does the source actually say what the proposal claims it does?
-3. **Feasibility** is the one check where partial credit earns its keep, so it comes back as pass, minor, major, or fail; "plan complete, team named, timeline realistic" is genuinely different from "no team, no timeline," and the middle ground is worth naming.
-4. Whether the **budget adds up** doesn't need the LLM either, since a spreadsheet can do the arithmetic.
-5. **Strategic fit** is scored by comparison, not on a scale: which of the funding cycle's stated priorities does this proposal align with best?
-6. And the **dealbreaker** check is a mix: a script catches hard failures like a missing required section, and a yes/no LLM call catches softer ones like unverifiable claims or a declared conflict of interest.
+- **Problem clarity** becomes one yes/no question with a quote for evidence: does this proposal describe a real user in a real situation, with a current cost? This item could be further broken down if more detail is needed.
+- **Evidence** checks each cited source, a dataset, reference, or prior work, with its own yes/no: does it actually say what the proposal claims? Handling one citation at a time keeps a vague "is the evidence solid?" from becoming a gut call.
+- **Feasibility** is the one check where a graded answer earns its keep, so it comes back as pass, minor, major, or fail; "plan complete, team named, timeline realistic" is genuinely different from "no team, no timeline," and the middle ground is worth naming.
+- **Budget sanity** doesn't need the LLM at all, since a spreadsheet can do the arithmetic.
+- **Strategic fit** is scored by comparison, not on a scale: which of the funding cycle's stated priorities does this proposal align with best?
+- **Dealbreakers** are a mix: a script catches hard failures like a missing required section, and a yes/no LLM call catches softer ones like unverifiable claims or a declared conflict of interest.
 
 Note that model choice does affect scoring behavior, but there is no universal best judge. Reasoning models can help when the judgment requires multi-step evidence matching, but they still need calibration. Treat model choice as part of the evaluation design: test candidate judges against the same human-reviewed benchmark, measure agreement and disagreement patterns, and pick the judge that is most reliable for your rubric.
 
@@ -95,7 +95,7 @@ Note that model choice does affect scoring behavior, but there is no universal b
 
 ## 4. Combine the results with a rule you write down
 
-This is where most of the real design lives, and the first rule is: **don't average the labels.** Averaging *pass/fail* results into a pass-rate is fine; averaging genuinely continuous scores is fine; averaging *minor/major/fail* style labels into a 3.7 is exactly the trap from the top of this post. Pick a combining rule that fits the decision instead:
+This step is where most of the important design choices actually get made, and the first rule is: **don't average the labels.** Averaging *pass/fail* results into a pass-rate is fine; averaging genuinely continuous scores is fine; averaging *minor/major/fail* style labels into a 3.7 is exactly the trap from the top of this post. Pick a combining rule that fits the decision instead:
 
 | What you're deciding | How to score | How to combine |
 | --- | --- | --- |
@@ -109,11 +109,11 @@ Whatever rule you pick, write it down, version it, and keep it *outside* the mod
 
 For the funding panel, that rule ends up looking like: any dealbreaker declines the proposal on its own, regardless of the rest. Fewer than four of the five non-dealbreaker checks pass, or feasibility marked *fail*, sends it to rework. Everything else lands on the shortlist.
 
-Once you have a rule that works, package it so you can drop the same scoring contract into every project instead of rewriting it. In Copilot Studio, that means a reusable [Modern Agents skill]({% post_url 2026-06-15-modern-mcs-agent-skills %}) when the checks are deterministic or shared across agents, and a [connected agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-connected-agents){:target="_blank"} pattern when the evaluation process needs its own workflow, tools, memory, or human review path. Keep the combining rule outside the LLM, so the final decision stays inspectable and repeatable.
+Once you have a rule that works, package it so you can reuse the same scoring contract across projects instead of rewriting it each time. In Copilot Studio, that can live as a reusable [skill]({% post_url 2026-06-15-modern-mcs-agent-skills %}) (with or without static scripts), a [connected agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-connected-agents){:target="_blank"}, or a workflow, whichever fits the rest of your setup.
 
 ## 5. Make the model show its work
 
-Every judgment should arrive with the evidence behind it: the quote, the field, the line that justified the call. This is what makes a score auditable: when a number looks wrong, you can see exactly why it landed where it did, instead of re-litigating a mystery digit.
+Every judgment should arrive with the evidence behind it: the quote, the field, the line that justified the call. This is what makes a score auditable: when a number looks wrong, you can see exactly why it landed where it did, instead of arguing over a mystery digit.
 
 In the proposal pipeline, that's the sentence stating the problem, the citation being verified, the budget row that didn't add up, the priority the strategic-fit call was pinned to. When someone challenges a decline six months later, no one re-runs the model. They open the report.
 
@@ -138,19 +138,11 @@ When you're switching architectures for the first time (e.g., retiring a 1-5 pro
 
 This is also what makes scoring usable inside an [automated agent improvement loop]({% post_url 2026-03-29-agentic-improvement-loop %}): when the judge is stable and the benchmark is fixed, every iteration on the agent gives you a real before-and-after instead of a fresh 1-5 guess on each run.
 
-## Putting it together
-
-Zooming out, the pipeline for the funding panel is a short chain. Start from the three-outcome decision. Break the proposal into six concrete checks. For each one, pick the cheapest scoring method that fits: a script where you can, a yes/no LLM call with evidence where you can't, a graded label only where partial credit really matters, a head-to-head where you're comparing. Combine the results with a written-down rule that lives outside the model. Keep every judgment attached to the sentence, citation, or line it was based on. Calibrate periodically against past proposals and a second judge from a different model family. Watch the pass-rates cycle over cycle and recalibrate when they drift.
-
-No step is clever on its own. Together they replace one mystery digit with a decision someone can point at and defend.
-
-Same proposals, same model, very different outcome from "rate this 1-5." The 4.2 either passes every check with evidence you can point at, or it lands in the rework pile with a specific list of what to fix. The 3.4 you would have skipped either shows up on the shortlist for a reason, or gets declined for a reason. Either way, no one has to defend a mystery digit.
-
 ## The bottom line
 
-It was never a question of whether an LLM *can* score. The question is whether the score means anything and a single 1-5 rating bundles a vague scale together with an unsteady judge. Treat the LLM as **one part of how you measure, not the measuring tape itself**: decision first, concrete checks second, your own combining rule third, and calibration all the way through.
+It was never a question of whether an LLM *can* score. The question is whether the score means anything, and a single 1-5 rating bundles a vague scale together with an unsteady judge. The fix is a handful of steps in order: decision first, a few concrete checks second, your own written-down combining rule third, and calibration all the way through. No step is clever on its own; together they replace one mystery digit with a decision someone can point at and defend. Treat the LLM as **one part of how you measure, not the measuring tape itself**.
 
-Build the proposal scores that way, and the 4.2 and the 3.4 stop being mystery numbers. You see which checks each one passed and failed and "fund anything above a 4" finally becomes a decision someone can defend.
+Build the proposal scores that way, and the 4.2 and the 3.4 stop being mystery numbers. You see which checks each one passed and failed, and "fund anything above a 4" finally becomes a decision someone can defend.
 
 What is a score your team trusted until it was too late? Share the lesson in the comments.
 
