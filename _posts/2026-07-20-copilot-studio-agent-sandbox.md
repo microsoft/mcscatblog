@@ -1,98 +1,120 @@
 ---
 layout: post
+agent_edition: modern
 title: "The New Copilot Studio Agent Sandbox"
 date: 2026-07-20
 categories: [copilot-studio, agents]
 tags: [copilot-studio, skills, agent-sandbox, code-execution, python, agent-development]
-description: "What the modern Copilot Studio agent sandbox is, what Python libraries come with it, why it can't reach the internet, and when to let the agent write code versus run a script you packaged yourself."
+description: "What the modern Copilot Studio agent sandbox is, how it fits into the agent harness, why it cannot reach the internet, and when to use generated code versus a packaged Skill script."
 author: chrisgarty
 image:
-  path: /assets/posts/copilot-studio-agent-sandbox/header.png
-  alt: A small, tidy container wedged inside an agent, quietly doing the math.
+  path: /assets/posts/copilot-studio-agent-sandbox/copilot-studio-agent-sandbox-cat.png
+  alt: A cat playing in a sandbox labeled Copilot Sandbox
   no_bg: true
 published: false
 ---
 
-If you read our post about how [Modern Agents Have Skills Now]({% post_url 2026-06-15-modern-mcs-agent-skills %}), you know a Skill is a bundle of instructions the agent uses when a task calls for it. That Skill can provide its own scripts or make use of any capability available to the agent. That raises a question: when the agent runs one of those scripts, where does it run and what is available to it?
+A capable AI model can look at a problem and reason through it. It can explain how to clean a spreadsheet, describe the Python you would need, or tell you how to assemble a report.
 
-The Skill and its script run in the agent's sandbox and it's worth a few minutes to understand what that is, because the answer changes what you can build.
+Reasoning alone, however, cannot inspect the spreadsheet, run the Python, or create the report file. Something has to give the model the right context, connect it to approved capabilities, and provide somewhere for code to execute.
+
+If you read our post about how [Modern Agents Have Skills Now]({% post_url 2026-06-15-modern-mcs-agent-skills %}), you know a Skill can give an agent task-specific instructions and scripts. That raises a practical question: when the agent needs to run code, where does that work happen, and what can the code actually reach?
+
+The answer is easier to understand if we separate three layers. The **model** supplies reasoning and generation. The **runtime harness** surrounds the model with instructions and context, Knowledge, Skills, Tools, and orchestration. The **sandbox** is the isolated execution environment where the agent can perform supported local work, including running generated code or a script packaged in a Skill. Evals sit outside that runtime loop and test whether the assembled agent still behaves as expected.
+
+In short, the harness adds capabilities and the sandbox provides a controlled place to execute some of them. If the model is the engine and the harness is the rest of the vehicle that makes it useful, the sandbox is an island it is driving on: equipped for a defined set of jobs, but separated from the outside world, unless you add a bridge.
 
 ## So what is the sandbox?
 
-The sandbox is a small container with a Python runtime and a set of shell tools. Every agent in the [modern Copilot Studio experience](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/overview) gets one, it's on by default, and it's thrown away when the run ends. Think of it as a scratch workspace the agent can use for work that reasoning alone can't finish: read a file, do the math, build a spreadsheet, draw a chart. When the conversation is over, the container and everything the agent wrote in it are gone. Nothing carries over to the next run, which is a useful property when you remember that any file the agent creates lives inside those walls and only those walls.
+The sandbox is a small container with a Python runtime, local files, preinstalled libraries, and shell tools. In the [modern Copilot Studio experience](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/overview) and environments tested for this post, agents had one available by default. Treat its workspace as ephemeral rather than relying on files to remain available across runs.
 
-People sometimes use "harness" and "sandbox" as if they mean the same thing but they don't. The harness is the workshop, the interpreter, libraries and tools the agent works with. The sandbox is the walls around it, the container that keeps that work isolated. The two are complementary, and both matter to the rest of this discussion, but for the sake of readability we'll just say sandbox and mean the whole box.
+| Layer | What it contributes |
+| --- | --- |
+| Model | Reasoning and generation |
+| Runtime harness | Instructions and context, Knowledge, Skills, Tools, and orchestration |
+| Sandbox | An isolated runtime, libraries, local files, shell access, and execution boundaries |
+
+That distinction matters. Instructions and Skills guide what the agent should do. Knowledge supplies approved content and context for that work. Tools can provide governed ways to work with systems outside the sandbox. The sandbox itself is a temporary place for supported local execution: read a file, do the math, build a spreadsheet, or draw a chart.
+
+Do not rely on the sandbox workspace carrying over to the next run. That is useful when you remember that the agent may have written the code only moments before executing it. [Agent Memory](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/memory-overview), when enabled, persists separately from sandbox files.
 
 ## Why should you care about the sandbox?
 
 That depends on who you are:
 
-- If you're a **user** of an agent, the loop can now finish jobs instead of describing them. Ask for a summary table from a messy CSV and you get the table back, not a recipe for making it yourself. The range of problems an agent can actually complete, rather than talk about, gets a lot wider once it has somewhere to do the work.
-- If you're a **maker**, you get a large toolbox for free. A lot of scenarios that used to need a connector, an API, and a full afternoon are now a few lines of Python the agent writes on the spot, or a script you package once and reuse, or a skill you can download and add to the agent. You spend less time plumbing and more time on the part of the problem that's actually yours.
-- If you're an **admin**, the keyword is "isolated". Code runs in a throwaway container with no open door to the internet. That's a comfortable place to start, and it also raises some fair questions about lifecycle and governance that we'll come back to.
+- If you are a **user** of an agent, the agentic loop can finish more jobs instead of merely describing them. Ask for a summary table from a messy CSV and you can get the table back, not a recipe for making it yourself.
+- If you are a **maker**, you get a useful toolbox without building a custom service for every calculation or file transformation. The agent can write a few lines of Python for a one-off task, or run a script from a Skill that you have provided. It can leverage those capabilities inside the isolated sandbox and can only reach outside of the sandbox via the tools and knowledge sources provided to the agent.
+- If you are an **admin**, the keyword is **isolated**. Local code runs in a throwaway container with no open door to the internet.
 
-## What's in the sandbox
-
-The sandbox ships with close to a hundred Python libraries already installed. That number sounds abstract until you group them by the kind of work they do:
-
-- **Documents:** python-docx, python-pptx, openpyxl, and pypdf for reading and writing Office files and PDFs.
-- **Data:** pandas and numpy for tables and numbers, with pyarrow underneath.
-- **Charts:** matplotlib, plotly, and seaborn for turning those numbers into something a person can read.
-- **Files and images:** Pillow and OpenCV for image work, plus OCR for pulling text out of a scan.
-- **Web and parsing:** BeautifulSoup and lxml for HTML and XML that arrives as content rather than a live fetch.
-- **Everyday utilities:** the usual date, math, and text-handling libraries, plus tools for validating and reshaping data.
-
-Alongside the libraries are the ordinary shell tools you'd expect on a machine like this. The agent can create a file, run a command, read the output, and decide what to do next, all in the same container for the length of the conversation. This is the part that's easy to underrate. The agent isn't limited to one clever function call. It works the way you would at a terminal: try something, look at the result, adjust, and try again. That read-run-read loop is where a lot of the new capability actually comes from, because the agent can react to what its own code produced instead of guessing.
-
-> These libraries are preinstalled today. The exact list and versions will change over time. You can check the current list using the [agent-harness-explorer](https://microsoft.github.io/cat-agent-skills/skills/agent-harness-explorer/) that is described below.
+> By default, agents created in the new Copilot Studio experience can 'Search all websites' via [Knowledge](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/knowledge-copilot-studio), but that can be turned off.
 {: .prompt-info }
 
-## The sandbox doesn't call home
+## What is in the sandbox
 
-The sandbox has no outbound internet. The agent can run all the code it likes in there, but it can't reach out to APIs on its own. Anything that touches the outside world goes through [Tools](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/tools-overview), [Skills](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/skills-overview), and [Knowledge](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/knowledge-copilot-studio) instead, which is covered by the [security and governance](https://learn.microsoft.com/microsoft-copilot-studio/security-and-governance) controls in the Copilot Studio ecosystem. It means the code running in the sandbox and the connections leaving your tenant are two separate concerns, and your [data policies](https://learn.microsoft.com/microsoft-copilot-studio/admin-data-loss-prevention) for connectors keep applying to the connections no matter what happens in the sandbox.
+The sandbox ships with close to a hundred Python libraries. The exact inventory matters less than the kinds of local work it supports:
 
-A small thing that trips people up: a networking library being installed is not the same as the agent being allowed to use it. `requests` is sitting right there in the list, because pulling it out would break half the other libraries that depend on it. It still can't send an email, write a file to SharePoint, or order lunch. The library is a capability. The wall decides whether anything actually leaves, and by default nothing does.
+- **Documents and data:** python-docx, python-pptx, openpyxl, pypdf, pandas, and numpy.
+- **Charts and images:** matplotlib, plotly, seaborn, Pillow, OpenCV, and OCR support.
+- **Parsing and utilities:** BeautifulSoup and lxml for content already provided to the agent, plus common date, math, validation, and text-handling tools.
 
-Code runs in a space with no inbound path, no outbound path, and no memory of the last conversation, which is a very sensible approach to use for code that an agent wrote thirty seconds ago.
+Alongside those libraries are shell and file tools. The agent can create a file, run a command, inspect the result, adjust its approach, and try again within the same container. That read-run-read loop is the important part. The agent is not limited to one clever function call; it can react to what its own code produced.
+
+> These libraries are preinstalled today. The exact list and versions will change over time. Use the [agent-harness-explorer](https://microsoft.github.io/cat-agent-skills/skills/agent-harness-explorer/) described below to inspect the current environment.
+{: .prompt-info }
+
+## The sandbox does not get an open internet connection
+
+Agents can use the local runtime and installed libraries, but supported external access needs to go through [Tools](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/tools-overview): connectors and MCPs. Configured [Knowledge](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/knowledge-copilot-studio) can supply grounded content, while [Skills](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/skills-overview) can provide task-specific instructions and scripts.
+
+This keeps local execution and external access as separate concerns. Connections outside the sandbox via [Tools](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/tools-overview) are subject to Copilot Studio [security and governance](https://learn.microsoft.com/microsoft-copilot-studio/security-and-governance) controls, including applicable [data policies](https://learn.microsoft.com/microsoft-copilot-studio/admin-data-loss-prevention) for connectors.
+
+Here is a practical distinction to make: an installed networking library provides a **capability**, not **permission**. The sandbox includes `requests`, in part because other installed libraries depend on it. Its presence means Python code knows how to make an HTTP request. However, that does not mean the sandbox is allowed to send that request beyond its boundary.
+
+So the presence of `requests` does not establish permission or supported connectivity to send an email, write a file to SharePoint, call an arbitrary API, or order lunch. The library supplies code-level capability but the agent definition operating within configured platform capabilities determines what the agent can reach.
+
+The sandbox is a space where local code cannot assume an open inbound or outbound network path. Files and content can still be supplied through the user chat experience and configured agent capabilities, but the sandbox is designed as a safe and isolated execution environment. That sandbox is an ideal place to execute the code an agent may have generated seconds ago to try to solve a problem the user gave it.
 
 ## Live code, or a script you packed yourself
 
 There are two ways code ends up running in the sandbox:
 
-- **Code the agent writes on the fly.** You ask, it reasons, it writes a bit of Python, and runs it right there. This is what you want for a one-off, or when you can't predict the task's shape in advance: parse this oddly formatted export, reconcile these two lists, chart whatever ends up in this file. The agent adapts to the specifics in front of it, which is the appeal, and it means the code is a little different every time. That's fine when the job is exploratory, and less fine when someone downstream needs the same answer twice.
-- **A script you packaged into a Skill.** Same runtime, same libraries, but the code is fixed. You get the same deterministic steps in the same order on every run, which is what you want when the work is repeatable and somebody needs to trust the output. A packaged script is something you can read, test, version, and sign off on, the way you would any other code your team ships. The agent still decides when to reach for it, but it can't quietly rewrite what's inside.
+- **Code the agent writes on the fly.** After receiving a user prompt, the agent may reason, write some Python, and run it in the sandbox. This works well for a one-off or when you cannot predict the task's shape in advance: parse this oddly formatted export, reconcile these two lists, chart whatever is in this file, or generate a report. The code can adapt to the specifics in front of it, but the code may be different on the next run.
+- **A script you packaged into a Skill.** If you supply the agent with a skill, potentially containing pre-written scripts, then that can make the required steps easier to complete and they can be completed in a standard repeatable way. The harness helps the agent select the Skill when it is relevant; the sandbox provides the controlled place to run its script.
 
-The rough rule: if the work is novel, let the agent improvise; if it's repeatable and has to be predictable, hand it a skill with a script. In practice most real agents do both, improvising around the edges and leaning on packaged skills and scripts for the parts that matter. That's the tie back to our earlier post on Skills. A Skill is how you package the script and the capabilities it needs. The sandbox is where it runs.
+The rough rule is simple: if the work is **novel**, the agent can improvise; if the work is **repeatable**, then use a reviewed Skill with scripts can improve consistency and validate the end-to-end behavior with evals. Most useful agents do both, relying on packaged skills and scripts for the steps that should stay stable and improvising around the edges.
 
 ## Where the edges are
 
-Once you realize that your agent has a sandbox to work in there are a few next-level considerations worth knowing about:
+Once you know where the harness ends and the sandbox begins, a few next-level considerations become clearer:
 
-- **Libraries change.** The preinstalled set of libraries is a snapshot, and snapshots change between releases. A version bump can shift behavior, and a library you relied on today might be organized differently tomorrow. If a script depends on a specific library doing a specific thing, treat that like any other dependency and test it [with evals](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/analytics-agent-evaluation-intro).
-- **Skills are part of the agent.** A Skill is an asset that will move between environments inside the agent. As you lean on scripts for the dependable work, you inherit the ordinary lifecycle questions that come with any code: how it's moved from a dev environment to production and how you keep the version running in front of customers matching the one you actually approved. Copilot Studio provides broad [application lifecycle management (ALM) support](https://learn.microsoft.com/power-platform/architecture/reference-architectures/enterprise-power-platform-alm) through [Power Platform Pipelines](https://learn.microsoft.com/power-platform/alm/pipelines) for movement of solutions and [evals](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/analytics-agent-evaluation-intro) for regression testing.
+- **Libraries change.** The preinstalled library set is a snapshot, and snapshots change between releases. A version change can shift behavior. If a script depends on a library doing something specific, treat that dependency like any other and regression-test the agent [with evals](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/analytics-agent-evaluation-intro). For one way to make that check part of delivery, see [Quality Gates for Copilot Studio]({% post_url 2026-04-19-copilot-studio-eval-gate-azure-devops %}).
+- **Skills are part of the agent.** A Skill is an agent asset that moves between environments with the agent. As you rely on packaged scripts, you inherit ordinary lifecycle questions: how the approved version moves from development to production, and how you verify that it still behaves as expected. Copilot Studio has broad [application lifecycle management (ALM) support](https://learn.microsoft.com/power-platform/architecture/reference-architectures/enterprise-power-platform-alm), including [Power Platform Pipelines](https://learn.microsoft.com/power-platform/alm/pipelines) for solution movement and [evals](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/analytics-agent-evaluation-intro) for ensuring that agents are running as expected.
 
 ## What this actually gets you
 
 A few examples from conversations we keep having with customers:
 
-- **Document generation.** The kind of agent that turns a pile of data into a formatted report. With python-docx and python-pptx already sitting in the box, that's a normal Tuesday, not a research project. The agent assembles the document in the sandbox and hands back the finished file.
-- **Content review.** An agent that reads submitted PDFs or web content, pulls out the text, checks it against a set of rules, and flags the problems. pdfplumber, BeautifulSoup, and pandas cover most of it before you write a single custom tool, and the parts specific to your rules are exactly the parts worth packaging into a script.
-- **Data analysis.** An agent that takes a messy spreadsheet, cleans it with pandas, works out the numbers, and returns a chart from matplotlib alongside a short written read of what the numbers say. That combination, compute plus narrative, is awkward to do with connectors alone and natural when the agent has a place to run code.
+- **Document generation.** The harness gives the agent the request, instructions, and source content. The agent uses python-docx or python-pptx to assemble a report or presentation and return the finished file. The sandbox ensures that the document is only leveraging the information it has access to.
+- **Content review.** Knowledge, files, or Tools supply the content and rules. The agent can extract text from a provided PDF or HTML document, reshape the results, and run local checks within the sandbox. A packaged Skill script is a good fit for checks that must be repeated consistently.
+- **Data analysis.** The agent receives a messy spreadsheet, cleans it with pandas in the sandbox, calculates the numbers, and creates a chart with matplotlib. The model can then explain what the computed results mean or generate a file within the sandbox and pass it to the user.
 
-The point isn't that any one of these is clever. It's that you can look a customer in the eye and say "yes, that's doable, and here's roughly how," instead of hoping it is.
+Those examples highlight how the agent, it's model, and the agent harness work within the sandbox. The model reasons, the harness supplies the right context and capabilities, and the agent performs the supported local work within the boundaries of the sandbox.
 
-## "How do I know which libraries are in the sandbox?"
+## "How do I know which libraries and capabilities are available in the agent sandbox?"
 
-You look, because guessing wrong costs you an afternoon and the list changes between releases. Rather than trust a doc that may already be stale, we built a small Skill for exactly this, the [agent-harness-explorer](https://microsoft.github.io/cat-agent-skills/skills/agent-harness-explorer/), that inspects the running sandbox and writes down what it actually finds.
+We built a small Skill for exactly this. The [agent-harness-explorer](https://microsoft.github.io/cat-agent-skills/skills/agent-harness-explorer/) inspects the running environment and creates a self-contained HTML report of the Python runtime, installed libraries, and the Tools and Skills visible to the agent.
 
-It works the way a good auditor would. It captures a snapshot of the live environment, checks the installed Python libraries against a curated catalog so it can name and group them, enumerates the tools and Skills the agent can see, and renders the whole thing as a single self-contained HTML report you can open in a browser or hand to a colleague. Run it again next week and it will compare the two snapshots and tell you what was added, removed, or bumped to a new version. Its guiding rule is "observe, don't assume," so it reports what it saw rather than what the platform is supposed to do, and it leaves anything it couldn't confirm marked as unverified instead of guessing.
+A report from an otherwise empty Copilot Studio agent on 2026-07-20 found **Python 3.12.9** in a **container**, with **97 Python libraries**, **11 built-in tools**, **8 Skills**, and **no MCP servers** configured for that agent. The numbers provided dated snapshot, not a permanent contract. The [agent-harness-explorer](https://microsoft.github.io/cat-agent-skills/skills/agent-harness-explorer/) stays passive by default, so checks that would write to the filesystem or probe outbound HTTPS can remain unverified, but the agent can be encouraged to perform deeper inspection if needed.
 
-The latest report, from a live Copilot Studio agent on 2026-07-20, is a decent picture of the box we've been describing. It found **Python 3.12.9** running in a **container**, with **97 Python libraries** installed, grouped into the same kinds of buckets used earlier: documents, data, images, web parsing, visualization, and the rest. It also listed **11 built-in tools**, including the shell family (`bash` and its `list_bash`, `read_bash`, and `stop_bash` companions) and the file tools (`create`, `edit`, `view`, `glob`, `grep`) the agent uses to work inside the container, plus **8 Skills** and **no MCP servers** wired up in that particular agent. Tellingly, the report left filesystem-write and outbound-HTTPS checks marked unverified, because it stays passive by default and doesn't go poking at the walls. That gap is the network isolation showing up in the data rather than just in the marketing.
+![Example Agent Harness Capability Report showing the runtime, available capabilities, tools, Skills, and Python libraries](/assets/posts/copilot-studio-agent-sandbox/agent-harness-explorer-report-example.png){: .shadow }
+_An example report generated by the agent-harness-explorer Skill._
 
-None of this is the point of the post, but it's a useful footnote: when someone asks whether a library is there, you don't have to argue about it. You can look.
+Now, when someone asks whether a library is available in the sandbox, you can inspect the environment instead of guessing.
 
-## Where this leaves us
+## Ready for action
 
-The short version: your agent has a sandbox now. It's a network-isolated container with a decent set of Python libraries, and that combination is most of why the new agents can do so much more. For users, it means the loop can finish the job. For makers, it's a large toolbox that ships in the base. For admins, it's a contained, ephemeral space with the outside world routed through the controls you already run. If you want the background on packaging code for it, start with [Skills for Copilot Studio]({% post_url 2026-03-10-skills-for-copilot-studio %}).
+The model supplies reasoning. The runtime harness adds instructions, Knowledge, Skills, Tools, and orchestration. The sandbox supplies an isolated place to run supported local code with useful libraries and file tools. And ideally evals help confirm that the agent behaves as intended.
 
-So here's the question we'll leave you with. Now that these Copilot Studio agents are so much more capable, what new agents are you going to build?
+For users, that means an agentic loop can finish more of the job. For makers, it means generated code and packaged Skill scripts can share a capable local runtime. For admins, it means local execution stays contained while external actions use the governed routes you allow.
+
+So now that Copilot Studio agents are so much more capable, what business problems will your next Copilot Studio agent help solve?
