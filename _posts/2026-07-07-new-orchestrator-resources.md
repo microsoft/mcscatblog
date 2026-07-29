@@ -16,13 +16,14 @@ image:
 
 The new Copilot Studio experience, and the orchestration stack underneath it, is a big shift. It's a new paradigm for agents and workflows: agents are far more adaptive and sophisticated, and workflows let you build automated processes on a visual canvas with much more control over which steps are handled by AI. That's a lot of new capability, and it changes how you design.
 
-New design space, new stack, new questions: What changed? What do I build? What about my existing classic agents? We shipped three resources to answer exactly those. Here's how to use each one.
+New design space, new stack, new questions: What changed? What do I build? What about my existing classic agents? We shipped four resources to answer exactly those. Here's how to use each one.
 
 | Want to... | Use... |
 | --- | --- |
 | Understand and explain what changed | The **[Deep Dive deck](https://aka.ms/CopilotStudioDeepDiveDeck)** |
 | See it running end to end | The **[mini-site](https://aka.ms/MCSTechGuide)** |
 | Upgrade a classic agent | The **[plugin](https://github.com/microsoft/copilot-studio-plugin)** |
+| Add reusable capabilities via skills | The **[CAT Agent Skills library](https://microsoft.github.io/cat-agent-skills/)** |
 
 ## Understand it: the Technical Deep Dive deck
 
@@ -62,8 +63,17 @@ The key word is **propose**. It performed well in testing, but it's a fast assis
 > Treat the output as a first draft: run it, inspect it, compare against your old evals, decide if it's good enough.
 {: .prompt-warning }
 
+## Add to it: CAT Agent Skills library
+
+**Use it when** you want to leverage a Skill bundle as a starting point instead of building from scratch. Browse the [CAT Agent Skills library](https://microsoft.github.io/cat-agent-skills/), download a Skill bundle, then add it to your agent.
+
+![CAT Agent Skills gallery showing reusable Skills and plugins for AI agents](/assets/posts/new-orchestrator-resources/cat-agent-skills.png){: .shadow }
+_The CAT Agent Skills gallery lets you search and filter reusable capabilities by platform, category, and contributor._
+
+The library includes ready-made Skills for repeatable tasks such as content review, document creation, data analysis, and so much more. Treat each one as a useful starting point: understand what it does, test it in your agent, evolve the Skill if needed, and contribute back if you come up with something useful.
+
 ## That's the on-ramp
 
-The new experience is a different mental model, not just a new UI, and that can feel like a lot. So CAT turned it into three steps: **deck** to get the concepts, **mini-site** to see them run, **plugin** to try them on a real agent. We got you.
+The new experience is a different mental model, not just a new UI, and that can feel like a lot. So CAT turned it into four resources: **deck** to get the concepts, **mini-site** to see them run, **plugin** to try them on a real agent, and **Skills library** to add reusable capabilities. We got you.
 
-Tried the samples or the plugin's upgrade workflow? We'd love to hear what surprised you, and whether the proposed architecture matched how you'd have redesigned the agent.
+Tried the samples, a Skill from the library, or the plugin's upgrade workflow? We'd love to hear what surprised you, and whether the proposed architecture matched how you'd have redesigned the agent.
