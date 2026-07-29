@@ -7,11 +7,11 @@ categories: [copilot-studio, orchestration]
 tags: [copilot-studio, modern-agents, orchestration, upgrade, skills, agent-development]
 mermaid: false
 pin: true
-description: "The new Copilot Studio experience is a big shift. We shipped three resources so you can understand it, see it run, and upgrade to it. Here's how to use each one."
+description: "The new Copilot Studio experience is a big shift. We shipped four resources so you can understand it, see it run, upgrade to it, and add reusable Skills. Here's how to use each one."
 author: [giorgioughini, roels, adilei, henryjammes, chrisgarty, lewisdoesdev, adrianatruji]
 image:
   path: /assets/posts/new-orchestrator-resources/header.png
-  alt: "Three new resources to get started with modern agents: migrations, samples, and a deep-dive deck for the new stack"
+  alt: "Four resources for modern Copilot Studio agents: a deep-dive deck, samples, an upgrade plugin, and the CAT Agent Skills library"
 ---
 
 The new Copilot Studio experience, and the orchestration stack underneath it, is a big shift. It's a new paradigm for agents and workflows: agents are far more adaptive and sophisticated, and workflows let you build automated processes on a visual canvas with much more control over which steps are handled by AI. That's a lot of new capability, and it changes how you design.
