@@ -72,6 +72,8 @@ _The CAT Agent Skills gallery lets you search and filter reusable capabilities b
 
 The library includes ready-made Skills for repeatable tasks such as content review, document creation, data analysis, and so much more. Treat each one as a useful starting point: understand what it does, test it in your agent, evolve the Skill if needed, and contribute back if you come up with something useful.
 
+For a deeper look at how Skills work and how to build one, see [Modern Agents Have Skills Now]({% post_url 2026-06-15-modern-mcs-agent-skills %}) and [Redlining Documents with the New Copilot Studio Experience]({% post_url 2026-07-15-redlining-documents-new-copilot-studio-experience %}).
+
 ## That's the on-ramp
 
 The new experience is a different mental model, not just a new UI, and that can feel like a lot. So CAT turned it into four resources: **deck** to get the concepts, **mini-site** to see them run, **plugin** to try them on a real agent, and **Skills library** to add reusable capabilities. We got you.
