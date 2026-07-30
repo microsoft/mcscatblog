@@ -29,7 +29,7 @@ Today's menu:
 4. **Publishing to Teams and M365 Copilot** so it lands on your phone
 5. **The SSML details** that decide whether it sounds like a podcast or a train announcement
 
-> This one needs the **GitHub Copilot harness**. Skills don't exist in the Standard harness, and the whole thing hangs off them. If you're not [building agents with the GitHub Copilot harness](https://techcommunity.microsoft.com/blog/copilot-studio-blog/meet-the-new-copilot-studio-rebuilt-for-more-complex-multi-step-work/4526488) yet, this post is a preview rather than a build guide.
+> This one needs the **GitHub Copilot harness**. Skills live there, not in the Standard harness, and the whole thing hangs off them. If you [aren't building with it](https://techcommunity.microsoft.com/blog/copilot-studio-blog/meet-the-new-copilot-studio-rebuilt-for-more-complex-multi-step-work/4526488) yet, this post is a preview rather than a build guide.
 {: .prompt-warning }
 
 ---
