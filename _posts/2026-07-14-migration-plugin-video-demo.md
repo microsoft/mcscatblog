@@ -1,5 +1,5 @@
 ---
-agent_edition: modern
+agent_edition: github-copilot
 layout: post
 title: "Video Demo: Upgrading a Classic Agent to Modern Orchestration"
 date: 2026-07-14 16:12:53 +0200

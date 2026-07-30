@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Skills for Copilot Studio: Build agents from YAML code, up to 20x Faster"
 date: 2026-03-10 9:00:00 +0100

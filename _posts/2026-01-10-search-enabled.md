@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Search Enabled: Powering The Custom Engine Blog with Algolia"
 date: 2026-01-10 00:00:00 +0100

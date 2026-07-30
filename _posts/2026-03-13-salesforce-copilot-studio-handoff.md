@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Salesforce Handoff to Copilot Studio: From Bare Docs to One-Click Deploy"
 date: 2026-03-13
