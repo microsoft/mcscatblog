@@ -1,14 +1,14 @@
 ---
-agent_edition: modern
+agent_edition: github-copilot
 layout: post
 title: "Turn Your Daily Digest Into a Podcast You'll Actually Listen To"
 date: 2026-07-28
 categories: [copilot-studio, skills]
-tags: [skills, text-to-speech, ssml, azure-speech, productivity, agent-development, microsoft-teams]
+tags: [skills, text-to-speech, ssml, azure-speech, productivity, agent-development, teams]
 description: "A Copilot Studio Skill that turns any document, email, or press review into a two-host podcast episode, with multi-voice SSML, an Azure Text to Speech endpoint, and an agent you can listen to from your phone."
 author: raemone
 image:
-  path: /assets/posts/podcast-script-skill/header.png
+  path: /assets/posts/podcast-script-skill/header.jpg
   alt: "Turn your daily digest into a podcast you'll actually listen to"
   no_bg: true
 ---
@@ -29,7 +29,7 @@ Today's menu:
 4. **Publishing to Teams and M365 Copilot** so it lands on your phone
 5. **The SSML details** that decide whether it sounds like a podcast or a train announcement
 
-> This one is **modern agents only**. Skills don't exist in the classic experience, and the whole thing hangs off them. If you're not on the [new Copilot Studio experience](https://techcommunity.microsoft.com/blog/copilot-studio-blog/meet-the-new-copilot-studio-rebuilt-for-more-complex-multi-step-work/4526488) yet, this post is a preview rather than a build guide.
+> This one needs the **GitHub Copilot harness**. Skills don't exist in the Standard harness, and the whole thing hangs off them. If you're not [building agents with the GitHub Copilot harness](https://techcommunity.microsoft.com/blog/copilot-studio-blog/meet-the-new-copilot-studio-rebuilt-for-more-complex-multi-step-work/4526488) yet, this post is a preview rather than a build guide.
 {: .prompt-warning }
 
 ---
@@ -52,7 +52,6 @@ The source can be almost anything: a newsletter, a press review, a set of articl
 
 Here's the finished thing before we build it, so you know what we're aiming at.
 
-<!-- SCREENSHOT: full run in the modern agent test pane. User pastes the press review, agent returns the segment table, then the .wav attachment -->
 ![The Podcast Agent in the Copilot Studio test pane, showing the segment summary table and the generated audio file](/assets/posts/podcast-script-skill/agent-full-run.png){: .shadow }
 _Paste the digest, get a segment breakdown, say yes to audio, get a `.wav`. The whole loop is one conversation._
 
@@ -67,7 +66,6 @@ In the [Azure portal](https://portal.azure.com/#create/Microsoft.CognitiveServic
 - **Region.** Pick one close to you, and write it down. The connector asks for it by short code (`westeurope`, `eastus`, and so on), not by display name.
 - **Pricing tier.** The free tier includes a monthly allowance of neural text-to-speech characters, which is enough to prove the whole thing works before you commit to anything. A six-minute episode is roughly 5,000 characters of spoken text.
 
-<!-- SCREENSHOT: Azure portal "Create Speech Services" blade with region and pricing tier visible -->
 ![Creating a Speech service resource in the Azure portal](/assets/posts/podcast-script-skill/azure-create-speech.png){: .shadow }
 _Region and pricing tier are the only two real decisions here. Note the region string, you'll need it in a minute._
 
@@ -75,7 +73,6 @@ _Region and pricing tier are the only two real decisions here. Note the region s
 
 Once it deploys, open the resource and go to **Resource Management** → **Keys and Endpoint**. You need **KEY 1** and the **Location/Region** value. That's it, [the connector doesn't need the endpoint URL](https://learn.microsoft.com/connectors/azuretexttospeech/).
 
-<!-- SCREENSHOT: Keys and Endpoint blade, keys masked -->
 ![The Keys and Endpoint blade of the Speech resource, showing the key and region fields](/assets/posts/podcast-script-skill/azure-keys-endpoint.png){: .shadow }
 _Key 1 and the region string. Both go straight into a Power Platform connection and nowhere else._
 
@@ -90,8 +87,7 @@ The default cast uses `en-US-AvaMultilingualNeural` and `en-US-AndrewMultilingua
 
 Over to Copilot Studio. In your agent, go to **Tools** → **Add a tool** → **Connector**, and search for **Azure Text to speech**.
 
-<!-- SCREENSHOT: Add a tool dialog, Connector tab, searching "Azure Text to speech" -->
-![Adding the Azure Text to speech connector as a tool in a modern Copilot Studio agent](/assets/posts/podcast-script-skill/add-tts-connector.png){: .shadow }
+![Adding the Azure Text to speech connector as a tool in a Copilot Studio agent](/assets/posts/podcast-script-skill/add-tts-connector.png){: .shadow }
 _The connector ships three operations. You only need one of them._
 
 Add the **Convert text to speech with SSML** action. This is the one that matters. Its sibling, *Convert text to speech*, takes a plain string and a single voice name, which means one host reading at you in a flat monotone. The SSML operation is what buys you two speakers, per-line prosody, and controlled pauses.
@@ -103,7 +99,6 @@ When prompted, create the connection. Choose **API Key** authentication and fill
 | Account Key | Key 1 from the Speech resource |
 | Region | The region short code, e.g. `westeurope` |
 
-<!-- SCREENSHOT: connection dialog with Account Key and Region fields, key masked -->
 ![Creating the Azure Text to speech connection with account key and region](/assets/posts/podcast-script-skill/create-connection.png){: .shadow }
 _Two fields. The region is the one people get wrong, it's the short code, not the friendly name._
 
@@ -112,9 +107,8 @@ Two things worth knowing before you build a habit on this connector:
 - **It's a premium connector**, so the usual Power Platform licensing rules apply.
 - **It throttles at 100 calls per connection per 60 seconds.** Irrelevant for one episode a day, very relevant if you ever point this at a batch of documents.
 
-Once the tool is added, check that its description still reads sensibly in the agent's tool list. The orchestrator picks tools on description, and the Skill instructs it to reach for this one by name, so a heavily rewritten description will break the handoff.
+Once the tool is added, check that its description still reads sensibly in the agent's tool list. The agent picks tools on description, and the Skill instructs it to reach for this one by name, so a heavily rewritten description will break the handoff.
 
-<!-- SCREENSHOT: agent Tools tab showing "Convert text to speech with SSML" listed -->
 ![The agent's Tools tab with the Convert text to speech with SSML tool listed](/assets/posts/podcast-script-skill/tools-list.png){: .shadow }
 _The tool as the Skill expects to find it._
 
@@ -128,7 +122,7 @@ You could write all of this as one enormous instruction block on the agent. I tr
 
 The first is that the guidance is long. Parsing source material, ranking items editorially, writing conversational dialogue, spelling out numbers for a synthesizer, and emitting valid multi-voice SSML add up to a few thousand words of very specific procedure. If that sits in the agent's instructions, it's in context on every single turn, including the ones where someone just says "hi".
 
-The second is that it's situational. Most of what my agent does has nothing to do with podcasts. Roel's post on [how Skills work in modern agents]({% post_url 2026-06-15-modern-mcs-agent-skills %}) puts the rule better than I can: if guidance is true in every conversation, it belongs in instructions; if it only applies to specific scenarios, it belongs in a Skill. This is about as scenario-specific as it gets.
+The second is that it's situational. Most of what my agent does has nothing to do with podcasts. Roel's post on [how Skills work in Copilot Studio]({% post_url 2026-06-15-modern-mcs-agent-skills %}) puts the rule better than I can: if guidance is true in every conversation, it belongs in instructions; if it only applies to specific scenarios, it belongs in a Skill. This is about as scenario-specific as it gets.
 
 ### Get it and upload it
 
@@ -145,7 +139,6 @@ generating-podcast-script/
 
 Zip the folder and upload it in the agent's **Skills** tab via **Add a Skill** → **Upload**. A standalone `SKILL.md`{: .filepath} works too, but the zip keeps the README and metadata travelling with it.
 
-<!-- SCREENSHOT: Skills tab, upload dialog with the zip selected -->
 ![Uploading the podcast Skill zip in the Copilot Studio Skills tab](/assets/posts/podcast-script-skill/upload-skill.png){: .shadow }
 _Upload the zip and the Skill becomes part of the agent, scoped to it and travelling with it through solutions._
 
@@ -164,7 +157,6 @@ description: >
 
 That last sentence exists because of a bug I spent too much time on. Without it, the Skill fired cleanly on "make this a podcast", then quietly dropped out of context when I said "actually, make it shorter", and the agent improvised a script with none of the rules applied. Saying out loud that the Skill owns the follow-ups fixed it.
 
-<!-- SCREENSHOT: Skills tab showing the skill added, with name and description -->
 ![The podcast Skill listed in the agent's Skills tab](/assets/posts/podcast-script-skill/skill-added.png){: .shadow }
 _Name and description are the routing metadata. Everything else loads only when a podcast request shows up._
 
@@ -204,7 +196,6 @@ and give me the audio.
 
 The agent parses, ranks, writes both files, and shows you a table of segments with rough durations *before* it asks whether you want audio. Keep that review step. It's much cheaper to fix the running order in text than after synthesis.
 
-<!-- SCREENSHOT: segment summary table in the test pane with the "convert to audio?" question -->
 ![The agent showing a segment-by-segment summary table before offering to generate audio](/assets/posts/podcast-script-skill/segment-table.png){: .shadow }
 _Six segments, a rapid-fire round, and an estimated duration. Say yes and it calls the connector._
 
@@ -216,7 +207,6 @@ This is the part that turns a demo into a habit, and it's why the whole thing is
 
 Publish the agent, then enable the **Microsoft 365 Copilot** and **Microsoft Teams** channels under **Channels**. Both are covered properly in Henry's post on [Teams and M365 Copilot deployment]({% post_url 2026-04-07-copilot-studio-teams-deployment %}), so I won't relitigate the admin approval flow here.
 
-<!-- SCREENSHOT: Channels tab with Teams and M365 Copilot enabled -->
 ![Enabling the Teams and Microsoft 365 Copilot channels for the agent](/assets/posts/podcast-script-skill/channels.png){: .shadow }
 _One agent, two surfaces. The mobile clients come along for free._
 
@@ -227,7 +217,6 @@ What you get from that is the bit I actually care about. Teams mobile renders th
 3. By the time I'm at the door, the audio is sitting in the chat
 4. Tap play, headphones in, walk
 
-<!-- SCREENSHOT: Teams mobile chat showing the agent's audio attachment with playback controls. Tall/narrow, keep at ~300px -->
 ![The generated podcast episode as a playable attachment in Teams mobile](/assets/posts/podcast-script-skill/teams-mobile-audio.jpg){: .shadow w="300" }
 _The whole point of the exercise, sitting in a chat thread on a phone._
 
@@ -309,6 +298,6 @@ The obvious extension is removing myself from the loop entirely. An autonomous t
 
 The other direction is source material that isn't news. Release notes for a product I don't follow closely. The changelog for a repo I contribute to occasionally. That architecture doc nobody read. Anything where the information is genuinely useful and the format is genuinely unappealing, which describes a depressing amount of what lands in a work inbox.
 
-If you're curious how far you can push a Skill's instructions before they stop being followed, this one is a decent stress test. It asks the agent to do editorial work, creative writing, and strict XML generation in a single pass, and the constraints on each conflict a little with the others. Watching where it strains taught me more about writing Skill instructions than any of my well-behaved ones did. Incidentally, the way I found the SSML failures in the first place was by making the orchestrator narrate its own steps, which is [trick number one in my post on topics]({% post_url 2026-03-13-power-of-topics-copilot-studio %}).
+If you're curious how far you can push a Skill's instructions before they stop being followed, this one is a decent stress test. It asks the agent to do editorial work, creative writing, and strict XML generation in a single pass, and the constraints on each conflict a little with the others. Watching where it strains taught me more about writing Skill instructions than any of my well-behaved ones did. Incidentally, the way I found the SSML failures in the first place was by making the agent narrate its own steps, which is [trick number one in my post on topics]({% post_url 2026-03-13-power-of-topics-copilot-studio %}).
 
 So: what's the thing in your inbox that you keep meaning to read and never do? That's the one to point this at first.
