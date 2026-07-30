@@ -1,4 +1,5 @@
 ---
+agent_edition: standard
 layout: post
 title: "Quality Gates for Copilot Studio: Automated Evaluations in Azure DevOps"
 date: 2026-04-19

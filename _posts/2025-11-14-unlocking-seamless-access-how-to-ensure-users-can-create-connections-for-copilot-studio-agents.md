@@ -1,4 +1,5 @@
 ---
+agent_edition: standard
 layout: post
 title: "Unlocking Seamless Access: How to Ensure Users Can Create Connections for Copilot Studio Agents"
 date: 2025-11-21

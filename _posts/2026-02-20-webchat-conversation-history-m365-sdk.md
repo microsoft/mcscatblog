@@ -1,4 +1,5 @@
 ---
+agent_edition: standard
 layout: post
 title: "The Conversation History Gap in the M365 Agents SDK (And How We Filled It)"
 date: 2026-02-20

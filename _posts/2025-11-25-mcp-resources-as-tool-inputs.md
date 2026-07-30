@@ -1,4 +1,5 @@
 ---    
+agent_edition: standard
 layout: post    
 title: "Free Up Your Context Window: Pass MCP Resources, Not Raw Data"    
 date: 2025-11-24 23:50:00 +0100    

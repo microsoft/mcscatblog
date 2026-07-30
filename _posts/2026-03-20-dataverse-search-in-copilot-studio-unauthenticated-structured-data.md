@@ -1,4 +1,5 @@
 ---
+agent_edition: standard
 title: "Structured Data with Zero User Auth: Dataverse searchQuery in Copilot Studio"
 date: 2026-03-20
 categories: [copilot-studio, dataverse]

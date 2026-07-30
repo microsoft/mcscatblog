@@ -1,4 +1,5 @@
 ---  
+agent_edition: standard
 layout: post
 title: "Influencing Agent Planning with Contextual Instructions"
 date: 2025-11-11 11:11:00 +0100

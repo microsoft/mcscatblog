@@ -1,4 +1,5 @@
 ---
+agent_edition: standard
 layout: post
 title: "Design Copilot Studio Agents for Teams (Because Test Chat Was Too Easy)"
 date: 2026-04-07

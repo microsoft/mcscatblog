@@ -87,3 +87,50 @@ PetrosFeleskouras:
 dieterd-msft:
   name: Dieter De Cock
   avatar: https://github.com/dieterd-msft.png
+
+dikladc:
+  name: Dikla Dotan-Cohen
+  email: dikladc@microsoft.com
+
+rranjit:
+  name: Rahul Ranjit Kannathusseril
+  avatar: https://github.com/rranjit83.png
+
+zekitekin:
+  name: Zeki Tekin
+  email: zekitekin@microsoft.com
+  avatar: https://github.com/fs-dp.png
+
+lewisdoesdev:
+  name: Lewis Baybutt
+  email: lewisbaybutt@microsoft.com
+  avatar: https://github.com/lewisdoesdev.png
+  
+missbets:
+  name: Betty Le
+  email: Elizabeth.Le@microsoft.com # Optional
+  avatar: https://github.com/missbets.png # Optional: path to avatar image
+
+ashVancouver:
+  name: Ashwin Raju Krishnamurthi
+  avatar: https://github.com/ashVancouver.png
+
+msmgp:
+  name: Michael Guimet
+  avatar: https://github.com/msmgp.png
+
+serenaxxiee:
+  name: Serena Xie
+  avatar: https://github.com/serenaxxiee.png
+  
+AndrewHessMSFT:
+  name: Andrew Hess
+  email: hessandrew@microsoft.com
+  avatar: https://github.com/AndrewHessMSFT.png
+  
+adrianatruji:
+  name: Adriana Trujillo
+
+emdarcy:
+  name: Em D'Arcy
+  avatar: https://github.com/EmDarcy.png

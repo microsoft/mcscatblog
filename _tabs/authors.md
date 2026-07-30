@@ -8,22 +8,70 @@ image: /assets/img/customengine.png
 ---
 
 <div class="authors-grid">
-{% assign posts_by_author = site.posts | group_by: "author" | sort: "name" %}
-{% for author in posts_by_author %}
-{% assign author_data = site.data.authors[author.name] %}
+{% comment %}
+  Build a deduplicated list of author keys from all posts.
+  Handles both single-author (string) and multi-author (array) front matter.
+{% endcomment %}
+{% assign all_author_keys = "" %}
+{% for post in site.posts %}
+  {% if post.author %}
+    {% assign post_authors = post.author %}
+  {% elsif post.authors %}
+    {% assign post_authors = post.authors %}
+  {% else %}
+    {% continue %}
+  {% endif %}
+  {% if post_authors.first %}
+    {% for a in post_authors %}
+      {% assign all_author_keys = all_author_keys | append: a | append: "," %}
+    {% endfor %}
+  {% else %}
+    {% assign all_author_keys = all_author_keys | append: post_authors | append: "," %}
+  {% endif %}
+{% endfor %}
+{% assign author_list = all_author_keys | split: "," | uniq | sort %}
 
-<div class="author-card" id="{{ author.name }}">
+{% for author_key in author_list %}
+{% if author_key == "" %}{% continue %}{% endif %}
+{% assign author_data = site.data.authors[author_key] %}
+{% unless author_data %}{% continue %}{% endunless %}
+
+{% comment %} Collect posts for this author {% endcomment %}
+{% assign author_posts = "" | split: "" %}
+{% for post in site.posts %}
+  {% if post.author %}
+    {% assign post_authors = post.author %}
+  {% elsif post.authors %}
+    {% assign post_authors = post.authors %}
+  {% else %}
+    {% continue %}
+  {% endif %}
+  {% if post_authors.first %}
+    {% if post_authors contains author_key %}
+      {% assign author_posts = author_posts | push: post %}
+    {% endif %}
+  {% else %}
+    {% if post_authors == author_key %}
+      {% assign author_posts = author_posts | push: post %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% assign post_count = author_posts.size %}
+{% if post_count == 0 %}{% continue %}{% endif %}
+
+<div class="author-card" id="{{ author_key }}">
   <div class="author-header">
     {% if author_data.avatar %}
     <img src="{{ author_data.avatar }}" alt="{{ author_data.name }}" class="author-avatar">
     {% endif %}
     <div class="author-info">
       <h2>{{ author_data.name }}</h2>
-      <span class="post-count">{{ author.items.size }} post{% if author.items.size != 1 %}s{% endif %}</span>
+      <span class="post-count">{{ post_count }} post{% if post_count != 1 %}s{% endif %}</span>
     </div>
   </div>
   <ul class="author-posts">
-    {% for post in author.items %}
+    {% for post in author_posts %}
     <li>
       <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
       <time>{{ post.date | date: "%b %d, %Y" }}</time>

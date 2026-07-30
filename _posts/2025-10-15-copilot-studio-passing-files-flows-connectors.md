@@ -1,4 +1,5 @@
 ---
+agent_edition: standard
 layout: post
 title: "Tutorial: Passing Files from Copilot Studio to Agent Flows, Connectors and Tools"
 date: 2025-10-15

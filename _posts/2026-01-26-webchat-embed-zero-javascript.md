@@ -1,4 +1,5 @@
 ---
+agent_edition: standard
 layout: post
 title: "Embedding WebChat Without Writing a Single Line of JavaScript"
 date: 2026-01-26
