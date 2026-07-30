@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Five Minutes to Your First MCP Connector in Copilot Studio"
 date: 2026-04-10

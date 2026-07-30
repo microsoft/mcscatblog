@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Embed Copilot Studio Agents in Canvas Apps with a PCF Control"
 date: 2026-04-17

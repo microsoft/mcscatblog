@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Enabling SSO for Custom Connectors in Copilot Studio"
 date: 2025-11-15

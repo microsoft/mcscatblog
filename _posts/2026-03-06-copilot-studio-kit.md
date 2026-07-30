@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Copilot Studio Kit: Beyond Test Automation"
 date: 2026-03-06

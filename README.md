@@ -58,19 +58,22 @@ will **not** receive upstream updates automatically.
 > each item below against the new gem version. Anything that overrides or copies a theme
 > file is the most likely thing to break.
 
-### Classic / Modern agent edition pill
+### Agent harness edition pill
 
-Shows a small pill under the post title indicating whether a post is about a **Classic**
-or **Modern** Copilot Studio agent. **Every post must set this field — the build fails
-otherwise** (enforced by `_plugins/validate-agent-edition.rb`). Set it in front matter:
+Shows a small pill under the post title indicating which Copilot Studio build harness a
+post is about: the **Standard harness** or the **GitHub Copilot harness**. **Every post
+must set this field — the build fails otherwise** (enforced by
+`_plugins/validate-agent-edition.rb`). Set it in front matter:
 
 ```yaml
-agent_edition: classic   # one of: classic | modern | both
+agent_edition: standard   # one of: standard | github-copilot | both
 ```
 
-- `classic` — applies to classic agents
-- `modern` — applies to modern (rebuilt) agents
-- `both` — applies to both; renders a neutral "Classic & Modern" pill
+- `standard` — applies to Standard-harness agents (includes generative orchestration)
+- `github-copilot` — applies to GitHub Copilot (GHCP) harness agents; renders a "GHCP harness" pill
+- `both` — applies to both; renders a neutral "Both harnesses" pill
+- `classic` / `modern` — **deprecated aliases** for `standard` / `github-copilot`, still
+  accepted so older drafts don't break; prefer the canonical values
 
 | File | What it is | Upgrade risk |
 | ---- | ---------- | ------------ |

@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "No, You Don't Need a Copilot License to Deploy Agents to Microsoft 365 Copilot"
 date: 2026-04-17

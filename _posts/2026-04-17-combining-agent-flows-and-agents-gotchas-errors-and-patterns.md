@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Combining Agent Flows with Agents: Gotchas, Errors, and Patterns"
 date: 2026-04-17
