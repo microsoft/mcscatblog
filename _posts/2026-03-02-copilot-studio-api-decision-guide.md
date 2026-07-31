@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Every Path to Integrating Your Copilot Studio Agent"
 date: 2026-03-02

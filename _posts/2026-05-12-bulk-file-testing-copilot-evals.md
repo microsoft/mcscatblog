@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Bulk File-Based Testing for Copilot Studio: Beyond Standard Evals"
 date: 2026-05-12

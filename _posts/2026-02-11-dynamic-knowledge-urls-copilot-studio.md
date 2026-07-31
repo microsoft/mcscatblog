@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Zero Noise, Maximum Relevance: Dynamic Knowledge URLs in Copilot Studio"
 date: 2026-02-11 00:00:00 +0000

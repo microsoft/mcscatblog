@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Intercepting and Responding to Connector Consent Cards via the Agents SDK"
 date: 2025-09-21

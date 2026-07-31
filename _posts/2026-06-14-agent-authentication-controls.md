@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "The Admin Control That Closes the Door Before \"Hello\""
 date: 2026-06-14

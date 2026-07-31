@@ -1,11 +1,11 @@
 ---
 layout: post
-agent_edition: modern
-title: "Modern Agents Have Skills Now — Here's How They Work in Copilot Studio"
+agent_edition: github-copilot
+title: "Agents Have Skills Now — Here's How They Work in Copilot Studio"
 date: 2026-06-15
 categories: [copilot-studio, skills]
 tags: [copilot-studio, skills, orchestration, agent-development, best-practices]
-description: "How Skills work in modern Copilot Studio agents: instructions and resources loaded on demand for specific scenarios, why you would modularize instructions into Skills, and when to use Skills versus instructions."
+description: "How Skills work in Copilot Studio agents: instructions and resources loaded on demand for specific scenarios, why you would modularize instructions into Skills, and when to use Skills versus instructions."
 author: roels
 image:
   path: /assets/posts/modern-mcs-agent-skills/header.png
@@ -13,11 +13,11 @@ image:
 mermaid: true
 ---
 
-LLMs are good at the common cases, the ones that don't need any specific knowledge of *your* organization. Where they might do less well is everything that does: the context, conventions, data, and know-how a model cannot infer on its own. Procedural know-how especially, the step-by-step way *your* organization does something, is the kind of thing an LLM is not all that good at figuring out on its own, so you end up writing it down. But pile all of it into the agent's context, all the time, and that is exactly where agents get bloated and unpredictable. Modern agents have a cleaner place to put the situational part: **Skills**.
+LLMs are good at the common cases, the ones that don't need any specific knowledge of *your* organization. Where they might do less well is everything that does: the context, conventions, data, and know-how a model cannot infer on its own. Procedural know-how especially, the step-by-step way *your* organization does something, is the kind of thing an LLM is not all that good at figuring out on its own, so you end up writing it down. But pile all of it into the agent's context, all the time, and that is exactly where agents get bloated and unpredictable. Agents have a cleaner place to put the situational part: **Skills**.
 
 If you have spent time with coding agents recently, you have probably already met them. At its core, a Skill is just instructions (and optionally resources like examples, templates, or scripts) that the agent loads **on demand**, only when a specific kind of task comes up. A `SKILL.md` file carries a name, a description, and the instructions themselves. The name and description are what tell the agent when the Skill is relevant.
 
-That same idea has now arrived in the [modern Copilot Studio agent experience](https://techcommunity.microsoft.com/blog/copilot-studio-blog/meet-the-new-copilot-studio-rebuilt-for-more-complex-multi-step-work/4526488). This post is about what Skills are, why an agent builder should care, and how they work in Copilot Studio specifically.
+That same idea has now arrived in Copilot Studio agents powered by the [GitHub Copilot harness](https://techcommunity.microsoft.com/blog/copilot-studio-blog/meet-the-new-copilot-studio-rebuilt-for-more-complex-multi-step-work/4526488). This post is about what Skills are, why an agent builder should care, and how they work in Copilot Studio specifically.
 
 ## Why an agent builder should care
 
@@ -32,7 +32,7 @@ That is the short version. Manageability and context management are structural a
 
 ## The same benefits show up in Copilot Studio
 
-The good news is that the modern Copilot Studio orchestrator works the same way: it can reason over a set of available Skills, select the relevant one, and bring its instructions into context only when the conversation calls for it.
+The good news is that an agent on the GitHub Copilot harness works the same way: it can reason over a set of available Skills, select the relevant one, and bring its instructions into context only when the conversation calls for it.
 
 ```mermaid
 flowchart TB
@@ -73,21 +73,21 @@ Once added, the Skill becomes part of the agent. It is scoped to that agent and 
 
 ### Invoke a Skill
 
-You do not "call" a Skill directly. The orchestrator selects it, based on the Skill's name and description, when the conversation matches. You can watch this happen in the agent's reasoning view.
+You do not "call" a Skill directly. The agent selects it, based on the Skill's name and description, when the conversation matches. You can watch this happen in the agent's reasoning view.
 
 ![Copilot Studio reasoning view showing the agent loading a process-mining Skill and then following its steps to call a tool](/assets/posts/modern-mcs-agent-skills/invoke-skill-reasoning.png){: .shadow }
-_The user asks for a process-mining analysis. The orchestrator loads the matching Skill, then follows its instructions step by step, including calling the right tool (`get_processes`) at the right moment._
+_The user asks for a process-mining analysis. The agent loads the matching Skill, then follows its instructions step by step, including calling the right tool (`get_processes`) at the right moment._
 
 That reasoning view is also your main debugging surface: if a Skill fires too often, the description is probably too broad; if it never fires, the description is too narrow or does not match the words your users actually use.
 
 ### Write the description like routing metadata
 
-This is worth dwelling on, because it is the part makers most often get wrong. The name and description are not documentation for humans; they are the **routing signal** the orchestrator uses to decide when the Skill applies. Treat them that way:
+This is worth dwelling on, because it is the part makers most often get wrong. The name and description are not documentation for humans; they are the **routing signal** the agent uses to decide when the Skill applies. Treat them that way:
 
 - Name specifically: `HR Leave Eligibility Triage`, not `HR Help`.
 - Say when to use it *and when not to*: "Use for leave eligibility and required documentation. Do not use for payroll or benefits enrollment."
 
-A precise description gives the orchestrator a clear routing target. A vague one ("Helps with HR questions") invites the wrong Skill to fire, or none at all. If two reasonable makers would disagree on when a Skill applies, the description is not specific enough yet.
+A precise description gives the agent a clear routing target. A vague one ("Helps with HR questions") invites the wrong Skill to fire, or none at all. If two reasonable makers would disagree on when a Skill applies, the description is not specific enough yet.
 
 ## Copilot Studio Skills and the open format
 
@@ -103,8 +103,8 @@ my-skill/
 
 Copilot Studio supports this full shape today. A Skill carries its `SKILL.md` instructions and can bundle resources (reference files, examples, templates) and executable scripts, all loaded on demand when the Skill is selected. Putting those resources and scripts to work deserves its own walkthrough, and that is coming in a follow-up post. For now, two things about how Copilot Studio handles the bundle are worth calling out:
 
-- **Distribution is per-agent, for now.** Coding-agent ecosystems let you distribute Skills as plugins across products and tenants. As of June 2026, a Skill in Copilot Studio is scoped to its agent and travels with that agent through solutions and ALM, rather than through a shared, cross-product catalog. That's the current state, not the end state: a more catalog-like way to share Skills is being worked on.
-- **Skills can soft-point at the agent's tools, not just bundled scripts.** A Skill can run its own bundled script, but it can also *soft-point* at the agent's existing capabilities: actions, flows, connectors, and MCP servers. It's a *soft* pointer because the Skill only references the capability, it doesn't bind to it or grant it. The Skill can say "use the order-lookup action here," but there's no guarantee: if the agent doesn't already have that tool, the instruction can't be fulfilled, and even when it does, the orchestrator still decides whether to follow the pointer.
+- **Distribution is per-agent, for now.** Coding-agent ecosystems let you distribute Skills as plugins across products and tenants. As of June 2026, a Skill in Copilot Studio is scoped to its agent and travels with that agent through solutions and ALM, rather than through a shared, cross-product catalog. That's the current state, not the end state: a more catalog-like way to share Skills in the product is being worked on. Outside the product, the community-driven [CAT Agent Skills gallery](https://microsoft.github.io/cat-agent-skills/) already collects ready-made Skills you can browse and upload into your agent.
+- **Skills can soft-point at the agent's tools, not just bundled scripts.** A Skill can run its own bundled script, but it can also *soft-point* at the agent's existing capabilities: actions, flows, connectors, and MCP servers. It's a *soft* pointer because the Skill only references the capability, it doesn't bind to it or grant it. The Skill can say "use the order-lookup action here," but there's no guarantee: if the agent doesn't already have that tool, the instruction can't be fulfilled, and even when it does, the agent still decides whether to follow the pointer.
 
 ## How to think about a Skill
 
@@ -172,7 +172,7 @@ Because a Skill shapes how the agent behaves, and can now bundle scripts, it is 
 
 ## What to take away
 
-If you want to go deeper, [Influencing Agent Planning with Contextual Instructions]({% post_url 2025-11-11-influence-orchestration-knowledge %}) covers how always-on instructions steer the orchestrator, [Open the Hood: What Your Copilot Studio Agent Is Really Doing]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}) shows how to inspect the reasoning that decides when a Skill fires, and [Closing the Loop]({% post_url 2026-03-29-agentic-improvement-loop %}) covers how to evaluate that the right Skill fires at the right moment.
+If you want to go deeper, [Influencing Agent Planning with Contextual Instructions]({% post_url 2025-11-11-influence-orchestration-knowledge %}) covers how always-on instructions steer the agent, [Open the Hood: What Your Copilot Studio Agent Is Really Doing]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}) shows how to inspect the reasoning that decides when a Skill fires, and [Closing the Loop]({% post_url 2026-03-29-agentic-improvement-loop %}) covers how to evaluate that the right Skill fires at the right moment.
 
 Skills are early in Copilot Studio, and intentionally focused. But the core idea is already worth internalizing: keep instructions for what is true in every conversation, and move everything situational into Skills the agent can pull in on demand, whether that is a reference manual, a checklist, a runbook, or a playbook.
 

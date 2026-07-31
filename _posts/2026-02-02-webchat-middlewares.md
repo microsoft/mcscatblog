@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "VIDEO: Mastering WebChat Middleware for Copilot Studio Agents"
 date: 2026-02-02 9:00:00 +0100

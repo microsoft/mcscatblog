@@ -1,5 +1,5 @@
 ---
-agent_edition: modern
+agent_edition: github-copilot
 layout: post
 title: "Redlining Documents with the New Copilot Studio Experience"
 date: 2026-07-15

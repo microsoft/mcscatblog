@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Adding Custom Headers to MCP Connectors in Copilot Studio"
 date: 2025-10-22
