@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "How to Set Context Variables to Copilot Studio Agents Using WebChat"
 date: 2026-04-28 9:00:00 +0100

@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Defeating Oversummarization in AI Agents: How to Deliver Exact Content from Knowledge Sources"
 date: 2026-01-23 12:00:00 +0100

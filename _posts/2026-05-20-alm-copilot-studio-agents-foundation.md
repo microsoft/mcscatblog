@@ -1,5 +1,5 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "ALM for Copilot Studio Agents: The Foundation"
 date: 2026-06-03
