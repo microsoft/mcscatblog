@@ -14,11 +14,11 @@ image:
 published: true
 ---
 
-Ask a capable AI model to total a column of numbers or pull a clause out of a contract and it will give you an answer. It will look right. But it is a plausible guess from a language model, not a checked result, and you cannot see the work.
+Typically, there are two things we don't want a large language model to do directly: perform a calculation, or generate a large, exact payload (a filled spreadsheet, a valid `.docx`, a long JSON document). A model *predicts* a plausible result; it doesn't compute one. The number it returns isn't guaranteed to be the correct sum, and the file it emits isn't guaranteed to be valid.
 
-Running code changes that. Code opens the actual file, computes the actual number, and produces an artifact you can verify and repeat.
+What language models are genuinely good at is writing the code that does those things. A few lines of Python can total the column exactly, or build the file byte for byte, the same way every run. But code is only useful if something can run it, and that requires an execution environment.
 
-In Copilot Studio agents powered by the [GitHub Copilot harness](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/overview), that code execution and file manipulation work takes place in the agent sandbox.
+In Copilot Studio agents powered by the [GitHub Copilot harness](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/overview), that execution environment is the agent sandbox.
 
 ## Why give an agent a sandbox?
 
