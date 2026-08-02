@@ -1,7 +1,7 @@
 # MCS CAT Blog
 
 ## What is the purpose of this blog?
-The Microsoft Copilot Studio (MCS) Customer Advisory Team (CAT) Blog is intended to be a **technical** notebook for sharing quick, practical patterns and snippets that are useful in customer scenarios but don’t fit into formal documentation or guidance. 
+The Microsoft Copilot Acceleration Team (CAT) Blog for Copilot Studio (MCS) is intended to be a **technical** notebook for sharing quick, practical patterns and snippets that are useful in customer scenarios but don’t fit into formal documentation or guidance. 
 The public site is https://microsoft.github.io/mcscatblog/.
 
 More specifically, this blog is meant to be:

@@ -488,6 +488,6 @@ Happy coding! 🎉
 
 ---
 
-*Written by Roel Schenk, Microsoft Copilot Studio Customer Advisory Team*
+*Written by Roel Schenk, Microsoft Copilot Acceleration Team*
 
 *Have questions or feedback? Drop a comment below or reach out to the team!*
