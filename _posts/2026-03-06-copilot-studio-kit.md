@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Copilot Studio Kit: Beyond Test Automation"
 date: 2026-03-06
-categories: [copilot-studio-kit, copilot-studio]
+categories: [alm]
 tags: [test-automation, governance, compliance, agent-inventory, conversation-analytics, rubric-refinement, webchat-customization, adaptive-cards]
 description: "A deep look at Copilot Studio Kit's full feature set, from test automation and rubric refinement to agent inventory, compliance governance, and webchat customization."
 author: psimolin

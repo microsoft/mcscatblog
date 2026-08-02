@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "The Welcome Message That Never Was: Mocking Agent Greetings in WebChat"
 date: 2026-01-11
-categories: [copilot-studio, webchat]
+categories: [channels]
 tags: [webchat, directline, welcome-message, redux, javascript]
 description: "Show a welcome message in WebChat without triggering your agent—because sometimes the best conversation is the one that never started."
 author: adilei

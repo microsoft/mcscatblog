@@ -1,0 +1,104 @@
+---
+layout: compress
+---
+
+<!doctype html>
+
+{% include origin-type.html %}
+
+{% include lang.html %}
+
+<!-- `site.alt_lang` can specify a language different from the UI -->
+<html
+  lang="{{ page.lang | default: site.alt_lang | default: site.lang }}"
+  {%- if site.theme_mode == 'light' or site.theme_mode == 'dark' -%}
+    data-bs-theme="{{ site.theme_mode }}"
+  {%- endif -%}
+>
+  {% include head.html lang=lang %}
+
+  <body{% if page.layout == 'home' %} class="home"{% endif %}>
+    {% include sidebar.html lang=lang %}
+
+    <div id="main-wrapper" class="d-flex justify-content-center">
+      <div class="container d-flex flex-column px-xxl-5">
+        {% include topbar.html lang=lang %}
+
+        <!-- NOTE (home redesign): on the home page the main column spans full
+             width and the right panel is dropped, because the Collections grid
+             and Latest feed replace Recently-Updated / Trending-Tags. All other
+             pages keep the original two-column layout. -->
+        {% assign is_home = false %}
+        {% if page.layout == 'home' %}
+          {% assign is_home = true %}
+        {% endif %}
+
+        <div class="row flex-grow-1">
+          <main
+            aria-label="Main Content"
+            class="{% if is_home %}col-12{% else %}col-12 col-lg-11 col-xl-9{% endif %} px-md-4"
+          >
+            {% if layout.layout == 'default' %}
+              {% include refactor-content.html content=content lang=lang %}
+            {% else %}
+              {{ content }}
+            {% endif %}
+          </main>
+
+          {% unless is_home %}
+            <!-- panel -->
+            <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
+              <div class="access">
+                {% include_cached update-list.html lang=lang %}
+                {% include_cached trending-tags.html lang=lang %}
+              </div>
+
+              {% for _include in layout.panel_includes %}
+                {% assign _include_path = _include | append: '.html' %}
+                {% include {{ _include_path }} lang=lang %}
+              {% endfor %}
+            </aside>
+          {% endunless %}
+        </div>
+
+        <div class="row">
+          <!-- tail -->
+          <div
+            id="tail-wrapper"
+            class="{% if is_home %}col-12{% else %}col-12 col-lg-11 col-xl-9{% endif %} px-md-4"
+          >
+            {% for _include in layout.tail_includes %}
+              {% assign _include_path = _include | append: '.html' %}
+              {% include {{ _include_path }} lang=lang %}
+            {% endfor %}
+
+            {% include_cached footer.html lang=lang %}
+          </div>
+        </div>
+
+        {% include_cached search-results.html lang=lang %}
+      </div>
+
+      <aside aria-label="Scroll to Top">
+        <button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow">
+          <i class="fas fa-angle-up"></i>
+        </button>
+      </aside>
+    </div>
+
+    <div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div>
+
+    {% if site.pwa.enabled %}
+      {% include_cached notification.html lang=lang %}
+    {% endif %}
+
+    <!-- Embedded scripts -->
+
+    {% for _include in layout.script_includes %}
+      {% assign _include_path = _include | append: '.html' %}
+      {% include {{ _include_path }} %}
+    {% endfor %}
+
+    {% include_cached search-loader.html lang=lang %}
+  </body>
+</html>

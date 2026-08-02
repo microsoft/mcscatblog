@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "The Conversation History Gap in the M365 Agents SDK (And How We Filled It)"
 date: 2026-02-20
-categories: [copilot-studio, webchat]
+categories: [channels]
 tags: [webchat, m365-agents-sdk, conversation-history, directline, streaming, activity-protocol, typescript]
 description: "The M365 Agents SDK doesn't support fetching past activities. Here's how we solved conversation resumption and history for a customer's multi-agent WebChat app."
 author: adilei

@@ -2,7 +2,7 @@
 layout: post
 title: "Stop Asking an LLM to \"Rate This 1-5\": A Better Way to Score with LLMs"
 date: 2026-06-26
-categories: [copilot-studio, patterns]
+categories: [testing]
 tags: [evals, testing, quality-gate, llm-as-judge, rubric-refinement, evaluation-api, generative-ai]
 description: 'Asking an LLM to "rate this 1-5" gives you a number that looks decisive but isn''t. Here''s how to build LLM scores you can actually defend.'
 author: [msmgp, serenaxxiee]

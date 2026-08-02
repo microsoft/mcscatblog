@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post      
 title: "VIDEO TUTORIAL: Add Custom APIs and MCP Servers to Declarative Agents"      
 date: 2025-12-10 9:00:00 +0100      
-categories: [copilot-studio, declarative-agents, video]
+categories: [automation]
 tags: [custom-api, mcp-server, agent-builder, m365-copilot, tutorial]      
 description: Short video walkthrough on how to plug custom HTTP APIs and MCP servers into Declarative Agents.      
 author: giorgioughini      

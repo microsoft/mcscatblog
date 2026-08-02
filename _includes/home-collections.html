@@ -1,0 +1,66 @@
+{% comment %}
+  Collections — the navigability signature of the home page.
+
+  Generated from the site's real post CATEGORIES: every category becomes a
+  tile with a live post count linking to its archive, ordered by how much
+  content it holds (richest topics first). Presentation (title, icon, colour,
+  blurb) comes from _data/collections.yml keyed by the category slug; unmapped
+  categories fall back to a sensible default. Utility categories in `skip`
+  never appear.
+{% endcomment %}
+
+{% assign skip = "blog" | split: "," %}
+
+<section class="ce-collections" id="collections" aria-label="Browse by topic">
+  <header class="ce-section-head">
+    <p class="ce-kicker">// Browse by topic</p>
+    <h2 class="ce-section-title">Topics</h2>
+    <a class="ce-section-link" href="{{ '/categories/' | relative_url }}">
+      All topics <i class="fas fa-angle-right"></i>
+    </a>
+  </header>
+
+  <div class="ce-grid">
+    {% comment %} Sort by live post count, desc. Counts are offset by 1000 so a
+       plain lexical sort orders them numerically, then reversed for desc. {% endcomment %}
+    {% assign rows = "" %}
+    {% for pair in site.categories %}
+      {% unless skip contains pair[0] %}
+        {% assign n = pair[1] | size | plus: 1000 %}
+        {% assign rows = rows | append: n | append: '#' | append: pair[0] | append: '|' %}
+      {% endunless %}
+    {% endfor %}
+    {% assign ordered = rows | split: '|' | sort | reverse %}
+
+    {% for row in ordered %}
+      {% unless row == blank %}
+        {% assign parts = row | split: '#' %}
+        {% assign count = parts[0] | minus: 1000 %}
+        {% assign name = parts[1] %}
+        {% assign meta = site.data.collections[name] %}
+        {% if meta %}
+          {% assign title = meta.title %}
+          {% assign icon = meta.icon %}
+          {% assign color = meta.color %}
+          {% assign blurb = meta.blurb %}
+        {% else %}
+          {% assign title = name | replace: '-', ' ' | capitalize %}
+          {% assign icon = 'fa-folder-open' %}
+          {% assign color = 'var(--ce-accent)' %}
+          {% assign blurb = '' %}
+        {% endif %}
+
+        <a class="ce-tile" href="{{ name | slugify | prepend: '/categories/' | append: '/' | relative_url }}" style="--tile-color: {{ color }};">
+          <div class="ce-tile__top">
+            <span class="ce-tile__icon"><i class="fas {{ icon }}"></i></span>
+          </div>
+          <h3 class="ce-tile__title">{{ title }}</h3>
+          {% if blurb != '' %}<p class="ce-tile__blurb">{{ blurb }}</p>{% endif %}
+          <span class="ce-tile__count">
+            {{ count }} {% if count == 1 %}post{% else %}posts{% endif %}
+          </span>
+        </a>
+      {% endunless %}
+    {% endfor %}
+  </div>
+</section>

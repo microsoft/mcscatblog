@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "You Probably Don't Need Manual Authentication (And Didn't Even Know It)"
 date: 2025-11-18
-categories: [copilot-studio, authentication]
+categories: [authentication]
 tags: [manual-auth, sso, authentication, best-practices, web-chat]
 description: Why most Copilot Studio agents don't need manual authentication, and the myths keeping you from simpler configurations.
 author: adilei

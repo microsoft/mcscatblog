@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Search Enabled: Powering The Custom Engine Blog with Algolia"
 date: 2026-01-10 00:00:00 +0100
-categories: [blog, search]
+categories: [knowledge]
 tags: [algolia, search, jekyll, instantsearch, user-experience]
 description: How we implemented Algolia-powered search to make finding technical content faster and more intuitive for the MCS CAT Blog.
 author: daveburman-msft

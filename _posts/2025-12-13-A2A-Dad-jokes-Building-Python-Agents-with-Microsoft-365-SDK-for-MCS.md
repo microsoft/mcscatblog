@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "From Dad Jokes to A2A: Building Python Agents That Talk to Copilot Studio"
 date: 2025-12-13
-categories: [copilot-studio, a2a, agents-sdk]
+categories: [agents-sdk]
 tags: [copilot-studio, python, a2a, activity-protocol, agents-sdk, multi-agent, tutorial]
 description: "Learn how to extend Copilot Studio with Python agents using the Microsoft 365 Agents SDK and both Activity Protocol and Agent-to-Agent (A2A) communication"
 author: roels

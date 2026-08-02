@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "(Nearly) Seamless Sign-In for Custom APIs in Copilot Studio"
 date: 2025-11-11
-categories: [copilot-studio, authentication, apis]
+categories: [authentication]
 tags: [entra-id, custom-apis, http-connector, authentication, delegated-permissions]
 author: adilei
 published: false

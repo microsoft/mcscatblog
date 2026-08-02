@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Get Answers Over SharePoint Lists and Other Structured Data — Turning Natural Language into Dynamic Queries in Copilot Studio"
 date: 2026-04-30
-categories: [copilot-studio, connectors]
+categories: [automation]
 tags: [sharepoint, connectors, orchestration, retrieval-patterns, odata, tools, inputs, nl2query, decision-guide, work-iq]
 description: "How to turn natural language into OData queries over SharePoint list data using Copilot Studio connector tools with dynamic inputs — from a one-tool starter to production patterns with dynamic schemas, semantic search, and response shaping."
 author: KarimaKT

@@ -3,7 +3,7 @@ agent_edition: both
 layout: post
 title: "Real-Time PAYG Overage Protection with Power Automate, Custom Connectors"
 date: 2026-05-07
-categories: [copilot-studio, power-platform]
+categories: [alm]
 tags: [power-automate, custom-connector, azure-cost-management, billing-policy, payg, governance, power-platform]
 description: "Build a fully native Power Platform solution for real-time PAYG overage protection using a scheduled cloud flow, the Azure Cost Management API, and the Power Platform Admin V2 connector."
 author: rranjit

@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "How to Set Context Variables to Copilot Studio Agents Using WebChat"
 date: 2026-04-28 9:00:00 +0100
-categories: [copilot-studio, webchat]
+categories: [channels]
 tags: [botframework-webchat, webchat, redux, middleware, m365-agents-sdk, directline, context-variables]
 description: "Learn how to reliably pass context variables to Copilot Studio agents via WebChat using a Redux middleware that works on both Direct Line and the M365 Agents SDK."
 author: giorgioughini

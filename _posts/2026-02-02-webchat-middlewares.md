@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "VIDEO: Mastering WebChat Middleware for Copilot Studio Agents"
 date: 2026-02-02 9:00:00 +0100
-categories: [copilot-studio, webchat, video]
+categories: [channels]
 tags: [webchat, bot-framework, direct-line, redux, middleware, tutorial]
 description: Watch how to intercept, modify, and control message flow in WebChat using Redux middleware - and why you should use WebChat instead of building custom chat UIs.
 author: giorgioughini

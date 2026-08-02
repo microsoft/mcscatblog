@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Closing the Loop: Automated Agent Improvement with Publish and Test"
 date: 2026-03-29
-categories: [copilot-studio, testing]
+categories: [testing]
 tags: [plugin, orchestration, deepeval, testing, m365-agents-sdk]
 description: "We added a publish command to the Copilot Studio plugin, enabling an automated edit-push-publish-test loop. A trial run on a D&D rules agent shows the progression from blank instructions to a stable 60% pass rate across 7 iterations."
 author: adilei
