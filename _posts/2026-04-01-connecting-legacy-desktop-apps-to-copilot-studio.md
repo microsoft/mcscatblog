@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Bridging the Gap: Connecting Legacy Desktop Applications to Copilot Studio Agents"
 date: 2026-04-15
-categories: [copilot-studio, agents]
+categories: [automation]
 tags: [computer-use, agents, power-automate, rpa, legacy, desktop, dataverse, robotic-process-automation, cua]
 description: "A technical deep-dive into connecting legacy desktop applications to Microsoft Copilot Studio agents - exploring how a Separation of Concerns pattern lets you reuse your existing RPA stack today, and how Computer Use Agents (CUA) enable a fully agentic alternative."
 author: jpapadimitriou

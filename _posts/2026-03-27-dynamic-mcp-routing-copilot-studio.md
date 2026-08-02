@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Dynamic MCP Routing in Copilot Studio: One Connector, Many Endpoints"
 date: 2026-03-27
-categories: [copilot-studio, mcp]
+categories: [mcp]
 tags: [mcp, custom-connector, connectors, enterprise-patterns, power-platform, dynamic-routing, model-context-protocol]
 description: "How to route a single Copilot Studio connector to multiple MCP endpoints using a catalog service, dynamic Swagger dropdowns, and C# URL rewriting."
 author: adilei

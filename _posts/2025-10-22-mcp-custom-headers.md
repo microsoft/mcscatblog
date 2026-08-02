@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Adding Custom Headers to MCP Connectors in Copilot Studio"
 date: 2025-10-22
-categories: [copilot-studio, tutorial, mcp]
+categories: [mcp]
 tags: [mcp, model-context-protocol, custom-connector, headers, authentication]
 author: adilei
 ---

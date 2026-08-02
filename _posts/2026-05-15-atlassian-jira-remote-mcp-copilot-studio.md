@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Wiring up the Jira (Atlassian) Remote MCP server in Copilot Studio in 5 mins"
 date: 2026-05-15
-categories: [copilot-studio, mcp]
+categories: [mcp]
 tags: [mcp, atlassian, jira, oauth, dynamic-client-registration, authentication]
 description: "The Atlassian Remote MCP server uses Dynamic Client Registration. If you wire it up with Manual OAuth in Copilot Studio you'll waste an afternoon. Use Dynamic discovery and a few Atlassian admin toggles, and you're done in five minutes."
 author: hasharaf

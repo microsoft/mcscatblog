@@ -3,7 +3,8 @@ agent_edition: github-copilot
 layout: post
 title: "Video Demo: Upgrading a Classic Agent to Modern Orchestration"
 date: 2026-07-14 16:12:53 +0200
-categories: [copilot-studio, upgrade]
+pin: true
+categories: [orchestration]
 tags: [github-copilot, copilot-studio, plugin, upgrade, modern-agents, orchestration, skills, agent-development]
 description: "Watch GitHub Copilot CLI upgrade a classic Copilot Studio travel agent to modern orchestration with our newly released plugin, then explore how its capabilities become Skills and tools."
 author: giorgioughini

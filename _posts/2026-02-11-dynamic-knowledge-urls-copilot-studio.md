@@ -4,7 +4,7 @@ layout: post
 title: "Zero Noise, Maximum Relevance: Dynamic Knowledge URLs in Copilot Studio"
 date: 2026-02-11 00:00:00 +0000
 last_modified_at: 2026-03-10 00:00:00 +0000
-categories: [copilot-studio, knowledge]
+categories: [knowledge]
 tags: [knowledge-sources, dynamic-urls, public-website, alm, multi-region, powerfx, topic-inputs, variables, table-variables]
 description: How a simple variable unlocks multi-market, multi-language, and multi-product web grounding while improving ALM processes.
 author: dbellingeri

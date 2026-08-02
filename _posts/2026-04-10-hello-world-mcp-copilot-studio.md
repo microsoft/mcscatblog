@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Five Minutes to Your First MCP Connector in Copilot Studio"
 date: 2026-04-10
-categories: [copilot-studio, mcp]
+categories: [mcp]
 tags: [mcp, custom-connectors, alm, connection-references, a2a, solutions, copilot-studio]
 description: "Create your first MCP connector in Copilot Studio in five minutes, then understand what was created behind the scenes: custom connectors, connection references, and solution structure."
 author: chrisgarty

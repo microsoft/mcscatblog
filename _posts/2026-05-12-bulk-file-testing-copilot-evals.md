@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Bulk File-Based Testing for Copilot Studio: Beyond Standard Evals"
 date: 2026-05-12
-categories: [copilot-studio, testing]
+categories: [testing]
 tags: [evals, testing, dataverse, power-automate, sharepoint, bulk-testing, power-bi, file-processing]
 description: "How to build a scalable bulk file-based testing framework for Copilot Studio agents using Dataverse, SharePoint, Power Automate, and Power BI when standard evals aren't enough."
 author: ashVancouver

@@ -1,0 +1,25 @@
+{% comment %}
+  Featured posts — a curated band directly under the masthead. Surfaces posts
+  flagged with `pin: true` in front matter, using the exact same card as the
+  Latest feed for a single, consistent visual language. Rendered only when at
+  least one post is featured, and only on the first paginator page. These posts
+  are excluded from the Latest feed (see home.html) to avoid duplication.
+{% endcomment %}
+
+{% assign featured = site.posts | where: 'pin', 'true' %}
+
+{% if featured.size > 0 %}
+  <section class="ce-featured" id="featured" aria-label="Featured posts">
+    <header class="ce-section-head">
+      <p class="ce-kicker">// Featured</p>
+      {% comment %} Curated headline describing the current pinned set; update when the pins change. {% endcomment %}
+      <h2 class="ce-section-title">Building inside the GHCP harness</h2>
+    </header>
+
+    <div class="ce-feed">
+      {% for post in featured %}
+        {% include home-post-card.html post=post %}
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

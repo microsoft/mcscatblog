@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Every Path to Integrating Your Copilot Studio Agent"
 date: 2026-03-02
-categories: [copilot-studio, tutorial]
+categories: [channels]
 tags: [direct-line, webchat, m365-agents-sdk, sso, embed, teams, api, decision-guide, byo-ui]
 description: "An interactive decision wizard that helps you pick the right integration pattern for your Copilot Studio agent, from no-code embeds to native mobile apps, custom UIs, and server-side connectors."
 author: adilei

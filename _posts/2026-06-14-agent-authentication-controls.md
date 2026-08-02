@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "The Admin Control That Closes the Door Before \"Hello\""
 date: 2026-06-14
-categories: [copilot-studio, governance]
+categories: [alm]
 tags: [authentication, governance, data-loss-prevention, direct-line, m365-agents-sdk, admin, entra-id, employee-facing]
 description: "A new Power Platform admin control lets you govern how users authenticate to Copilot Studio agents, and it answers a question that DLP channel blocking never could."
 author: adilei

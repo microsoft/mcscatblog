@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "ALM for Copilot Studio Agents: The Foundation"
 date: 2026-06-03
-categories: [copilot-studio, alm]
+categories: [alm]
 tags: [copilot-studio, power-platform, alm, environments, solutions, pipelines, connection-references]
 description: "The fundamentals of Application Lifecycle Management for Copilot Studio agents: environments, solutions, publishers, and pipelines - the safe baseline every maker should have in place."
 author: jpapadimitriou

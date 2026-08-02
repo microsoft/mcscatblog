@@ -2,7 +2,7 @@
 layout: post
 title: "Why Your E3 Users Can Suddenly Build Agents in Copilot Studio — and How to Turn It Off"
 date: 2026-07-09
-categories: [copilot-studio, governance]
+categories: [alm]
 tags: [copilot-studio, licensing, governance, e3, teams, power-virtual-agents]
 description: "A recent redirect change surfaced classic agent creation in the Copilot Studio web app for basic-licensed users. Here's the single service plan admins can disable to govern it."
 author: emdarcy

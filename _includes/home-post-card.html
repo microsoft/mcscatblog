@@ -1,0 +1,67 @@
+{% comment %}
+  Uniform post card, shared by the Featured band and the Latest feed so both
+  use exactly the same visual language. Pass a post:
+
+    {% include home-post-card.html post=post %}
+
+  Renders a 16:9 thumbnail (post image, or a branded placeholder when the post
+  has none), a category eyebrow, title, excerpt, and date.
+{% endcomment %}
+
+{% assign post = include.post %}
+
+<article class="ce-card">
+  <a href="{{ post.url | relative_url }}" class="ce-card__link">
+    {% comment %} ---- Uniform 16:9 thumbnail (image or branded placeholder) ---- {% endcomment %}
+    {% if post.image %}
+      {% assign src = post.image.path | default: post.image %}
+      {% if post.media_subpath %}
+        {% unless src contains '://' %}
+          {% assign src = post.media_subpath | append: '/' | append: src | replace: '///', '/' | replace: '//', '/' %}
+        {% endunless %}
+      {% endif %}
+
+      {% assign lqip_attr = '' %}
+      {% if post.image.lqip %}
+        {% assign lqip = post.image.lqip %}
+        {% if post.media_subpath %}
+          {% unless lqip contains 'data:' %}
+            {% assign lqip = post.media_subpath | append: '/' | append: lqip | replace: '///', '/' | replace: '//', '/' %}
+          {% endunless %}
+        {% endif %}
+        {% assign lqip_attr = 'lqip="' | append: lqip | append: '"' %}
+      {% endif %}
+
+      {% assign alt = post.image.alt | xml_escape | default: 'Preview image' %}
+
+      <div class="ce-thumb">
+        <img src="{{ src }}" alt="{{ alt }}" loading="lazy" {{ lqip_attr }}>
+      </div>
+    {% else %}
+      {% assign ph_label = post.categories[1] | default: post.categories[0] | default: 'Copilot Studio' %}
+      <div class="ce-thumb ce-thumb--placeholder">
+        <span class="ce-thumb__chip"><i class="fas fa-microchip"></i></span>
+        <span class="ce-thumb__label">{{ ph_label }}</span>
+      </div>
+    {% endif %}
+
+    <div class="ce-card__body">
+      {% if post.categories.size > 0 %}
+        <div class="ce-card__top">
+          <p class="ce-card__eyebrow">{{ post.categories | join: ' · ' }}</p>
+        </div>
+      {% endif %}
+
+      <h3 class="ce-card__title">{{ post.title }}</h3>
+
+      <p class="ce-card__excerpt">{% include post-summary.html %}</p>
+
+      <div class="ce-card__meta">
+        <span class="ce-card__date">
+          <i class="far fa-calendar"></i>
+          {% include datetime.html date=post.date lang=lang %}
+        </span>
+      </div>
+    </div>
+  </a>
+</article>

@@ -3,7 +3,7 @@ agent_edition: github-copilot
 layout: post
 title: "New Harness, New Rules? CAT's Got You"
 date: 2026-07-07
-categories: [copilot-studio, orchestration]
+categories: [orchestration]
 tags: [copilot-studio, github-copilot, orchestration, upgrade, skills, agent-development]
 mermaid: false
 pin: true
