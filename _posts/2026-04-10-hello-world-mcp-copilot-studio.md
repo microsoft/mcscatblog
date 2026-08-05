@@ -80,7 +80,7 @@ But the wizard created more than just a custom connector. Look at the solution c
 
 ### Why do the solution component details matter? 
 
-When you use pipelines or manual export/import to more your solution into another environment (say, test or production), the custom connector and connection reference are included in the solution. However the connection does not. When deploying via pipelines or importing the solution, you'll be prompted to create a connection for the connection reference in the target environment. This is standard Power Platform [ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm), but if you're coming from an M365 background, it's easy to miss.
+When you use pipelines or manual export/import to move your solution into another environment (say, test or production), the custom connector and connection reference are included in the solution. However the connection does not. When deploying via pipelines or importing the solution, you'll be prompted to create a connection for the connection reference in the target environment. This is standard Power Platform [ALM](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm), but if you're coming from an M365 background, it's easy to miss.
 
 > **Known limitation:** Power Platform requires custom connectors to be [in their own solution](https://learn.microsoft.com/en-us/connectors/custom-connectors/customconnectorssolutions#known-limitations) when moving across environments. The MCP wizard adds the connector to your agent's solution, so you'll need to separate it into its own solution before deploying to another environment.
 {: .prompt-warning }
