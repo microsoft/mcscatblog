@@ -4,7 +4,7 @@ title: "Evaluation-Driven Agent Readiness in Copilot Studio"
 date: 2026-06-01
 categories: [copilot-studio, evaluation]
 tags: [evaluation, agents, test-sets, graders, tool-use, copilot-studio-evaluate, scoping]
-agent_edition: both
+agent_edition: standard
 description: "When can I stop building and deploy my agent? There's no score that settles it; readiness is a qualitative call. So make evaluation part of the build: lead with a clear definition of good, generate scoped test sets, read the grader explanations, and iterate to a V1 you can describe and defend."
 author: KarimaKT
 image:
@@ -32,7 +32,7 @@ The rest of the post has two parts. First, the strategy: why evaluation belongs 
 
 "Is it ready?" tangles two different problems, and each needs a different fix.
 
-**A design problem: scope.** Agents work best with a goal and a scope. Handing an agent a tool is the core of how agents work, but a tool is not a scope: a single system of record serves many roles at once, and the whole of it is too broad to be one agent's job. The same orders database backs customer support, operations, and finance; a well-scoped agent takes one such role and harnesses whatever tools it needs, while a larger agent can hold several roles, each scoped and bounded so it can be evaluated on its own terms. 
+**A design problem: scope.** Agents work best with a goal and a scope. Handing an agent a tool is the core of how agents work, but a tool is not a scope: a single system of record serves many roles at once, and the whole of it is too broad to be one agent's job. The same orders database backs customer support, operations, and finance; a well-scoped agent takes one such role and harnesses whatever tools it needs, while a larger agent can hold several roles, each scoped and bounded so it can be evaluated on its own terms.
 
 **An agreement problem: what "good" means.** Before you evaluate anything, the business and the makers have to agree on what the agent does, what it does not do, and what *good* means for each role it plays. That agreement is the step most projects skip, and it's why "it's not ready" is a verdict no one can act on: nobody wrote down what ready would look like. Whether you're building an internal agent for colleagues or a partner handing a more complex agent to a customer for testing, the rule is the same: don't release an agent whose scope you cannot fully describe.
 
@@ -149,9 +149,9 @@ A test row is only as good as the grader judging it. Copilot Studio's graders sp
 | **Keyword match** | Yes | A specific token must appear verbatim, like an ID in the final answer |
 | **Tool use / plan steps** | Yes (the tool or step) | You need to check the path the agent took |
 
-Start with the graders that need nothing from you. **General quality** has no configuration and is easy to add; read its comments and you'll often know where to go back to the drawing board. **Custom graders** are where you dig into what *good* means for your business: a first pass plus the results overview tells you where to focus, and the comments let you prioritize, generalize a fix, and improve for the outcomes you care about. For a tool-using agent like the shipping one, a custom grader can evaluate format, completeness, business outcomes and more, not just correctness.
+Start with the graders that need nothing from you. **General quality** has no configuration and is easy to add; read its comments and you'll often know where to go back to the drawing board. **Custom graders** are where you dig into what *good* means for your business: a first pass plus the results overview tells you where to focus, and the comments let you prioritize, generalize a fix, and improve for the outcomes you care about. When a custom rubric asks an LLM to score, [design a score you can defend]({% post_url 2026-06-26-better-llm-scoring %}) instead of a bare 1-5. For a tool-using agent like the shipping one, a custom grader can evaluate format, completeness, business outcomes and more, not just correctness.
 
-The graders that need an expected answer also need authoring effort, so spend it where it counts. Write out expected answers for your high-value use cases, run, adjust the design with generalizable fixes, and rerun. If a round of fixes touched a lot, regenerate similar tests to confirm the fixes held and generalized to the range you meant to cover. 
+The graders that need an expected answer also need authoring effort, so spend it where it counts. Write out expected answers for your high-value use cases, run, adjust the design with generalizable fixes, and rerun. If a round of fixes touched a lot, regenerate similar tests to confirm the fixes held and generalized to the range you meant to cover.
 
 On a larger project, where a separate builder team delivers for the business SMEs, that authoring effort is shared work, not a solo chore. Agree up front on who does what: the business owners set the priority use cases and define what a good answer is, and the people who own the data supply the expected responses. From there, the makers expand those sets with AI to anticipate logical edge cases, build the solution iteratively against them, and deliver it with its expectations already described by the evaluations, so end-user testing holds few surprises.
 
@@ -162,7 +162,7 @@ Two rules of thumb save real pain:
 
 ### Stack graders selectively
 
-You can attach more than one grader to a row, but do it selectively. For example, two tool calls can sometimes produce the same answer, but when only one is the right choice for the situation, pair a **Tool use** check with **Compare meaning** . The shipping agent runs **General quality** alongside the **Content Format** custom grader on every row, one for a fast read, one for the business-specific label. These pairings follow a simple rule: whether an answer is *correct* and whether it's *usable* are different questions for different graders.
+You can attach more than one grader to a row, but do it selectively. For example, two tool calls can sometimes produce the same answer, but when only one is the right choice for the situation, pair a **Tool use** check with **Compare meaning**. The shipping agent runs **General quality** alongside the **Content Format** custom grader on every row, one for a fast read, one for the business-specific label. These pairings follow a simple rule: whether an answer is *correct* and whether it's *usable* are different questions for different graders.
 
 > Deciding which graders to use, and whether to stack, is the evaluator's call, based on the goal, the priority of the use case, and a clear sense of what each grader can actually judge. The product team is genuinely open to feedback here; if a grader you need doesn't exist, let us know in the comments.
 {: .prompt-info }
@@ -190,7 +190,7 @@ Run the sets and resist the summary number. The value is in the rows, and specif
 
 Reading rows this way regularly surfaces design gaps: an out-of-range ID a real user could fat-finger, a phrasing the agent mishandles, or a case that returns nothing when it should have asked a question. When several rows need attention at once and the priorities aren't obvious, Microsoft's [evaluation-driven triage and remediation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/evaluation-triage-overview) framework helps decide what to fix first.
 
-> A wall of instructions is rarely the fix. Goal-based guidance generalizes better than a growing list of special cases, and it's far easier to test. Make one targeted change, rerun, and let the results tell you whether it worked before you add another instruction that could have inadvertent consequences.
+> A wall of instructions is rarely the fix. [Goal-based guidance]({% post_url 2025-11-11-influence-orchestration-knowledge %}) generalizes better than a growing list of special cases, and it's far easier to test. Make one targeted change, rerun, and let the results tell you whether it worked before you add another instruction that could have inadvertent consequences.
 {: .prompt-tip }
 
 Then rerun the **same** set and use [**Compare with**](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-results#compare-test-results) to line the two runs up row by row. Watch the rows that moved the way you intended, and any that regressed because a change had a side effect, like the agent now guardrailing valid requests.
@@ -199,7 +199,7 @@ A fix you can generalize is worth far more than one that clears a single row. Co
 
 ### Iterate, then slot the rest for the next wave
 
-Iteration has a natural stopping point. Once the must-do core and the guardrails hold, that's the signal to stop, take stock of what's left, and slot it into the next version. Ship a defined V1, then grow the solution. It's an agile loop, and the test sets draw the line: everything green in scope ships, and everything still open becomes the backlog for the next wave.
+Iteration has a natural stopping point. Once the must-do core and the guardrails hold, that's the signal to stop, take stock of what's left, and slot it into the next version. Ship a defined V1, then grow the solution. It's an agile loop, and the test sets draw the line: everything green in scope ships, and everything still open becomes the backlog for the next wave. Once its shape settles, you can even [automate the loop from edit to test]({% post_url 2026-03-29-agentic-improvement-loop %}).
 
 > When you see a genuinely good response, capture it as an expected output for a Compare-style check. It then guards against regressions on future runs.
 {: .prompt-tip }
@@ -222,10 +222,10 @@ Everything above is the strategy. This last part is a bonus you can run yourself
 
 The short version, to follow along:
 
-1. **[Watch scope sharpen the tests](#how-scope-changes-the-generated-tests)** — stand up a generic agent, then name it and describe the data, and watch the generated tests go from sign-in trivia to real shipping questions.
-2. **[Expand a use case with the template](#expand-a-use-case-with-the-template)** — grow one valuable use case past the starter set with a ready-to-paste prompt.
-3. **[Build the custom grader](#build-the-custom-grader)** — a Content Format Grader that judges shape and completeness, not just correctness.
-4. **[When a test reveals a design gap](#when-a-test-reveals-a-design-gap)** — read one generated test that turns an eval run into a concrete design change.
+1. **[How scope changes the generated tests](#how-scope-changes-the-generated-tests)**: stand up a generic agent, then name it and describe the data, and watch the generated tests go from sign-in trivia to real shipping questions.
+2. **[Expand a use case with the template](#expand-a-use-case-with-the-template)**: grow one valuable use case past the starter set with a ready-to-paste prompt.
+3. **[Build the custom grader](#build-the-custom-grader)**: a Content Format Grader that judges shape and completeness, not just correctness.
+4. **[When a test reveals a design gap](#when-a-test-reveals-a-design-gap)**: read one generated test that turns an eval run into a concrete design change.
 
 ![The SharePoint Get items tool pointed at the shipments list](/assets/posts/evaluation-driven-agent-readiness/02-get-items-tool.png){: .shadow }
 _The drop-in starting point: a generic Get items tool over the list, before any scoping._
