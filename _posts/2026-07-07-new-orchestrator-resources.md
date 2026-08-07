@@ -72,8 +72,10 @@ _The CAT Agent Skills gallery: an infinite-scroll grid of reusable Skills you ca
 
 Filter to Copilot Studio, open any card to read what the Skill does, and pull its `SKILL.md` straight into an agent. It's the fastest way to add a capability someone's already built and tested, and a working template for the Skills you'll write yourself.
 
+For a deeper look at how Skills work and how to use one, see [Modern Agents Have Skills Now]({% post_url 2026-06-15-modern-mcs-agent-skills %}) and [Redlining Documents with the New Copilot Studio Experience]({% post_url 2026-07-15-redlining-documents-new-copilot-studio-experience %}).
+
 ## That's the on-ramp
 
 The harness is a different mental model, not just a new UI, and that can feel like a lot. So CAT turned it into four steps: **deck** to get the concepts, **mini-site** to see them run, **plugin** to try them on a real agent, and the **skills gallery** to extend what you build with Skills you don't have to write. We got you.
 
-Tried the samples or the plugin's upgrade workflow? We'd love to hear what surprised you, and whether the proposed architecture matched how you'd have redesigned the agent.
+Tried the samples, a Skill from the gallery, or the plugin's upgrade workflow? We'd love to hear what surprised you, and whether the proposed architecture matched how you'd have redesigned the agent.
