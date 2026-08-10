@@ -5,139 +5,153 @@ title: "Adopting the GitHub Copilot Harness: Cost Control and Governance in Copi
 date: 2026-08-07
 categories: [copilot-studio, governance]
 tags: [copilot-studio, governance, billing, licensing, cost management]
-description: "The essentials and scalable controls for managing cost when enabling makers to build on Copilot Studio with consumptive billing as the option for GHCP agents. Allocate, set limits, rules and don't let users consume whatever they like without careful cost ownership."
+description: "Identify GitHub Copilot harness agents, review their environments, and apply Power Platform controls to manage Copilot Credit consumption during maker development and production use."
 author: lewisdoesdev
 image:
   path: /assets/posts/copilot-harness-cost-governance/header.png
   alt: "A cat accountant at a desk approving AI agent funding requests. Small robot agents queue with paperwork while budget records, governance checklists, ownership folders, and maker, departmental, and enterprise agent trays represent cost management and governance controls."
 ---
 
-As AI agents become more capable, consumption is becoming a more important part of how organizations plan and govern their use. The [GitHub Copilot harness in Copilot Studio]({% post_url 2026-07-07-new-orchestrator-resources %}) enables organizations to deliver high-quality agents that support complex business processes. For administrators, it increases the need to have a clear FinOps strategy and governance controls that can answer questions like:
-- "Who is allowed to create an agent?"
-- "Where can that agent consume Copilot Credits?"
-- "How many credits can that agent consume?"
-- "Who owns the consumption for that agent?"
+As AI agents become more capable, consumption is becoming a more important part of how organizations plan and govern their use. Makers using the [GitHub Copilot harness in Copilot Studio]({% post_url 2026-07-07-new-orchestrator-resources %}) can consume Copilot Credits while building, previewing, and evaluating agents, before those agents enter a formal production lifecycle. This changes when administrators need to apply consumption controls.
 
-Underpinning them all is another: "What is the build scenario we're actually talking about?". Without that context, the previous four answers become guesses or generic standards, leading to fragmented governance and no scalable model.
+An environment used for maker exploration can now incur consumption even if its agents are never published for production use. Maker development and funded production usage require different approaches to capacity, ownership, and continuity, regardless of the environment type used to support them.
 
-In this post, we take a look at a couple of risk scenarios when the build involves consumptive billing, and discuss the top priority governance controls for Copilot Studio to review and configure to ensure you have a handle on agent cost in your organization.
+If your existing controls focus primarily on published agents, the quickest path to reduce exposure is to:
 
-## Start with what you want to achieve, and then assess the risks to handle
+1. Find GitHub Copilot harness agents and the environments containing them.
+2. Classify those environments as maker development or funded production.
+3. Review allocations, tenant-pool access, pay-as-you-go billing, and enforcement rules.
+4. Apply agent-level limits where individual consumption needs a tighter boundary.
+5. Repeat the review periodically or automate detection of newly created environments and agents.
 
-The easiest way to approach cost control appropriately is to begin with what can go wrong. That said, simply reviewing the risk and applying a control doesn't lead to an environment that correctly balances enablement and control for safely delivering value with agents. First, begin with what you want to achieve, then assess the risk that comes with it. Are you:
-- Trying to enable makers to build limited capability, simple agents to help them with small business processes in their team?
-- Building more complex business process agents that work for entire departments or the organization in focused projects?
+This post shows how to complete those steps in the Power Platform admin center (PPAC) and through the Power Platform API.
 
-Each scenario comes with different risks, with similar controls to apply but in different ways to achieve the risk balance of control and achievable value.
+## Choose controls based on the environment purpose
 
-### Scenario 1: Enabling makers to self-solution the problems in their own workflows
+Environments where makers explore, build, preview, and evaluate agents need a clear development boundary. Environments supporting funded production usage need controls aligned to their funding, ownership, expected usage, and criticality. The same controls are available in both scenarios, but how you apply them should reflect what the environment is there to support.
 
- > **The first scenario:** you want to enable makers with the autonomy to self-build agents for their use cases, while managing the bill. You might want to, or perhaps have given a large group of makers access to the platform so they can do this. 
- {: .prompt-info }
-
-> **The potential risk:** A maker uses chat on the Copilot Studio homepage to create an agent that uses the GitHub Copilot harness, tries several instruction variants, adds knowledge and tools, and repeatedly tests the result. They reasonably run evaluations before deciding to rely on the agent going forward. Other members of the team do the same. None of these agents support a strategic business priority or are approved for formal production deployment at some point, but testing via preview and evaluation are real interactions and **contribute to consumptive-based cost.** With no control in place the maker consumes as much as they'd like, with the bill directly charging to a subscription for the owner to pay the bill against, consumption exhausting the tenant pool, or consuming all the shared credits allocated to the environment.
+> Maker development can now incur Copilot Credit consumption before an agent enters a formal production lifecycle.
 {: .prompt-warning }
 
-The risk isn't solved by discouraging testing or removing access to create. This just blocks the scenario you first wanted to achieve. Instead, give makers an explicit development boundary, a limit to the credits they can consume, make the cost owner visible, and decide in advance what should happen when that boundary is reached.
+Use the environment purpose to decide where to start.
 
-### Scenario 2: Production LOB process agents
+### Maker development
 
-> **Another approach:** You want to share production agents delivered through intentional, focused projects out to a broad audience or group of people who jointly input to or rely on a process, while managing cost and controlling the purpose of those environments so the cost incurred, continues to only stem from what the cost owner intended to fund.
- {: .prompt-info }
+Environments where makers explore, build, preview, and evaluate agents need controls before those agents enter a formal production lifecycle. Detect GitHub Copilot harness agents, apply a default agent limit, decide whether tenant-pool or pay-as-you-go access is appropriate, notify the agent owner of the boundary, and define how they can request more capacity.
 
-> **The potential risk:** not high cost from a scaled maker audience testing out less sensible use cases, provided the environment is intentionally scoped with careful access control. It is production consumption without accountable ownership, awareness of the uptime criticality for specific agents, lack of release control against the production environment and hence the chance of either a bill more expensive that someone expected, or the consumption of credits other people were relying on for their agents.
+### Funded production usage
+
+Environments supporting approved departmental or organization-wide processes need accountable ownership and intentional funding. Confirm the cost owner and funding model, allocate capacity or configure billing intentionally, set limits based on expected usage and service criticality, and monitor consumption that could interrupt the production service.
+
+Start by finding the affected agents and environments, then apply the controls that match their intended purpose.
+
+## Find affected agents and environments
+
+Start with [Power Platform Inventory](https://learn.microsoft.com/en-us/power-platform/admin/power-platform-inventory) to find Copilot Studio agents and the environments containing them. For a small estate, the inventory in PPAC might be enough. At scale, use [Azure Resource Graph](https://learn.microsoft.com/en-us/power-platform/admin/inventory-sample-queries) or the [Power Platform Inventory API](https://learn.microsoft.com/en-us/power-platform/admin/inventory-api) to make the review repeatable.
+
+For each GitHub Copilot harness agent, identify:
+
+- the environment containing it,
+- whether that environment supports maker development or funded production usage,
+- the agent owner and the person accountable for its consumption,
+- and whether its current allocation, overage settings, and consumption match that purpose.
+
+Inventory returns the technical relationship between the agent, its owner, and its environment. Your environment naming, environment groups, governance metadata, or approval records can then provide the business context needed to classify it. If you already use [Copilot Studio Kit]({% post_url 2026-03-06-copilot-studio-kit %}) or [Compliance Hub](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-compliance-hub), you can extend that inventory with the scenario and cost-ownership information used by your process.
+
+The `isCLIAgent` property identifies agents using the GitHub Copilot harness. These agents can consume Copilot Credits in the maker experience during design time. This request returns those agents together with their environment and owner IDs:
+
+<details>
+<summary>View the Inventory API request</summary>
+<pre><code class="language-http">
+POST https://api.powerplatform.com/resourcequery/resources/query?api-version=2024-10-01
+Content-Type: application/json
+
+{
+  "TableName": "PowerPlatformResources",
+  "Clauses": [
+    {
+      "$type": "where",
+      "FieldName": "type",
+      "Operator": "==",
+      "Values": ["'microsoft.copilotstudio/agents'"]
+    },
+    {
+      "$type": "where",
+      "FieldName": "properties.isCLIAgent",
+      "Operator": "==",
+      "Values": ["true"]
+    },
+    {
+      "$type": "project",
+      "FieldList": [
+        "name",
+        "properties.displayName",
+        "properties.environmentId",
+        "properties.ownerId",
+        "properties.isCLIAgent"
+      ]
+    }
+  ]
+}
+</code></pre>
+</details>
+
+## Apply environment controls
+
+After classifying an environment, review how it can access Copilot Credits and what should happen when its available capacity is exhausted:
+
+| Decision | Available control |
+|---|---|
+| Should prepaid capacity be reserved for the environment? | Allocate Copilot Credits to the environment |
+| Can the environment use unallocated capacity from the tenant pool? | Enable or disable tenant-pool draw |
+| Can consumption continue through an approved Azure subscription? | Enable or disable pay-as-you-go billing |
+| What happens as capacity is approached or exhausted? | Configure alerts or deny further consumption |
+
+Maker-development environments usually need a deliberate boundary so exploration doesn't consume capacity intended for other work. For funded production usage, tenant-pool or pay-as-you-go access might instead be an intentional continuity decision owned by the team funding the agent.
+
+> Newly created environments can have tenant-pool draw enabled. Treat environment configuration as a recurring check rather than a one-time exercise.
 {: .prompt-warning }
 
-# Approaching governance controls and tooling 
+A simple detection and remediation process can:
 
-## Inventory as a common baseline
+1. Query Power Platform Inventory for `microsoft.powerplatform/environments`. You can adapt the Inventory API request shown earlier by changing its resource-type filter.
+2. Compare the results with the previous scan or your governed environment register to identify new or unclassified environments.
+3. Read each environment's current allocation and enforcement rules with [Get Allocations By Environment](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/allocations-by-environment/get-allocations-by-environment).
+4. Compare that configuration with the controls expected for maker development or funded production usage.
+5. Route exceptions to the environment owner or apply the approved configuration through the update endpoint shown below.
 
-Similar to most governance concepts, be it access, risk assessment, business justification understanding, feature availability and more, effectively managing cost controls for agents, starts with a reliable and extensible inventory. Your agent inventory lets you answer technical questions like which harness an agent uses, as well as business questions like what the scenario is (maker or project led) and who owns the cost.
+Step 3 uses the read endpoint below to return the environment's current allocation and enforcement rules before you decide whether remediation is required:
 
-Start with the [Power Platform Inventory](https://learn.microsoft.com/en-us/power-platform/admin/power-platform-inventory), which Microsoft make available through the Power Platform admin center (PPAC), and [programmatic options](https://learn.microsoft.com/en-us/power-platform/admin/power-platform-inventory#programmatic-access) like [ARG](https://learn.microsoft.com/en-us/power-platform/admin/inventory-sample-queries) and the [Power Platform API](https://learn.microsoft.com/en-us/power-platform/admin/inventory-api). For organizations with a couple of environments and small collection of agents, PPAC is the best place to start. For enterprises managing several hundreds of environments and even more agents, programmatic methods are necessary.
+```http
+GET https://api.powerplatform.com/licensing/allocationsByEnvironment/<environment-id>?api-version=2024-10-01
+```
+{: .nolineno }
 
-### What inventory enables for governance and cost management
+Organizations can use Copilot Credit capacity packs, the Copilot Credit Pre-Purchase Plan, or pay-as-you-go billing. [Capacity allocation](https://learn.microsoft.com/en-us/power-platform/admin/manage-copilot-studio-messages-capacity) and overage controls can be managed in PPAC or through the Power Platform API.
 
-With access to an inventory of environments in your tenant, and agents that sit within them, you can more easily build the view of purpose and control against both of those scopes. Without it, it isn't feasible at scale to manage and automate where limits are placed, credits are assigned and base those and other controls on the actual scenario at hand instead of a generic approach that doesn't fit the real building you want to enable.
+### Configure allocation and enforcement in PPAC
 
-The example below uses a simple **zoned governance** model. A shared maker environment sits in a green zone with a development-oriented policy profile, while an enterprise production environment sits in a more restrictive red zone. The zone is not the control itself. It is inventory metadata that lets policy automation select the governance controls, funding compliance guardrails, and billing processes for that environment and the agents inside it. An example could be whether or not the environment adopts the organization's chargeback model and to what scope depending on the zone and purpose.
-
-![Environments and agents connected through inventory to the agent owner, cost owner, and budget.](/assets/posts/copilot-harness-cost-governance/inventory-ownership-model.png){: .shadow w="1200" }
-_Inventory combines zone, scenario, ownership, and funding metadata so repeatable processes can apply the appropriate controls._
-
-[Copilot Studio Kit]({% post_url 2026-03-06-copilot-studio-kit %}) and [Compliance Hub](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-compliance-hub) provide a ready to use and extendable example of how Power Platform Inventory can be used in conjunction with additional governance metadata and questions to define the controls that apply to each agent specifically, while doing it at scale. Governance at scale only works with automation and scenario-based rules, like those set with [environment group rules](https://learn.microsoft.com/en-us/power-platform/admin/environment-groups-rules).
-
-## Enable and govern with PPAC & Power Platform API 
-
-Once you have a view of the environments in the organization and those operating with agents in them, it's time to [enable usage with credits](https://learn.microsoft.com/en-us/power-platform/admin/manage-copilot-studio-messages-capacity). Organizations use Copilot credit capacity packs, the pre-purchase plan or PAYG to enable and fund credit consumption for agents and other AI workloads. Each are configured and managed differently.
-
-If you have pre-paid credit packs, these operate on an allocation model, so the first step is allocating credits to environments, so that those credits become reserved for their intended use. Don't just allow anyone to consume whatever you paid for from the tenant pool.
-
-> **Potential risk**: Acknowledge that when environments are created, they can default to having draw from the tenant pool enabled, so managing the tenant pool, as well as those environments is key to reducing the risk of capacity exhaustion.
-{: .prompt-danger }
-
- Now with your view of environments, their purpose and cost owner, you're able to support a request for credits with:
- 1. allocation to that environment and,
-2. the additional steps that makes sense for your governance process, like chargeback for example.
-
-
-> The person who can allocate credits depends on the tenant setting for add-on capacity assignments, set by the tenant administrator in PPAC. When set to 'any environment admin', both tenant and environment system administrators can update add-on assignments in the tenant. To avoid broad control over where credits get used, only allow tenant admins to allocate them. 
-{: .prompt-danger }
-
-### Assigning credits to an environment can be done in two ways:
-
-The first way to assign credits to an environment is via PPAC. Head to https://admin.powerplatform.microsoft.com/billing/licenses/copilotStudio or PPAC ➡️ Licensing ➡️ Copilot Studio. From here, administrators can review the credits available to assign under 'Prepaid capacity' and can then reserve their usage for an environment by allocating them. Selecting 'Manage Copilot Credits' opens a pane where administrators can select an environment and then allocate credits to that environment.
+In PPAC, go to **Licensing** > **Copilot Studio** and select **Manage Copilot Credits**. Select an environment, allocate prepaid capacity where required, and configure what happens when that capacity is exhausted.
 
 ![PPAC Manage capacity pane for allocating Copilot Credits and configuring environment overage controls.](/assets/posts/copilot-harness-cost-governance/manage-environment-capacity.png){: .shadow }
 _Administrators can reserve prepaid Copilot Credits for a selected environment._
 
-Allocating credits in enterprises or high scale scenarios can be better achieved with automation by using the Power Platform API. [Update Allocations By Environment](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/allocations-by-environment/update-allocations-by-environment) can be used to allocate credits to the environment needed.
+The tenant's [add-on capacity assignment setting](https://learn.microsoft.com/en-us/power-platform/admin/tenant-settings) controls who can allocate credits. Allowing environment administrators to manage allocations doesn't restrict them to environments they administer; it gives them allocation control across all environments in the tenant. Keep allocation restricted to tenant administrators unless that broader tenant-wide access is intentional.
 
-In the request you must provide two things: the environmentId and a CurrencyAllocationModel object nested in a currencyAllocations array. That object should be provided with the allocation, and the currencyType which in this case is 'MCSMessages'.
-```http
+### Configure allocation and enforcement through the API
+
+At scale, use [Update Allocations By Environment](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/allocations-by-environment/update-allocations-by-environment) to configure an environment's allocation and enforcement rules in the same request.
+
+The following request allocates 10,000 Copilot Credits, enables administrator alerts, prevents draw from the tenant pool, enables pay-as-you-go overage, and leaves denial of further consumption disabled:
+
+<details>
+<summary>View the allocation and enforcement request</summary>
+<pre><code class="language-http">
 PATCH https://api.powerplatform.com/licensing/allocationsByEnvironment?api-version=2024-10-01
 Content-Type: application/json
 
 {
-  "environmentId": "<environment-id>",
-  "currencyAllocations": [
-    {
-      "currencyType": "MCSMessages",
-      "allocated": 10000
-    }
-  ]
-}
-```
-{: .nolineno}
-
-### Set alerts, control draw down and switch to PAYG
-
-Still working with allocated credits, one of the most important rules both for the environment itself and its cost owner, but also the wider tenant and organization are the enforcement rules used. These include:
-- the alert to send admins when the environment is nearing usage,
-- whether or not the environment should draw from the available capacity in the tenant,
-- whether PayGo should be used as the fallback to charge usage to,
-- or if agents should be denied further consumption and should stop working.
-
-These rules can be configured both in PPAC, and using the [Power Platform API](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/allocations-by-environment/update-allocations-by-environment#enforcementrule), when allocating credits to an environment with the same [Update Allocations By Environment](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/allocations-by-environment/update-allocations-by-environment) endpoint.
-
-> For organizations that use pre-paid credits, understanding when to use the option to draw down from the tenant pool is essential. Enabled by default, it's key to decide whether you want environments to consume available capacity or whether you want to disable that based on the types of environments people are working in. Your environment inventory will help to target the environments that this should be turned off in, like shared development environments.
-{: .prompt-danger }
-
-This example request allocates 10,000 credits similar to the previous example but also sets the enforcement rules as follows:
-
-| Enforcement Rule | Configuration |
-|------------------|---------------|
-| Alert | Enabled |
-| Tenant Pool Draw | Disabled |
-| PayGo | Enabled |
-| Deny further usage | Disabled |
-
-```http
-PATCH https://api.powerplatform.com/licensing/allocationsByEnvironment?api-version=2024-10-01
-Content-Type: application/json
-
-{
-  "environmentId": "<environment-id>",
+  "environmentId": "&lt;environment-id&gt;",
   "currencyAllocations": [
     {
       "currencyType": "MCSMessages",
@@ -163,36 +177,52 @@ Content-Type: application/json
     }
   ]
 }
-```
-{: .nolineno}
+</code></pre>
+</details>
 
-### When limits make more sense, and how to apply them 
+> This PATCH replaces the allocation and configuration values included in the request. Read the current model first, preserve the existing values that should remain, and then submit the complete intended configuration.
+{: .prompt-info }
 
-Resource limits control how many credits an individual resource, like an agent, can consume each month. Reource limits are available today and can complement credits allocated to an environment or apply when the environment uses pay-as-you-go billing. Environment-level limits will be supported soon ([MC1451872](https://portal.office.com/adminportal/home/?l=en-US&ref=MessageCenter/:/messages/MC1451872)). 
+## Apply agent-level limits
 
-> Looking for a way to limit environment usage when working with pay-as-you-go or pre-purchase plan billing? Environment-level limits will be supported soon and in the meantime, you can [review usage and unlink a billing policy to prevent further environment level consumption]({% post_url 2026-05-13-managing-spend-pay-as-you-go %}).
- {: .prompt-info }
+Environment controls set the boundary for shared capacity. An agent-level limit adds a monthly boundary for one use case, regardless of whether its environment uses prepaid capacity or pay-as-you-go billing.
 
-Resource limits make sense when you want to target specific scenarios for an agent not consuming more than a certain amount of credits, for example:
-- Balancing cost control and enablement for GHCP harness agents, where admins might detect creation of a new agent by a maker for the first time, and automatically assign an agent-limit to enable limited discovery and testing by the maker(s). They might provide communication to the owner on the governance approach and limit, and may set a lower limit for the second agent created by the maker or simply limit the subsequent agents from consuming any credits until the use case is more established and funded appropriately.
-- Wanting to fairly distribute a credits budget based on a general expectation of consumption for each use case in an environment. A team may jointly use 5 production agents in their roles, one of which they may use once a month and has a critical uptime requirement. If they use the other 4 agents every day throughout the month but their availability isn't as critical based on other factors, and they consume all the allocated credits available, it's an agent limit on the 4 agents that keep the first one available as needed.
+For maker-development agents, a repeatable process can:
 
-> If you're enabling makers in the organization to build agents with Copilot Studio, a well balanced way to approach enablement and cost control as a starting point is the first example described above, allowing a small amount of credits for a use case, driven by the creator, then further limiting usage while providing communications. Keep in mind user-scoped limits are not supported in the platform so this is a workaround approach to enabling some discovery.
- {: .prompt-info }
+1. Detect a newly created GitHub Copilot harness agent.
+2. Confirm whether it is in a maker-development environment.
+3. Apply the organization's default development limit.
+4. Notify the agent owner of the limit and what happens when it is approached or reached.
+5. Route requests for more capacity through the appropriate approval process.
+6. Review or replace the development limit when the agent moves into funded production usage.
 
-To set a credit limit against an agent, **tenant administrators** can go to PPAC ➡️ Licensing ➡️ Copilot Studio ➡️ Manage Agents, where they can select specific agents and set the credit limit for them. One a limit has been set, administrators control the behavior for what happens when the agent hits that limit. They can decide to enforce the limit by preventing further usage, and/or send a notification at a set percentage of credits used.
+This gives makers room to explore without leaving consumption unbounded. Because limits apply to agents rather than users, consider how many agents one maker can create when defining the default and escalation process.
+
+Production agents can also use limits to protect shared capacity, but the value should reflect expected usage and service criticality rather than inheriting the maker-development default.
+
+> As of August 2026, Microsoft has announced environment-level limits through Message Center item [MC1451872](https://portal.office.com/adminportal/home/?l=en-US&ref=MessageCenter/:/messages/MC1451872). Until they are available, you can [review usage and unlink a billing policy to prevent further environment-level consumption]({% post_url 2026-05-13-managing-spend-pay-as-you-go %}).
+{: .prompt-info }
+
+### Configure an agent limit in PPAC
+
+In PPAC, go to **Licensing** > **Copilot Studio** > **Manage Agents**. Select an agent, set its monthly Copilot Credit limit, and choose whether to notify administrators as consumption approaches the limit and stop further usage when the limit is reached.
 
 ![PPAC agent capacity settings showing a Copilot Credit limit, stop-usage control, and notification threshold.](/assets/posts/copilot-harness-cost-governance/set-agent-limit.png){: .shadow w="900" }
 _Administrators can set an agent-level credit limit and choose what happens as consumption approaches or reaches it._
 
-> **Notifications for when an agent hits the specified percentage against the set limit are sent to tenant and environment administrators.** You should factor this in when designing your governance process for handling what happens when a limit is reached and an agent potentially denies further usage, in case you have additional steps you'd like to take to handle this or repeated cases of it.
+> Built-in limit notifications are sent to tenant and environment administrators, not necessarily to the agent owner. Define who reviews those alerts, who contacts the owner when context is needed, and who can approve a limit increase or allow the agent to stop.
 {: .prompt-warning }
 
-Administrators in scaled tenants may also have one of the following scenarios to handle:
-- Large numbers of requests to a CoE or IT team to add agent-level limits to agents owned by makers in the business.
-- A distributed or 'hub' CoE model where delegated administration for agents needs to be provided.
+Alternatively, administrators can implement their own consumption-review and notification process. [Get Many Environment Entitlements](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/environment-entitlements/get-many-environment-entitlements) returns entitlement consumption for an environment, allowing your monitoring process to decide who should be notified and when.
 
-The [Power Platform API Update Resource Threshold endpoint](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/resource-threshold/upsert-resource-threshold) lets administrators handle these scaled scenarios. This example sets a limit of 1000 credits for a specific agent, sends a notification when 80% of those have been consumed, and prevents further consumption once the limit is reached:
+```http
+GET https://api.powerplatform.com/licensing/environments/<environment-id>/entitlements?api-version=2024-10-01
+```
+{: .nolineno }
+
+### Configure an agent limit through the API
+
+At scale, use [Update Resource Threshold](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/resource-threshold/upsert-resource-threshold) to apply the approved limit, notification threshold, and stop behavior. The following request sets a limit of 1,000 credits, notifies administrators at 80%, and prevents further consumption when the limit is reached:
 
 ```http
 PUT https://api.powerplatform.com/licensing/environments/<environment-id>/entitlements/MCSMessages/resources/<agent-resource-id>/threshold?api-version=2024-10-01
@@ -206,33 +236,28 @@ Content-Type: application/json
   "notificationThreshold": 80
 }
 ```
-{: .nolineno}
+{: .nolineno }
 
-> Ensure you set stopResource to false to prevent stopping the agent from being used immediately. This is used to stop usage irrespective of a limit when the request is made, and works in the same way as the stop agent action in PPAC via 'Manage agents'.
+> Ensure you set `stopResource` to `false` to prevent stopping the agent from being used immediately. This is used to stop usage irrespective of a limit when the request is made, and works in the same way as the stop agent action through **Manage Agents** in PPAC.
 {: .prompt-danger }
 
-## How zoned governance applies 
+## Repeat the checks for new environments and agents
 
-Zoned governance groups environments and agents by purpose, risk, and complexity so that each group can inherit an appropriate and repeatable set of controls. A zone is not a control itself, but it selects a policy profile based on the agent’s purpose, ownership, risk, criticality and other variables. Zoned governance varies by organization and industry, particularly where regulation introduces additional requirements. This is an example of how cost control fits into zoned governance at a high level:
+The first review only covers the environments and agents that exist today. Run the same checks on a schedule or automate them so newly created resources don't remain outside your controls.
 
-| Example profile | Intended use | Cost-control profile | Review or escalation trigger |
-|---|---|---|---|
-| **Green: shared maker development** | Maker-led experimentation and limited team use | Apply a default agent limit, allocate development capacity intentionally, and restrict access to tenant-pool or pay-as-you-go overage unless approved | The limit is approached, the use case needs more capacity, or the agent is ready to enter a managed production lifecycle |
-| **Red: enterprise production** | Approved departmental or organization-wide agents with accountable ownership | Align allocation or billing to the cost owner, set agent limits according to expected use and criticality, and make tenant-pool or pay-as-you-go access an explicit continuity decision | Consumption changes materially, ownership or criticality changes, or enforcement could interrupt a production service |
+Focus the recurring process on:
 
-In future posts, we'll cover further considerations for managing and automating credit consumption control at scale around zoned governance.
+- discovering new environments and GitHub Copilot harness agents through Power Platform Inventory,
+- checking each new environment's allocation and enforcement rules and confirming that tenant-pool draw matches its intended purpose,
+- applying the approved default limit to maker-development agents,
+- and reviewing consumption so administrators can handle approaching limits or requests for more capacity.
 
-## Governance should always be iterative
+## Immediate administrator checklist
 
-There's one task in understanding the things an environment is being used for, the agents that require access to credits, and the controls that should be wrapped around those use cases. The more important part after the first job is continuing to stay on top of changing needs and requirements. With platform developments, iterative improvements by developers on use cases themselves and other changing factors, simply applying an allocation of credits, or setting a limit once, isn't future proof. 
+1. Inventory GitHub Copilot harness agents and their environments.
+2. Classify each environment as maker development or funded production usage, and decide whether tenant-pool draw is appropriate for that purpose.
+3. Review and correct its allocation, pay-as-you-go, alert, and deny configuration.
+4. Apply agent-level limits and define how requests for more capacity are handled.
+5. Repeat or automate the checks for newly created environments and agents.
 
-While considering your cost management and governance strategy for agents, acknowledge the fact that building it isn't a one time application of processes and controls. Think about how agents may need to consume more or less credits in the future. If colleagues move from one department to another, leaving only 75% of the people in the department they moved from then still using an agent, likelyhood is it may not need as many credits as it had before, and in an allocation scenario, leaving credits behind means missed value from what the organization invested in. We'll cover how to approach review processes and iterative governance in future posts.
-
-## Key takeaways
-
-- Start with the build scenario. Maker-led development and production agents carry different risks and should not inherit the same cost-control profile.
-- Use inventory to connect each agent and environment to its purpose, owner, funding model, and governance zone.
-- Allocate prepaid credits intentionally, then decide whether each environment can draw from the tenant pool, use pay-as-you-go, or deny further consumption.
-- Use environment controls to govern shared capacity and agent (resource) limits to place tighter boundaries around individual use cases.
-- Treat limits as guardrails, not one-time configuration. Define how to handle thresholds that get approached or met and review allocations and limits as ownership and usage change.
-- Apply controls through repeatable, scenario-based governance patterns so enablement can scale without relying on a single standard for every agent.
+Which parts of this process will you manage in PPAC, and which will you automate through the Power Platform API?
