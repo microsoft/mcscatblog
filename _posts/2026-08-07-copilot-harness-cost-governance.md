@@ -135,7 +135,7 @@ The tenant's [add-on capacity assignment setting](https://learn.microsoft.com/en
 
 At scale, use [Update Allocations By Environment](https://learn.microsoft.com/en-us/rest/api/power-platform/licensing/allocations-by-environment/update-allocations-by-environment) to configure an environment's allocation and enforcement rules in the same request.
 
-The following request allocates 10,000 Copilot Credits, enables administrator alerts, prevents draw from the tenant pool, enables pay-as-you-go overage, and leaves denial of further consumption disabled:
+The following request allocates 10,000 Copilot Credits, enables administrator alerts, prevents draw from the tenant pool, enables pay-as-you-go overage, and leaves denial of further consumption disabled. The request patches the current configuration including allocated credits. Read the current allocation first, preserve the existing values that should remain, and then submit the complete intended configuration.
 
 <details open>
 <summary>View the allocation and enforcement request</summary>
@@ -173,8 +173,10 @@ Content-Type: application/json
 </code></pre>
 </details>
 
-> This PATCH replaces the allocation and configuration values included in the request. Read the current model first, preserve the existing values that should remain, and then submit the complete intended configuration.
+> This example uses a raw HTTP call to demonstrate how you can use the API for programmatic control. Refer to the [Learn tutorial for managing credit allocations programmatically](https://learn.microsoft.com/en-us/power-platform/admin/programmability-tutorial-manage-copilot-credit-allocations), for examples using the C# and Python SDKs, and PowerShell with a raw HTTP call. Actions for the [Power Platform for Admins V2 connector](https://learn.microsoft.com/en-us/connectors/powerplatformadminv2) are also coming soon.
 {: .prompt-info }
+
+
 
 ### Review environment controls for new and existing environments
 
