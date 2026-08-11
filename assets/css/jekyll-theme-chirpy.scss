@@ -1352,6 +1352,7 @@ html[data-bs-theme="dark"] {
 
 /* Hide the redundant mobile topbar title on the home page (it duplicates the hero). */
 body.home #topbar-title { display: none !important; }
+body.home #search-trigger { margin-left: auto; }
 
 /* === Collapsible sidebar at all widths ===
    Below 850px Chirpy already renders the sidebar off-canvas with a hamburger
