@@ -3,7 +3,6 @@ layout: post
 agent_edition: github-copilot
 title: "The New Copilot Studio Agent Sandbox"
 date: 2026-07-20
-pin: true
 categories: [orchestration]
 tags: [copilot-studio, skills, agent-sandbox, code-execution, python, agent-development]
 description: "How the Copilot Studio agent sandbox turns model reasoning into finished files, calculations, and other executable work while keeping external access governed."
