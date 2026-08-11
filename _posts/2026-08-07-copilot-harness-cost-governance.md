@@ -3,6 +3,7 @@ layout: post
 agent_edition: github-copilot
 title: "Adopting the GitHub Copilot Harness: Cost Control and Governance in Copilot Studio"
 date: 2026-08-07
+pin: true
 categories: [copilot-studio, governance]
 tags: [copilot-studio, governance, billing, licensing, cost management]
 description: "Identify GitHub Copilot harness agents, review their environments, and apply Power Platform controls to manage Copilot Credit consumption during maker development and production use."
