@@ -245,7 +245,7 @@ The original card is replaced. No buttons, no inputs, just a clean confirmation.
 > Test this in Teams directly, not the Copilot Studio test canvas. The invoke/refresh flow may not work in the test panel.
 {: .prompt-warning }
 
-A complete, importable version of this pattern (built by [Nghiem Doan](https://github.com/nghiemdoan-msft)) is available in the [CopilotStudioSamples repo](https://github.com/microsoft/CopilotStudioSamples/tree/main/authoring/solutions/adaptive-card-refresh) as a ready-to-import solution. For the original walkthrough with screenshots, see [Nghiem's repo](https://github.com/nghiemdoan-msft/AdaptiveCardInCopilotStudio).
+A complete, importable version of this pattern (built by [Nghiem Doan](https://github.com/nghiemdoan-msft)) is available in the [CopilotStudioSamples repo](https://github.com/microsoft/CopilotStudioSamples/tree/main/authoring/solutions/adaptive-card-refresh) as a ready-to-import solution.
 
 ## What about the Microsoft 365 Copilot channel?
 
