@@ -244,7 +244,7 @@ This gives makers room to explore without leaving consumption unbounded. Because
 
 Production agents can also use limits to protect shared capacity, but the value should reflect expected usage and service criticality rather than inheriting the maker-development default.
 
-> Agent level limits don't cap the aggregate consumption across an environment. As of August 2026, Microsoft has announced environment-level limits through Message Center item [MC1451872](https://portal.office.com/adminportal/home/?l=en-US&ref=MessageCenter/:/messages/MC1451872), which close the gap this creates. Until they are available, you can [review usage and unlink a billing policy to prevent further environment-level consumption]({% post_url 2026-05-13-managing-spend-pay-as-you-go %}).
+> Agent level limits don't cap the aggregate consumption across an environment. You can [review usage and unlink a billing policy to prevent further environment-level consumption]({% post_url 2026-05-13-managing-spend-pay-as-you-go %}) and achieve an aggregate style limit.
 {: .prompt-info }
 
 ### Configure an agent limit in PPAC
