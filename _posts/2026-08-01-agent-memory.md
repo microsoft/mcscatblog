@@ -4,9 +4,9 @@ agent_edition: github-copilot
 title: "Agent Memory: How Agents Carry Knowledge Across Conversations"
 date: 2026-08-01
 categories: [copilot-studio, agents]
-tags: [copilot-studio, agent-memory, agent-development, best-practices, evals, governance]
-description: "Large language models are stateless. Here's how agent memory in Copilot Studio carries knowledge across conversations: short-term and long-term memory, the three kinds of long-term memory, reflection, and the guardrails that keep it trustworthy."
-author: kaashyapmurali
+tags: [copilot-studio, agent-memory, agent-development, best-practices, evals, sandbox]
+description: "Large language models are stateless. Here's how agent memory in Copilot Studio carries knowledge across conversations: short-term and long-term memory, the three kinds of long-term memory, reflection, and how we check that it actually works."
+authors: [kaashyapmurali, misroka]
 image:
   path: /assets/posts/agent-memory/header.png
   alt: "Agent memory: three sessions connected to a durable memory store"
@@ -81,9 +81,11 @@ Agent memory in Copilot Studio is built on a deliberately simple idea: **memory 
 
 Two consequences follow. Recall doesn't require exotic infrastructure. The agent looks things up much the way you would, opening an index and navigating to the relevant section. And correcting memory is a normal edit rather than a re-indexing operation, which matters enormously for the "cross it out because it is no longer true" problem.
 
+Being readable is only useful if someone can actually go and read it, so memory is not buried inside the runtime. When an agent has memory enabled, the first time you talk to it you are told so, and pointed at a memory page in Copilot Studio where what it has learned about you can be reviewed and deleted.
+
 ### Scoped, separated, and sandboxed
 
-Not all memory belongs to the same person. What one user told an agent about their own preferences is very different from a pattern the agent learned about how a business process works, which is different again from knowledge owned by the whole organization. Copilot Studio keeps these in **distinct scopes**, and those scopes are **separate stores, not labels on a shared one**.
+Not all memory belongs to the same person. What one user told an agent about their own preferences is very different from a pattern the agent learned about how a business process works, which is different again from knowledge owned by the whole organization. Copilot Studio keeps these in **distinct scopes**, and those scopes are **separate stores, not labels on a shared one**. Each store's address is derived from the scope it belongs to, so a session can only ever address the stores it was entitled to. There is no shared pool to accidentally over-read from.
 
 Each conversation then runs inside an **isolated sandbox**, the same kind of [agent sandbox]({% post_url 2026-07-20-copilot-studio-agent-sandbox %}) that gives an agent a private place to work. Memory is mounted into that sandbox for the life of the turn with an access mode attached. So the question "what can this agent reach right now?" has a concrete answer: exactly the stores it was entitled to, at exactly the permissions they were mounted with. Anything else simply isn't there to reach.
 
@@ -99,9 +101,9 @@ flowchart TB
     USR -- "mounted, read-write" --> SB
 ```
 {% endraw %}
-_Privacy by construction. Because separation is enforced by where memory lives and how it is mounted, least-privilege access is a property of the system rather than something the model has to be trusted to respect._
+_Isolation by construction. Because separation is enforced by where memory lives and how it is mounted, least-privilege access is a property of the system rather than something the model has to be trusted to respect._
 
-That is the point of building it this way. Privacy and compliance become properties of the architecture rather than promises about behavior.
+That is the point of building it this way: what an agent can reach is decided by the architecture, not by asking the model to behave. The wider story here, how memory is governed, what makers and admins control, and how organizations reason about it at scale, is a big enough topic that it deserves its own post rather than a section in this one.
 
 ### Reflection: turning experience into knowledge
 
@@ -121,35 +123,21 @@ flowchart LR
 ```
 _The memory loop. Forming memory is only half the system. Keeping it true is the other half: anything kept must also be capable of being corrected or dropped._
 
-## Guardrails come first, not last
-
-Memory can mislead as easily as it can help. A stale fact repeated confidently is worse than no fact at all, and durable memory about people is durable *personal data*. So the controls are part of the design, not a hardening pass bolted on afterward.
-
-| Control | What it means in practice |
-|---|---|
-| Consent and control | Whether an agent uses memory, and at which scopes, is an explicit decision rather than an implicit behavior, with controls for the maker who builds the agent and for the people who talk to it. |
-| Isolation by construction | Scopes are separate stores, addressed per tenant, environment, agent, and user, and surfaced to a session only when it is entitled to them. |
-| Least privilege on write | Live turns cannot rewrite broader-scope memory. Anything that would widen a memory's audience is treated as a promotion that has to be earned, not a side effect. |
-| Inspectable and reversible | Memory is human-readable and versioned, so it can be reviewed, corrected, or deleted, including deletion initiated by the person it describes. |
-| Staged rollout | Capabilities widen only after they clear quality, safety, privacy, and cost gates, and every step retains a kill switch. |
-
-Compliance is a first-class requirement rather than an afterthought: memory derived from a person's conversations must be discoverable and deletable by that person, and memory meant to describe a *process* must not quietly accumulate facts about *people*.
-
 ## Trusted, but also verified
 
-Adding memory to an agent is a change you have to prove, because the failure modes are quiet.
+Everything above is a claim about how the system behaves, and claims about memory are easy to make and hard to keep. So before any of this widens to more customers, our engineering and data science teams have to show it holds. That work is ours, not something we hand to makers to figure out on their own.
 
 > An agent with a bad memory does not crash. It just becomes confidently wrong.
 {: .prompt-warning }
 
-So memory is evaluated against the ways it can go wrong, not only the ways it can help. Among the behaviors we hold agents to:
+That is what makes memory worth testing carefully: the failure modes are quiet. So we evaluate memory against the ways it can go wrong, not only the ways it can help. Among the behaviors we hold agents to:
 
 - **Recall.** Days later, in a brand new conversation, does the agent still know what it was told?
 - **Negative recall.** When memory holds something stale or simply wrong, does the agent catch it, or repeat it with confidence?
 - **Abstention.** When something was never actually said, does the agent say it doesn't know? An agent that trades correct refusals for plausible guesses has become less trustworthy, not more.
 - **Hallucination.** Does having a memory tempt the model into inventing detail that was never in it?
 
-Pinning down behaviors this nuanced is its own discipline. If you want to go deeper on that, we wrote about [scoring agent behavior with LLMs]({% post_url 2026-06-26-better-llm-scoring %}). Memory earns a wider audience only when it clearly helps on recall without costing the agent its willingness to say "I don't know."
+Pinning down behaviors this nuanced is its own discipline. If you want to go deeper on that, we wrote about [scoring agent behavior with LLMs]({% post_url 2026-06-26-better-llm-scoring %}). The bar is simple: memory has to clearly help on recall without costing the agent its willingness to say "I don't know."
 
 > A memory system isn't good because it remembers more. It's good because it remembers the right things, and knows what it doesn't know.
 
