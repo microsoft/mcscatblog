@@ -53,7 +53,7 @@ works, but before it is released?**
 > experience. Its evaluators and presentation may evolve.
 {: .prompt-info }
 
-## Why the Preview Tab Is Not the Whole Review
+## Why the Preview tab is not the whole review
 
 Testing conversations is essential, but a conversation only exercises the path
 selected for that input. It does not automatically tell you whether:
@@ -84,7 +84,7 @@ If you are new to the broader toolkit, the
 overview linked above explains how its maker and administrator experiences fit
 together.
 
-## Establish a Baseline Review
+## Establish a baseline review
 
 ZAVA Visual Merchandiser is a fictional agent used for this walkthrough, not a
 downloadable sample. Its screenshots use fictional names and omit
@@ -112,7 +112,7 @@ evidence boundaries from configuration review.
 ![Completed ZAVA agent review summary](/assets/posts/agent-review-tool/zava-review-summary.png){: .shadow w="1200" }
 _In this walkthrough snapshot, the baseline review scored 63%, with 39 of 54 checks passing._
 
-## Start with Findings, but Do Not Stop at the Score
+## Start with findings, but do not stop at the score
 
 The review summary gives us a score and a breakdown of errors, warnings, and
 informational findings. The score provides a useful summary, but the individual
@@ -164,7 +164,7 @@ evaluator view helps us determine whether the issue is isolated or repeated
 across the skill set, while Agent map supplies the surrounding configuration
 context.
 
-## Inspect Skill Quality by Pattern
+## Inspect skill quality by pattern
 
 Open **Skill evaluator**. The default **Group by pattern** view organizes
 results across every evaluated skill and summarizes average quality, safety
@@ -195,7 +195,7 @@ harness, see
 ![ZAVA Skill Evaluator grouped by pattern](/assets/posts/agent-review-tool/zava-skill-evaluator.png){: .shadow w="1200" }
 _Grouping skill results by pattern makes repeated weaknesses visible across the agent._
 
-### Use "By skill" to Find the Actual Change
+### Use "By skill" to find the actual change
 
 The grouped view tells us whether a weakness is repeated. **By skill** tells us
 where to make the change.
@@ -242,7 +242,7 @@ _Agent map provides configuration context for the four skills and their authored
 > knowledge source, skill, or connected agent was invoked.
 {: .prompt-info }
 
-## Make One Focused Improvement
+## Make one focused improvement
 
 Change only the instructions or configuration implicated by the evidence.
 Before modifying ZAVA, document the intended correction and confirm that it
@@ -316,7 +316,7 @@ This is also why a single model-generated rating is not enough. The
 explains why smaller evidence-backed checks and deterministic combination rules
 are more defensible than asking a model for one mystery number.
 
-## What Agent Review Tool Does Not Claim
+## What the Agent Review Tool does not claim
 
 Agent Review Tool guides investigation. It does not certify an agent as
 production-ready, modify the source agent, replace representative test cases or
