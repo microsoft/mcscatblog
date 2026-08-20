@@ -79,7 +79,7 @@ Make sure your corresponding risk level (I chose **high** here) is set to `-1` w
 ![Risk level set to high with Quarantine action](/assets/posts/github-copilot-harness-agents-agent-kit/6.png){: .shadow w="700" h="400"}
 _Setting the high risk level to an SLA of -1 with a Quarantine action_
 
-> As this blog is focused on GHCh agents, it is also important to highlight that even quarantined agents can consume credits if the maker is testing. For a comprehensive look at managing cost and credits for agents, I highly recommend my colleague Lewis Baybutt's blog here: [Adopting the GitHub Copilot Harness: Cost Control and Governance in Copilot Studio | The Custom Engine](https://microsoft.github.io/mcscatblog/posts/copilot-harness-cost-governance/).
+> As this blog is focused on GHCh agents, it is also important to highlight that even quarantined agents can consume credits if the maker is testing. For a comprehensive look at managing cost and credits for agents, I highly recommend my colleague Lewis Baybutt's blog [here](https://microsoft.github.io/mcscatblog/posts/copilot-harness-cost-governance/).
 {: .prompt-warning }
 
 Finally, remember that the SLA countdown doesn't start until the intake form is sent to the maker. If you want these agents to enter the enforcement lifecycle automatically, disable the **Admin Approval Before Maker Notification** flag after you validate your thresholds. Otherwise, an admin must open each compliance case and send its notification.
