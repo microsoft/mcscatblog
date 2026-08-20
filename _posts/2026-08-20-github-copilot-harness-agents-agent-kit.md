@@ -8,19 +8,19 @@ description: "Use Copilot Agent Kit Compliance Hub thresholds, cases, and enforc
 author: emdarcy
 agent_edition: github-copilot
 image:
-  path: /assets/posts/github-copilot-harness-agents-agent-kit/1.png
+  path: /assets/posts/github-copilot-harness-agents-agent-kit/header.png
   alt: "Copilot Agent Kit Compliance Hub dashboard showing agent risk and compliance status"
 ---
 
-GitHub Copilot harness (**GHCh**) agents give makers a new way to build, but they also give platform admins a new governance question: how do you identify these agents and apply your organization's controls consistently? The **Compliance Hub** in Copilot Agent Kit can turn that question into an inventory filter, a compliance case, and an enforceable policy.
+GitHub Copilot harness (**GHCh**) agents give makers a new way to build, but they also give platform admins a new governance question: how do you identify these agents and apply your organization's controls consistently? The **Compliance Hub** in Copilot Agent Kit can play an important role in bringing peace of mind by providing additional visibility and providing extra guardrails.
 
 If you're not familiar with Copilot Agent Kit, start with the [Copilot Agent Kit overview](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-overview). For a broader tour of its testing, inventory, and governance features, see [Copilot Studio Kit: Beyond Test Automation]({% post_url 2026-03-06-copilot-studio-kit %}). This post assumes the kit and Agent Inventory are already configured and focuses on using Compliance Hub to identify and govern GHCh agents in your tenant.
 
-The [Compliance Hub](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-compliance-hub) evaluates Agent Inventory data against configurable thresholds. When an agent violates a threshold, the hub can create a case, notify its maker, track a remediation SLA, and apply the configured action after that SLA expires. Available actions include manual review, quarantine, and delete. Let's take a closer look.
+The [Compliance Hub](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-compliance-hub) is a key part of the Copilot Agent Kit that allows organisations to track and monitor all agents built on Copilot Studio in line with their own rules. It includes automated rules and alerts that make governance for admins a breeze, providing them with alerts when an agent is created that doesn't meet the organisation's standards. It also assists makers by giving them guidance on how to bring their agent into compliance with automated notifications and guidelines. It can even quarantine or delete any agents if a specific time period has lapsed without any action. Let's take a closer look.
 
 ## The Compliance Hub dashboard
 
-When we first load the Compliance Hub, we get a dashboard view of our agents' current status against the compliance rules we have configured. At a glance, an admin can see agents that are high risk, missing owners, or require immediate action. An admin can manually trigger a **Compliance Scan** from this screen. A Compliance Scan also runs automatically after Agent Inventory finishes, typically once each day.
+When we first load the Compliance Hub, we get a dashboard view of our agents' current status against the compliance rules we have configured. At a glance, an admin can see agents that are high risk, missing owners, or any that require immediate action. An admin can manually trigger a **Compliance Scan** from this screen. A Compliance Scan also runs automatically after Agent Inventory finishes, typically once each day.
 
 ![Compliance Hub dashboard view](/assets/posts/github-copilot-harness-agents-agent-kit/1.png){: .shadow w="700" h="400"}
 _The Compliance Hub dashboard_
@@ -32,12 +32,12 @@ The results of these charts all depend on our settings, starting with **Complian
 ![Compliance Thresholds settings](/assets/posts/github-copilot-harness-agents-agent-kit/2.png){: .shadow w="700" h="400"}
 _Out-of-the-box Compliance Thresholds_
 
-Each rule is measured as **low, medium, or high** risk. When an agent violates more than one rule, its case uses the highest matched risk level. Risk levels are associated with enforcement actions that admins can customize:
+Each rule is measured as **low, medium, or high** risk. When a maker creates an agent that violates one of these rules, they will be notified and the agent will be categorized at the highest threat level of violation. Risk levels are associated with varying enforcement actions that can be customized:
 
 ![Risk levels and enforcement actions](/assets/posts/github-copilot-harness-agents-agent-kit/3.png){: .shadow w="700" h="400"}
 _Risk levels mapped to enforcement actions_
 
-When an agent matches one of the configured risk factors, Compliance Hub creates or updates a **case**. The default action policies give a medium-risk case five days before quarantine and a high-risk case three days before deletion, but admins can change both the SLA and action for each risk level. Quarantine disables the agent for end users while leaving it available to its owner for remediation. Delete permanently removes the agent and can't be undone.
+When an agent matches one or more of the configured risk factors, Compliance Hub creates or updates a **case**. As an example, the default action policies give a medium-risk case five days before quarantine and a high-risk case three days before deletion, but admins can change both the SLA and action for each risk level. Quarantine disables the agent for end users while leaving it available to its owner for remediation. Delete permanently removes the agent and can't be undone.
 
 > Only **published** agents can be quarantined. If an agent is in a draft state, it can only be deleted or manually handled.
 {: .prompt-warning }
@@ -79,7 +79,7 @@ Make sure your corresponding risk level (I chose **high** here) is set to `-1` w
 ![Risk level set to high with Quarantine action](/assets/posts/github-copilot-harness-agents-agent-kit/6.png){: .shadow w="700" h="400"}
 _Setting the high risk level to an SLA of -1 with a Quarantine action_
 
-> The `-1` SLA shown here is an implementation-specific configuration used to make a case immediately overdue; it isn't a documented default. Validate this behavior and the complete notification-to-enforcement path in a nonproduction environment before enabling it. Use **Quarantine**, not **Delete**, while testing so the agent owner can still remediate the agent.
+> As this blog is focused on GHCh agents, it is also important to highlight that even quarantined agents can consume credits if the maker is testing. For a comprehensive look at managing cost and credits for agents, I highly recommend my colleague Lewis Baybutt's blog here: [Adopting the GitHub Copilot Harness: Cost Control and Governance in Copilot Studio | The Custom Engine](https://microsoft.github.io/mcscatblog/posts/copilot-harness-cost-governance/).
 {: .prompt-warning }
 
 Finally, remember that the SLA countdown doesn't start until the intake form is sent to the maker. If you want these agents to enter the enforcement lifecycle automatically, disable the **Admin Approval Before Maker Notification** flag after you validate your thresholds. Otherwise, an admin must open each compliance case and send its notification.
@@ -108,6 +108,13 @@ Once that compliance case is created, sending the intake notification starts the
 
 ![Compliance Scan enforcement flow](/assets/posts/github-copilot-harness-agents-agent-kit/9.png){: .shadow w="700" h="400"}
 _The Compliance Scan enforcement sequence_
+
+## Automating the scan
+
+To further automate this process, I created a custom flow that triggered when a Compliance Case with a violation containing GHCh was created. I leveraged a simple **"When a record is added"** trigger paired with an **unbound action** to call the Compliance Scan flow:
+
+![Custom automation flow](/assets/posts/github-copilot-harness-agents-agent-kit/10.png){: .shadow w="700" h="400"}
+_A custom flow to auto-run the Compliance Scan on new GHCh cases_
 
 ## Wrapping up
 
