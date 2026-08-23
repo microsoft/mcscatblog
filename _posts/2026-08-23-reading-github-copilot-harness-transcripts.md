@@ -9,7 +9,7 @@ description: "Learn how to find, merge, and read Copilot Studio transcripts from
 author: patilravikiran
 image:
   path: /assets/posts/reading-github-copilot-harness-transcripts/header.svg
-  alt: "A Copilot Studio transcript timeline showing reasoning, tool call start, status stream, completion or failure, and turn completion markers."
+  alt: "A CAT investigator traces reasoning, tool calls, results, and turn completion across split GitHub Copilot harness transcript pages."
 mermaid: true
 ---
 
