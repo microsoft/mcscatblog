@@ -35,8 +35,10 @@
     </filter>
     <style>
       .eyebrow { font: 700 24px "Segoe UI", Arial, sans-serif; letter-spacing: 4px; fill: #67e8f9; }
+      .badge { font: 700 18px "Segoe UI", Arial, sans-serif; letter-spacing: 3px; fill: #67e8f9; }
       .headline { font: 750 72px "Segoe UI", Arial, sans-serif; fill: #f8fafc; }
       .subhead { font: 400 30px "Segoe UI", Arial, sans-serif; fill: #c7d2fe; }
+      .chip { font: 500 22px "Segoe UI", Arial, sans-serif; fill: #c7d2fe; }
       .event { font: 700 20px "Segoe UI", Arial, sans-serif; fill: #172554; }
       .detail { font: 600 15px Consolas, "Courier New", monospace; fill: #64748b; }
       .batch { font: 700 15px "Segoe UI", Arial, sans-serif; fill: #ffffff; }
@@ -50,9 +52,9 @@
   <path d="M0 760 C340 670 520 820 820 735 C1110 650 1320 690 1600 565 V900 H0 Z" fill="#070d1d" opacity="0.72"/>
 
   <g transform="translate(105 126)">
-    <rect width="228" height="44" rx="22" fill="#0891b2" opacity="0.2" stroke="#67e8f9" stroke-opacity="0.55"/>
+    <rect width="258" height="44" rx="22" fill="#0891b2" opacity="0.2" stroke="#67e8f9" stroke-opacity="0.55"/>
     <circle cx="27" cy="22" r="7" fill="#67e8f9"/>
-    <text x="49" y="30" class="eyebrow" font-size="18" letter-spacing="2">GHCP HARNESS</text>
+    <text x="49" y="29" class="badge">GHCP HARNESS</text>
 
     <text x="0" y="132" class="headline">Inside the</text>
     <text x="0" y="214" class="headline">transcript</text>
@@ -61,13 +63,13 @@
     <g transform="translate(0 337)">
       <rect width="170" height="48" rx="24" fill="#22d3ee" fill-opacity="0.14" stroke="#22d3ee" stroke-opacity="0.6"/>
       <circle cx="25" cy="24" r="8" fill="#22d3ee"/>
-      <text x="45" y="32" class="subhead" font-size="22">Reasoning</text>
+      <text x="45" y="32" class="chip">Reasoning</text>
       <rect x="184" width="130" height="48" rx="24" fill="#8b5cf6" fill-opacity="0.17" stroke="#a78bfa" stroke-opacity="0.65"/>
       <circle cx="209" cy="24" r="8" fill="#a78bfa"/>
-      <text x="229" y="32" class="subhead" font-size="22">Tools</text>
+      <text x="229" y="32" class="chip">Tools</text>
       <rect x="328" width="124" height="48" rx="24" fill="#34d399" fill-opacity="0.14" stroke="#34d399" stroke-opacity="0.62"/>
       <circle cx="353" cy="24" r="8" fill="#34d399"/>
-      <text x="373" y="32" class="subhead" font-size="22">Turns</text>
+      <text x="373" y="32" class="chip">Turns</text>
     </g>
     <path d="M0 438 H430" stroke="#475569" stroke-width="2"/>
     <text x="0" y="487" class="subhead" font-size="22">Find it  ·  merge it  ·  read it</text>
