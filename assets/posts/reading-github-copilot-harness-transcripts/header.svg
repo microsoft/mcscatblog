@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Inside GitHub Copilot harness transcripts: reasoning, tools, and turn lifecycles</title>
+  <desc id="desc">A stylized conversation transcript timeline with reasoning, tool calls, and completion events for a Copilot Studio agent.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="55%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b1224" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#111c38" stop-opacity="0.95"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#031027" flood-opacity="0.45"/>
+    </filter>
+    <style>
+      .title { font: 700 64px "Segoe UI", Arial, sans-serif; fill: #f8fafc; }
+      .subtitle { font: 400 30px "Segoe UI", Arial, sans-serif; fill: #dbeafe; }
+      .label { font: 600 22px "Segoe UI", Arial, sans-serif; fill: #e2e8f0; }
+      .small { font: 500 18px "Segoe UI", Arial, sans-serif; fill: #bfdbfe; }
+      .mono { font: 600 17px Consolas, "Courier New", monospace; fill: #93c5fd; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1460" cy="110" r="180" fill="#ffffff" fill-opacity="0.08"/>
+  <circle cx="170" cy="760" r="260" fill="#ffffff" fill-opacity="0.07"/>
+
+  <rect x="110" y="130" width="1380" height="640" rx="26" fill="url(#card)" stroke="#60a5fa" stroke-opacity="0.35" filter="url(#shadow)"/>
+
+  <text x="170" y="240" class="title">Copilot Harness Transcript Anatomy</text>
+  <text x="170" y="290" class="subtitle">Reasoning → tool call lifecycle → answer → turn completion</text>
+
+  <line x1="230" y1="420" x2="1370" y2="420" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 14"/>
+
+  <g transform="translate(240,420)">
+    <circle r="28" fill="#38bdf8"/>
+    <text x="-70" y="72" class="label">User message</text>
+    <text x="-84" y="103" class="mono">type: "message"</text>
+  </g>
+
+  <g transform="translate(455,420)">
+    <circle r="30" fill="#22d3ee"/>
+    <text x="-76" y="72" class="label">ThinkingTrace</text>
+    <text x="-104" y="103" class="mono">value.thinkingText</text>
+  </g>
+
+  <g transform="translate(700,420)">
+    <circle r="32" fill="#6366f1"/>
+    <text x="-116" y="72" class="label">ToolCallTrace:Started</text>
+    <text x="-136" y="103" class="mono">toolCallId, toolKind, inputs</text>
+  </g>
+
+  <g transform="translate(950,420)">
+    <rect x="-54" y="-36" width="108" height="72" rx="14" fill="#0284c7"/>
+    <text x="-78" y="72" class="label">Status stream</text>
+    <text x="-112" y="103" class="mono">ToolCallTrace (status)</text>
+  </g>
+
+  <g transform="translate(1180,420)">
+    <circle r="32" fill="#0ea5e9"/>
+    <text x="-112" y="72" class="label">Completed / Failed</text>
+    <text x="-108" y="103" class="mono">result or errorMessage</text>
+  </g>
+
+  <g transform="translate(1360,420)">
+    <circle r="30" fill="#14b8a6"/>
+    <text x="-72" y="72" class="label">turn.complete</text>
+    <text x="-66" y="103" class="mono">value: {}</text>
+  </g>
+
+  <rect x="170" y="560" width="1240" height="145" rx="16" fill="#0b223f" stroke="#7dd3fc" stroke-opacity="0.45"/>
+  <text x="205" y="615" class="small">Read this timeline as evidence, not decoration:</text>
+  <text x="205" y="650" class="small">• Correlate calls by toolCallId  • Merge BatchId rows before analyzing  • Check both name and valueType</text>
+  <text x="205" y="684" class="small">• turn.complete confirms closure when present, but absence does not prove failure</text>
+</svg>
