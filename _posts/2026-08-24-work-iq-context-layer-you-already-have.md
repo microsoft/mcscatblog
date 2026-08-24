@@ -6,7 +6,7 @@ date: 2026-08-24 09:00:00 +0200
 categories: [copilot-studio, work-iq]
 tags: [copilot-studio, microsoft-365-copilot, mcp, governance, licensing, declarative-agents, authentication, agent-365]
 description: "What Work IQ is, where its data lives, the main ways to reach it, and the constraints that decide whether what you build holds up in a real tenant."
-author: afjordhoj_microsoft
+author: asfjordhoj
 image:
   path: /assets/posts/work-iq-context-layer-you-already-have/door4-renewal-risk-board.gif
   alt: A renewal risk board grounded in CRM records and Microsoft 365 evidence
