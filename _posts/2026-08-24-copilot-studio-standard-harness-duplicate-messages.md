@@ -70,7 +70,7 @@ Keep one question in mind for the rest of this post:
 
 ## Build the bug in about five minutes
 
-The fastest way to internalize this is to reproduce it on purpose. The example is **Fabrikam's internal employee assistant**, a standard harness agent that helps staff with travel, IT, and HR. It's the kind of broad internal assistant many large organizations build, and breadth is exactly what surfaces this class of bug. 
+The fastest way to internalize this is to reproduce it on purpose. The example is **Fabrikam's internal employee assistant**, a standard harness agent that helps staff with travel, IT, and HR. It's the kind of broad internal assistant many large organizations build, and breadth is exactly what surfaces this class of bug.
 
 > What you're about to build is a teaching setup, not a pattern to copy. We turn it into the design we recommend a few sections down.
 
@@ -127,7 +127,7 @@ No card, no message node, nothing shown from inside the topic. The orchestration
 
 This is the fix we trust most. It was the most consistent design we tested across models.
 
-> Prefer the orchestration layer as the answer owner. Each topic, tool, or agent collects what it needs as inputs, does its work without communicating directly to the user, and returns outputs, so exactly one owner writes each answer. 
+> Prefer the orchestration layer as the answer owner. Each topic, tool, or agent collects what it needs as inputs, does its work without communicating directly to the user, and returns outputs, so exactly one owner writes each answer.
 {: .prompt-tip }
 
 ### Fix 2, when a component must talk to the user: report what you showed
@@ -186,7 +186,7 @@ Even with these instructions, fix 2 is the slightly more fragile choice, so when
 > Output descriptions are descriptions, not instructions.
 {: .prompt-warning }
 
-The orchestration layer reads an output description to understand what the value is; it does not run it as a command. Write "The balance already shown to the user," not "Keep this as context and don't show it again." An imperative reads like an instruction to the next maker who opens the topic, and it won't behave like one. 
+The orchestration layer reads an output description to understand what the value is; it does not run it as a command. Write "The balance already shown to the user," not "Keep this as context and don't show it again." An imperative reads like an instruction to the next maker who opens the topic, and it won't behave like one.
 
 We tested the shortcut of writing the imperative into the output description instead of the topic description. The orchestration layer ignored it for the presentation decision and re-showed the value anyway. The instruction only changes behavior when it lives in the topic description or the top-level instructions. The top-level instructions are a good home for it, so you don't have to repeat it in every topic and agent description.
 
@@ -224,7 +224,7 @@ Use these snippets when a component genuinely needs to post to the user or hand 
 
 ### Report that a component answered
 
-On any topic or subagent that shows the user an answer, add the following output. 
+On any topic or subagent that shows the user an answer, add the following output.
 
 ```text
 answered = true
@@ -244,7 +244,7 @@ for later steps.
 
 ### Scope a subagent so it doesn't answer the whole conversation
 
-A child or connected agent receives the parent's conversation context under the covers. If that context still holds an earlier request that looks unanswered, the agent tries to help with it too. 
+A child or connected agent receives the parent's conversation context under the covers. If that context still holds an earlier request that looks unanswered, the agent tries to help with it too.
 
 Scope the request in an input:
 
@@ -265,7 +265,7 @@ For a child agent, the scoped input excludes the rest of the parent context from
 
 A connected agent has an advanced  setting, **Pass conversation history to this agent**, that feeds it the parent's entire conversation context by default. Leave it on, and the connected agent sees the whole conversation, including the parts the parent hasn't answered yet, and it may answer them itself and step on the parent's turn. Deselect it so the connected agent sees only the scoped input you passed it.
 
-Use both levers together for a connected agent: scope the input, and turn off the parent context. 
+Use both levers together for a connected agent: scope the input, and turn off the parent context.
 
 For a child agent the scoped input above is the whole job. For the full mechanics of wiring inputs and outputs across subagents, see [Using Inputs and Outputs in Child and Connected Agents]({% post_url 2025-09-20-copilot-studio-child-connected-agents-inputs-outputs %}).
 
@@ -343,7 +343,7 @@ flowchart TD
 
 Each branch maps to a section in the [troubleshooting guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration-duplicate-messages-troubleshoot), where you'll find the evidence to confirm it and the exact remedy.
 
->If you want to prove that a fix holds, write test cases into an evaluation set and re-run after each change. See [Evaluation-Driven Agent Readiness in Copilot Studio]({% post_url 2026-06-01-evaluation-driven-agent-readiness-copilot-studio %}).
+> If you want to prove that a fix holds, write test cases into an evaluation set and re-run after each change. See [Evaluation-Driven Agent Readiness in Copilot Studio]({% post_url 2026-06-01-evaluation-driven-agent-readiness-copilot-studio %}).
 
 ## Microsoft Learn guidance
 
@@ -360,6 +360,3 @@ The dedicated guidance set on duplicate messages and context design goes deeper 
 - [Design topics as mini-agents that avoid duplicate messages](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration-topics): topic design.
 - [Design subagents that avoid duplicate messages](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration-subagents): child and connected agent design.
 - [Troubleshoot duplicate messages and missed answers](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration-duplicate-messages-troubleshoot): each root cause and its remedy.
-
-
-
