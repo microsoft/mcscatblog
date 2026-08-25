@@ -1,7 +1,7 @@
 ---
 layout: post
 agent_edition: github-copilot
-title: "Agent Memory: How Agents Carry Knowledge Across Conversations"
+title: "Memory in Copilot Studio: How Agents Carry Knowledge Across Conversations"
 date: 2026-08-01
 categories: [copilot-studio, agents]
 tags: [copilot-studio, agent-memory, agent-development, best-practices, evals, sandbox]
