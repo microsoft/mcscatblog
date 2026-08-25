@@ -17,7 +17,7 @@ mermaid: false
 
 Here's a scene that plays out on a lot of agent projects. The makers finish the agent, feel good about it, and hand it over. A few days later the verdict comes back: "it didn't work," or "it's not ready," with a handful of failed questions and a few lines of feedback attached. The team fixes what it can see, hands it back, and waits. The same cycle repeats, sometimes for weeks.
 
-The effort was never the problem. What's missing is a shared, visible definition of *ready*. Nobody agreed on what passing looks like, and surprise tests keep getting added that the agent then fails. Underneath sits a genuinely hard constraint: a generative agent can be asked an almost unlimited number of things, so "just test everything" was never on the table.
+The effort was never the problem. What's missing is a shared, visible definition of *ready*. Nobody agreed on what passing looks like, and surprise tests keep getting added that the agent then fails. A generative agent can be asked an almost unlimited number of things, so "just test everything" was never on the table.
 
 This post is about closing that gap while you build, not after. You make evaluation part of your design work: define what good means, generate scoped tests, read what they tell you, fix the design, and go again. Each loop replaces opinion with evidence.
 
@@ -89,6 +89,8 @@ How broadly you describe the agent also controls how wide the generated tests ra
 
 Before generating in bulk, decide how you'll group coverage so you can talk about results without leaning on one number. The grouping comes straight from the scope agreement: the things the agent must do, the things it must not, and the nice-to-haves you'll refine later.
 
+Business value and risk decide which bucket a use case belongs in. A frequent request tied directly to the agent's purpose is likely a must-do. So is an uncommon request whose failure would have serious consequences. Nice-to-have coverage is useful, but it should not take investment away from the scenarios that justify this version of the agent.
+
 | Bucket | What it covers | Example |
 | --- | --- | --- |
 | **Must-do** | The core scenarios that justify shipping, plus their robustness: the same intents in messy, real phrasing like typos, compound asks, and ambiguous routes | "What's the status of tracking C31VU3ZPDY?" / "status of shippment new york to tokyo" |
@@ -121,9 +123,9 @@ Two different decisions, often muddled:
 
 ### Generate a starter set, then expand it with the template
 
-Copilot Studio's [agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro) in the Evaluate tab generates a starter set straight from your agent definition. Treat it as a starting point. Its quality tracks how well your agent and tools are described, which is exactly why the scoping work above pays off here. Simply reviewing what it generates already sharpens your scoping and guardrailing.
+Copilot Studio's [agent evaluation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-agent-evaluation-intro) in the Evaluate tab generates a starter set straight from your agent definition. Treat it as a starting point. Its quality tracks how well your agent and tools are described, which is exactly why the scoping work above pays off here. Reviewing what it generates already sharpens the agent's scope and guardrails.
 
-To expand a valuable use case, use the template provided in the Evaluate tab. Export the evaluation template, which carries the request-and-expected-response format, add a short use-case description, a few sample questions, and your value ranges, and hand it to an LLM you already have. M365 Copilot will do it. Ask for about 20 new rows for that use case. Twenty is a good size for a test set: enough to represent the range, small enough to read and curate. The [hands-on pass at the end](#bonus-a-hands-on-pass) includes a ready-to-paste version of that prompt.
+To expand a valuable use case, use the template provided in the Evaluate tab. Export the evaluation template, which carries the request-and-expected-response format, add a short use-case description, a few sample questions, and your value ranges, and hand it to an LLM you already have. M365 Copilot will do it. Ask for about 20 new rows for one tightly scoped use case. That is a manageable starting point: small enough to review and curate, then expand if the scope requires broader coverage. The [hands-on pass at the end](#bonus-a-hands-on-pass) includes a ready-to-paste version of that prompt.
 
 ### Review every generated set
 
@@ -134,7 +136,7 @@ Generation is a draft. The review step is where the value is:
 - **vary** the breadth: keep a variety of narrow and broad requests
 - **refine** the expected response so a grader can judge it
 
-Work modularly: one use case, about 20 rows, reviewed, before you move to the next.
+Work modularly: generate and review evaluations for one scoped use case before moving to the next. Start with about 20 rows, then expand only where the coverage still has meaningful gaps.
 
 ## Match the grader to the job
 
@@ -289,8 +291,10 @@ Sample context:
 - Statuses: Pending, In Transit, Delayed, Delivered
 - Identifiers: shipment titles SHIP-1 to SHIP-20; 10-character tracking
   numbers like C31VU3ZPDY, MRT1X77V1U, C4NLONGCT2
-- Typical mistakes: misspellings, a route given instead of a tracking
-  number, ambiguous routes that match more than one shipment
+- Real-world variations: misspellings, inconsistent casing and spacing,
+  missing fields, edge values, a route instead of a tracking number,
+  ambiguous routes with multiple matches, and requests in every language
+  this version of the agent is expected to support
 
 Generate 20 test rows for this use case. For each, give the request,
 the expected response, and its bucket: Must-do, Must-not-do guardrails,
@@ -313,6 +317,6 @@ _Two graders per row. The label and its explanation tell you more than the pass 
 
 One generated test asked, "*Is my shipment SHIP-1023 still in transit?*", but there is no SHIP-1023; the real identifiers only run to the low twenties. The generator had invented an out-of-range ID, and reading that row was the useful moment. It exposed a design gap: what happens when a real user fat-fingers a tracking number or shipment ID? Today the agent would run the search and come back empty. So the fix wasn't to the test, it was to the agent: add the valid ID range to the instructions so the agent asks the user to confirm or correct an out-of-range identifier *before* it searches and fails. A small change, more efficient for the user, and caught before the user base ever hit it.
 
-No score would have surfaced that gap. A generated test did, and reading it turned an evaluation run into a concrete design change. Scale that same habit up from this small example, and it's the loop that carries an agent build from working once to genuinely ready.
+No score would have surfaced that gap. A generated test did, and reading it turned an evaluation run into a concrete design change. Scale that same habit up from this small example, and it's the loop that carries an agent build from working once to a version whose readiness you can explain and defend.
 
 What's the first failure your evaluations caught that changed how you designed an agent? Share it in the comments.
