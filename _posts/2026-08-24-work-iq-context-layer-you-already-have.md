@@ -79,7 +79,7 @@ Which reduces to one sentence:
 > **The same intelligence is included when it is underneath you, and consumption-based when you reach for it.**
 {: .prompt-tip }
 
-If your users are licensed for Microsoft 365 Copilot, they already have Work IQ inside Copilot experiences at no incremental charge. Build something that calls the Work IQ APIs, or adopt a third-party agent that grounds in your tenant through them, and you are on the consumption side.
+Declarative agents built in Agent Builder or with [pro-code tooling](https://learn.microsoft.com/microsoft-365/copilot/extensibility/build-declarative-agents) inherit Work IQ natively from Microsoft 365 Copilot, so licensed users are not separately charged for that grounding. The boundary is how Work IQ is reached: if the same agent calls Work IQ through MCP, an API plugin or another custom tool, those calls use the Work IQ API and are consumption-based.
 
 **Cowork sits across that line, and it catches people.** Work IQ is an underlying intelligence layer within Cowork, but Cowork itself is an agentic system on usage-based billing. An administrator has to [switch it on](https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-admin-governance) before anyone in the tenant can use it. Being underneath a surface describes how Work IQ reaches it, not whether that surface is included.
 
