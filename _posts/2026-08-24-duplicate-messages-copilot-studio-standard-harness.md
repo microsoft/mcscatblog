@@ -8,7 +8,7 @@ description: "Learn why duplicate messages occur in the Copilot Studio standard 
 author: KarimaKT
 agent_edition: standard
 image:
-  path: /assets/posts/copilot-studio-standard-harness-duplicate-messages/header.png
+  path: /assets/posts/duplicate-messages-copilot-studio-standard-harness/header.png
   alt: "Two side-by-side conversations, the user-visible chat and the orchestration layer's internal context, drifting out of sync"
   no_bg: true
 mermaid: true
@@ -343,7 +343,7 @@ flowchart TD
 
 Each branch maps to a section in the [troubleshooting guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration-duplicate-messages-troubleshoot), where you'll find the evidence to confirm it and the exact remedy.
 
-> If you want to prove that a fix holds, write test cases into an evaluation set and re-run after each change. See [Evaluation-Driven Agent Readiness in Copilot Studio]({% post_url 2026-06-01-evaluation-driven-agent-readiness-copilot-studio %}).
+> If you want to prove that a fix holds, write test cases into an evaluation set and re-run after each change. See [Evaluation-Driven Agent Readiness in Copilot Studio](https://microsoft.github.io/mcscatblog/posts/evaluation-driven-agent-readiness-copilot-studio/).
 
 ## Microsoft Learn guidance
 
