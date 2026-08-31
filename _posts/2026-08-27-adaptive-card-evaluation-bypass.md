@@ -64,7 +64,7 @@ The Data Envelope is a table with four columns:
 | Column | Purpose | Example |
 |---|---|---|
 | `Key` | Stable identity used by the main topic | `priority` |
-| `Label` | Question text and expected-value guidance | `priority (High or Low)` |
+| `Label` | Sentence fragment inserted into the question | `the request priority (High or Low)` |
 | `Type` | Selects the typed question branch | `Choice` |
 | `Value` | Optional value already known to the main topic | `High` |
 
@@ -77,7 +77,7 @@ The Card Bypass Topic receives the Data Envelope from the calling main topic and
 ![Card Bypass Topic processing each Data Envelope row through existing-value and typed-question paths](/assets/posts/adaptive-card-evaluation-bypass/card-bypass-topic-flow.png){: .shadow w="1536" h="1024" }
 _The Card Bypass Topic carries populated values forward, asks once for missing values, and returns the completed Data Envelope._
 
-One Question node can't dynamically change its entity type, so the Card Bypass Topic contains fixed branches for Text, Email, Date, Number, Boolean, and Choice. Choice is collected as text so allowed-value checks can run after the completed envelope returns.
+One Question node can't dynamically change its entity type, so the Card Bypass Topic contains fixed branches for Text, Email, Date, Number, Boolean, and Choice. Choice is collected as text.
 
 ## How the main topic integrates the Card Bypass Topic
 
@@ -117,12 +117,7 @@ The main topic builds this envelope because it knows which fields exist, how eac
 
 ### Choose how the main topic completes the Data Envelope
 
-Immediately before each Adaptive Card would appear, the main topic checks the `Evaluation` flag:
-
-- The **Adaptive Card path (`Evaluation=False`)** presents that Adaptive Card to the user.
-- The **evaluation bypass path (`Evaluation=True`)** skips that card interaction and calls the Card Bypass Topic.
-
-The condition selects only the interaction used to collect the values for the next Adaptive Card. After that interaction, both paths return to the same point in the main topic.
+The `Evaluation` flag selects the interaction immediately before each card. Both paths return to the same point in the main topic.
 
 ![Adaptive Card and evaluation bypass paths converging on one completed Data Envelope](/assets/posts/adaptive-card-evaluation-bypass/main-topic-integration.png){: .shadow w="1460" h="976" }
 _The decision and integration nodes added around one Adaptive Card._
@@ -141,9 +136,6 @@ The input and output bindings deliberately use the same main-topic variable:
 Before the call, `Topic.RequestDetailsEnvelope` is the request sent by the calling main topic. After the call, it contains one completed row for each field expected from that card.
 
 For the main topic, the add-on is limited to selecting the input path, building the Data Envelope, calling the Card Bypass Topic, and mapping the returned values. After mapping, execution resumes at the same existing nodes used after an Adaptive Card submission.
-
-> The bypass adds a small amount of integration logic at the card boundary while preserving the workflow on either side of it.
-{: .prompt-info }
 
 ### The payoff: continue the main topic without `Action.Submit`
 
@@ -186,7 +178,9 @@ Topic.priority
 
 Each `Key` maps the returned text to its corresponding variable, where any required business-type conversion is applied. The Card Bypass Topic works only with the generic `Key`, `Label`, `Type`, and `Value` columns.
 
-Values cross the Data Envelope boundary as text. Text, Email, and Choice values can be assigned directly. Date, Number, and Boolean values require conversion:
+Values cross the Data Envelope boundary as text. Text, Email, and Choice values can be assigned directly. For typed values, first store the envelope lookup result in a text variable, then convert it into the destination variable. The six-field demo applies this pattern across a more complex three-card workflow.
+
+Date, Number, and Boolean values require conversion:
 
 ```javascript
 IfError(
@@ -261,7 +255,7 @@ The sample sets `Topic.Evaluation` to `true`. Set it to `false` when testing the
 > Always replace the sample dialog reference because schema prefixes differ between environments.
 {: .prompt-warning }
 
-### Step 2: Test the Adaptive Card path (`Evaluation=False`)
+### Step 2: Compare the Adaptive Card path (`Evaluation=False`)
 
 In **Test your agent**, the main topic displays and submits the real cards before reaching the final processing:
 
@@ -280,6 +274,11 @@ _The evaluation remains on Card 1 after both text attempts, and the result ident
 > Run the three card evaluation demo for Ada Lovelace. Her email is ada@example.com. The visit date is 2026-09-15 for 4 people. She consents to follow-up and prefers Email.
 {: .prompt-tip }
 
+> This one-message test uses [generative orchestration](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-managing-topic-inputs-outputs) to populate topic inputs from the opening message.
+>
+> **For sequential test cases:** If a value is missing, the Card Bypass Topic asks questions in Data Envelope order. Add each expected question and user answer as one message pair. Conversational test cases allow 12 total messages, so prefill enough values to leave no more than five missing fields when the final response must also be evaluated.
+{: .prompt-info }
+
 In **Test your agent**, one initial utterance populates every main-topic input. The Card Bypass Topic is invoked at all three card boundaries, no Adaptive Card is displayed, and the main topic reaches `SUCCESS`:
 
 ![Evaluation bypass path skipping all three Adaptive Cards and reaching success](/assets/posts/adaptive-card-evaluation-bypass/evaluation-prefilled-success.png){: .shadow w="2482" h="1456" }
@@ -294,11 +293,14 @@ These scenarios can also complement delivery automation built with [Quality Gate
 
 ## Implementation boundaries
 
-- Use an environment variable to control evaluation mode, and ensure normal conversations resolve to `Evaluation=False`.
+> Use an environment variable to control evaluation mode: set it to `true` only in a dedicated evaluation environment and `false` in environments that serve users.
+{: .prompt-warning }
+
 - The Card Bypass Topic supports Text, Email, Date, Number, Boolean, and Choice.
 - It does not inspect or dynamically interpret Adaptive Card JSON.
+- The evaluation bypass performs typed collection but does not reproduce Adaptive Card-enforced checks such as required fields, ranges, or allowed choices. Implement equivalent downstream checks and validations when they must be evaluated.
 - Date and Number conversions can be locale-sensitive.
-- Use `EndDialog` to return control to the calling main topic.
+- Use `EndDialog` after successful collection; malformed envelope definitions use `CancelAllDialogs`.
 
 ## Key takeaways
 

@@ -29,8 +29,8 @@ beginDialog:
               id: sendEmptyDataEnvelopeError
               activity: The Data Envelope must contain at least one row.
 
-            - kind: EndDialog
-              id: endInvalidDefinitionCount
+            - kind: CancelAllDialogs
+              id: cancelInvalidDefinitionCount
 
     - kind: ConditionGroup
       id: dispatchNextField
@@ -195,8 +195,8 @@ beginDialog:
                           id: sendUnsupportedTypeError
                           activity: "Unsupported field type '{Topic.CurrentField.Type}' for key '{Topic.CurrentField.Key}'."
 
-                        - kind: EndDialog
-                          id: endUnsupportedType
+                        - kind: CancelAllDialogs
+                          id: cancelUnsupportedType
 
               elseActions:
                 - kind: SetVariable
