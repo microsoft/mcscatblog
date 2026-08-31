@@ -92,18 +92,19 @@ Which licenses put you on the included side is worth checking: Copilot is an add
 
 ## Four of the doors onto it
 
-Work IQ is the floor, and more doors lead onto it than one post can cover. These four are ordered by how much you take on, plus one threshold you are already through.
+Work IQ is the floor. These four doors are ordered by how much you take on; door one has two build routes.
 
-**Before the doors, there is Copilot itself.** A licensed user can ask a work-grounded question today, with nothing built or configured, covered by the license. It is the broad starting point from which the more specialized options follow.
+**Before them sits Copilot itself.** A licensed user can ask a work-grounded question without building or configuring anything. It is the broad starting point for the more specialized options.
 
 | Door | What it is | Who it is for | How Work IQ arrives |
 | --- | --- | --- | --- |
-| **1. Declarative agents** | You scope Copilot itself with instructions, knowledge and actions | Makers | Inherited from Microsoft 365 Copilot |
+| **1a. Declarative agents, Agent Builder** | Guided instructions, knowledge and actions | Makers | Inherited from Microsoft 365 Copilot |
+| **1b. Declarative agents, pro code** | Source-controlled manifests and developer tooling | Developers | Inherited from Microsoft 365 Copilot |
 | **2. Cowork** | Microsoft's ready-made agent that carries out multi-step work | Users | Built in |
 | **3. Copilot Studio agents** | You build the agent and [add Work IQ as a tool](https://learn.microsoft.com/microsoft-copilot-studio/use-work-iq) (preview) | Makers | Tools -> Add Tool -> MCP -> Work IQ |
 | **4. Your own host** | Foundry, GitHub Copilot, or your own code calling [the Work IQ API](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/api-overview) | Developers and architects | A2A, [MCP](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/mcp/overview), or REST |
 
-Door one deserves more attention than it gets. [Declarative agents](https://learn.microsoft.com/microsoft-365/copilot/extensibility/overview-declarative-agent) run on the same orchestrator, foundation models and trusted AI services that power Microsoft 365 Copilot: a declarative agent is not a separate engine, it is Copilot shaped for a specific purpose. Give it tailored instructions, selected knowledge sources and actions, and it can deliver more focused, accurate and repeatable responses for that task.
+Door one has two routes. [Agent Builder and pro-code tooling](https://learn.microsoft.com/microsoft-365-copilot/extensibility/build-declarative-agents) both produce declarative agents: Copilot shaped for a purpose with tailored instructions, knowledge and actions. Agent Builder is guided; pro code gives developers source-controlled manifests. Both inherit Work IQ from Microsoft 365 Copilot, so the route changes how you build, not how it arrives.
 
 Door four is less exotic than it sounds. You do not need a platform team to open it: once the tenant is enabled, a developer on their own laptop can add the Work IQ MCP server, point it at their tenant, and their agent has work context. Two more doors open here: Work IQ as a [Microsoft Foundry agent tool](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/work-iq) and an [Azure AI Search agentic knowledge source](https://learn.microsoft.com/azure/search/agentic-knowledge-source-how-to-work-iq), both in preview, though the AI Search path is gated behind an approved access request and every end user needs their own Copilot license.
 
