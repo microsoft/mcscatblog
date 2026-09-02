@@ -84,6 +84,16 @@ beginDialog:
                 binding:
                   CompletedDataEnvelope: Topic.ParticipantDetailsEnvelope
 
+            - kind: SetVariable
+              id: mapFullName
+              variable: Topic.fullName
+              value: =LookUp(Topic.ParticipantDetailsEnvelope, Key = "fullName", Value)
+
+            - kind: SetVariable
+              id: mapEmail
+              variable: Topic.email
+              value: =LookUp(Topic.ParticipantDetailsEnvelope, Key = "email", Value)
+
       elseActions:
         - kind: AdaptiveCardPrompt
           id: participantCard
@@ -131,25 +141,6 @@ beginDialog:
               fullName: String
               email: String
 
-        - kind: SetVariable
-          id: buildParticipantDetailsEnvelopeFromCard
-          variable: Topic.ParticipantDetailsEnvelope
-          value: |-
-            =Table(
-              { Key: "fullName", Label: "the participant's full name", Type: "Text", Value: Topic.fullName },
-              { Key: "email", Label: "the participant's email address", Type: "Email", Value: Topic.email }
-            )
-
-    - kind: SetVariable
-      id: mapFullName
-      variable: Topic.fullName
-      value: =LookUp(Topic.ParticipantDetailsEnvelope, Key = "fullName", Value)
-
-    - kind: SetVariable
-      id: mapEmail
-      variable: Topic.email
-      value: =LookUp(Topic.ParticipantDetailsEnvelope, Key = "email", Value)
-
     - kind: SendActivity
       id: displayCardOneValues
       activity: "Card 1 fields available: name={Topic.fullName}; email={Topic.email}"
@@ -182,6 +173,16 @@ beginDialog:
               output:
                 binding:
                   CompletedDataEnvelope: Topic.ScheduleDetailsEnvelope
+
+            - kind: SetVariable
+              id: mapVisitDate
+              variable: Topic.visitDate
+              value: =IfError(DateTimeValue(LookUp(Topic.ScheduleDetailsEnvelope, Key = "visitDate", Value)), Blank())
+
+            - kind: SetVariable
+              id: mapPartySize
+              variable: Topic.partySize
+              value: =IfError(Value(LookUp(Topic.ScheduleDetailsEnvelope, Key = "partySize", Value)), Blank())
 
       elseActions:
         - kind: AdaptiveCardPrompt
@@ -234,36 +235,7 @@ beginDialog:
         - kind: SetVariable
           id: normalizeInteractiveVisitDate
           variable: Topic.visitDate
-          value: =DateTimeValue(Topic.VisitDateCard)
-
-        - kind: SetVariable
-          id: buildScheduleDetailsEnvelopeFromCard
-          variable: Topic.ScheduleDetailsEnvelope
-          value: |-
-            =Table(
-              { Key: "visitDate", Label: "the visit date", Type: "Date", Value: Text(Topic.visitDate, "yyyy-MM-dd") },
-              { Key: "partySize", Label: "the party size", Type: "Number", Value: Text(Topic.partySize) }
-            )
-
-    - kind: SetVariable
-      id: mapVisitDateText
-      variable: Topic.VisitDateText
-      value: =LookUp(Topic.ScheduleDetailsEnvelope, Key = "visitDate", Value)
-
-    - kind: SetVariable
-      id: mapVisitDate
-      variable: Topic.visitDate
-      value: =IfError(DateTimeValue(Topic.VisitDateText), Blank())
-
-    - kind: SetVariable
-      id: mapPartySizeText
-      variable: Topic.PartySizeText
-      value: =LookUp(Topic.ScheduleDetailsEnvelope, Key = "partySize", Value)
-
-    - kind: SetVariable
-      id: mapPartySize
-      variable: Topic.partySize
-      value: =IfError(Value(Topic.PartySizeText), Blank())
+          value: =IfError(DateTimeValue(Topic.VisitDateCard), Blank())
 
     - kind: SendActivity
       id: displayCardTwoValues
@@ -297,6 +269,20 @@ beginDialog:
               output:
                 binding:
                   CompletedDataEnvelope: Topic.ContactPreferencesEnvelope
+
+            - kind: SetVariable
+              id: mapConsent
+              variable: Topic.consent
+              value: |-
+                =With(
+                  { consentText: LookUp(Topic.ContactPreferencesEnvelope, Key = "consent", Value) },
+                  If(IsBlank(consentText), Blank(), Lower(consentText) = "true")
+                )
+
+            - kind: SetVariable
+              id: mapContactMethod
+              variable: Topic.contactMethod
+              value: =LookUp(Topic.ContactPreferencesEnvelope, Key = "contactMethod", Value)
 
       elseActions:
         - kind: AdaptiveCardPrompt
@@ -357,30 +343,6 @@ beginDialog:
             properties:
               consent: Boolean
               contactMethod: String
-
-        - kind: SetVariable
-          id: buildContactPreferencesEnvelopeFromCard
-          variable: Topic.ContactPreferencesEnvelope
-          value: |-
-            =Table(
-              { Key: "consent", Label: "whether the participant consents to follow-up", Type: "Boolean", Value: Text(Topic.consent) },
-              { Key: "contactMethod", Label: "the preferred contact method (Email, SMS, or Phone)", Type: "Choice", Value: Topic.contactMethod }
-            )
-
-    - kind: SetVariable
-      id: mapConsentText
-      variable: Topic.ConsentText
-      value: =LookUp(Topic.ContactPreferencesEnvelope, Key = "consent", Value)
-
-    - kind: SetVariable
-      id: mapConsent
-      variable: Topic.consent
-      value: =If(IsBlank(Topic.ConsentText), Blank(), Lower(Topic.ConsentText) = "true")
-
-    - kind: SetVariable
-      id: mapContactMethod
-      variable: Topic.contactMethod
-      value: =LookUp(Topic.ContactPreferencesEnvelope, Key = "contactMethod", Value)
 
     - kind: SendActivity
       id: displayCardThreeValues
