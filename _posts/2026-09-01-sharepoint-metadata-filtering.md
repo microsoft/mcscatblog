@@ -78,7 +78,67 @@ The tool returns server-calculated totals rather than only the rows displayed to
 
 For a content question that doesn't need metadata, the agent can call `knowledge_search_sharepoint` directly across its configured SharePoint knowledge sources.
 
-The more interesting case is chaining them. Consider a library with a `Country` column and the question, "What employee benefits does Contoso offer in the US?" The agent can first call `sharepoint_metadata_filter` with `Country = US`. That call returns the matching files and their URLs. The agent can then pass those URLs to the knowledge-search tool:
+The more interesting case is chaining them. Consider a library with a `Country` column and the question, "What employee benefits does Contoso offer in the US?" The agent first asks `sharepoint_metadata_filter` for US files and requests every available column:
+
+```json
+{
+  "columnFilter": {
+    "column": "Country",
+    "operator": "eq",
+    "value": "US"
+  },
+  "includeColumns": ["*"]
+}
+```
+{: file="Input sent by the agent to sharepoint_metadata_filter" }
+
+The tool returns the matching files, their metadata, and the URLs needed for the next step:
+
+<details>
+<summary>Output returned by sharepoint_metadata_filter</summary>
+<pre><code class="language-json">{
+  "files": [
+    {
+      "url": "https://pplatform.sharepoint.com/Shared%20Documents/Contoso%20HR%20Documents/Contoso%20Benefits.docx",
+      "fileName": "Contoso Benefits.docx",
+      "fileType": "docx",
+      "author": "Emily Braun",
+      "modifiedBy": "Elad Gal",
+      "lastModified": "2026-09-01T20:22:12Z",
+      "size": 33330,
+      "columns": {
+        "Country": "US",
+        "Image Tags": null
+      }
+    },
+    {
+      "url": "https://pplatform.sharepoint.com/Shared%20Documents/Contoso%20HR%20Documents/Contoso%20HR%20policies.docx",
+      "fileName": "Contoso HR policies.docx",
+      "fileType": "docx",
+      "author": "Emily Braun",
+      "modifiedBy": "Elad Gal",
+      "lastModified": "2026-09-01T20:22:23Z",
+      "size": 28658,
+      "columns": {
+        "Country": "US",
+        "Image Tags": null
+      }
+    }
+  ],
+  "totalFound": 2,
+  "totalMatched": 2,
+  "availableColumns": [
+    "Image Tags",
+    "Country",
+    "Author",
+    "Modified By"
+  ],
+  "backend": "sharepoint_rest",
+  "usage": "Report totalMatched as the count and pass these file URLs into knowledge_search_sharepoint's scopeUrls parameter to search their contents."
+}</code></pre>
+</details>
+
+The agent then passes those returned URLs to the knowledge-search tool:
 
 ```json
 {
