@@ -5,11 +5,8 @@ title: "Work IQ: The Context Layer You Already Have"
 date: 2026-08-24 09:00:00 +0200
 categories: [copilot-studio, work-iq]
 tags: [copilot-studio, microsoft-365-copilot, mcp, governance, licensing, declarative-agents, authentication, agent-365]
-description: "What Work IQ is, when it is included or consumption-based, which admin consoles control it, and the constraints to check before a pilot."
+description: "What Work IQ is, when it is included or consumption-based, which admin consoles control it, and the constraints to check before you turn it on."
 author: asfjordhoj
-image:
-  path: /assets/posts/work-iq-context-layer-you-already-have/door4-renewal-risk-board.gif
-  alt: A renewal risk board grounded in CRM records and Microsoft 365 evidence
 ---
 
 Ask an agent a question that depends on knowing your organization, and watch what it does.
@@ -22,7 +19,7 @@ Now give the same agent your work context. It sees a three-line note from your s
 
 Nothing changed about the model. What changed is that the second agent knew where it was standing.
 
-That difference is Work IQ. This guide focuses on the decision that follows: what is included with Microsoft 365 Copilot, what becomes consumption-based, and which controls matter before a pilot.
+That difference is Work IQ. This guide focuses on the decision that follows: what is included with Microsoft 365 Copilot, what becomes consumption-based, and which controls matter before you turn it on.
 
 Evaluating Work IQ? Start with [the boundary that determines cost](#the-boundary-that-determines-cost). Tenant administrators can skip to [billing controls](#billing-controls-and-where-they-live). Architects should not miss [the three design constraints](#three-constraints-that-reshape-designs).
 
@@ -34,12 +31,7 @@ Work IQ is not a product you buy. It is the [workplace intelligence layer](https
 
 This is the question that arrives ninety seconds into every architecture conversation, and the answer is more reassuring than people expect: **Work IQ is not another store that copies your Microsoft 365 content.**
 
-It reasons over content already in Microsoft 365, where you already govern it. Your mail is still in the mailbox, your documents still in SharePoint and OneDrive. On top of that sits the semantic index, which makes content searchable by meaning rather than keyword. External connector data and agent working data follow the separate paths below.
-
-External data reaches it two ways, and the difference matters:
-
-- **Copilot connectors** ingest external content into Microsoft Graph, so it joins the indexed picture alongside your Microsoft 365 content.
-- **Federated connectors** skip indexing entirely. They read the source in real time over MCP, making live or sensitive systems discoverable *without* their content ever entering the semantic index. If legal will not allow you to index a system, this is the mechanism to reach for.
+It reasons over content already in Microsoft 365, where you already govern it. Your mail is still in the mailbox, your documents still in SharePoint and OneDrive. On top of that sits the semantic index, which makes content searchable by meaning rather than keyword.
 
 Where an agent needs somewhere to put working notes, Work IQ provides [Workspaces](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq#workspaces): persistent storage on SharePoint Embedded, inside the tenant boundary, for intermediate results and handing work between agents.
 
@@ -109,14 +101,18 @@ Agent Builder and pro-code tooling are two ways to create the same kind of decla
 
 Copilot Studio has its own billing model in PPAC. The standard harness has a published per-message rate, while the GitHub Copilot harness is billed by usage. Neither model should be used to forecast Cowork or direct Work IQ API consumption. For a closer look, see [cost control and governance for the GitHub Copilot harness]({% post_url 2026-08-07-copilot-harness-cost-governance %}).
 
-### What the choice changes
+### Work IQ in action
 
-Our renewal risk board belongs in the final row because the account team works in a CRM portal. The CRM holds each renewal record; Work IQ searches Microsoft 365 for contradictory evidence. Embedding that capability meets users where they work, but the team now owns delegated authentication, end-to-end residency and the governance decisions earlier routes make for them.
+Using the last route in that table, a custom integration in your own host, we can add intelligence to solutions we already own.
+
+In this example we have a CRM renewal dashboard showing the renewals for the quarter. Normally it holds the CRM data, and maybe some tracked emails and documents attached to each renewal.
+
+Add Work IQ to the mix and company intelligence becomes part of the renewal as well. For each record, Work IQ brings in relevant information from the owner's mailbox, Teams meetings and files, compares it against what the renewal claims, and flags the potential risks. A requirement mentioned in a meeting. A comment in an email. All of it relevant to the renewal, and none of it guaranteed to reach the record.
 
 ![The renewal board scans eight CRM records, flags three contradictions and opens the supporting evidence for Litware Chemical.](/assets/posts/work-iq-context-layer-you-already-have/door4-renewal-risk-board.gif){: .shadow }
-_The renewal risk board compares CRM records with evidence from Microsoft 365._
+_Eight renewals checked against Microsoft 365, with three contradictions surfaced alongside their evidence._
 
-The same business question may not require a custom host. A licensed account manager can ask Microsoft 365 Copilot directly, a declarative agent can make the preparation repeatable, and Cowork can produce the brief as an artifact. Control and responsibility move together. Stop at the first route that solves the problem.
+One call to Work IQ for each renewal. Intelligence built into your own solution.
 
 ## Billing controls and where they live
 
@@ -136,7 +132,7 @@ The most useful orienting fact is that billing is governed in two consoles. Cowo
 > A limited monthly budget is a hard stop, not an alert. Users lose access to affected agents and services until the first day of the following month.
 {: .prompt-danger }
 
-Before a pilot, set a budget, per-user limits and threshold alerts that point to somebody who will act on them. Then observe real tasks rather than inventing an average request: a sales manager researching a deal and a support lead triaging mail do not consume the same amount.
+Set a budget, per-user limits and threshold alerts before users arrive, and point those alerts at somebody who will act on them. Then observe real tasks rather than inventing an average request: a sales manager researching a deal and a support lead triaging mail do not consume the same amount.
 
 ### Power Platform admin center
 
@@ -180,7 +176,7 @@ This constrains identity, not presence. Work can run while nobody is watching if
 
 > By default, mutation operations aren't allowed for safety. This restriction includes create, update, delete, and action requests that modify data, such as sending email.
 
-Work IQ MCP is read-only until an administrator enables writes. The write tools are present, but policy refuses them until the tenant opts in. Include that decision in the pilot plan, and allow up to 24 hours for policy changes to propagate.
+Work IQ MCP is read-only until an administrator enables writes. The write tools are present, but policy refuses them until the tenant opts in. Settle that decision before you build against it, and allow up to 24 hours for policy changes to propagate.
 
 ### 3. Policy control is tenant-level only, for now
 
@@ -208,9 +204,9 @@ A guide that only explains when to say yes is a brochure. Work IQ reasons over w
 
 **When simple retrieval would do.** If a SharePoint search box or a well-placed link answers the question, use it.
 
-## Before a pilot
+## Before you turn it on
 
-Learn owns the enablement sequence. Your project team owns the decisions around it:
+Learn owns the enablement sequence. You own the decisions around it:
 
 1. Choose the route and confirm whether it is included or consumption-based.
 2. Name the billing owner in the correct console.
