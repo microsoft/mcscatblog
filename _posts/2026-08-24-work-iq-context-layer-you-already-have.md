@@ -5,7 +5,7 @@ title: "Work IQ: The Context Layer You Already Have"
 date: 2026-08-24 09:00:00 +0200
 categories: [copilot-studio, work-iq]
 tags: [copilot-studio, microsoft-365-copilot, mcp, knowledge, governance, licensing, billing, declarative-agents]
-description: "How Work IQ is used across Copilot experiences and custom agents, what's included versus metered, and where MAC and PPAC controls apply."
+description: "How Work IQ is used across Copilot experiences and your own solutions, what's included versus metered, and where MAC and PPAC controls apply."
 author: asfjordhoj
 ---
 
@@ -19,25 +19,26 @@ Ask a mailbox-only agent *"What matters today?"* and it might overvalue an email
 
 The useful first question isn't "Does this product have Work IQ?" It's "What is the user or agent doing to invoke it?" Native grounding, an explicitly added tool, and a Cowork task don't have the same licensing treatment, even when they draw on similar work context.
 
-The comparison below uses the **September 2026** [Copilot Credits Licensing Guide](https://aka.ms/CopilotCredits/LicensingGuide) and [Copilot Studio Licensing Guide](https://go.microsoft.com/fwlink/?linkid=2320995). "Included" refers to the qualifying licensed-user scenario described, not every user, channel, or tool the product supports. The standalone GitHub Copilot CLI is a developer host here, not Copilot Studio's GitHub Copilot harness.
+The comparison below uses the **September 2026** [Copilot Credits Licensing Guide](https://aka.ms/CopilotCredits/LicensingGuide) and [Copilot Studio Licensing Guide](https://go.microsoft.com/fwlink/?linkid=2320995). "Included" refers to the qualifying licensed-user scenario described, not every user, channel, or tool the product supports.
 
 | Scenario | What triggers Work IQ | Licensing: included or metered? |
 | --- | --- | --- |
 | **Microsoft 365 Copilot** for a licensed user | The user asks a work-related question; Copilot uses its native Work IQ grounding. No separate Work IQ API integration is needed. | Native Work IQ grounding is included in the Microsoft 365 Copilot experience. It doesn't add a separate Work IQ API charge. |
-| **[Declarative agent](https://learn.microsoft.com/microsoft-365-copilot/extensibility/build-declarative-agents) in Microsoft 365 Copilot**, built with Agent Builder or pro-code tooling | A request to the agent uses Microsoft 365 Copilot's native grounding. The two build methods don't change this scenario. | For eligible Microsoft 365 Copilot licensed users in Microsoft channels, qualifying usage is included under the documented conditions and fair usage. An explicit Work IQ API call is still consumption-based. |
+| **[Declarative agent](https://learn.microsoft.com/microsoft-365-copilot/extensibility/build-declarative-agents) using native grounding**, built with Agent Builder or pro-code tooling | A request to the agent uses Microsoft 365 Copilot's native grounding, without an explicit Work IQ API call. | For eligible Microsoft 365 Copilot licensed users in Microsoft channels, qualifying usage is included under the documented conditions and fair usage. |
+| **Pro-code declarative agent with an explicit Work IQ call** | An action in the agent explicitly calls a Work IQ API, in addition to any native grounding the agent uses. | Qualifying native agent usage can still be included. The explicit Work IQ API call consumes Copilot Credits, even when the user has a Microsoft 365 Copilot license. |
 | **Cowork** | A user starts a Cowork task that draws on their work context. | Task activity consumes Copilot Credits. Requires a Microsoft 365 Copilot license **and** usage-based billing enabled, per the [September 2026 Copilot Credits Licensing Guide](https://aka.ms/CopilotCredits/LicensingGuide). |
 | **Copilot Studio, GitHub Copilot harness** | The agent invokes the unified Work IQ MCP tool that a maker explicitly added. | GitHub Copilot harness runtime consumes Copilot Credits regardless of the user's Microsoft 365 Copilot license. Work IQ API calls are consumption-based too. |
-| **Developer or custom host:** [Foundry](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/work-iq#prerequisites), standalone GitHub Copilot CLI, or your own app | The host explicitly calls the unified Work IQ APIs, including through MCP. | Work IQ API consumption uses Copilot Credits and doesn't itself require a Microsoft 365 Copilot license. Microsoft 365 user access and consumption setup are still required. The host's own charges or licensing still apply. |
-{: #work-iq-scenarios }
+| **Custom client or own solution** | Your client or solution explicitly calls a Work IQ API to use work context in its own experience. | Work IQ API consumption uses Copilot Credits and doesn't itself require a Microsoft 365 Copilot license. Microsoft 365 user access and consumption setup are still required. Your solution's other costs remain separate. |
+{: #work-iq-scenarios .work-iq-comparison }
 
 <style>
-  .content #work-iq-scenarios {
+  .content table.work-iq-comparison {
     width: 100%;
     min-width: 36rem;
     table-layout: fixed;
   }
-  .content #work-iq-scenarios th,
-  .content #work-iq-scenarios td {
+  .content .table-wrapper > table.work-iq-comparison th,
+  .content .table-wrapper > table.work-iq-comparison td {
     white-space: normal;
   }
 </style>
@@ -58,8 +59,14 @@ There's also a licensing distinction within Studio. Qualifying Standard or Copil
 
 Now take the scenario you've chosen to the people who manage its consumption. The **Microsoft 365 admin center (MAC)** manages spending policies for Work IQ API usage and Cowork. The **Power Platform admin center (PPAC)** manages Copilot Studio environment capacity and agent limits. A Studio agent using Work IQ needs attention in **both**, not just the console where you manage the agent.
 
-> Agent consumption draws from the environment's allocated Copilot Credits or the tenant pool, as configured in PPAC. Work IQ consumption is managed through the user's Work IQ spending policy in Microsoft 365 admin center (MAC).
-{: .prompt-info }
+For the metered scenarios in the comparison, these are the controls to configure:
+
+| Applies to | Admin center | Controls |
+| --- | --- | --- |
+| **Copilot Studio, GitHub Copilot harness: agent consumption** | [**PPAC**](https://learn.microsoft.com/power-platform/admin/manage-usage-github-copilot-harness) | Agent consumption draws from the environment's allocated Copilot Credits or the permitted tenant pool. Configure pay-as-you-go, agent monthly limits, **Stop usage**, and notifications as needed. |
+| **Work IQ calls** from a **pro-code declarative agent**, **Copilot Studio, GitHub Copilot harness**, or a **custom client or own solution** | [**MAC**](https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-manage-copilot-credits) | The calling user's **Work IQ spending policy**: user/group scope, billing method, policy and per-user spending limits, and threshold alerts. |
+| **Cowork** | [**MAC**](https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-admin-governance) | A spending policy that selects **Cowork**, scoped to the intended users/groups, with a billing method, spending limits, and alerts. |
+{: #work-iq-controls .work-iq-comparison }
 
 These are different management paths, not a reason to assume each console has an isolated pool of credits. The practical question is which control governs the activity you want to allow, limit, or investigate.
 
@@ -69,7 +76,7 @@ For metered scenarios, estimate usage from representative tasks, not the number 
 
 Start in **Copilot > Cost Management** and review the applicable [spending policy](https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-manage-copilot-credits). The policy connects users or groups, the relevant service, a billing method, and spending limits. For a Work IQ integration, check that the people who will use it are covered for **Work IQ**. For Cowork, [policy scope grants service access](https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-access): a very low credit limit doesn't keep a user out. To prevent access, don't include that user in any spending policy that selects Cowork.
 
-This applies when the Work IQ caller is Foundry or your own application, but also when it's a Copilot Studio agent. The [Studio setup documentation](https://learn.microsoft.com/microsoft-copilot-studio/add-work-iq) explicitly requires a separate Work IQ spending policy. An environment with available Copilot Credits is therefore not the whole setup story: the user's Work IQ consumption still needs its MAC policy.
+This applies to explicit Work IQ calls from a pro-code declarative agent or a custom client or own solution, as well as from a Copilot Studio agent. The [Studio setup documentation](https://learn.microsoft.com/microsoft-copilot-studio/add-work-iq) explicitly requires a separate Work IQ spending policy. An environment with available Copilot Credits is therefore not the whole setup story: the user's Work IQ consumption still needs its MAC policy.
 
 Spending limits don't reserve credits. Giving a department a monthly spending limit doesn't set aside that many credits exclusively for it. The policy sets spending limits against the configured billing method. Prepaid credits and pay-as-you-go provide funding; the policy expresses how much usage you're willing to allow. Don't mistake money available to spend for permission to spend without a limit.
 

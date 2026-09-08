@@ -148,6 +148,7 @@ This section captures adilei's writing patterns for Claude to replicate when dra
 **Decision guides:**
 - Lead with what the article helps the reader decide, then use a short scenario to illustrate why it matters.
 - Organize comparisons by the reader's product or scenario. Prefer one definitive comparison over overlapping technical frameworks.
+- Split scenarios when consumption differs, such as native grounding versus explicit API calls, not merely because authoring tools differ. A separate controls table can map back to those scenarios without repeating the licensing comparison.
 - Connect controls directly to those same scenarios. Link to general setup and architecture documentation instead of repeating it.
 
 Standard flow for tutorial/technical posts:
