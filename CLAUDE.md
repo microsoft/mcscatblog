@@ -107,6 +107,8 @@ This section captures adilei's writing patterns for Claude to replicate when dra
 
 **Punctuation:** Be frugal with em-dashes. Prefer commas or restructuring sentences over em-dashes.
 
+**Clarity:** State the fact or action directly. Avoid defensive framing such as "not a reason to assume," unnecessary metaphors, and repeated warnings. Define acronyms at first use, keep configuration guidance procedural, and distinguish current capabilities from unconfirmed roadmap changes.
+
 **Formality:** Semi-formal balance—professional but not academic. Examples:
 - Good: "You've probably run into this before..."
 - Good: "Okay, I made that last one up, but it *should* be true"
@@ -136,12 +138,21 @@ This section captures adilei's writing patterns for Claude to replicate when dra
 - Imply rather than state directly: "someone eventually notices" vs "you get charged"
 - Avoid promising savings—let readers draw their own conclusions
 - Keep financial references tongue-in-cheek, not preachy
+- For posts specifically about licensing and billing, state inclusion, consumption, and applicable controls plainly with current official sources; still avoid savings promises.
+- Distinguish spending policies and reporting views from the underlying credit pools. Different admin consoles do not necessarily mean separate pools.
+- Distinguish feature activation from billing: tenant graph grounding is zero-rated for Microsoft 365 Copilot licensed users when enabled; the license doesn't mean the feature is enabled by default.
 
 **Tone about users:**
 - Don't be derogatory about visitor behavior (e.g., avoid "closes tab without engaging")
 - Use neutral phrasing: "moves on", "doesn't need help right now", "continues browsing"
 
 ### Post Structure
+
+**Decision guides:**
+- Lead with what the article helps the reader decide, then use a short scenario to illustrate why it matters.
+- Organize comparisons by the reader's product or scenario. Prefer one definitive comparison over overlapping technical frameworks.
+- Split scenarios when consumption or required configuration differs, such as built-in grounding versus a connected tool, or UI configuration versus manifest configuration. A separate controls table can map back to those scenarios without repeating the licensing comparison.
+- Connect controls directly to those same scenarios. Link to general setup and architecture documentation instead of repeating it.
 
 Standard flow for tutorial/technical posts:
 
