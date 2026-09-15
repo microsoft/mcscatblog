@@ -1,12 +1,12 @@
 ---
 layout: post
 agent_edition: github-copilot
-title: "Agent Memory: How Agents Carry Knowledge Across Conversations"
+title: "Memory in Copilot Studio: How Agents Carry Knowledge Across Conversations"
 date: 2026-08-01
 categories: [copilot-studio, agents]
-tags: [copilot-studio, agent-memory, agent-development, best-practices, evals, governance]
-description: "Large language models are stateless. Here's how agent memory in Copilot Studio carries knowledge across conversations: short-term and long-term memory, the three kinds of long-term memory, reflection, and the guardrails that keep it trustworthy."
-author: kaashyapmurali
+tags: [copilot-studio, agent-memory, agent-development, best-practices, evals, sandbox]
+description: "Large language models are stateless. Here's how agent memory in Copilot Studio carries knowledge across conversations: short-term and long-term memory, the three kinds of long-term memory, reflection, and how we check that it actually works."
+authors: [kaashyapmurali, misroka]
 image:
   path: /assets/posts/agent-memory/header.png
   alt: "Agent memory: three sessions connected to a durable memory store"
@@ -77,79 +77,75 @@ That last row is worth sitting with. Procedural memory is a close cousin of a Sk
 
 ## How Copilot Studio approaches memory
 
-Agent memory in Copilot Studio is built on a deliberately simple idea: **memory is content the agent can read and write**, in plain, human-readable form, rather than an opaque embedding blob nobody can inspect. If a person can open the agent's memory and understand what it believes and why, then makers can audit it, reviewers can reason about it, and the agent itself can revise it in place when something changes.
+[Memory in Copilot Studio](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/memory-overview) follows a deliberately concrete model: an agent saves a user's memory as files in a dedicated folder in Microsoft-managed storage. Each agent maintains a separate folder for every user, and the agent reads from and writes to that folder across interactions.
 
-Two consequences follow. Recall doesn't require exotic infrastructure. The agent looks things up much the way you would, opening an index and navigating to the relevant section. And correcting memory is a normal edit rather than a re-indexing operation, which matters enormously for the "cross it out because it is no longer true" problem.
+### Capture, store, and apply
 
-### Scoped, separated, and sandboxed
+Memory follows a three-step lifecycle:
 
-Not all memory belongs to the same person. What one user told an agent about their own preferences is very different from a pattern the agent learned about how a business process works, which is different again from knowledge owned by the whole organization. Copilot Studio keeps these in **distinct scopes**, and those scopes are **separate stores, not labels on a shared one**.
+1. **Capture**: The agent records signals such as preferences and relevant context shared during a conversation.
+2. **Store**: Those signals are saved as files in the user's dedicated memory folder.
+3. **Apply**: In later interactions, the agent reads that memory to inform its responses or decisions.
 
-Each conversation then runs inside an **isolated sandbox**, the same kind of [agent sandbox]({% post_url 2026-07-20-copilot-studio-agent-sandbox %}) that gives an agent a private place to work. Memory is mounted into that sandbox for the life of the turn with an access mode attached. So the question "what can this agent reach right now?" has a concrete answer: exactly the stores it was entitled to, at exactly the permissions they were mounted with. Anything else simply isn't there to reach.
+The maker decides whether to turn Memory on for an agent from the **Build** tab. The memories themselves remain private to the individual user: other users and the maker can't view them.
+
+Memory is also user-controlled. The first time someone interacts with a memory-enabled agent in a new channel, the agent's response includes a link to that user's memory portal. The portal opens in a new browser tab, where the user can review what the agent has stored or clear all memories. In chat, the user can ask the agent to describe what it remembers, update a specific memory, forget something, or display the portal link again.
+
+### Separated by user, executed in a secure sandbox
+
+Two durable boundaries shape the design. First, every user gets a dedicated memory folder for each agent, so one person's context isn't shared with another. Second, agents powered by the GitHub Copilot harness run each task inside a [secure sandbox](https://learn.microsoft.com/en-us/microsoft-copilot-studio/harnesses-overview) provided by Copilot Studio.
 
 {% raw %}
 ```mermaid
 flowchart TB
-    ORG["Organization store<br/>owned by the business"]
-    AGT["Agent store<br/>how this agent and its tools behave"]
-    USR["User store<br/>one person's preferences and history"]
-    SB{{"Isolated sandbox<br/>one conversation, no ambient access"}}
-    ORG -. "not entitled, not mounted" .-> SB
-    AGT -- "mounted, read-only" --> SB
-    USR -- "mounted, read-write" --> SB
+    subgraph MEMORY["Memory for one agent"]
+        U1["User A<br/>dedicated memory folder"]
+        U2["User B<br/>dedicated memory folder"]
+        U1 ~~~ U2
+    end
+
+    subgraph EXECUTION["Task execution"]
+        TASK["Agent task"] --> SB{{"Secure sandbox<br/>provided by Copilot Studio"}}
+    end
+
+    MEMORY ~~~ EXECUTION
 ```
 {% endraw %}
-_Privacy by construction. Because separation is enforced by where memory lives and how it is mounted, least-privilege access is a property of the system rather than something the model has to be trusted to respect._
+_Clear boundaries. Each user has separate memory for an agent, while agent tasks run in a secure sandbox._
 
-That is the point of building it this way. Privacy and compliance become properties of the architecture rather than promises about behavior.
+For this introductory post, those are the boundaries that matter: memory is separated per user, and task execution is isolated.
 
-### Reflection: turning experience into knowledge
+### Reflection as a broader memory pattern
 
-Writing memory during a live conversation is useful, but it is also the worst possible moment to decide what is worth keeping. The agent is mid-task, it has partial information, and everything it does costs the user latency.
+Capture, store, and apply describe how memory supports future interactions. **Reflection** goes one step further as a broader memory-system design pattern.
 
-So the harder work happens away from the live turn, in a background pass we think of as **reflection**. Off the clock, a deliberately restricted agent revisits its own memory stores alongside recent conversations and does what the scientist does at the end of the week: promotes the episodes that mattered into durable facts, merges duplicates, resolves contradictions, and retires what is no longer true. Memory stops being an append-only pile and starts being curated, and the next conversation simply finds better memory waiting for it.
-
-The reflecting agent is deliberately weaker than the one you talk to. It gets a narrow, purpose-built toolset and no access to the maker's connectors or knowledge sources, because anything that *writes* durable memory should have the smallest blast radius we can give it. This capability is still being hardened, and it reaches customers the way everything else here does: gated, evaluated, and rolled out in stages.
+In a reflection loop, an agent revisits stored experience outside the live conversation to consolidate what matters, merge duplicates, update stale information, and retire what is no longer useful. It is the memory-system equivalent of reviewing the scientist's notebook at the end of the week rather than treating every entry as permanent truth.
 
 ```mermaid
 flowchart LR
     O["Observe<br/>the conversation"] --> W["Write<br/>what is worth keeping"]
-    W --> R["Reflect<br/>offline, restricted"]
-    R --> C["Recall<br/>next conversation"]
+    W --> R["Reflect<br/>outside the live turn"]
+    R --> C["Apply<br/>in a later conversation"]
     C --> T["Retire<br/>if stale"]
     T -. "corrected or dropped" .-> O
 ```
-_The memory loop. Forming memory is only half the system. Keeping it true is the other half: anything kept must also be capable of being corrected or dropped._
-
-## Guardrails come first, not last
-
-Memory can mislead as easily as it can help. A stale fact repeated confidently is worse than no fact at all, and durable memory about people is durable *personal data*. So the controls are part of the design, not a hardening pass bolted on afterward.
-
-| Control | What it means in practice |
-|---|---|
-| Consent and control | Whether an agent uses memory, and at which scopes, is an explicit decision rather than an implicit behavior, with controls for the maker who builds the agent and for the people who talk to it. |
-| Isolation by construction | Scopes are separate stores, addressed per tenant, environment, agent, and user, and surfaced to a session only when it is entitled to them. |
-| Least privilege on write | Live turns cannot rewrite broader-scope memory. Anything that would widen a memory's audience is treated as a promotion that has to be earned, not a side effect. |
-| Inspectable and reversible | Memory is human-readable and versioned, so it can be reviewed, corrected, or deleted, including deletion initiated by the person it describes. |
-| Staged rollout | Capabilities widen only after they clear quality, safety, privacy, and cost gates, and every step retains a kill switch. |
-
-Compliance is a first-class requirement rather than an afterthought: memory derived from a person's conversations must be discoverable and deletable by that person, and memory meant to describe a *process* must not quietly accumulate facts about *people*.
+_A conceptual reflection loop. Forming memory is only half the system; keeping it useful and current is the other half._
 
 ## Trusted, but also verified
 
-Adding memory to an agent is a change you have to prove, because the failure modes are quiet.
+Everything above is a claim about how the system behaves, and claims about memory are easy to make and hard to keep. So before any of this widens to more customers, our engineering and data science teams have to show it holds. That work is ours, not something we hand to makers to figure out on their own.
 
 > An agent with a bad memory does not crash. It just becomes confidently wrong.
 {: .prompt-warning }
 
-So memory is evaluated against the ways it can go wrong, not only the ways it can help. Among the behaviors we hold agents to:
+That is what makes memory worth testing carefully: the failure modes are quiet. So we evaluate memory against the ways it can go wrong, not only the ways it can help. Among the behaviors we hold agents to:
 
 - **Recall.** Days later, in a brand new conversation, does the agent still know what it was told?
 - **Negative recall.** When memory holds something stale or simply wrong, does the agent catch it, or repeat it with confidence?
 - **Abstention.** When something was never actually said, does the agent say it doesn't know? An agent that trades correct refusals for plausible guesses has become less trustworthy, not more.
 - **Hallucination.** Does having a memory tempt the model into inventing detail that was never in it?
 
-Pinning down behaviors this nuanced is its own discipline. If you want to go deeper on that, we wrote about [scoring agent behavior with LLMs]({% post_url 2026-06-26-better-llm-scoring %}). Memory earns a wider audience only when it clearly helps on recall without costing the agent its willingness to say "I don't know."
+Pinning down behaviors this nuanced is its own discipline. If you want to go deeper on that, we wrote about [scoring agent behavior with LLMs]({% post_url 2026-06-26-better-llm-scoring %}). The bar is simple: memory has to clearly help on recall without costing the agent its willingness to say "I don't know."
 
 > A memory system isn't good because it remembers more. It's good because it remembers the right things, and knows what it doesn't know.
 
@@ -159,11 +155,11 @@ Strip away the architecture and memory delivers one thing: **an agent that stops
 
 The support agent already knows this customer has been escalated twice and doesn't restart the story from the top. The operations agent remembers that this approval always needs a second signature and stops asking. The analyst's agent recalls which approach was tried last quarter and why it was abandoned. Each is small on its own; compounded over hundreds of conversations, they are the difference between a tool people tolerate and a colleague people rely on.
 
-And that value arrives without makers having to become memory engineers. You decide whether your agent should learn, and at which scope. Copilot Studio handles the rest: forming the memory, keeping it separated and governed, reflecting on it in the background, and proving through evaluation that it is helping rather than quietly drifting.
+And that value arrives without makers having to become memory engineers. The maker decides whether to turn Memory on for an agent. Copilot Studio then captures relevant context, stores it separately for each user, and applies it in later interactions. Each user can inspect and manage their own memories through chat or the memory portal.
 
 Agents are becoming genuine co-workers. Memory, deciding what to write down, how to find it again, and what to let go, is the part that makes the relationship worth having.
 
 So here's the question worth asking of your own agents: what is the first thing you'd want them to stop forgetting?
 
-> Agent memory in Copilot Studio is rolling out progressively. Capabilities described here may change as they move through preview.
+> Memory in Copilot Studio is a production-ready preview for agents powered by the GitHub Copilot harness. Preview capabilities and documentation may change.
 {: .prompt-info }
