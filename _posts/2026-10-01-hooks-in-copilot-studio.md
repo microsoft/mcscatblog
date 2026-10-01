@@ -2,7 +2,7 @@
 layout: post
 agent_edition: github-copilot
 title: "Hooks in Copilot Studio: Give Your Agent More Than Instructions"
-date: 2026-09-29
+date: 2026-10-01
 categories: [copilot-studio, automation]
 tags: [copilot-studio, hooks, github-copilot-harness, workflows, governance]
 description: "Choose the right checkpoint for context, tool checks, and data protection. See runtime inputs and practical use cases for every hook."
