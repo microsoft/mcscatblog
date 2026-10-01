@@ -53,8 +53,9 @@ jobs:
         run: |
           # Mirrors _plugins/validate-agent-edition.rb so contributors get a
           # fast, clear failure on the PR before the full Jekyll build runs.
-          # Every post must declare: agent_edition: classic | modern | both
-          allowed_regex='^agent_edition:[[:space:]]*(classic|modern|both)[[:space:]]*$'
+          # Every post must declare: agent_edition: standard | github-copilot | both
+          # (classic/modern accepted as deprecated aliases so in-flight PRs don't break).
+          allowed_regex='^agent_edition:[[:space:]]*(standard|github-copilot|both|classic|modern)[[:space:]]*$'
           offenders=()
 
           for post in _posts/*.md; do
@@ -69,10 +70,10 @@ jobs:
           done
 
           if (( ${#offenders[@]} > 0 )); then
-            echo "::error::Every post must set 'agent_edition' to one of: classic | modern | both"
+            echo "::error::Every post must set 'agent_edition' to one of: standard | github-copilot | both"
             printf '%s\n' "${offenders[@]}"
             echo ""
-            echo "Add 'agent_edition: classic' (or 'modern' / 'both') to the front matter of each post listed above."
+            echo "Add 'agent_edition: standard' (or 'github-copilot' / 'both') to the front matter of each post listed above."
             exit 1
           fi
 

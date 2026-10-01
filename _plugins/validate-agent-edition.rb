@@ -2,11 +2,14 @@
 #
 # LOCAL CUSTOMIZATION (not part of the Chirpy theme).
 # Fails the build if any published post is missing a valid `agent_edition`
-# front-matter value. This keeps the Classic vs. Modern Copilot Studio agent
+# front-matter value. This keeps the agent harness (Standard vs. GitHub Copilot)
 # distinction explicit on every post (it drives the edition pill rendered in
 # _layouts/post.html). See README "Theme customizations".
 
-ALLOWED_AGENT_EDITIONS = %w[classic modern both].freeze
+CANONICAL_AGENT_EDITIONS = %w[standard github-copilot both].freeze
+# Deprecated aliases still accepted so in-flight posts/PRs don't hard-fail.
+DEPRECATED_AGENT_EDITION_ALIASES = %w[classic modern].freeze
+ALLOWED_AGENT_EDITIONS = (CANONICAL_AGENT_EDITIONS + DEPRECATED_AGENT_EDITION_ALIASES).freeze
 
 Jekyll::Hooks.register :site, :post_read do |site|
   offenders = []
@@ -30,9 +33,9 @@ Jekyll::Hooks.register :site, :post_read do |site|
   next if offenders.empty?
 
   message = +"Build failed: every post must set `agent_edition` to one of " \
-             "#{ALLOWED_AGENT_EDITIONS.join(' or ')}.\n"
+             "#{CANONICAL_AGENT_EDITIONS.join(' or ')}.\n"
   message << offenders.join("\n")
-  message << "\n\nAdd `agent_edition: classic` (or `modern`) to the front matter " \
+  message << "\n\nAdd `agent_edition: standard` (or `github-copilot` / `both`) to the front matter " \
              "of each post listed above."
 
   raise message

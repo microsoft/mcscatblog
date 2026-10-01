@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Embedding WebChat Without Writing a Single Line of JavaScript"
 date: 2026-01-26
-categories: [copilot-studio, webchat]
+categories: [channels]
 tags: [webchat, copilot-studio, embedding, javascript, html, cdn, unauthenticated-agents, widget]
 description: "A new library that lets you embed BotFramework WebChat into any website using only HTML data attributes. No JavaScript knowledge required."
 author: adilei

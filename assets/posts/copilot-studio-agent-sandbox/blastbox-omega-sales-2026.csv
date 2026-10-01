@@ -1,0 +1,539 @@
+OrderDate,Region,Product,Category,Units,UnitPrice
+2026-01-01,Southeast,Neon Drift Cabinet,Hardware,2,1249.00
+2026-01-01,Southwest,Holo Visor Mk II,Hardware,7,415.00
+2026-01-01,Southwest,Neon Drift Cabinet,Hardware,9,1249.00
+2026-01-02,Northwest,Arcade Token Pack,Accessories,5,12.00
+2026-01-02,Northwest,Retro Rewind Vol. 3,Games,3,29.99
+2026-01-02,Northeast,Midnight Circuit,Games,10,54.50
+2026-01-03,Northeast,Midnight Circuit,Games,5,54.50
+2026-01-03,Southeast,Plasma Cartridge,Accessories,2,34.50
+2026-01-04,Northwest,Starfall Anthology,Games,5,44.00
+2026-01-08,Northwest,Holo Visor Mk II,Hardware,1,415.00
+2026-01-08,Southeast,Vector Blaster Pad,Accessories,6,59.95
+2026-01-09,Northwest,Midnight Circuit,Games,2,54.50
+2026-01-09,Southeast,Midnight Circuit,Games,4,54.50
+2026-01-09,Southeast,Holo Visor Mk II,Hardware,12,415.00
+2026-01-09,Southeast,Vector Blaster Pad,Accessories,12,59.95
+2026-01-10,Northeast,Arcade Token Pack,Accessories,-2,12.00
+2026-01-12,Southwest,Midnight Circuit,Games,13,54.50
+2026-01-13,Southeast,Neon Drift Cabinet,Hardware,8,1249.00
+2026-01-14,Southwest,Quantum Save Stick,Accessories,14,22.75
+2026-01-15,Southeast,Plasma Cartridge,Accessories,13,34.50
+2026-01-16,Southeast,Holo Visor Mk II,Hardware,6,415.00
+2026-01-16,Southeast,Plasma Cartridge,Accessories,6,34.50
+2026-01-16,Southeast,Retro Rewind Vol. 3,Games,9,29.99
+2026-01-16,Southwest,Plasma Cartridge,Accessories,4,34.50
+2026-01-18,Southeast,Vector Blaster Pad,Accessories,10,59.95
+2026-01-18,Northwest,Neon Drift Cabinet,Hardware,5,1249.00
+2026-01-20,Southwest,Neon Drift Cabinet,Hardware,2,1249.00
+2026-01-21,Southeast,Retro Rewind Vol. 3,Games,11,29.99
+2026-01-21,Northeast,Midnight Circuit,Games,2,54.50
+2026-01-21,Northeast,Holo Visor Mk II,Hardware,4,415.00
+2026-01-22,Southeast,Arcade Token Pack,Accessories,9,12.00
+2026-01-23,Southwest,Chrono Loop Deck,Hardware,10,689.00
+2026-01-24,Northeast,Midnight Circuit,Games,8,54.50
+2026-01-25,Northeast,Vector Blaster Pad,Accessories,6,59.95
+2026-01-25,Southwest,Midnight Circuit,Games,9,54.50
+2026-01-26,Northeast,Midnight Circuit,Games,5,54.50
+2026-01-27,Southwest,Quantum Save Stick,Accessories,2,22.75
+2026-01-27,Southeast,Neon Drift Cabinet,Hardware,4,1249.00
+2026-01-27,Northeast,Midnight Circuit,Games,11,54.50
+2026-01-27,Northwest,Holo Visor Mk II,Hardware,4,415.00
+2026-01-28,Northwest,Neon Drift Cabinet,Hardware,10,1249.00
+2026-01-28,Northeast,Quantum Save Stick,Accessories,2,22.75
+2026-01-28,Southeast,Plasma Cartridge,Accessories,11,34.50
+2026-01-31,Southwest,Retro Rewind Vol. 3,Games,-2,29.99
+2026-01-31,Southeast,Holo Visor Mk II,Hardware,-3,415.00
+2026-02-01,Southwest,Chrono Loop Deck,Hardware,1,689.00
+2026-02-01,Southeast,Midnight Circuit,Games,14,54.50
+2026-02-02,Northeast,Vector Blaster Pad,Accessories,8,59.95
+2026-02-03,Southwest,Starfall Anthology,Games,9,44.00
+2026-02-04,Northwest,Quantum Save Stick,Accessories,9,22.75
+2026-02-04,Southeast,Vector Blaster Pad,Accessories,1,59.95
+2026-02-04,Southwest,Midnight Circuit,Games,14,54.50
+2026-02-08,Southeast,Plasma Cartridge,Accessories,11,34.50
+2026-02-09,Northwest,Holo Visor Mk II,Hardware,9,415.00
+2026-02-10,Southeast,Midnight Circuit,Games,11,54.50
+2026-02-10,Northwest,Chrono Loop Deck,Hardware,2,689.00
+2026-02-10,Southwest,Midnight Circuit,Games,1,54.50
+2026-02-11,Southeast,Starfall Anthology,Games,3,44.00
+2026-02-12,Southwest,Neon Drift Cabinet,Hardware,4,1249.00
+2026-02-12,Southwest,Midnight Circuit,Games,6,54.50
+2026-02-12,Northeast,Chrono Loop Deck,Hardware,11,689.00
+2026-02-12,Northwest,Holo Visor Mk II,Hardware,10,415.00
+2026-02-13,Southeast,Vector Blaster Pad,Accessories,2,59.95
+2026-02-13,Southeast,Quantum Save Stick,Accessories,6,22.75
+2026-02-14,Southeast,Neon Drift Cabinet,Hardware,2,1249.00
+2026-02-14,Southeast,Neon Drift Cabinet,Hardware,5,1249.00
+2026-02-15,Southwest,Midnight Circuit,Games,2,54.50
+2026-02-16,Northwest,Vector Blaster Pad,Accessories,11,59.95
+2026-02-18,Northeast,Chrono Loop Deck,Hardware,11,689.00
+2026-02-19,Southwest,Midnight Circuit,Games,10,54.50
+2026-02-20,Southeast,Holo Visor Mk II,Hardware,4,415.00
+2026-02-20,Southeast,Midnight Circuit,Games,4,54.50
+2026-02-21,Southeast,Quantum Save Stick,Accessories,2,22.75
+2026-02-21,Southeast,Chrono Loop Deck,Hardware,1,689.00
+2026-02-21,Northeast,Plasma Cartridge,Accessories,5,34.50
+2026-02-24,Northwest,Midnight Circuit,Games,4,54.50
+2026-02-24,Southeast,Neon Drift Cabinet,Hardware,3,1249.00
+2026-02-24,Southwest,Arcade Token Pack,Accessories,1,12.00
+2026-02-26,Southwest,Plasma Cartridge,Accessories,2,34.50
+2026-02-27,Northwest,Arcade Token Pack,Accessories,3,12.00
+2026-02-28,Southwest,Vector Blaster Pad,Accessories,12,59.95
+2026-02-28,Northwest,Neon Drift Cabinet,Hardware,14,1249.00
+2026-03-01,Northeast,Quantum Save Stick,Accessories,9,22.75
+2026-03-01,Southeast,Vector Blaster Pad,Accessories,14,59.95
+2026-03-01,Northeast,Midnight Circuit,Games,2,54.50
+2026-03-01,Southwest,Plasma Cartridge,Accessories,11,34.50
+2026-03-03,Southeast,Starfall Anthology,Games,3,44.00
+2026-03-03,Northwest,Neon Drift Cabinet,Hardware,11,1249.00
+2026-03-04,Southwest,Holo Visor Mk II,Hardware,8,415.00
+2026-03-06,Southwest,Arcade Token Pack,Accessories,2,12.00
+2026-03-09,Southwest,Retro Rewind Vol. 3,Games,10,29.99
+2026-03-09,Southeast,Neon Drift Cabinet,Hardware,11,1249.00
+2026-03-10,Northwest,Holo Visor Mk II,Hardware,4,415.00
+2026-03-10,Northwest,Midnight Circuit,Games,2,54.50
+2026-03-10,Southwest,Vector Blaster Pad,Accessories,13,59.95
+2026-03-11,Northeast,Holo Visor Mk II,Hardware,6,415.00
+2026-03-12,Northeast,Quantum Save Stick,Accessories,3,22.75
+2026-03-13,Northwest,Holo Visor Mk II,Hardware,12,415.00
+2026-03-13,Northwest,Plasma Cartridge,Accessories,4,34.50
+2026-03-14,Northwest,Midnight Circuit,Games,14,54.50
+2026-03-14,Northeast,Quantum Save Stick,Accessories,5,22.75
+2026-03-15,Northeast,Retro Rewind Vol. 3,Games,5,29.99
+2026-03-16,Southeast,Midnight Circuit,Games,7,54.50
+2026-03-17,Northwest,Quantum Save Stick,Accessories,12,22.75
+2026-03-18,Northwest,Quantum Save Stick,Accessories,8,22.75
+2026-03-19,Northwest,Retro Rewind Vol. 3,Games,5,29.99
+2026-03-19,Southeast,Retro Rewind Vol. 3,Games,6,29.99
+2026-03-21,Southwest,Retro Rewind Vol. 3,Games,13,29.99
+2026-03-21,Southeast,Retro Rewind Vol. 3,Games,1,29.99
+2026-03-22,Northwest,Midnight Circuit,Games,3,54.50
+2026-03-22,Northeast,Starfall Anthology,Games,9,44.00
+2026-03-23,Southwest,Neon Drift Cabinet,Hardware,6,1249.00
+2026-03-23,Southeast,Starfall Anthology,Games,3,44.00
+2026-03-24,Southwest,Neon Drift Cabinet,Hardware,5,1249.00
+2026-03-24,Northwest,Neon Drift Cabinet,Hardware,2,1249.00
+2026-03-26,Southwest,Neon Drift Cabinet,Hardware,1,1249.00
+2026-03-27,Northeast,Chrono Loop Deck,Hardware,14,689.00
+2026-03-28,Northeast,Plasma Cartridge,Accessories,10,34.50
+2026-03-28,Northeast,Arcade Token Pack,Accessories,10,12.00
+2026-03-29,Northwest,Holo Visor Mk II,Hardware,10,415.00
+2026-03-29,Southeast,Arcade Token Pack,Accessories,12,12.00
+2026-03-31,Southwest,Chrono Loop Deck,Hardware,9,689.00
+2026-04-01,Northeast,Chrono Loop Deck,Hardware,4,689.00
+2026-04-01,Northeast,Plasma Cartridge,Accessories,10,34.50
+2026-04-02,Southeast,Retro Rewind Vol. 3,Games,2,29.99
+2026-04-03,Southeast,Neon Drift Cabinet,Hardware,1,1249.00
+2026-04-03,Northeast,Retro Rewind Vol. 3,Games,10,29.99
+2026-04-03,Southwest,Retro Rewind Vol. 3,Games,1,29.99
+2026-04-03,Southeast,Plasma Cartridge,Accessories,-2,34.50
+2026-04-05,Northwest,Neon Drift Cabinet,Hardware,8,1249.00
+2026-04-05,Southwest,Midnight Circuit,Games,10,54.50
+2026-04-05,Southeast,Holo Visor Mk II,Hardware,13,415.00
+2026-04-06,Southeast,Vector Blaster Pad,Accessories,-3,59.95
+2026-04-07,Northwest,Chrono Loop Deck,Hardware,16,689.00
+2026-04-07,Northwest,Holo Visor Mk II,Hardware,9,415.00
+2026-04-07,Southeast,Midnight Circuit,Games,1,54.50
+2026-04-07,Southwest,Retro Rewind Vol. 3,Games,14,29.99
+2026-04-07,Northwest,Plasma Cartridge,Accessories,8,34.50
+2026-04-07,Northeast,Starfall Anthology,Games,1,44.00
+2026-04-08,Southwest,Starfall Anthology,Games,4,44.00
+2026-04-09,Northwest,Arcade Token Pack,Accessories,5,12.00
+2026-04-11,Southeast,Quantum Save Stick,Accessories,13,22.75
+2026-04-11,Southwest,Holo Visor Mk II,Hardware,1,415.00
+2026-04-11,Southwest,Plasma Cartridge,Accessories,2,34.50
+2026-04-11,Northeast,Midnight Circuit,Games,2,54.50
+2026-04-12,Southwest,Vector Blaster Pad,Accessories,3,59.95
+2026-04-13,Southwest,Arcade Token Pack,Accessories,5,12.00
+2026-04-14,Northeast,Vector Blaster Pad,Accessories,3,59.95
+2026-04-15,Northeast,Quantum Save Stick,Accessories,11,22.75
+2026-04-17,Northwest,Holo Visor Mk II,Hardware,16,415.00
+2026-04-17,Southeast,Vector Blaster Pad,Accessories,8,59.95
+2026-04-19,Southeast,Arcade Token Pack,Accessories,8,12.00
+2026-04-22,Northeast,Arcade Token Pack,Accessories,11,12.00
+2026-04-22,Southwest,Neon Drift Cabinet,Hardware,4,1249.00
+2026-04-24,Southwest,Neon Drift Cabinet,Hardware,11,1249.00
+2026-04-25,Northwest,Neon Drift Cabinet,Hardware,9,1249.00
+2026-04-26,Southeast,Arcade Token Pack,Accessories,8,12.00
+2026-04-26,Northeast,Retro Rewind Vol. 3,Games,2,29.99
+2026-04-27,Northeast,Quantum Save Stick,Accessories,1,22.75
+2026-04-27,Southeast,Midnight Circuit,Games,13,54.50
+2026-04-28,Southeast,Quantum Save Stick,Accessories,11,22.75
+2026-04-29,Northwest,Chrono Loop Deck,Hardware,11,689.00
+2026-04-29,Northwest,Chrono Loop Deck,Hardware,19,689.00
+2026-04-29,Northwest,Holo Visor Mk II,Hardware,1,415.00
+2026-05-01,Southeast,Quantum Save Stick,Accessories,13,22.75
+2026-05-01,Northeast,Quantum Save Stick,Accessories,2,22.75
+2026-05-01,Northwest,Chrono Loop Deck,Hardware,5,689.00
+2026-05-02,Southwest,Chrono Loop Deck,Hardware,13,689.00
+2026-05-04,Southwest,Vector Blaster Pad,Accessories,15,59.95
+2026-05-04,Southwest,Neon Drift Cabinet,Hardware,3,1249.00
+2026-05-04,Southwest,Midnight Circuit,Games,13,54.50
+2026-05-05,Northwest,Retro Rewind Vol. 3,Games,5,29.99
+2026-05-05,Southeast,Quantum Save Stick,Accessories,16,22.75
+2026-05-06,Northeast,Plasma Cartridge,Accessories,12,34.50
+2026-05-06,Northwest,Starfall Anthology,Games,9,44.00
+2026-05-07,Southwest,Quantum Save Stick,Accessories,12,22.75
+2026-05-07,Northeast,Chrono Loop Deck,Hardware,9,689.00
+2026-05-08,Southwest,Starfall Anthology,Games,6,44.00
+2026-05-08,Southwest,Chrono Loop Deck,Hardware,2,689.00
+2026-05-08,Northwest,Midnight Circuit,Games,18,54.50
+2026-05-09,Southwest,Vector Blaster Pad,Accessories,11,59.95
+2026-05-09,Northwest,Starfall Anthology,Games,5,44.00
+2026-05-10,Southwest,Chrono Loop Deck,Hardware,14,689.00
+2026-05-11,Northeast,Arcade Token Pack,Accessories,5,12.00
+2026-05-11,Northwest,Midnight Circuit,Games,9,54.50
+2026-05-12,Northeast,Retro Rewind Vol. 3,Games,10,29.99
+2026-05-12,Northeast,Vector Blaster Pad,Accessories,5,59.95
+2026-05-14,Northwest,Starfall Anthology,Games,14,44.00
+2026-05-16,Southeast,Chrono Loop Deck,Hardware,13,689.00
+2026-05-16,Northwest,Quantum Save Stick,Accessories,3,22.75
+2026-05-17,Southwest,Chrono Loop Deck,Hardware,14,689.00
+2026-05-17,Southwest,Vector Blaster Pad,Accessories,12,59.95
+2026-05-18,Northeast,Neon Drift Cabinet,Hardware,3,1249.00
+2026-05-18,Northwest,Neon Drift Cabinet,Hardware,7,1249.00
+2026-05-18,Northwest,Vector Blaster Pad,Accessories,11,59.95
+2026-05-18,Southwest,Midnight Circuit,Games,14,54.50
+2026-05-19,Southwest,Arcade Token Pack,Accessories,15,12.00
+2026-05-20,Southwest,Neon Drift Cabinet,Hardware,6,1249.00
+2026-05-20,Northwest,Retro Rewind Vol. 3,Games,16,29.99
+2026-05-22,Northwest,Quantum Save Stick,Accessories,14,22.75
+2026-05-23,Southwest,Holo Visor Mk II,Hardware,6,415.00
+2026-05-24,Northeast,Arcade Token Pack,Accessories,12,12.00
+2026-05-25,Southeast,Vector Blaster Pad,Accessories,8,59.95
+2026-05-25,Northwest,Midnight Circuit,Games,14,54.50
+2026-05-26,Southwest,Plasma Cartridge,Accessories,5,34.50
+2026-05-26,Southeast,Holo Visor Mk II,Hardware,8,415.00
+2026-05-26,Northwest,Holo Visor Mk II,Hardware,-1,415.00
+2026-05-28,Northwest,Holo Visor Mk II,Hardware,16,415.00
+2026-05-30,Northwest,Holo Visor Mk II,Hardware,4,415.00
+2026-05-31,Southeast,Retro Rewind Vol. 3,Games,11,29.99
+2026-05-31,Northeast,Neon Drift Cabinet,Hardware,12,1249.00
+2026-06-01,Southeast,Arcade Token Pack,Accessories,7,12.00
+2026-06-01,Southeast,Holo Visor Mk II,Hardware,12,415.00
+2026-06-01,Northwest,Arcade Token Pack,Accessories,11,12.00
+2026-06-03,Northeast,Plasma Cartridge,Accessories,5,34.50
+2026-06-03,Northwest,Arcade Token Pack,Accessories,4,12.00
+2026-06-04,Southeast,Vector Blaster Pad,Accessories,8,59.95
+2026-06-05,Southeast,Quantum Save Stick,Accessories,10,22.75
+2026-06-07,Southeast,Quantum Save Stick,Accessories,10,22.75
+2026-06-07,Southeast,Plasma Cartridge,Accessories,2,34.50
+2026-06-07,Northwest,Quantum Save Stick,Accessories,7,22.75
+2026-06-08,Northwest,Retro Rewind Vol. 3,Games,19,29.99
+2026-06-08,Northwest,Plasma Cartridge,Accessories,14,34.50
+2026-06-09,Northeast,Neon Drift Cabinet,Hardware,4,1249.00
+2026-06-09,Northeast,Midnight Circuit,Games,10,54.50
+2026-06-10,Northwest,Neon Drift Cabinet,Hardware,11,1249.00
+2026-06-11,Southeast,Retro Rewind Vol. 3,Games,11,29.99
+2026-06-11,Southwest,Retro Rewind Vol. 3,Games,2,29.99
+2026-06-11,Northeast,Arcade Token Pack,Accessories,5,12.00
+2026-06-11,Northwest,Vector Blaster Pad,Accessories,18,59.95
+2026-06-12,Southwest,Chrono Loop Deck,Hardware,-3,689.00
+2026-06-13,Southwest,Arcade Token Pack,Accessories,8,12.00
+2026-06-14,Northwest,Plasma Cartridge,Accessories,19,34.50
+2026-06-15,Southeast,Retro Rewind Vol. 3,Games,3,29.99
+2026-06-15,Northeast,Midnight Circuit,Games,5,54.50
+2026-06-15,Southwest,Chrono Loop Deck,Hardware,9,689.00
+2026-06-16,Northwest,Midnight Circuit,Games,15,54.50
+2026-06-16,Southwest,Holo Visor Mk II,Hardware,-2,415.00
+2026-06-18,Northeast,Vector Blaster Pad,Accessories,2,59.95
+2026-06-18,Southwest,Starfall Anthology,Games,11,44.00
+2026-06-19,Northeast,Vector Blaster Pad,Accessories,14,59.95
+2026-06-19,Southwest,Neon Drift Cabinet,Hardware,11,1249.00
+2026-06-20,Southeast,Midnight Circuit,Games,16,54.50
+2026-06-22,Southwest,Starfall Anthology,Games,9,44.00
+2026-06-23,Northwest,Chrono Loop Deck,Hardware,18,689.00
+2026-06-23,Southeast,Plasma Cartridge,Accessories,4,34.50
+2026-06-23,Southeast,Vector Blaster Pad,Accessories,-3,59.95
+2026-06-24,Southwest,Chrono Loop Deck,Hardware,15,689.00
+2026-06-28,Northwest,Arcade Token Pack,Accessories,14,12.00
+2026-06-29,Northeast,Vector Blaster Pad,Accessories,11,59.95
+2026-06-29,Northeast,Plasma Cartridge,Accessories,9,34.50
+2026-06-29,Northwest,Holo Visor Mk II,Hardware,5,415.00
+2026-06-29,Northwest,Midnight Circuit,Games,5,54.50
+2026-07-01,Northeast,Starfall Anthology,Games,-3,44.00
+2026-07-02,Northwest,Chrono Loop Deck,Hardware,2,689.00
+2026-07-03,Southwest,Starfall Anthology,Games,1,44.00
+2026-07-04,Southwest,Retro Rewind Vol. 3,Games,6,29.99
+2026-07-04,Northwest,Chrono Loop Deck,Hardware,18,689.00
+2026-07-04,Southeast,Midnight Circuit,Games,15,54.50
+2026-07-04,Southeast,Midnight Circuit,Games,12,54.50
+2026-07-05,Southwest,Midnight Circuit,Games,2,54.50
+2026-07-05,Southeast,Holo Visor Mk II,Hardware,4,415.00
+2026-07-05,Southeast,Neon Drift Cabinet,Hardware,6,1249.00
+2026-07-05,Northeast,Plasma Cartridge,Accessories,6,34.50
+2026-07-05,Southeast,Chrono Loop Deck,Hardware,4,689.00
+2026-07-07,Northeast,Quantum Save Stick,Accessories,8,22.75
+2026-07-08,Southeast,Plasma Cartridge,Accessories,7,34.50
+2026-07-08,Southeast,Starfall Anthology,Games,-2,44.00
+2026-07-09,Southeast,Quantum Save Stick,Accessories,9,22.75
+2026-07-09,Northeast,Retro Rewind Vol. 3,Games,14,29.99
+2026-07-09,Northwest,Chrono Loop Deck,Hardware,5,689.00
+2026-07-09,Northwest,Arcade Token Pack,Accessories,9,12.00
+2026-07-10,Northeast,Retro Rewind Vol. 3,Games,3,29.99
+2026-07-11,Southwest,Starfall Anthology,Games,2,44.00
+2026-07-11,Northeast,Quantum Save Stick,Accessories,14,22.75
+2026-07-11,Southeast,Plasma Cartridge,Accessories,10,34.50
+2026-07-13,Northeast,Quantum Save Stick,Accessories,8,22.75
+2026-07-13,Southeast,Retro Rewind Vol. 3,Games,8,29.99
+2026-07-13,Northwest,Starfall Anthology,Games,9,44.00
+2026-07-13,Northeast,Retro Rewind Vol. 3,Games,11,29.99
+2026-07-14,Southwest,Vector Blaster Pad,Accessories,6,59.95
+2026-07-14,Southeast,Vector Blaster Pad,Accessories,2,59.95
+2026-07-15,Northwest,Chrono Loop Deck,Hardware,23,689.00
+2026-07-16,Southwest,Plasma Cartridge,Accessories,9,34.50
+2026-07-17,Northwest,Midnight Circuit,Games,16,54.50
+2026-07-17,Northeast,Midnight Circuit,Games,9,54.50
+2026-07-18,Southwest,Arcade Token Pack,Accessories,10,12.00
+2026-07-19,Northeast,Chrono Loop Deck,Hardware,7,689.00
+2026-07-19,Northeast,Neon Drift Cabinet,Hardware,7,1249.00
+2026-07-20,Northeast,Starfall Anthology,Games,14,44.00
+2026-07-21,Southeast,Midnight Circuit,Games,12,54.50
+2026-07-22,Northeast,Plasma Cartridge,Accessories,1,34.50
+2026-07-24,Southeast,Vector Blaster Pad,Accessories,2,59.95
+2026-07-24,Northwest,Midnight Circuit,Games,9,54.50
+2026-07-25,Northwest,Arcade Token Pack,Accessories,14,12.00
+2026-07-28,Southwest,Retro Rewind Vol. 3,Games,15,29.99
+2026-07-28,Northeast,Chrono Loop Deck,Hardware,6,689.00
+2026-07-29,Northwest,Chrono Loop Deck,Hardware,13,689.00
+2026-07-29,Southeast,Neon Drift Cabinet,Hardware,4,1249.00
+2026-07-31,Northeast,Holo Visor Mk II,Hardware,3,415.00
+2026-08-01,Southwest,Vector Blaster Pad,Accessories,3,59.95
+2026-08-02,Southeast,Starfall Anthology,Games,6,44.00
+2026-08-02,Northwest,Starfall Anthology,Games,7,44.00
+2026-08-02,Southeast,Retro Rewind Vol. 3,Games,14,29.99
+2026-08-03,Southeast,Holo Visor Mk II,Hardware,9,415.00
+2026-08-03,Southeast,Plasma Cartridge,Accessories,10,34.50
+2026-08-04,Southeast,Neon Drift Cabinet,Hardware,15,1249.00
+2026-08-04,Southwest,Holo Visor Mk II,Hardware,12,415.00
+2026-08-05,Southeast,Plasma Cartridge,Accessories,8,34.50
+2026-08-05,Southwest,Holo Visor Mk II,Hardware,10,415.00
+2026-08-05,Northeast,Arcade Token Pack,Accessories,-1,12.00
+2026-08-06,Southeast,Neon Drift Cabinet,Hardware,4,1249.00
+2026-08-06,Southeast,Arcade Token Pack,Accessories,8,12.00
+2026-08-07,Northeast,Starfall Anthology,Games,13,44.00
+2026-08-07,Northwest,Quantum Save Stick,Accessories,16,22.75
+2026-08-08,Southwest,Arcade Token Pack,Accessories,10,12.00
+2026-08-08,Southeast,Vector Blaster Pad,Accessories,13,59.95
+2026-08-09,Southeast,Arcade Token Pack,Accessories,4,12.00
+2026-08-09,Northeast,Starfall Anthology,Games,7,44.00
+2026-08-09,Northwest,Midnight Circuit,Games,22,54.50
+2026-08-10,Southeast,Vector Blaster Pad,Accessories,3,59.95
+2026-08-11,Southwest,Neon Drift Cabinet,Hardware,9,1249.00
+2026-08-11,Northeast,Holo Visor Mk II,Hardware,9,415.00
+2026-08-11,Northeast,Retro Rewind Vol. 3,Games,5,29.99
+2026-08-11,Northwest,Starfall Anthology,Games,16,44.00
+2026-08-13,Southwest,Starfall Anthology,Games,8,44.00
+2026-08-14,Southeast,Retro Rewind Vol. 3,Games,9,29.99
+2026-08-14,Northeast,Holo Visor Mk II,Hardware,10,415.00
+2026-08-14,Southwest,Chrono Loop Deck,Hardware,16,689.00
+2026-08-14,Northwest,Chrono Loop Deck,Hardware,22,689.00
+2026-08-15,Northeast,Plasma Cartridge,Accessories,9,34.50
+2026-08-17,Northwest,Holo Visor Mk II,Hardware,9,415.00
+2026-08-19,Northwest,Quantum Save Stick,Accessories,23,22.75
+2026-08-20,Southeast,Holo Visor Mk II,Hardware,11,415.00
+2026-08-21,Northeast,Vector Blaster Pad,Accessories,2,59.95
+2026-08-21,Northwest,Arcade Token Pack,Accessories,23,12.00
+2026-08-22,Northwest,Plasma Cartridge,Accessories,9,34.50
+2026-08-24,Southeast,Vector Blaster Pad,Accessories,9,59.95
+2026-08-25,Southwest,Plasma Cartridge,Accessories,8,34.50
+2026-08-26,Northwest,Starfall Anthology,Games,7,44.00
+2026-08-27,Northwest,Retro Rewind Vol. 3,Games,11,29.99
+2026-08-27,Northeast,Holo Visor Mk II,Hardware,-3,415.00
+2026-08-28,Northwest,Starfall Anthology,Games,14,44.00
+2026-08-29,Northeast,Neon Drift Cabinet,Hardware,12,1249.00
+2026-08-29,Northwest,Chrono Loop Deck,Hardware,22,689.00
+2026-08-30,Southeast,Holo Visor Mk II,Hardware,1,415.00
+2026-08-31,Southeast,Retro Rewind Vol. 3,Games,9,29.99
+2026-08-31,Southwest,Midnight Circuit,Games,1,54.50
+2026-08-31,Southeast,Holo Visor Mk II,Hardware,8,415.00
+2026-08-31,Southeast,Midnight Circuit,Games,15,54.50
+2026-09-01,Southeast,Vector Blaster Pad,Accessories,7,59.95
+2026-09-01,Northwest,Quantum Save Stick,Accessories,7,22.75
+2026-09-02,Southeast,Arcade Token Pack,Accessories,13,12.00
+2026-09-02,Southeast,Quantum Save Stick,Accessories,12,22.75
+2026-09-03,Southwest,Starfall Anthology,Games,2,44.00
+2026-09-05,Northwest,Holo Visor Mk II,Hardware,23,415.00
+2026-09-05,Southeast,Plasma Cartridge,Accessories,9,34.50
+2026-09-05,Southeast,Arcade Token Pack,Accessories,4,12.00
+2026-09-06,Northeast,Quantum Save Stick,Accessories,10,22.75
+2026-09-06,Northeast,Vector Blaster Pad,Accessories,9,59.95
+2026-09-07,Northeast,Plasma Cartridge,Accessories,3,34.50
+2026-09-07,Southwest,Starfall Anthology,Games,5,44.00
+2026-09-07,Northwest,Vector Blaster Pad,Accessories,5,59.95
+2026-09-09,Northwest,Retro Rewind Vol. 3,Games,4,29.99
+2026-09-10,Southeast,Vector Blaster Pad,Accessories,8,59.95
+2026-09-10,Northwest,Neon Drift Cabinet,Hardware,25,1249.00
+2026-09-10,Southwest,Midnight Circuit,Games,5,54.50
+2026-09-11,Southwest,Retro Rewind Vol. 3,Games,3,29.99
+2026-09-11,Southeast,Starfall Anthology,Games,6,44.00
+2026-09-12,Southeast,Plasma Cartridge,Accessories,14,34.50
+2026-09-12,Southeast,Midnight Circuit,Games,11,54.50
+2026-09-14,Northeast,Retro Rewind Vol. 3,Games,11,29.99
+2026-09-16,Northwest,Retro Rewind Vol. 3,Games,7,29.99
+2026-09-16,Southwest,Chrono Loop Deck,Hardware,9,689.00
+2026-09-17,Southeast,Neon Drift Cabinet,Hardware,9,1249.00
+2026-09-18,Northeast,Holo Visor Mk II,Hardware,8,415.00
+2026-09-20,Southeast,Retro Rewind Vol. 3,Games,2,29.99
+2026-09-20,Southeast,Plasma Cartridge,Accessories,1,34.50
+2026-09-20,Southeast,Midnight Circuit,Games,8,54.50
+2026-09-20,Northeast,Plasma Cartridge,Accessories,12,34.50
+2026-09-21,Northwest,Plasma Cartridge,Accessories,23,34.50
+2026-09-21,Southeast,Retro Rewind Vol. 3,Games,12,29.99
+2026-09-21,Southeast,Arcade Token Pack,Accessories,11,12.00
+2026-09-22,Southeast,Vector Blaster Pad,Accessories,15,59.95
+2026-09-23,Northeast,Chrono Loop Deck,Hardware,10,689.00
+2026-09-24,Northwest,Vector Blaster Pad,Accessories,11,59.95
+2026-09-25,Southeast,Retro Rewind Vol. 3,Games,2,29.99
+2026-09-25,Southwest,Chrono Loop Deck,Hardware,5,689.00
+2026-09-26,Southeast,Vector Blaster Pad,Accessories,6,59.95
+2026-09-27,Northwest,Vector Blaster Pad,Accessories,23,59.95
+2026-09-27,Southeast,Plasma Cartridge,Accessories,13,34.50
+2026-09-28,Southeast,Arcade Token Pack,Accessories,10,12.00
+2026-09-30,Northwest,Starfall Anthology,Games,5,44.00
+2026-09-30,Southeast,Vector Blaster Pad,Accessories,9,59.95
+2026-09-30,Northwest,Arcade Token Pack,Accessories,9,12.00
+2026-09-30,Southwest,Vector Blaster Pad,Accessories,14,59.95
+2026-09-30,Northwest,Arcade Token Pack,Accessories,18,12.00
+2026-09-30,Northeast,Holo Visor Mk II,Hardware,-3,415.00
+2026-10-01,Northwest,Retro Rewind Vol. 3,Games,29,29.99
+2026-10-01,Northwest,Quantum Save Stick,Accessories,34,22.75
+2026-10-02,Northeast,Chrono Loop Deck,Hardware,1,689.00
+2026-10-03,Northwest,Starfall Anthology,Games,26,44.00
+2026-10-03,Southeast,Chrono Loop Deck,Hardware,5,689.00
+2026-10-05,Southwest,Starfall Anthology,Games,4,44.00
+2026-10-06,Northeast,Plasma Cartridge,Accessories,1,34.50
+2026-10-07,Southeast,Chrono Loop Deck,Hardware,2,689.00
+2026-10-07,Southeast,Plasma Cartridge,Accessories,14,34.50
+2026-10-07,Northwest,Vector Blaster Pad,Accessories,19,59.95
+2026-10-07,Southwest,Quantum Save Stick,Accessories,-1,22.75
+2026-10-08,Southwest,Retro Rewind Vol. 3,Games,9,29.99
+2026-10-09,Northwest,Midnight Circuit,Games,22,54.50
+2026-10-11,Northeast,Retro Rewind Vol. 3,Games,1,29.99
+2026-10-11,Southwest,Vector Blaster Pad,Accessories,17,59.95
+2026-10-12,Northwest,Quantum Save Stick,Accessories,14,22.75
+2026-10-12,Northwest,Vector Blaster Pad,Accessories,7,59.95
+2026-10-12,Southwest,Quantum Save Stick,Accessories,13,22.75
+2026-10-13,Northeast,Chrono Loop Deck,Hardware,14,689.00
+2026-10-13,Northeast,Retro Rewind Vol. 3,Games,1,29.99
+2026-10-13,Southwest,Chrono Loop Deck,Hardware,5,689.00
+2026-10-15,Southeast,Starfall Anthology,Games,7,44.00
+2026-10-16,Northeast,Plasma Cartridge,Accessories,4,34.50
+2026-10-18,Southeast,Holo Visor Mk II,Hardware,6,415.00
+2026-10-18,Northwest,Holo Visor Mk II,Hardware,29,415.00
+2026-10-18,Northeast,Neon Drift Cabinet,Hardware,6,1249.00
+2026-10-19,Southeast,Vector Blaster Pad,Accessories,14,59.95
+2026-10-21,Southeast,Neon Drift Cabinet,Hardware,13,1249.00
+2026-10-22,Northwest,Midnight Circuit,Games,34,54.50
+2026-10-23,Southwest,Starfall Anthology,Games,10,44.00
+2026-10-24,Southwest,Quantum Save Stick,Accessories,12,22.75
+2026-10-24,Northeast,Holo Visor Mk II,Hardware,3,415.00
+2026-10-24,Northeast,Plasma Cartridge,Accessories,15,34.50
+2026-10-26,Southeast,Midnight Circuit,Games,11,54.50
+2026-10-27,Northeast,Chrono Loop Deck,Hardware,5,689.00
+2026-10-28,Southwest,Vector Blaster Pad,Accessories,11,59.95
+2026-10-28,Southwest,Retro Rewind Vol. 3,Games,7,29.99
+2026-10-28,Northeast,Vector Blaster Pad,Accessories,5,59.95
+2026-10-31,Southeast,Starfall Anthology,Games,17,44.00
+2026-11-01,Northeast,Plasma Cartridge,Accessories,5,34.50
+2026-11-01,Southwest,Chrono Loop Deck,Hardware,10,689.00
+2026-11-01,Southwest,Midnight Circuit,Games,17,54.50
+2026-11-02,Southwest,Chrono Loop Deck,Hardware,11,689.00
+2026-11-02,Southwest,Retro Rewind Vol. 3,Games,1,29.99
+2026-11-03,Northwest,Retro Rewind Vol. 3,Games,22,29.99
+2026-11-05,Southeast,Neon Drift Cabinet,Hardware,6,1249.00
+2026-11-05,Northeast,Neon Drift Cabinet,Hardware,2,1249.00
+2026-11-05,Northwest,Chrono Loop Deck,Hardware,17,689.00
+2026-11-06,Southeast,Plasma Cartridge,Accessories,9,34.50
+2026-11-07,Southeast,Midnight Circuit,Games,14,54.50
+2026-11-07,Northwest,Chrono Loop Deck,Hardware,29,689.00
+2026-11-07,Northwest,Neon Drift Cabinet,Hardware,34,1249.00
+2026-11-07,Northwest,Plasma Cartridge,Accessories,34,34.50
+2026-11-08,Southwest,Retro Rewind Vol. 3,Games,11,29.99
+2026-11-09,Northwest,Plasma Cartridge,Accessories,22,34.50
+2026-11-10,Northeast,Chrono Loop Deck,Hardware,10,689.00
+2026-11-10,Northeast,Vector Blaster Pad,Accessories,15,59.95
+2026-11-11,Northwest,Quantum Save Stick,Accessories,14,22.75
+2026-11-12,Northwest,Chrono Loop Deck,Hardware,24,689.00
+2026-11-12,Northwest,Vector Blaster Pad,Accessories,34,59.95
+2026-11-13,Southeast,Retro Rewind Vol. 3,Games,2,29.99
+2026-11-13,Northeast,Quantum Save Stick,Accessories,3,22.75
+2026-11-14,Southwest,Arcade Token Pack,Accessories,15,12.00
+2026-11-16,Southeast,Starfall Anthology,Games,12,44.00
+2026-11-16,Southwest,Starfall Anthology,Games,15,44.00
+2026-11-17,Southeast,Vector Blaster Pad,Accessories,7,59.95
+2026-11-17,Northwest,Starfall Anthology,Games,31,44.00
+2026-11-17,Southeast,Midnight Circuit,Games,4,54.50
+2026-11-17,Southwest,Vector Blaster Pad,Accessories,16,59.95
+2026-11-17,Southwest,Retro Rewind Vol. 3,Games,16,29.99
+2026-11-19,Southeast,Starfall Anthology,Games,15,44.00
+2026-11-20,Northwest,Quantum Save Stick,Accessories,12,22.75
+2026-11-21,Northeast,Midnight Circuit,Games,8,54.50
+2026-11-21,Southwest,Vector Blaster Pad,Accessories,17,59.95
+2026-11-22,Northwest,Arcade Token Pack,Accessories,26,12.00
+2026-11-23,Northwest,Holo Visor Mk II,Hardware,7,415.00
+2026-11-24,Southeast,Plasma Cartridge,Accessories,7,34.50
+2026-11-24,Northeast,Starfall Anthology,Games,5,44.00
+2026-11-24,Northeast,Retro Rewind Vol. 3,Games,10,29.99
+2026-11-24,Southeast,Arcade Token Pack,Accessories,4,12.00
+2026-11-25,Southeast,Midnight Circuit,Games,15,54.50
+2026-11-25,Southwest,Quantum Save Stick,Accessories,13,22.75
+2026-11-25,Southeast,Quantum Save Stick,Accessories,17,22.75
+2026-11-26,Southeast,Quantum Save Stick,Accessories,14,22.75
+2026-11-26,Southeast,Plasma Cartridge,Accessories,11,34.50
+2026-11-29,Southwest,Chrono Loop Deck,Hardware,10,689.00
+2026-11-30,Southwest,Vector Blaster Pad,Accessories,12,59.95
+2026-11-30,Northeast,Starfall Anthology,Games,7,44.00
+2026-12-01,Southeast,Vector Blaster Pad,Accessories,7,59.95
+2026-12-01,Southeast,Starfall Anthology,Games,4,44.00
+2026-12-02,Northwest,Midnight Circuit,Games,2,54.50
+2026-12-02,Northeast,Midnight Circuit,Games,1,54.50
+2026-12-03,Northeast,Vector Blaster Pad,Accessories,12,59.95
+2026-12-04,Northwest,Starfall Anthology,Games,10,44.00
+2026-12-05,Northwest,Plasma Cartridge,Accessories,12,34.50
+2026-12-07,Southwest,Starfall Anthology,Games,11,44.00
+2026-12-07,Southwest,Starfall Anthology,Games,5,44.00
+2026-12-08,Southwest,Chrono Loop Deck,Hardware,13,689.00
+2026-12-10,Northwest,Chrono Loop Deck,Hardware,7,689.00
+2026-12-10,Southwest,Retro Rewind Vol. 3,Games,2,29.99
+2026-12-10,Northwest,Quantum Save Stick,Accessories,31,22.75
+2026-12-10,Southeast,Starfall Anthology,Games,2,44.00
+2026-12-12,Southwest,Neon Drift Cabinet,Hardware,2,1249.00
+2026-12-12,Northwest,Holo Visor Mk II,Hardware,26,415.00
+2026-12-14,Northwest,Arcade Token Pack,Accessories,10,12.00
+2026-12-14,Southwest,Quantum Save Stick,Accessories,4,22.75
+2026-12-14,Northeast,Arcade Token Pack,Accessories,6,12.00
+2026-12-14,Northeast,Quantum Save Stick,Accessories,13,22.75
+2026-12-14,Northeast,Quantum Save Stick,Accessories,-2,22.75
+2026-12-15,Southwest,Holo Visor Mk II,Hardware,6,415.00
+2026-12-15,Southeast,Starfall Anthology,Games,8,44.00
+2026-12-16,Northeast,Retro Rewind Vol. 3,Games,10,29.99
+2026-12-16,Northwest,Midnight Circuit,Games,-2,54.50
+2026-12-17,Northeast,Neon Drift Cabinet,Hardware,15,1249.00
+2026-12-17,Northeast,Vector Blaster Pad,Accessories,1,59.95
+2026-12-18,Southwest,Plasma Cartridge,Accessories,4,34.50
+2026-12-18,Southwest,Retro Rewind Vol. 3,Games,9,29.99
+2026-12-21,Northwest,Vector Blaster Pad,Accessories,12,59.95
+2026-12-21,Northeast,Plasma Cartridge,Accessories,2,34.50
+2026-12-21,Northwest,Holo Visor Mk II,Hardware,29,415.00
+2026-12-22,Northwest,Starfall Anthology,Games,2,44.00
+2026-12-22,Southeast,Starfall Anthology,Games,15,44.00
+2026-12-23,Northeast,Quantum Save Stick,Accessories,9,22.75
+2026-12-24,Northwest,Holo Visor Mk II,Hardware,34,415.00
+2026-12-24,Northeast,Midnight Circuit,Games,2,54.50
+2026-12-24,Southwest,Quantum Save Stick,Accessories,9,22.75
+2026-12-25,Southeast,Arcade Token Pack,Accessories,14,12.00
+2026-12-25,Northeast,Vector Blaster Pad,Accessories,1,59.95
+2026-12-26,Northwest,Quantum Save Stick,Accessories,34,22.75
+2026-12-27,Northeast,Vector Blaster Pad,Accessories,5,59.95
+2026-12-27,Southwest,Quantum Save Stick,Accessories,7,22.75
+2026-12-27,Northeast,Quantum Save Stick,Accessories,5,22.75
+2026-12-28,Northwest,Starfall Anthology,Games,26,44.00
+2026-12-29,Southeast,Retro Rewind Vol. 3,Games,7,29.99
+2026-12-29,Southeast,Starfall Anthology,Games,1,44.00
+2026-12-29,Northeast,Neon Drift Cabinet,Hardware,-3,1249.00
+2026-12-30,Southwest,Chrono Loop Deck,Hardware,10,689.00
+2026-12-30,Northeast,Quantum Save Stick,Accessories,2,22.75
+2026-12-30,Northwest,Plasma Cartridge,Accessories,10,34.50
+2026-12-30,Northeast,Arcade Token Pack,Accessories,6,12.00

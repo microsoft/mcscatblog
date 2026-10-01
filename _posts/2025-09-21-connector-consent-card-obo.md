@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Intercepting and Responding to Connector Consent Cards via the Agents SDK"
 date: 2025-09-21
-categories: [copilot-studio, connectors, authentication]
+categories: [authentication]
 tags: [obo, consent, connectors, agents-sdk, adaptive-cards]
 description: Detect a connector consent (OBO) Adaptive Card, summarize it, and submit Allow or Cancel.
 #image: /assets/posts/connector-consent-card-obo/consent.png

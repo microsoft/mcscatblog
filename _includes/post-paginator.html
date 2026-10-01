@@ -1,0 +1,105 @@
+<!--
+  Local override of Chirpy's post-paginator.
+
+  The home feed (see _layouts/home.html) excludes pinned posts, so it can be
+  shorter than site.posts. jekyll-paginate's `paginator.total_pages` counts ALL
+  posts and would emit an empty trailing page reachable via the "next" arrow.
+  We drive the pager off `feed_total_pages` (set in home.html, in scope here)
+  so the widget stops at the last page that actually has feed posts.
+-->
+
+{% assign total = feed_total_pages | default: paginator.total_pages %}
+{% assign next = paginator.page | plus: 1 %}
+{% assign prev = paginator.page | minus: 1 %}
+
+<nav aria-label="Page Navigation">
+  <ul class="pagination align-items-center mt-4 mb-0">
+    <!-- left arrow -->
+    {% if paginator.page > 1 %}
+      {% if prev == 1 %}
+        {% assign prev_url = '/' | relative_url %}
+      {% else %}
+        {% assign prev_url = site.paginate_path | replace: ':num', prev | relative_url %}
+      {% endif %}
+    {% else %}
+      {% assign prev_url = '#' %}
+    {% endif %}
+
+    <li class="page-item {% if paginator.page <= 1 %}disabled{% endif %}">
+      <a class="page-link" href="{{ prev_url }}" aria-label="previous-page">
+        <i class="fas fa-angle-left"></i>
+      </a>
+    </li>
+
+    <!-- page numbers -->
+    {% assign left_ellipsis = false %}
+    {% assign right_ellipsis = false %}
+
+    {% for i in (1..total) %}
+      {% assign pre = paginator.page | minus: 1 %}
+      {% assign pre_less = pre | minus: 1 %}
+      {% assign show = false %}
+
+      {% if paginator.page == 1 %}
+        {% if i <= 3 or i == total %}
+          {% assign show = true %}
+        {% endif %}
+      {% elsif paginator.page == total %}
+        {% if i == 1 or i >= pre_less %}
+          {% assign show = true %}
+        {% endif %}
+      {% else %}
+        {% if i == 1 or i == total %}
+          {% assign show = true %}
+        {% elsif i >= pre and i <= next %}
+          {% assign show = true %}
+        {% endif %}
+      {% endif %}
+
+      {% if show %}
+        <!-- show number -->
+        <li class="page-item {% if i == paginator.page %} active{% endif %}">
+          <a
+            class="page-link"
+            href="{% if i > 1 %}{{ site.paginate_path | replace: ':num', i | relative_url }}{% else %}{{ '/' | relative_url }}{% endif %}"
+          >
+            {{- i -}}
+          </a>
+        </li>
+      {% else %}
+        <!-- hide number -->
+        {% if i < pre and left_ellipsis == false %}
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+          {% assign left_ellipsis = true %}
+        {% elsif i > next and right_ellipsis == false %}
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+          {% assign right_ellipsis = true %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    <!-- mobile pagination -->
+    <li class="page-index align-middle">
+      <span>{{ paginator.page }}</span>
+      <span class="text-muted">/ {{ total }}</span>
+    </li>
+
+    <!-- right arrow -->
+    {% if paginator.page < total %}
+      {% assign next_url = site.paginate_path | replace: ':num', next | relative_url %}
+    {% else %}
+      {% assign next_url = '#' %}
+    {% endif %}
+
+    <li class="page-item {% if paginator.page >= total %}disabled{% endif %}">
+      <a class="page-link" href="{{ next_url }}" aria-label="next-page">
+        <i class="fas fa-angle-right"></i>
+      </a>
+    </li>
+  </ul>
+</nav>
+<!-- .pagination -->

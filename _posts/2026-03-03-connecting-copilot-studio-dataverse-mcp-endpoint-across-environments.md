@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Connecting Copilot Studio to a Dataverse MCP Endpoint Across Environments: A Practical Guide"
 date: 2026-03-03 00:00:00 +0000
-categories: [copilot-studio, mcp]
+categories: [mcp]
 tags:
   [
     dataverse,

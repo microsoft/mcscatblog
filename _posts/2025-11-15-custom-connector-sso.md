@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Enabling SSO for Custom Connectors in Copilot Studio"
 date: 2025-11-15
-categories: [copilot-studio, connectors, authentication]
+categories: [authentication]
 tags: [sso, custom-connectors, entra-id, authentication, api]
 description: How to configure custom connectors with Entra ID SSO to enable seamless user authentication and consent flow.
 #image: /assets/posts/custom-connector-sso/sso-flow.png
