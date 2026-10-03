@@ -62,7 +62,9 @@ Three things come back.
       "bytesSent": 56104,
       "bytesStored": 56340,
       "missingFields": ["Delegated Authority"],
-      "removed": [],
+      "removed": [
+        { "match": "Notes for the author", "scope": "block", "why": "template instruction block" }
+      ],
       "highlightCleared": 4,
       "markedGenerated": true,
       "archivedAs": "Role (20260910-071831).pdf"
@@ -144,7 +146,7 @@ Content controls and tokens carry their own names. Labelled blanks do not, so th
 )
 </code></pre>
 
-<p>You don't need <code>python-docx</code> for any of this. The helper prefers <code>lxml</code> when it's available and falls back to the standard library, so it runs in a sandbox with no package installs at all:</p>
+<p>You don't need <code>python-docx</code> for any of this. The helper prefers <code>lxml</code> when it's available and falls back to the standard library, so it still runs where no package installs are allowed:</p>
 
 <pre><code>try:
     from lxml import etree as ET
@@ -154,6 +156,8 @@ except ImportError:
     LXML = False
     ET.register_namespace("w", W)
 </code></pre>
+
+<p><strong>Treat that fallback as degraded, not equivalent.</strong> Registering the <code>w</code> prefix preserves namespace URIs on element and attribute <em>names</em>, but not prefixes used as attribute <em>values</em>. Round-tripping a part that carries <code>mc:Ignorable="w14"</code> through <code>xml.etree.ElementTree</code> renames the <code>w14</code> declaration to <code>ns2</code> while leaving the attribute value reading <code>w14</code>, so the document now names a prefix it no longer declares. Word may reject the result or offer to repair it. If you take this route, preserve the original declarations for every prefix named in <code>mc:Ignorable</code>, and test against real templates before relying on it.</p>
 
 <p>Content controls are found by walking <code>w:sdt</code> elements and reading the name from <code>w:tag</code> or <code>w:alias</code>:</p>
 
@@ -173,7 +177,7 @@ except ImportError:
         yield sdt, content, name
 </code></pre>
 
-<p><strong>Rewriting the archive is where this gets delicate.</strong> Unzip, edit, rezip can produce an archive Word refuses to open cleanly, and a repair dialog destroys any confidence your users had in the output. The approach that held up was to rewrite every entry rather than rebuild the archive, preserving each entry's original metadata and carrying through entries you don't recognise rather than dropping them:</p>
+<p><strong>Rewriting the archive is where this gets delicate.</strong> Unzip, edit, rezip can produce an archive Word refuses to open cleanly, and a repair dialog destroys any confidence your users had in the output. The approach that held up was to rewrite every entry rather than rebuild the archive, carrying through entries you don't recognise rather than dropping them:</p>
 
 <pre><code>zi = zipfile.ZipInfo(info.filename, date_time=info.date_time)
 zi.external_attr = info.external_attr
@@ -183,7 +187,7 @@ zi._compresslevel = level
 zout.writestr(zi, data)
 </code></pre>
 
-<p>These are defensive measures taken against real templates, not a proven universal cure for malformed OOXML. That last line is a genuine Python trap, though: passing a <code>ZipInfo</code> makes <code>writestr</code> ignore the <code>ZipFile</code>-level <code>compresslevel</code>, because <code>ZipInfo._compresslevel</code> defaults to <code>None</code> and wins. Without it, level 1 and level 9 produce byte-identical output. If you're tuning compression and your output size never moves, that's why.</p>
+<p>Be precise about how much that preserves: it copies the timestamp, external attributes and originating system, and nothing else. Entry extras, comments and internal attributes are dropped, and every part is recompressed as DEFLATED rather than kept at its original compression. That was enough for the templates in play, but if yours depend on any of the rest, carry those fields across too and test it. These are defensive measures taken against real templates, not a proven universal cure for malformed OOXML. That last line is a genuine Python trap, though: passing a <code>ZipInfo</code> makes <code>writestr</code> ignore the <code>ZipFile</code>-level <code>compresslevel</code>, because <code>ZipInfo._compresslevel</code> defaults to <code>None</code> and wins. Without it, level 1 and level 9 produce byte-identical output. If you're tuning compression and your output size never moves, that's why.</p>
 
 <p><strong>One encoding trap, on Windows.</strong> The helper prints JSON with <code>ensure_ascii=True</code> deliberately. Real templates carry curly quotes, en dashes and non-breaking spaces, and stdout on Windows defaults to cp1252, so with <code>ensure_ascii=False</code> those characters go out as cp1252 bytes and a caller decoding as UTF-8 cannot parse the result. Escaping sidesteps the console encoding entirely.</p>
 
@@ -328,6 +332,8 @@ That is not restart safety, and the gaps matter before you build on it.
 **There's a window between upload and stamp.** If the upload succeeds and the run times out before the column is written, the document is correct in the library but still looks due, and the next run converts it again. Surviving that needs an idempotent destination, not just a flag.
 
 **Loop concurrency is not run concurrency.** Setting an *Apply to each* loop to 1 limits parallelism *inside* one run. It does nothing to stop two triggered runs overlapping and both picking up the same unstamped document. That's a separate setting, on the trigger, and it's off by default. Microsoft documents them as distinct controls in [concurrency, looping, and debatching limits](https://learn.microsoft.com/en-us/power-automate/limits-and-config).
+
+**A successful batch is not a reviewed batch.** The run reports success when no document is missing the current stamp, but a document gets stamped once it converts and verifies, regardless of whether anyone has filled the fields the report flagged. So a green batch can contain documents still carrying unresolved `missingFields`, and the next run will skip them. If completion is meant to imply approval, carry the unresolved fields into the batch report and track review as its own state rather than inferring it from the stamp.
 
 **The stamp records the template version, not the source version.** A document whose source was edited after conversion still carries a current-looking stamp.
 
