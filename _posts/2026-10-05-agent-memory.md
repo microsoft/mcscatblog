@@ -2,7 +2,7 @@
 layout: post
 agent_edition: github-copilot
 title: "Memory in Copilot Studio: How Agents Carry Knowledge Across Conversations"
-date: 2026-08-01
+date: 2026-10-05
 categories: [copilot-studio, agents]
 tags: [copilot-studio, agent-memory, agent-development, best-practices, evals, sandbox]
 description: "Large language models are stateless. Here's how agent memory in Copilot Studio carries knowledge across conversations: short-term and long-term memory, the three kinds of long-term memory, reflection, and how we check that it actually works."
@@ -133,7 +133,7 @@ _A conceptual reflection loop. Forming memory is only half the system; keeping i
 
 ## Trusted, but also verified
 
-Everything above is a claim about how the system behaves, and claims about memory are easy to make and hard to keep. So before any of this widens to more customers, our engineering and data science teams have to show it holds. That work is ours, not something we hand to makers to figure out on their own.
+The Copilot Studio behavior described above has to hold up in practice. Before Memory widens to more customers, our engineering and data science teams have to validate it. That work is ours, not something we hand to makers to figure out on their own.
 
 > An agent with a bad memory does not crash. It just becomes confidently wrong.
 {: .prompt-warning }
