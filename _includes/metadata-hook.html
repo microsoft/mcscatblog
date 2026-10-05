@@ -1,1 +1,8 @@
 <meta name="algolia-site-verification"  content="46C247BC7C8677B2" />
+
+{% if page.authors %}
+  {% for author in page.authors offset: 1 %}
+    {% assign author_name = site.data.authors[author].name | default: author %}
+    <meta name="author" content="{{ author_name | xml_escape }}">
+  {% endfor %}
+{% endif %}
