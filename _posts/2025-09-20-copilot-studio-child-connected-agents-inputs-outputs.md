@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Using Inputs and Outputs in Child and Connected Agents"
 date: 2025-09-20
-categories: [copilot-studio, tutorial, multi-agent]
+categories: [orchestration]
 tags: [child-agents, connected-agents, orchestration, inputs, outputs]
 author: adilei
 ---

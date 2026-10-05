@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post  
 title: "Video Demo: Connect a Microsoft Foundry agent in Copilot Studio"  
 date: 2025-12-16 14:32:00 +0100  
-categories: [copilot-studio, foundry-agent, connectedagent, a2a]
+categories: [orchestration]
 tags: [a2a, agent, foundry, copilotstudio, connected-agent, multi-agent, integration, orchestration]  
 description: Quick illustration of integrating Foundry agents with Copilot Studio  
 author: jpad5  

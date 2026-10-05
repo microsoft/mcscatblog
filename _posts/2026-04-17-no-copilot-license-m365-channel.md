@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "No, You Don't Need a Copilot License to Deploy Agents to Microsoft 365 Copilot"
 date: 2026-04-17
-categories: [copilot-studio, microsoft-365-copilot]
+categories: [alm]
 tags: [microsoft-365-copilot, declarative-agents, copilot-chat, copilot-credits, agent-builder, licensing, teams, alm]
 description: "Microsoft 365 Copilot isn't just for licensed Copilot users. Learn how to deploy Copilot Studio agents to Copilot Chat users, how declarative agents are evolving, and why you no longer need an Azure subscription for prepaid capacity."
 author: henryjammes

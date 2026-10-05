@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Dataverse Retrieval Patterns for Structured Data in Copilot Studio Agents"
 date: 2026-04-10
-categories: [copilot-studio, dataverse]
+categories: [knowledge]
 tags: [dataverse, retrieval-patterns, knowledge, list-rows, mcp, searchquery, prompt-tool, connectors, decision-guide]
 description: "Five ways to retrieve Dataverse data from Copilot Studio agents — Knowledge, List Rows, MCP Server, Search Query, and Prompt Tool. A decision guide with setup steps and trade-offs, flow charts and a handy interactive widget to help you pick the right method."
 authors: [KarimaKT, roels]

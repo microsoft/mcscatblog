@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Defeating Oversummarization in AI Agents: How to Deliver Exact Content from Knowledge Sources"
 date: 2026-01-23 12:00:00 +0100
-categories: [copilot-studio, knowledge, rag]
+categories: [knowledge]
 tags: [generative-ai, summarization, knowledge-sources, custom-search]
 description: Learn three methods to return exact, unsummarized content from Copilot Studio knowledge sources when precision matters more than simplification.
 author: dbellingeri

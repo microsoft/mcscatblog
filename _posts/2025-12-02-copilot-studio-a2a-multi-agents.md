@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post  
 title: "Quickstart: Connect an A2A Agent to Copilot Studio"  
 date: 2025-12-02 14:00:00 +0100  
-categories: [copilot-studio, a2a, connections]
+categories: [orchestration]
 tags: [a2a-protocol, agent-sdk, foundry, microsoft-365, integration]  
 description: Step-by-step guide to wiring an A2A-enabled agent into Copilot Studio.  
 author: giorgioughini  

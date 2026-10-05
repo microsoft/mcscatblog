@@ -7,11 +7,11 @@ order: 5
 
 # About The Custom Engine
 
-Welcome to **The Custom Engine** - the technical blog of the Microsoft Copilot Studio Customer Advisory Team (CAT).
+Welcome to **The Custom Engine** - the technical blog of the Microsoft Copilot Acceleration Team (CAT).
 
 ## Who Are We?
 
-The Copilot Studio Customer Advisory Team (CAT) is a part of the Copilot Studio engineering team at Microsoft. We are dedicated to empowering organizations to achieve digital transformation at scale with Microsoft Copilot Studio.
+The Copilot Acceleration Team (CAT) is a part of the Copilot Studio engineering team at Microsoft. We are dedicated to empowering organizations to achieve digital transformation at scale with Microsoft Copilot Studio.
 
 ## Our Mission
 

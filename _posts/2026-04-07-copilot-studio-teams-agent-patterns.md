@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Design Copilot Studio Agents for Teams (Because Test Chat Was Too Easy)"
 date: 2026-04-07
-categories: [copilot-studio, teams]
+categories: [channels]
 tags: [teams, microsoft-365-copilot, conversation-management, troubleshooting, adaptive-cards]
 description: Eight production patterns for designing Copilot Studio agents that work well in Teams and Microsoft 365 Copilot - handling reinstalls, context management, error handling, and self-service troubleshooting with diagnostic cards.
 author: henryjammes

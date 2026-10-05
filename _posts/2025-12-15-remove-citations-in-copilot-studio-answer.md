@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Kill the [1]: How to Remove Citations from Copilot Studio Answers"
 date: 2025-12-15
-categories: [copilot-studio, generative-ai]
+categories: [knowledge]
 tags: [knowledge, citations, formatting, power-fx, pro-code]
 description: When citations get in the way of the experience, here is how to remove them from Copilot Studio answers.
 author: henryjammes

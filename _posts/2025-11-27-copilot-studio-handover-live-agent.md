@@ -3,8 +3,8 @@ agent_edition: standard
 layout: post
 title: "Handing Over to Live Agents Without Losing Control"
 date: 2025-12-14
-categories: [copilot-studio, tutorial, integration]
-tags: [handover, escalation, live-chat, skills, proactive-messaging, microsoft-teams]
+categories: [channels]
+tags: [teams, handover, escalation, live-chat, skills, proactive-messaging, microsoft-teams]
 description: Keep Copilot Studio in control while seamlessly handing off conversations to live agents using skills and Teams proactive messaging.
 author: mawasile    
 mermaid: true

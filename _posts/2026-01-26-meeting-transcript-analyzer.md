@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post      
 title: "VIDEO: Retrieve Meeting Transcripts in Copilot Studio & Block Focus Time"      
 date: 2026-01-26 9:00:00 +0100      
-categories: [copilot-studio, autonomous-agents, video]
+categories: [knowledge]
 tags: [microsoft-teams, outlook, meeting-transcripts, productivity, tutorial]
 description: Watch an autonomous agent analyze your daily meeting transcripts and automatically block focus time for open action items.
 author: giorgioughini

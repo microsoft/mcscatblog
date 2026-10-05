@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Live Demo: Using the Claude Code Plugin to Author a Copilot Studio Agent"
 date: 2026-03-26 9:00:00 +0100
-categories: [copilot-studio, plugin, video]
+categories: [mcp]
 tags: [claude-code, copilot-studio, plugin, agent-authoring, yaml, tutorial]
 description: Watch a full live demo of building a complex Copilot Studio agent from scratch using the Claude Code plugin - from cloning to pushing, all in one session.
 author: giorgioughini

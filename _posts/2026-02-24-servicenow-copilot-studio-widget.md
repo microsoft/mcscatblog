@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Embedding Copilot Studio Directly in ServiceNow (And Why Auth Was the Easy Part)"
 date: 2026-02-24
-categories: [copilot-studio, webchat]
+categories: [channels]
 tags: [servicenow, webchat, m365-agents-sdk, msal, authentication, field-report, widget, service-portal]
 description: "A field report on embedding a Copilot Studio agent as a native floating chat widget in ServiceNow Service Portal, with MSAL auth that sidesteps federation complexity."
 author: adilei

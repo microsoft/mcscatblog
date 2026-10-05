@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "The One Card: Build Once, Speak All Languages"
 date: 2026-01-08
-categories: [copilot-studio, localization]
+categories: [channels]
 tags: [adaptive-cards, multilingual, localization, best-practices]
 description: Static text in Adaptive Cards now appears in localization files, making multilingual agents with rich UI components actually practical.
 author: adilei

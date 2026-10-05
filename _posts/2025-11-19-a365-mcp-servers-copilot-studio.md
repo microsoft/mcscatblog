@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post  
 title: "Bringing Microsoft 365 Copilot into Copilot Studio with Agent 365 MCP Servers"  
 date: 2025-11-19 09:00:00 +0100  
-categories: [copilot-studio, frontier, mcp]
+categories: [mcp]
 tags: [a365, agent-365, frontier, copilot, sharepoint, outlook]  
 description: Use the new Agent 365 tooling servers to bring Microsoft 365 Copilot Search, SharePoint & OneDrive, Outlook Mail, Outlook Calendar, Word and more directly into your Copilot Studio agents. 
 author: giorgioughini

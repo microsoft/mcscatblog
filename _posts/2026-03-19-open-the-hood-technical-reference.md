@@ -5,7 +5,7 @@ title: "Open the Hood: Technical Reference for Copilot Studio Transcripts"
 description: "Data model deep-dive, Dataverse vs Application Insights comparison, and all six transcript access methods with code examples."
 date: 2026-03-19
 author: roels
-categories: [copilot-studio, tutorial]
+categories: [testing]
 tags: [transcripts, dataverse, application-insights, power-apps, copilot-studio-kit, debugging, analytics, kql, data-model]
 image:
   path: /assets/posts/conversation-transcripts/header-technical-reference.png

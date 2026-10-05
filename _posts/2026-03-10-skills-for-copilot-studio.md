@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Skills for Copilot Studio: Build agents from YAML code, up to 20x Faster"
 date: 2026-03-10 9:00:00 +0100
-categories: [copilot-studio, tutorial, open-source]
+categories: [mcp]
 tags: [claude-code, github-copilot, yaml, agent-development, productivity]
 description: An open-source plugin for Claude Code and GitHub Copilot that lets you author, test, and troubleshoot Copilot Studio agents directly from your terminal.
 author: giorgioughini

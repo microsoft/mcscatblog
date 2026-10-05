@@ -2,7 +2,7 @@
 agent_edition: standard
 title: "Structured Data with Zero User Auth: Dataverse searchQuery in Copilot Studio"
 date: 2026-03-20
-categories: [copilot-studio, dataverse]
+categories: [knowledge]
 tags: [copilot studio, dataverse, searchquery, unauthenticated, agentic, enterprise-grade]
 description: "Build fuzzy, ranked search over Dataverse structured data with zero user sign-in. A step-by-step guide from indexing to a working agent, with progressive enhancements for OData filtering, pagination, and full record retrieval."
 author: KarimaKT

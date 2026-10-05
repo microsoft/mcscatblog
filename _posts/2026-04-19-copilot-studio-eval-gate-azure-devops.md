@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Quality Gates for Copilot Studio: Automated Evaluations in Azure DevOps"
 date: 2026-04-19
-categories: [copilot-studio, testing]
+categories: [testing]
 tags: [evaluation-api, azure-devops, ci-cd, quality-gate, testing, alm, pac-cli, power-platform]
 description: "How to use the Copilot Studio Evaluation API to build automated quality gates in Azure DevOps pipelines, blocking PR merges when agent quality drops below threshold."
 author: adilei

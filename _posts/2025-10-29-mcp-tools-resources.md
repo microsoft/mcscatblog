@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Using MCP Resources in Copilot Studio"
 date: 2025-10-29
-categories: [copilot-studio, mcp, agents]
+categories: [mcp]
 tags: [model-context-protocol, resources, tools, search, enterprise-patterns]
 author: adilei
 ---

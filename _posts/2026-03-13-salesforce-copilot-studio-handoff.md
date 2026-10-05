@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Salesforce Handoff to Copilot Studio: From Bare Docs to One-Click Deploy"
 date: 2026-03-13
-categories: [copilot-studio, integration]
+categories: [channels]
 tags: [salesforce, einstein-bot, direct-line, handoff, engagement-hub, apex, deployment-script]
 description: "The Copilot Studio + Salesforce Einstein Bot integration docs got a major overhaul: full Apex code samples, Named Credentials for secure auth, and deployment scripts that do everything for you."
 author: adilei

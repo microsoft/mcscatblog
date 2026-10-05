@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "{Brace Yourself} - or Let Copilot Do It! Zero-100 with Adaptive Cards"
 date: 2026-01-02
-categories: [copilot-studio, user-experience]
+categories: [channels]
 tags: [adaptive-cards, best-practices, tips]
 description:  Stop hand cranking Adaptive Card JSON - put your effort into avoiding it!
 author: daveburman-msft

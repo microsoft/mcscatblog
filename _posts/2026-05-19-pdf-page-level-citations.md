@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Page-Level PDF Citations in Copilot Studio"
 date: 2026-06-02
-categories: [copilot-studio, knowledge]
+categories: [knowledge]
 tags: [citations, pdf, sharepoint, knowledge-sources, power-fx, generative-orchestration, unstructured-data]
 description: "How to deliver page-level PDF citations in Copilot Studio for SharePoint and uploaded file knowledge sources, so users land on the exact page that grounded the answer."
 author: [lewisdoesdev, raemone]

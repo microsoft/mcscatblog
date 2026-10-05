@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Combining Agent Flows with Agents: Gotchas, Errors, and Patterns"
 date: 2026-04-17
-categories: [copilot-studio, tutorial]
+categories: [automation]
 tags: [power-automate, agent-flows, troubleshooting, async-pattern, maker-credentials, approvals, flow-timeout]
 description: "Best practices and common issues when deploying solutions that combine agent flows with agents in Copilot Studio — timeouts, credentials, schema mismatches, collaboration, and more."
 author: PetrosFeleskouras

@@ -5,7 +5,7 @@ title: "Open the Hood: What Your Copilot Studio Agent Is Really Doing"
 description: "How to extract, read, and understand Copilot Studio conversation transcripts so you know what your agent is doing and why."
 date: 2026-03-19
 author: roels
-categories: [copilot-studio, tutorial]
+categories: [testing]
 tags: [transcripts, dataverse, application-insights, power-apps, copilot-studio-kit, debugging, analytics]
 image:
   path: /assets/posts/conversation-transcripts/header.png

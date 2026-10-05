@@ -3,7 +3,7 @@ agent_edition: both
 layout: post
 title: "Herding Clouds: Taming Pay-As-You-Go Billing Policies in Power Platform at Scale"
 date: 2026-05-13
-categories: [copilot-studio, licensing]
+categories: [alm]
 tags: [pay-as-you-go, billing-policy, power-automate, governance, azure-automation, power-platform, licensing, powershell]
 mermaid: true
 description: "Assigning billing policies to 50+ environments by hand doesn't scale, and nobody reads the budget alert email before Monday. This post walks through a bulk assignment script and an automated unlinking pipeline that solve both problems."

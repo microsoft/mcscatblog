@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Wiring up a Snowflake-managed MCP server in Copilot Studio"
 date: 2026-05-22
-categories: [copilot-studio, mcp]
+categories: [mcp]
 tags: [mcp, snowflake, cortex, oauth, entra-id, copilot-studio, power-platform]
 description: "An end-to-end walkthrough for wiring a Snowflake-managed MCP server into a Microsoft Copilot Studio agent with delegated user OAuth through Microsoft Entra ID, including the Cortex Agent prerequisite, the manual OAuth path Snowflake actually requires, and the small details that make or break the setup."
 authors: [hasharaf, missbets]

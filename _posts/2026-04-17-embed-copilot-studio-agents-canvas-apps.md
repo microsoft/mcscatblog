@@ -3,7 +3,7 @@ agent_edition: standard
 layout: post
 title: "Embed Copilot Studio Agents in Canvas Apps with a PCF Control"
 date: 2026-04-17
-categories: [copilot-studio, canvas-apps]
+categories: [channels]
 tags: [canvas-apps, pcf, webchat, power-apps, embed, m365-agents-sdk, sso]
 description: "The built-in Copilot control for Canvas Apps is deprecated. Use this PCF control to embed your Copilot Studio agent with custom styling and two-way communication."
 author: dieterd-msft

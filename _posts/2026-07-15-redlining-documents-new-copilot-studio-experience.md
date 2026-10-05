@@ -3,7 +3,7 @@ agent_edition: github-copilot
 layout: post
 title: "Redlining Documents with the New Copilot Studio Experience"
 date: 2026-07-15
-categories: [copilot-studio, tutorial]
+categories: [orchestration]
 tags: [orchestration, pdf, document-comparison, track-changes, docx, redlining, agent-development]
 description: "Compare documents using Microsoft Word's Native Redlining Track Changes."
 author: [AndrewHessMSFT, raemone]

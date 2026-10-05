@@ -3,7 +3,7 @@ agent_edition: github-copilot
 layout: post
 title: "Turn Your Daily Digest Into a Podcast You'll Actually Listen To"
 date: 2026-07-28
-categories: [copilot-studio, skills]
+categories: [mcp]
 tags: [skills, text-to-speech, ssml, azure-speech, productivity, agent-development, teams]
 description: "A Copilot Studio Skill that turns any document, email, or press review into a two-host podcast episode, with multi-voice SSML, an Azure Text to Speech endpoint, and an agent you can listen to from your phone."
 author: raemone

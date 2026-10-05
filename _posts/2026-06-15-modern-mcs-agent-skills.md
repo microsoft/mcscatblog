@@ -3,7 +3,7 @@ layout: post
 agent_edition: github-copilot
 title: "Agents Have Skills Now — Here's How They Work in Copilot Studio"
 date: 2026-06-15
-categories: [copilot-studio, skills]
+categories: [mcp]
 tags: [copilot-studio, skills, orchestration, agent-development, best-practices]
 description: "How Skills work in Copilot Studio agents: instructions and resources loaded on demand for specific scenarios, why you would modularize instructions into Skills, and when to use Skills versus instructions."
 author: roels
