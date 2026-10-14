@@ -8,43 +8,43 @@ tags: [copilot-studio, github-copilot, hooks, workflows, governance, orchestrati
 description: "Learn how hooks in Copilot Studio extend agent behavior with event-driven workflows that add context, transform data, and check actions before execution."
 author: PetrosFeleskouras
 image:
-  path: /assets/posts/hooks-in-copilot-studio/hooks-in-copilot-studio.png
-  alt: "Checkpoints around an agent showing where hooks run during execution."
+  path: /assets/posts/hooks-in-copilot-studio/background-image.png
+  alt: "User input passing through before and after hooks around Copilot Studio agent orchestration to an agent response."
 mermaid: false
 ---
 
+In agents powered by the GitHub Copilot harness, the agent reasons about how to approach a task and which tools to call. Instructions guide those decisions, but some steps should run whenever a particular event occurs — not only when the model chooses them. **Hooks provide predictable checkpoints where the runtime invokes your logic.**
+
 An HR agent can start a conversation with the employee’s country and preferred language already available. A redaction workflow can mask sensitive personal information in a user’s question before the agent processes it. A booking workflow can check a proposed fare against the employee’s budget before the booking tool runs.
 
-**Hooks connect these workflows to specific events in agent execution.** They add context, transform data, check proposed actions, and provide guidance after failures. This article covers three examples with configuration, input/output mappings, and tests.
+These examples show how hooks add context, transform data, and check proposed actions. We’ll look at their workflows, input/output mappings, and execution traces, including what happens when a hook fails.
 
 > Hooks are currently in public preview for agents powered by the GitHub Copilot harness. To access hooks today, go to [copilotstudio.preview.microsoft.com](https://copilotstudio.preview.microsoft.com/) and confirm availability in your environment.
 {: .prompt-info }
 
-## How hooks execute workflows
+## From topic triggers to hooks
 
-A hook is an extension point, such as session start or before a tool call. When a matching event occurs, the runtime automatically invokes the configured workflow, rather than relying on the agent to decide to run it.
+For agents using the Standard harness, [topic triggers](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers) provide familiar ways to respond at defined points in a conversation: **A message is received** handles incoming messages, and **An AI-generated response is about to be sent** handles the response stage.
 
-In Copilot Studio, a workflow implements the hook's logic. It receives event inputs and returns outputs that add context, replace values, or deny a proposed tool call.
+Agents powered by the GitHub Copilot harness use hooks as extension points at defined moments in execution, such as session start or before a tool call. The runtime invokes the configured logic when the matching event occurs, without relying on the model to choose it.
+
+This lifecycle-hook pattern is also available in the [GitHub Copilot SDK](https://github.com/github/copilot-sdk/blob/main/docs/hooks/hooks-overview.md), where developers use code handlers such as `onSessionStart` and `onPreToolUse`.
+
+In Copilot Studio, you currently implement a hook's handler through a workflow. It receives event inputs and returns outputs that add context, replace values, or deny a proposed tool call. The hook determines when the workflow runs; the agent still decides how to approach the task using the resulting context and decisions.
 
 [Agent skills]({% post_url 2026-06-15-modern-mcs-agent-skills %}) provide task guidance; hooks provide event-triggered execution. See also [agents powered by the GitHub Copilot harness]({% post_url 2026-07-07-new-orchestrator-resources %}).
 
-### Topic triggers and SDK hooks
-
-For agents using the Standard harness, [topic triggers](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers) offer a familiar event-driven behavior: **A message is received** handles incoming messages, and **An AI-generated response is about to be sent** handles the response stage.
-
-For developers familiar with the [GitHub Copilot SDK](https://github.com/github/copilot-sdk/blob/main/docs/hooks/hooks-overview.md), this is the same extension pattern: run custom logic at defined points in an agent’s lifecycle. The SDK uses code handlers such as `onSessionStart` and `onPreToolUse`; Copilot Studio implements hook logic through workflows instead.
-
 ## Configure a hook
 
-Follow [Add a hook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/hooks-overview#add-a-hook) to select an event, create its workflow, and attach it to your agent. You can reuse the same workflow across agents, using metadata about the agent, user, or channel to determine which rules to apply.
+Follow [Add a hook](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/hooks-overview#add-a-hook) to select an event, create or select a compatible workflow, and attach it to your agent. You can reuse the same workflow across agents, using metadata about the agent, user, or channel to determine which rules to apply.
 
 ## 1. Load employee context at session start
 
 The HR Buddy agent answers employee questions about benefits and onboarding. Useful answers depend on context: the employee's country helps identify applicable guidance, their employment category affects which policies are relevant, and their preferred language shapes the response. The goal is to make those facts available as the session begins.
 
-**Start (pre-loop)** runs at the beginning of a new conversation. A deployed workflow retrieves the signed-in employee's profile and returns `additionalContext`: text that adds extra context to the session for the model to use while reasoning and responding. For example, "Country: Greece" and "Preferred language: Greek" help HR Buddy select relevant guidance and reply in Greek.
+**Start (pre-loop)** runs at the beginning of a new conversation. A deployed workflow retrieves the signed-in employee's profile and returns `additionalContext`. This text is attached to the user's first message in the session as an additional context block, giving the model information to use while reasoning and responding. For example, "Country: Greece" and "Preferred language: Greek" help HR Buddy select relevant guidance and reply in Greek.
 
-This context gives the agent employee-specific information alongside its instructions and the conversation. HR systems still enforce data permissions and determine benefit eligibility.
+Although the block accompanies the user's message, the workflow supplies its contents; the user does not have to type those details. This supplements the agent's instructions and conversation. HR systems still enforce data permissions and determine benefit eligibility.
 
 In the sample HR Buddy agent, create **Load employee context**, select **Start (pre-loop)**, and attach its workflow:
 
@@ -142,7 +142,7 @@ For approval, leave both permission outputs empty. For handled validation or pol
 | **After tool failure** | `toolName`, `parameters`, `error` | Match the tool and error, then return `additionalContext` with guidance, such as a bounded retry policy for a transient lookup error. The agent uses it to choose the next step. |
 | **Error** | `error`, `errorContext`, `recoverable` | Handle errors outside a tool call through `errorHandling`: `retry`, `skip`, or `abort`. Use a bounded `retryCount` and safe `userNotification`. |
 
-Use the [event reference](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/hooks-overview#supported-hook-events) for all fields. 
+Use the [event reference](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/hooks-overview#supported-hook-events) for all fields.
 
 ## Current behavior and implementation requirements
 
@@ -150,7 +150,7 @@ Use the [event reference](https://learn.microsoft.com/en-us/microsoft-copilot-st
 
 The [current runtime fails open](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/hooks-overview#things-to-know): if a hook errors, times out, or returns an unreadable response, execution continues with default behavior.
 
-Hook workflows use the workflow response deadline. On timeout, preview chat displays a note that the hook failed because the workflow timed out. 
+Hook workflows use the workflow response deadline. On timeout, preview chat displays a note that the hook failed because the workflow timed out.
 
 | Example | Consequence of hook failure |
 |---|---|
@@ -172,7 +172,9 @@ These transformations do not erase data already received or stored. In the PII e
 
 ### Apply hooks to built-in tools
 
-**Hooks also support built-in knowledge tools such as `web_search` and CLI tools such as `bash` commands.** To apply a hook to these calls, use **All tools** by leaving the **Tools** field empty. These built-in tools are not available as individual selections in the tool filter.
+**Hooks also support built-in knowledge tools such as `web_search` and CLI tools such as `bash` commands.** Add at least one tool to the agent first so the **Tools** filter appears in the hook configuration. To apply a hook to built-in tool calls, use **All tools** by leaving the **Tools** field empty. These built-in tools are not available as individual selections in the tool filter.
+
+The hook input includes `toolName`, so the workflow can identify the invoked tool and apply the relevant logic. Because **All tools** includes other tool calls too, inspect the actual names in Preview before branching on them.
 
 ## Put hooks to work
 
