@@ -12,6 +12,9 @@ image:
   alt: "Copilot Credit consumption flowing through the Power Platform API into Dataverse and a custom dashboard."
 ---
 
+> ⚠️ **Update (September 2026):** The Copilot Credit consumption endpoint used in this article is now restricted and returns HTTP 403 when called from flows, connectors or scripts, so the solution described below no longer works. A supported alternative is expected later this year, and this article will be updated as soon as it's available. In the meantime, use the Power Platform admin center to view and download consumption data.
+{: .prompt-warning }
+
 The Power Platform admin center provides out-of-the-box reports on your tenant's Copilot Credit consumption under **Licensing > Copilot Studio** ([Manage Copilot Credits and capacity](https://learn.microsoft.com/en-us/power-platform/admin/manage-copilot-studio-copilot-credits-capacity)). For many organizations, these reports should be the starting point. You can read them, but you can't reshape them or own the underlying rows.
 
 That becomes a problem the moment you want anything beyond the headline: a trend line for one agent that also shows which channels drove its consumption, a billed-vs-non-billed split, or a history that outlives the reporting window. It matters even more now that the GitHub Copilot harness charges credits while makers build, preview, and evaluate agents, not only when an agent is running in production.
