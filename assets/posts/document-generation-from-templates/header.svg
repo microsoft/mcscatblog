@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1456" height="816" viewBox="0 0 1456 816" role="img" font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+<title>The agent passes a field map through a barrier while code does the file work</title>
+<desc>On the left the agent works only with text and hands over a small JSON field map. A dashed barrier marked "no file crosses here" separates it from the right side, where a standard-library helper opens the Word package, fills the blanks it discovered, archives the version it replaced and verifies the stored bytes.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fdfcfa"/><stop offset="0.55" stop-color="#f7f4ee"/><stop offset="1" stop-color="#edf1f7"/>
+  </linearGradient>
+  <linearGradient id="agentG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fef3ee"/><stop offset="1" stop-color="#fbe0d3"/>
+  </linearGradient>
+  <linearGradient id="codeG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#eaf2fd"/><stop offset="1" stop-color="#d6e5fa"/>
+  </linearGradient>
+  <filter id="sh" x="-30%" y="-30%" width="160%" height="175%">
+    <feDropShadow dx="0" dy="5" stdDeviation="9" flood-color="#2a2a2a" flood-opacity="0.13"/>
+  </filter>
+  <filter id="shs" x="-30%" y="-30%" width="160%" height="175%">
+    <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#2a2a2a" flood-opacity="0.11"/>
+  </filter>
+  <marker id="ar" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0.8 L9,5 L0,9.2 z" fill="#eb6834"/>
+  </marker>
+</defs>
+
+<rect width="1456" height="816" fill="url(#bg)"/>
+
+<line x1="616" y1="104" x2="616" y2="640" stroke="#c6c3ba" stroke-width="2.5" stroke-dasharray="11 9"/>
+<g transform="translate(616,252)">
+  <rect x="-122" y="-25" width="244" height="50" rx="25" fill="#ffffff" stroke="#c6c3ba" stroke-width="1.5" filter="url(#shs)"/>
+  <text x="0" y="6" font-size="17" font-weight="600" fill="#6d6a62" text-anchor="middle">no file crosses here</text>
+</g>
+
+<text x="86" y="126" font-size="14" font-weight="700" fill="#bf5320" letter-spacing="1.6">THE AGENT</text>
+<text x="86" y="178" font-size="33" font-weight="600" fill="#12110f">Reads the words.</text>
+<text x="86" y="220" font-size="33" font-weight="600" fill="#12110f">Decides where they go.</text>
+
+<g filter="url(#sh)">
+  <rect x="86" y="292" width="188" height="188" rx="34" fill="url(#agentG)" stroke="#eb6834" stroke-width="2.5"/>
+</g>
+<rect x="162" y="266" width="36" height="28" rx="8" fill="#eb6834"/>
+<circle cx="142" cy="360" r="13" fill="#eb6834"/>
+<circle cx="218" cy="360" r="13" fill="#eb6834"/>
+<path d="M136 414 Q180 446 224 414" stroke="#eb6834" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+<g filter="url(#sh)">
+  <rect x="310" y="280" width="256" height="212" rx="14" fill="#ffffff" stroke="#e3e0d8" stroke-width="1.5"/>
+</g>
+<path d="M310 294 a14 14 0 0 1 14 -14 h228 a14 14 0 0 1 14 14 v26 h-256 z" fill="#fdeee7"/>
+<text x="330" y="306" font-size="14" font-weight="700" fill="#bf5320" letter-spacing="0.8">FIELD MAP</text>
+<text x="330" y="354" font-size="15" font-family="Consolas, 'Courier New', monospace" fill="#3d3b36">{</text>
+<text x="342" y="380" font-size="15" font-family="Consolas, 'Courier New', monospace" fill="#3d3b36">"Role Title":</text>
+<text x="354" y="404" font-size="15" font-family="Consolas, 'Courier New', monospace" fill="#2a78d6">"Project Officer"</text>
+<text x="342" y="432" font-size="15" font-family="Consolas, 'Courier New', monospace" fill="#3d3b36">"Authority":</text>
+<text x="354" y="456" font-size="15" font-family="Consolas, 'Courier New', monospace" fill="#bf5320">"Not provided"</text>
+<text x="330" y="480" font-size="15" font-family="Consolas, 'Courier New', monospace" fill="#3d3b36">}</text>
+
+<line x1="576" y1="386" x2="656" y2="386" stroke="#eb6834" stroke-width="3" stroke-linecap="round" marker-end="url(#ar)"/>
+
+<text x="86" y="556" font-size="18" fill="#57544d">Text in, judgment out. The document itself never arrives.</text>
+
+<text x="700" y="126" font-size="14" font-weight="700" fill="#1c5ea8" letter-spacing="1.6">THE HELPER</text>
+<text x="700" y="178" font-size="33" font-weight="600" fill="#12110f">Opens the package.</text>
+<text x="700" y="220" font-size="33" font-weight="600" fill="#12110f">Proves what it stored.</text>
+
+<g filter="url(#sh)">
+  <rect x="700" y="280" width="200" height="248" rx="12" fill="#ffffff" stroke="#c9c7bd" stroke-width="1.5"/>
+</g>
+<rect x="726" y="310" width="116" height="11" rx="5.5" fill="#262522"/>
+<rect x="726" y="344" width="148" height="9" rx="4.5" fill="#dcdad1"/>
+<rect x="726" y="366" width="148" height="22" rx="5" fill="#d6e5fa" stroke="#2a78d6" stroke-width="1.5"/>
+<rect x="726" y="402" width="124" height="9" rx="4.5" fill="#dcdad1"/>
+<rect x="726" y="424" width="148" height="22" rx="5" fill="#d6e5fa" stroke="#2a78d6" stroke-width="1.5"/>
+<rect x="726" y="460" width="148" height="9" rx="4.5" fill="#dcdad1"/>
+<rect x="726" y="482" width="96" height="22" rx="5" fill="#fdeee7" stroke="#eb6834" stroke-width="1.5"/>
+
+<g transform="translate(934,300)">
+  <rect x="0" y="0" width="156" height="40" rx="11" fill="url(#codeG)" stroke="#2a78d6" stroke-width="1.5"/>
+  <text x="78" y="26" font-size="15" font-weight="600" fill="#1c5ea8" text-anchor="middle">zip + XML</text>
+</g>
+<g transform="translate(934,356)">
+  <rect x="0" y="0" width="156" height="40" rx="11" fill="url(#codeG)" stroke="#2a78d6" stroke-width="1.5"/>
+  <text x="78" y="26" font-size="15" font-weight="600" fill="#1c5ea8" text-anchor="middle">no pip install</text>
+</g>
+<g transform="translate(934,412)">
+  <rect x="0" y="0" width="156" height="40" rx="11" fill="#f3f1ea" stroke="#c9c7bd" stroke-width="1.5"/>
+  <text x="78" y="26" font-size="15" font-weight="600" fill="#57544d" text-anchor="middle">archive first</text>
+</g>
+
+<g filter="url(#sh)">
+  <rect x="1130" y="280" width="196" height="248" rx="12" fill="#ffffff" stroke="#c9c7bd" stroke-width="1.5"/>
+</g>
+<rect x="1156" y="310" width="112" height="11" rx="5.5" fill="#262522"/>
+<rect x="1156" y="344" width="144" height="9" rx="4.5" fill="#b9b6ab"/>
+<rect x="1156" y="366" width="144" height="9" rx="4.5" fill="#b9b6ab"/>
+<rect x="1156" y="388" width="108" height="9" rx="4.5" fill="#b9b6ab"/>
+<rect x="1156" y="410" width="144" height="9" rx="4.5" fill="#b9b6ab"/>
+<rect x="1156" y="432" width="126" height="9" rx="4.5" fill="#b9b6ab"/>
+<g transform="translate(1156,468)">
+  <rect x="0" y="0" width="144" height="32" rx="16" fill="#e9f3ea" stroke="#3f8f52" stroke-width="1.5"/>
+  <path d="M13 16 l7 7 l13 -15" stroke="#3f8f52" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="88" y="21" font-size="14" font-weight="600" fill="#2f6f3f" text-anchor="middle">bytes verified</text>
+</g>
+
+<text x="700" y="576" font-size="18" fill="#57544d">Fills the blanks it discovered, strips the notes meant for the author,</text>
+<text x="700" y="602" font-size="18" fill="#57544d">then checks what actually landed instead of trusting the response.</text>
+
+<line x1="86" y1="666" x2="1370" y2="666" stroke="#e1ded6" stroke-width="1.5"/>
+<text x="86" y="714" font-size="20" font-weight="600" fill="#12110f">Two of the seven steps need judgment.</text>
+<text x="86" y="746" font-size="20" fill="#57544d">The other five are mechanical, which also means they can be tested.</text>
+</svg>
