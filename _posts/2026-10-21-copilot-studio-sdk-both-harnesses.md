@@ -60,7 +60,7 @@ npm install --save-exact \
   rxjs@7.8.2
 ```
 
-I've pinned the sample revision and package versions so we're starting from the same code. Keep WebChat and its Fluent theme on matching versions.
+I've pinned the sample revision and package versions so we're starting from the same code. Keep WebChat and its Fluent theme on matching versions. Check the [JavaScript client release notes](https://github.com/microsoft/Agents-for-js/releases) for when this support lands in a stable release.
 
 ## Point It at Your Agent
 
