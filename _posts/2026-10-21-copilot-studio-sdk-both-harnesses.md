@@ -125,11 +125,11 @@ For now, this extension is a way to understand and demonstrate how reasoning and
 
 I've included two helper modules and a replacement `Chat.tsx` with this post. Save them in the React sample's **`src/`** directory:
 
-- [activityDetails.ts](/assets/posts/copilot-studio-sdk-both-harnesses/activityDetails.ts): collects thought updates and tool status changes.
-- [agentActivity.ts](/assets/posts/copilot-studio-sdk-both-harnesses/agentActivity.ts): connects those updates to WebChat's native groups.
-- [Chat.tsx](/assets/posts/copilot-studio-sdk-both-harnesses/Chat.tsx): the complete replacement component, including sign-in, error display, and connection cleanup.
+- [activityDetails.ts]({{ '/assets/posts/copilot-studio-sdk-both-harnesses/activityDetails.ts' | relative_url }}): collects thought updates and tool status changes.
+- [agentActivity.ts]({{ '/assets/posts/copilot-studio-sdk-both-harnesses/agentActivity.ts' | relative_url }}): connects those updates to WebChat's native groups.
+- [Chat.tsx]({{ '/assets/posts/copilot-studio-sdk-both-harnesses/Chat.tsx' | relative_url }}): the complete replacement component, including sign-in, error display, and connection cleanup.
 
-Keep the existing `acquireToken.ts`. We're changing how activities get displayed, not how you sign in. The downloads are provided under the [MIT license](/assets/posts/copilot-studio-sdk-both-harnesses/LICENSE.txt).
+Keep the existing `acquireToken.ts`. We're changing how activities get displayed, not how you sign in. The downloads are provided under the [MIT license]({{ '/assets/posts/copilot-studio-sdk-both-harnesses/LICENSE.txt' | relative_url }}).
 
 ### Wrap the Connection
 
