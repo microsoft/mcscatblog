@@ -25,7 +25,8 @@ https://workiq.svc.cloud.microsoft/mcp
 
 It is **not** a walkthrough for the separate Work IQ Mail, Calendar, or Teams MCP connectors.
 
-Microsoft documents [MCP onboarding for standard-harness agents](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent). Its separate [packaged Work IQ preview](https://learn.microsoft.com/microsoft-copilot-studio/add-work-iq) is GitHub Copilot harness-specific; the validated manual connection here establishes technical usability, not an official support statement for this combination.
+> **Standard-harness connection:** Microsoft documents two generic MCP onboarding routes: the [Copilot Studio MCP onboarding wizard](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent) and [creating a custom MCP connector in Power Apps](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent#option-2-create-a-custom-mcp-connector-in-power-apps). This walkthrough uses the wizard with Microsoft Entra OAuth to connect the **unified Work IQ endpoint**, validated end to end through a successful `ask` call.
+{: .prompt-info }
 
 > **Important:** Using the unified Work IQ MCP endpoint from a standard-harness agent incurs usage-based billing. Connecting through a custom MCP tool doesn't make Work IQ usage free. Review [Work IQ: How It's Used, Licensed, and Controlled]({% post_url 2026-08-24-work-iq-context-layer-you-already-have %}) for licensing, billing, and spending controls before enabling the connection.
 {: .prompt-warning }
