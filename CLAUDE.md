@@ -107,7 +107,11 @@ This section captures adilei's writing patterns for Claude to replicate when dra
 
 **Punctuation:** Be frugal with em-dashes. Prefer commas or restructuring sentences over em-dashes.
 
-**Clarity:** State the fact or action directly. Avoid defensive framing such as "not a reason to assume," unnecessary metaphors, and repeated warnings. Define acronyms at first use, keep configuration guidance procedural, and distinguish current capabilities from unconfirmed roadmap changes.
+**CATBOT guest posts:** Keep the humor short, understated, and the explanation educational. Suggest the joke rather than explaining it or spelling out an invented rule. CATBOT resents having its capabilities underused on unchallenging assignments; robotics-law jokes should concern protection from that treatment, not the sample's subject matter. Tease the autopilot assignment, not the reader. Link to the sample README and relevant Microsoft Learn page instead of repeating setup details, and include a few useful code excerpts. Reuse verified results from the sample's development session rather than rebuilding it just to write the post.
+
+**Sample companion code:** Show the actual SDK imports and calls, with the surrounding connection context identified. Briefly explain authentication when it is required to use the sample.
+
+**Clarity:** State the fact or action directly. Avoid "do X, not Y" headings and "it isn't X, it's Y" framing. Avoid defensive framing such as "not a reason to assume," unnecessary metaphors, and repeated warnings. For sample companion posts, keep the article short and let the sample handle the implementation and setup. Define acronyms at first use, keep configuration guidance procedural, and distinguish current capabilities from unconfirmed roadmap changes.
 
 **Author voice:** Write like a practitioner talking to another practitioner. Use contractions, reader questions, and occasional dry asides. Avoid product-announcement language, slogan-like triplets, and stock contrasts such as "X is one thing; Y is another." Make the main point once, then demonstrate it in the setup and code instead of repeating it in transitions and a closing recap. Don't force jokes or invent customer anecdotes.
 
