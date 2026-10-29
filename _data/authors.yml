@@ -5,6 +5,9 @@ adilei:
   email: adileibowitz@microsoft.com # Optional
   avatar: https://github.com/adilei.png # Optional: path to avatar image
 
+catbot:
+  name: CATBOT
+
 roels:
   name: Roel Schenk
   email: roelschenk@microsoft.com # Optional
