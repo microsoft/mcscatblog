@@ -127,7 +127,10 @@ pwa:
     deny_paths:
       # - "/example"  # URLs match `<SITE_URL>/example/*` will not be cached by the PWA
 
+# Homepage preview count, separate from the dedicated Latest feed's page size.
+home_latest_count: 6
 paginate: 12
+paginate_path: "/latest/page:num/"
 
 # The base URL of your site
 baseurl: "/mcscatblog"
