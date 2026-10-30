@@ -1,0 +1,249 @@
+kind: AdaptiveDialog
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: DataEnvelope
+    description: Data Envelope rows with Key, Label, Type, and optional Value columns.
+    shouldPromptUser: false
+
+beginDialog:
+  kind: OnRedirect
+  id: main
+  actions:
+    - kind: SetVariable
+      id: initializeCompletedDataEnvelope
+      variable: Topic.CompletedDataEnvelope
+      value: =FirstN(Topic.DataEnvelope, 0)
+
+    - kind: SetVariable
+      id: initializeIndex
+      variable: Topic.FieldIndex
+      value: =1
+
+    - kind: ConditionGroup
+      id: validateDefinitionCount
+      conditions:
+        - id: invalidDefinitionCount
+          condition: =CountRows(Topic.DataEnvelope) < 1
+          actions:
+            - kind: SendActivity
+              id: sendEmptyDataEnvelopeError
+              activity: The Data Envelope must contain at least one row.
+
+            - kind: CancelAllDialogs
+              id: cancelInvalidDefinitionCount
+
+    - kind: ConditionGroup
+      id: dispatchNextField
+      conditions:
+        - id: fieldRemains
+          condition: =Topic.FieldIndex <= CountRows(Topic.DataEnvelope)
+          actions:
+            - kind: SetVariable
+              id: selectCurrentField
+              variable: Topic.CurrentField
+              value: =Index(Topic.DataEnvelope, Topic.FieldIndex)
+
+            - kind: ConditionGroup
+              id: collectWhenMissing
+              conditions:
+                - id: responseMissing
+                  condition: =IsBlank(Topic.CurrentField.Value)
+                  actions:
+                    - kind: ConditionGroup
+                      id: dispatchByType
+                      conditions:
+                        - id: collectText
+                          condition: =Topic.CurrentField.Type = "Text"
+                          actions:
+                            - kind: SetVariable
+                              id: clearTextAnswer
+                              variable: Topic.TextAnswer
+                              value: =Blank()
+
+                            - kind: Question
+                              id: askText
+                              interruptionPolicy:
+                                allowInterruption: false
+                              repeatCount: 0
+                              alwaysPrompt: true
+                              variable: Topic.TextAnswer
+                              prompt: "Provide {Topic.CurrentField.Label}."
+                              entity: StringPrebuiltEntity
+
+                            - kind: SetVariable
+                              id: normalizeTextAnswer
+                              variable: Topic.CollectedValue
+                              value: =Topic.TextAnswer
+
+                        - id: collectEmail
+                          condition: =Topic.CurrentField.Type = "Email"
+                          actions:
+                            - kind: SetVariable
+                              id: clearEmailAnswer
+                              variable: Topic.EmailAnswer
+                              value: =Blank()
+
+                            - kind: Question
+                              id: askEmail
+                              interruptionPolicy:
+                                allowInterruption: false
+                              repeatCount: 0
+                              alwaysPrompt: true
+                              variable: Topic.EmailAnswer
+                              prompt: "Provide {Topic.CurrentField.Label}."
+                              entity: EmailPrebuiltEntity
+
+                            - kind: SetVariable
+                              id: normalizeEmailAnswer
+                              variable: Topic.CollectedValue
+                              value: =Topic.EmailAnswer
+
+                        - id: collectDate
+                          condition: =Topic.CurrentField.Type = "Date"
+                          actions:
+                            - kind: SetVariable
+                              id: clearDateAnswer
+                              variable: Topic.DateAnswer
+                              value: =Blank()
+
+                            - kind: Question
+                              id: askDate
+                              interruptionPolicy:
+                                allowInterruption: false
+                              repeatCount: 0
+                              alwaysPrompt: true
+                              variable: Topic.DateAnswer
+                              prompt: "Provide {Topic.CurrentField.Label}."
+                              entity: DateTimePrebuiltEntity
+
+                            - kind: SetVariable
+                              id: normalizeDateAnswer
+                              variable: Topic.CollectedValue
+                              value: =Text(Topic.DateAnswer, "yyyy-MM-dd")
+
+                        - id: collectNumber
+                          condition: =Topic.CurrentField.Type = "Number"
+                          actions:
+                            - kind: SetVariable
+                              id: clearNumberAnswer
+                              variable: Topic.NumberAnswer
+                              value: =Blank()
+
+                            - kind: Question
+                              id: askNumber
+                              interruptionPolicy:
+                                allowInterruption: false
+                              repeatCount: 0
+                              alwaysPrompt: true
+                              variable: Topic.NumberAnswer
+                              prompt: "Provide {Topic.CurrentField.Label}."
+                              entity: NumberPrebuiltEntity
+
+                            - kind: SetVariable
+                              id: normalizeNumberAnswer
+                              variable: Topic.CollectedValue
+                              value: =Text(Topic.NumberAnswer)
+
+                        - id: collectBoolean
+                          condition: =Topic.CurrentField.Type = "Boolean"
+                          actions:
+                            - kind: SetVariable
+                              id: clearBooleanAnswer
+                              variable: Topic.BooleanAnswer
+                              value: =Blank()
+
+                            - kind: Question
+                              id: askBoolean
+                              interruptionPolicy:
+                                allowInterruption: false
+                              repeatCount: 0
+                              alwaysPrompt: true
+                              variable: Topic.BooleanAnswer
+                              prompt: "Provide {Topic.CurrentField.Label}."
+                              entity: BooleanPrebuiltEntity
+
+                            - kind: SetVariable
+                              id: normalizeBooleanAnswer
+                              variable: Topic.CollectedValue
+                              value: =Text(Topic.BooleanAnswer)
+
+                        - id: collectChoice
+                          condition: =Topic.CurrentField.Type = "Choice"
+                          actions:
+                            - kind: SetVariable
+                              id: clearChoiceAnswer
+                              variable: Topic.ChoiceAnswer
+                              value: =Blank()
+
+                            - kind: Question
+                              id: askChoice
+                              interruptionPolicy:
+                                allowInterruption: false
+                              repeatCount: 0
+                              alwaysPrompt: true
+                              variable: Topic.ChoiceAnswer
+                              prompt: "Provide {Topic.CurrentField.Label}."
+                              entity: StringPrebuiltEntity
+
+                            - kind: SetVariable
+                              id: normalizeChoiceAnswer
+                              variable: Topic.CollectedValue
+                              value: =Topic.ChoiceAnswer
+
+                      elseActions:
+                        - kind: SendActivity
+                          id: sendUnsupportedTypeError
+                          activity: "Unsupported field type '{Topic.CurrentField.Type}' for key '{Topic.CurrentField.Key}'."
+
+                        - kind: CancelAllDialogs
+                          id: cancelUnsupportedType
+
+              elseActions:
+                - kind: SetVariable
+                  id: usePrefilledValue
+                  variable: Topic.CollectedValue
+                  value: =Topic.CurrentField.Value
+
+            - kind: EditTable
+              id: appendCollectedValue
+              changeType: Add
+              itemsVariable: Topic.CompletedDataEnvelope
+              value: "={ Key: Topic.CurrentField.Key, Label: Topic.CurrentField.Label, Type: Topic.CurrentField.Type, Value: Topic.CollectedValue }"
+
+            - kind: SetVariable
+              id: advanceFieldIndex
+              variable: Topic.FieldIndex
+              value: =Topic.FieldIndex + 1
+
+            - kind: GotoAction
+              id: continueFieldLoop
+              actionId: dispatchNextField
+
+    - kind: EndDialog
+      id: returnCollectionResult
+
+inputType:
+  properties:
+    DataEnvelope:
+      displayName: Data Envelope
+      description: Ordered fields and optional values.
+      type:
+        kind: Table
+        properties:
+          Key: String
+          Label: String
+          Type: String
+          Value: String
+
+outputType:
+  properties:
+    CompletedDataEnvelope:
+      displayName: Completed Data Envelope
+      description: The same Data Envelope with collected values.
+      type:
+        kind: Table
+        properties:
+          Key: String
+          Label: String
+          Type: String
+          Value: String
