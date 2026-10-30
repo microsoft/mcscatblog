@@ -58,6 +58,18 @@ will **not** receive upstream updates automatically.
 > each item below against the new gem version. Anything that overrides or copies a theme
 > file is the most likely thing to break.
 
+### Homepage layout
+
+The homepage shows pinned posts, then Latest, then the topic grid. The hero's
+**Browse by topic** link jumps directly to the grid. Set `home_latest_count` in
+`_config.yml` to adjust the preview size (currently 6); pinned posts are excluded
+from that count. **All posts** opens `/latest/`, a full chronological
+feed including pinned posts, with a **Back to home** button. `paginate` controls
+that feed's page size (currently 12), and `paginate_path` keeps its pagination
+under `/latest/`. The homepage has no pagination.
+Both pages use the `home` layout and shared post cards so Chirpy preserves
+linked header images instead of turning them into article lightbox links.
+
 ### Agent harness edition pill
 
 Shows a small pill under the post title indicating which Copilot Studio build harness a

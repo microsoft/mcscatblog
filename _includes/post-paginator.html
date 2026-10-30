@@ -1,14 +1,11 @@
 <!--
   Local override of Chirpy's post-paginator.
 
-  The home feed (see _layouts/home.html) excludes pinned posts, so it can be
-  shorter than site.posts. jekyll-paginate's `paginator.total_pages` counts ALL
-  posts and would emit an empty trailing page reachable via the "next" arrow.
-  We drive the pager off `feed_total_pages` (set in home.html, in scope here)
-  so the widget stops at the last page that actually has feed posts.
+  Pass first_page_path when the paginated feed lives outside the homepage.
 -->
 
-{% assign total = feed_total_pages | default: paginator.total_pages %}
+{% assign total = paginator.total_pages %}
+{% assign first_page_path = include.first_page_path | default: '/' %}
 {% assign next = paginator.page | plus: 1 %}
 {% assign prev = paginator.page | minus: 1 %}
 
@@ -17,7 +14,7 @@
     <!-- left arrow -->
     {% if paginator.page > 1 %}
       {% if prev == 1 %}
-        {% assign prev_url = '/' | relative_url %}
+        {% assign prev_url = first_page_path | relative_url %}
       {% else %}
         {% assign prev_url = site.paginate_path | replace: ':num', prev | relative_url %}
       {% endif %}
@@ -61,7 +58,7 @@
         <li class="page-item {% if i == paginator.page %} active{% endif %}">
           <a
             class="page-link"
-            href="{% if i > 1 %}{{ site.paginate_path | replace: ':num', i | relative_url }}{% else %}{{ '/' | relative_url }}{% endif %}"
+            href="{% if i > 1 %}{{ site.paginate_path | replace: ':num', i | relative_url }}{% else %}{{ first_page_path | relative_url }}{% endif %}"
           >
             {{- i -}}
           </a>

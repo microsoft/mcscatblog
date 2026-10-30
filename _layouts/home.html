@@ -4,43 +4,25 @@ layout: default
 
 {% include lang.html %}
 
-{% comment %}
-  Featured (pinned) posts get their own band on page 1 (home-featured.html);
-  the Latest feed below is the chronological stream of everything else, with
-  pinned and hidden posts excluded to avoid duplication, windowed by the current
-  paginator page. When nothing is pinned there is no Featured band and every
-  post simply flows through the feed.
+{% if page.latest_feed %}
+  {% include latest-feed.html %}
+{% else %}
 
-  The feed excludes pinned posts, so it can be shorter than site.posts. We derive
-  feed_total_pages from the feed itself and drive the pager off that; gating on
-  jekyll-paginate's paginator.total_pages would emit an empty trailing page
-  reachable via the "next" arrow.
+{% comment %}
+  Latest is a short preview, excluding pinned and hidden posts.
+  The complete chronological feed and pagination live at /latest/.
 {% endcomment %}
 {% assign feed_posts = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
-{% assign feed_total_pages = feed_posts.size | plus: paginator.per_page | minus: 1 | divided_by: paginator.per_page %}
+{% assign posts = feed_posts | slice: 0, site.home_latest_count %}
 
-{% assign feed_start = paginator.page | minus: 1 | times: paginator.per_page %}
-{% assign feed_end = feed_start | plus: paginator.per_page | minus: 1 %}
-
-{% assign posts = '' | split: '' %}
-{% for i in (feed_start..feed_end) %}
-  {% if feed_posts[i] %}
-    {% assign posts = posts | push: feed_posts[i] %}
-  {% endif %}
-{% endfor %}
-
-{% comment %} Hero + featured + collections only lead the very first page. {% endcomment %}
-{% if paginator.page == 1 %}
-  {% include home-hero.html %}
-  {% include home-featured.html %}
-  {% include home-collections.html %}
-{% endif %}
+{% include home-hero.html %}
+{% include home-featured.html %}
 
 <section class="ce-latest" id="latest" aria-label="Latest posts">
   <header class="ce-section-head">
-    <p class="ce-kicker">// {% if paginator.page == 1 %}Fresh off the bench{% else %}Page {{ paginator.page }}{% endif %}</p>
+    <p class="ce-kicker">// Fresh off the bench</p>
     <h2 class="ce-section-title">Latest</h2>
-    <a class="ce-section-link" href="{{ '/archives/' | relative_url }}">
+    <a class="ce-section-link" href="{{ '/latest/' | relative_url }}">
       All posts <i class="fas fa-angle-right"></i>
     </a>
   </header>
@@ -56,6 +38,6 @@ layout: default
   {% endif %}
 </section>
 
-{% if feed_total_pages > 1 %}
-  {% include post-paginator.html %}
+{% include home-collections.html %}
+
 {% endif %}
