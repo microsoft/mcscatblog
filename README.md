@@ -70,6 +70,18 @@ under `/latest/`. The homepage has no pagination.
 Both pages use the `home` layout and shared post cards so Chirpy preserves
 linked header images instead of turning them into article lightbox links.
 
+### Full-text subscription feed
+
+Subscribe at https://microsoft.github.io/mcscatblog/feed.xml. The Atom feed includes
+the full article bodies of the five newest published posts, including code and
+images. Interactive embeds and media link back to the web article.
+
+`assets/feed.xml` overrides Chirpy's summary-only feed, and
+`_plugins/feed-content.rb` prepares article HTML with absolute links and image
+URLs, without executable scripts or page stylesheets. The feed skips the HTML
+compression layout to preserve code whitespace. Review the template against the
+theme's `assets/feed.xml` when upgrading Chirpy.
+
 ### Agent harness edition pill
 
 Shows a small pill under the post title indicating which Copilot Studio build harness a
