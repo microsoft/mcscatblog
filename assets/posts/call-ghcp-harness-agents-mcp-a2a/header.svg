@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1456" height="816" viewBox="0 0 1456 816" role="img" font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
-<title>A GitHub Copilot harness agent called through MCP as a tool and through A2A as a peer</title>
-<desc>A standard agent calls the GitHub Copilot harness agent through its MCP endpoint as a tool. A GitHub Copilot harness agent in another environment calls it through its A2A endpoint as a peer. Both calls pass through Microsoft Entra ID as the signed-in user. An agent in the same environment connects directly as a connected agent.</desc>
+<title>A GitHub Copilot harness agent called through the MCP and A2A channels</title>
+<desc>An existing standard agent calls the HR Policy agent, a GitHub Copilot harness agent, through its MCP endpoint. A GitHub Copilot harness agent in another environment calls it through its A2A endpoint. Both calls pass through Microsoft Entra ID as the signed-in user. An agent in the same environment connects directly as a connected agent.</desc>
 <defs>
   <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2563EB"/></marker>
   <marker id="arrow-violet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7C3AED"/></marker>
@@ -27,8 +27,8 @@
 </g>
 <rect x="104" y="222" width="104" height="30" rx="15" fill="#DBEAFE"/>
 <text x="156" y="243" text-anchor="middle" font-size="16" font-weight="600" fill="#1D4ED8">Standard</text>
-<text x="104" y="290" font-size="28" font-weight="700" fill="#0F172A">IT Helpdesk agent</text>
-<text x="104" y="322" font-size="18" fill="#475569">In production. Not rebuilt.</text>
+<text x="104" y="290" font-size="28" font-weight="700" fill="#0F172A">Existing agent</text>
+<text x="104" y="322" font-size="18" fill="#475569">Uses it as an MCP tool</text>
 
 <!-- GHCP agent in other environment (caller, A2A) -->
 <g filter="url(#shadow)">
@@ -36,8 +36,8 @@
 </g>
 <rect x="104" y="496" width="230" height="30" rx="15" fill="#EDE9FE"/>
 <text x="219" y="517" text-anchor="middle" font-size="16" font-weight="600" fill="#6D28D9">GitHub Copilot harness</text>
-<text x="104" y="564" font-size="28" font-weight="700" fill="#0F172A">Sales Quote agent</text>
-<text x="104" y="596" font-size="18" fill="#475569">Sales environment</text>
+<text x="104" y="564" font-size="28" font-weight="700" fill="#0F172A">Calling agent</text>
+<text x="104" y="596" font-size="18" fill="#475569">Another environment</text>
 
 <!-- Called agent -->
 <g filter="url(#shadow)">
@@ -45,30 +45,28 @@
 </g>
 <rect x="808" y="206" width="230" height="30" rx="15" fill="#EDE9FE"/>
 <text x="923" y="227" text-anchor="middle" font-size="16" font-weight="600" fill="#6D28D9">GitHub Copilot harness</text>
-<text x="808" y="282" font-size="30" font-weight="700" fill="#0F172A">Device Compliance</text>
-<text x="808" y="318" font-size="30" font-weight="700" fill="#0F172A">agent</text>
-<text x="808" y="352" font-size="18" fill="#475569">Published · Early environment</text>
+<text x="808" y="296" font-size="32" font-weight="700" fill="#0F172A">HR Policy agent</text>
+<text x="808" y="336" font-size="18" fill="#475569">Published · Early environment</text>
 
 <!-- MCP port -->
 <rect x="808" y="392" width="344" height="92" rx="16" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2"/>
 <text x="832" y="430" font-size="22" font-weight="700" fill="#1D4ED8">MCP endpoint</text>
-<text x="832" y="460" font-size="17" fill="#1E40AF" font-family="Consolas, 'Cascadia Mono', monospace">send-message</text>
+<text x="832" y="460" font-size="17" fill="#1E40AF" >One send-message tool</text>
 
 <!-- A2A port -->
 <rect x="808" y="508" width="344" height="104" rx="16" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="2"/>
 <text x="832" y="546" font-size="22" font-weight="700" fill="#6D28D9">A2A endpoint</text>
-<text x="832" y="576" font-size="17" fill="#5B21B6" font-family="Consolas, 'Cascadia Mono', monospace">SendMessage</text>
-<text x="832" y="598" font-size="17" fill="#5B21B6" font-family="Consolas, 'Cascadia Mono', monospace">agent-card.json</text>
+<text x="832" y="580" font-size="17" fill="#5B21B6">Agent card with skills</text>
 
 <!-- MCP arrow -->
 <path d="M460 271 C 600 271, 640 438, 802 438" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#arrow-blue)"/>
 <rect x="470" y="396" width="168" height="34" rx="17" fill="#2563EB"/>
-<text x="554" y="419" text-anchor="middle" font-size="17" font-weight="600" fill="#FFFFFF">MCP · as a tool</text>
+<text x="554" y="419" text-anchor="middle" font-size="17" font-weight="600" fill="#FFFFFF">MCP channel</text>
 
 <!-- A2A arrow -->
 <path d="M460 545 C 600 545, 640 560, 802 560" fill="none" stroke="#7C3AED" stroke-width="4" marker-end="url(#arrow-violet)"/>
 <rect x="470" y="490" width="168" height="34" rx="17" fill="#7C3AED"/>
-<text x="554" y="513" text-anchor="middle" font-size="17" font-weight="600" fill="#FFFFFF">A2A · as a peer</text>
+<text x="554" y="513" text-anchor="middle" font-size="17" font-weight="600" fill="#FFFFFF">A2A channel</text>
 
 <!-- Connected agent, same environment -->
 <g filter="url(#shadow)">
