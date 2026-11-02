@@ -24,15 +24,13 @@ This post uses two kinds of boundary. A **document boundary** decides what infor
 
 ## What drives the work behind an answer
 
-A grounded answer can require more than one retrieval operation. Five factors contribute to the work behind an answer. The last column shows how each one appears in the HR example.
+A grounded answer can require more than one retrieval operation. Five factors contribute to the work behind an answer. Each one is shown with the travel example.
 
-| Factor | What it covers | In the HR example |
-|---|---|---|
-| Base retrieval | The platform activity required to invoke search. The search mechanism is platform-defined, and its billing treatment depends on the harness and features used. | The agent searches the HR knowledge source for the hotel limit on business travel. |
-| Context | The evidence retrieved from knowledge sources and passed to the model for a task. Its usefulness depends on relevance, authority, consistency, and amount. Outdated, duplicate, or unrelated material can compete with the evidence the answer needs. | Several years of the travel policy, near-identical FAQs, and a draft of next year's rates return as candidates. |
-| Reasoning | The work required to compare candidates, reconcile conflicts, and synthesize evidence across sources. | The agent compares effective dates and rates to identify the policy in force. |
-| Retries | Additional retrieval attempts when the first result set does not provide sufficient or reliable evidence. | If the candidates conflict, the agent reformulates and searches again. |
-| Verification | The checks needed to establish that an answer is grounded in an appropriate source and can be traced or cited when needed. | The agent has to confirm that the cited source is the approved policy currently in force. |
+1. **Base retrieval.** The search the platform runs. The search mechanism is platform-defined, and its billing treatment depends on the harness and features used. In the travel example, the agent searches the HR knowledge source for the hotel limit on business travel.
+2. **Context.** The evidence retrieved from knowledge sources and passed to the model for a task. Its usefulness depends on relevance, authority, consistency, and amount. In the travel example, several years of the policy, near-identical FAQs, and a draft of next year's rates all return as candidates.
+3. **Reasoning.** The work of comparing candidates, reconciling conflicts, and synthesizing evidence. In the travel example, the agent compares effective dates and rates to identify the policy in force.
+4. **Retries.** Additional searches when the first results are weak or conflicting. In the travel example, conflicting candidates can lead the agent to reformulate and search again.
+5. **Verification.** The checks that confirm an answer is grounded in an appropriate source and can be cited. In the travel example, the agent has to confirm that the cited source is the approved policy in force.
 
 Retrieved evidence is one part of the model's context, alongside instructions, conversation history, and tool output. This post focuses on the retrieved evidence, because that is the part knowledge governance can change.
 
@@ -43,24 +41,19 @@ Content preparation does not change the underlying price or service behavior of 
 
 ## Where the extra work comes from
 
-The five factors describe the work behind an answer. A knowledge base adds avoidable work to those factors in four ways. Two come from how the knowledge base is organized: which sources the agent can search, and how each document is shaped. Two come from the content itself: whether the answer exists, and whether its source can be verified.
+A knowledge base can add avoidable work to those factors in four ways. The first two come from how the knowledge base is organized: which sources the agent can search, and how each document is shaped. The other two come from the content itself: whether the answer exists, and whether its source can be verified.
 
-| Problem | What the agent encounters | Work it adds | Where the fix sits |
-|---|---|---|---|
-| Too many competing sources | Several plausible matches for one question | Reasoning, retries, verification | The knowledge boundary |
-| Documents shaped the wrong way | Evidence mixed with unrelated material, or split across fragments | Context, reasoning, retries | The document boundary |
-| Missing information | No source holds the answer, or retrieval doesn't surface it | Retries, escalation | Source coverage and metadata |
-| Hard-to-verify answers | A correct answer with an unclear source | Verification | Source metadata and citation design |
-
-### Too many competing sources
+### 1. Too many competing sources
 
 In the travel example, five years of policy and several FAQs all match a question about hotel limits. The agent has to work out which version is in force before it can answer. Each extra candidate adds reasoning and verification, and conflicting candidates can trigger another search.
 
 The fix is to narrow the knowledge boundary so fewer sources compete. That means retiring superseded versions, removing duplicates, and filtering by metadata. Research on [entity-based chunk filtering](https://arxiv.org/abs/2604.24334) supports this approach. In its experiments, removing redundant content reduced index size while retrieval quality stayed near baseline. The next section covers the practices that keep this boundary narrow.
 
-### Documents shaped the wrong way
+In the travel example, archiving earlier years, merging the FAQs into one, and keeping next year's draft out until it takes effect should leave one current policy to retrieve. You would expect fewer competing candidates, a more direct answer path, and no answers quoting rates that are not yet in effect. These are expected effects, not measured results. The measurement section shows how to test them.
 
-Even with the right sources in the knowledge boundary, the shape of each document affects the work. A large, mixed-topic document places unrelated material next to the evidence. Over-fragmented content splits one answer across several sources that the agent has to retrieve and combine.
+### 2. Documents shaped the wrong way
+
+Even with the right sources in the knowledge boundary, the shape of each document affects the work. A large, mixed-topic document places unrelated material next to the evidence. Over-fragmented content splits one answer across several sources that the agent has to retrieve and combine. Both add context and reasoning, and fragmented content can also add retries.
 
 Shape matters more on the [GitHub Copilot harness](https://learn.microsoft.com/en-us/microsoft-copilot-studio/harnesses-overview), where the agent can open a full knowledge file in its [sandbox]({% post_url 2026-07-20-copilot-studio-agent-sandbox %}) rather than work only from search snippets. The document's shape then decides how much unrelated content the agent examines. A full file in the sandbox is not the same as its whole content in every model call, and it doesn't guarantee that a follow-up question avoids another search. Measure this for your own workload.
 
@@ -71,13 +64,13 @@ Design document boundaries around the questions users ask rather than the organi
 ![Three-row diagram. The target row shows a focused source with policy, scope, and relevant exceptions together, leading to relevant content for grounding and reasoning, and then to relevant context with minimal competing information. Pattern 1, a mixed-topic source, introduces unrelated material alongside relevant evidence and distracts from it. Pattern 2, over-fragmented content, means several isolated fragments must be combined, so more retrieval and synthesis is required.](/assets/posts/retrieval-economics/knowledge-boundaries.png){: w="700" h="470" }
 _Mixed-topic sources and over-fragmented content both add retrieval work, in different ways._
 
-### Missing information
+### 3. Missing information
 
-Sometimes no source holds the answer, or retrieval doesn't surface it. A broad question across many department reports may miss one department's figure. The agent should report the gap, try a more targeted search, or escalate rather than guess. The fix may be better source coverage, better metadata, a different retrieval approach, or a human process. Adding more content alone rarely closes the gap.
+Sometimes no source holds the answer, or retrieval doesn't surface it. This adds retries and, when the gap is real, escalation. A broad question across many department reports may miss one department's figure. The agent should report the gap, try a more targeted search, or escalate rather than guess. The fix may be better source coverage, better metadata, a different retrieval approach, or a human process. Adding more content alone rarely closes the gap.
 
-### Hard-to-verify answers
+### 4. Hard-to-verify answers
 
-An answer can be correct but cite no clear source, so users can't tell whether it comes from the approved policy. Clear titles and identifiers, source metadata, and citation design make verification easier. Higher-risk scenarios may also need human review.
+An answer can be correct but cite no clear source, so users can't tell whether it comes from the approved policy. This adds verification work for the agent and the user. Clear titles and identifiers, source metadata, and citation design make verification easier. Higher-risk scenarios may also need human review.
 
 > The studies cited here don't measure Copilot Studio consumption or answer quality. Treat them as reasons to test governance changes, and validate the effect against your own questions.
 {: .prompt-warning }
@@ -103,21 +96,11 @@ Consider the question, "What was customer X's revenue in Q2?" A governed table o
 
 A question often suggests useful metadata for narrowing a search. These examples illustrate the intent, not a filter configuration supported identically by every harness. Historical questions need an archive source that is deliberately included in the knowledge boundary, rather than access to an archive the agent cannot search.
 
-| Question | Filters the question implies |
+| Question | Filters it implies |
 |---|---|
-| "What is the hotel limit for a business trip to Canada?" | Region: Canada. Policy type: travel. Status: current. |
-| "Which security standard applies to the retail business unit?" | Business unit: retail. Policy type: security. Status: current. |
-| "What did the 2024 travel policy say about hotel limits?" | Policy type: travel. Effective date: 2024. Status: archived. |
-
-### Applying the practices to the HR agent
-
-Each source problem in the HR example maps to a practice and an expected effect. The effects below are what you would expect to see, not measured results. Validate them with the procedure in the next section.
-
-| Source problem | Work it creates | Practice applied | Expected effect | How to check |
-|---|---|---|---|---|
-| Five years of the travel and expense policy | Competing candidates, extra reasoning to find the version in force, and extra verification | Treat deprecation as a workflow. Archive earlier years and tag the version in force with a status of current. | Fewer competing candidates and a more direct answer path | Citations point to the policy in force. Search calls and files examined drop where the activity trace shows them. |
-| Several near-identical travel FAQs | Redundant evidence and small conflicts in the rates they quote | Deduplicate deliberately. Consolidate them into one FAQ owned by the travel policy owner. | A smaller, more consistent evidence set | Answers quote the same rates across repeated runs. |
-| A draft of next year's rates in the same library | Risk of quoting rates that are not yet in effect | Maintain the active knowledge boundary. Keep drafts out until their effective date and assign an owner to the policy. | Lower risk of grounding on unapproved content | The answer matches the expected answer, and the draft never appears as a citation. |
+| "What is the hotel limit for a trip to Canada?" | Region: Canada · Type: travel · Status: current |
+| "Which security standard applies to retail?" | Unit: retail · Type: security · Status: current |
+| "What did the 2024 travel policy allow for hotels?" | Type: travel · Year: 2024 · Status: archived |
 
 ## Measure the impact in your environment
 
@@ -125,15 +108,15 @@ Knowledge governance should be evaluated, not assumed. Compare the current knowl
 
 1. **Define the workload.** Select representative real questions, including policy exceptions, ambiguous requests, historical questions, and questions the agent should escalate. Record the expected answer and authoritative source for each. Fix the test identities and permissions so both versions can access equivalent evidence. For the HR agent, the set could include the current hotel limit for a domestic trip, the limit for a trip to Canada, what the 2024 policy allowed, and a request for an exception that should be escalated to an approver.
 2. **Change the knowledge boundary, not the whole agent.** Keep the harness, model, instructions, tools, and question set the same. Record which sources, document boundaries, or metadata changed. Run each question multiple times against both versions. Test fresh conversations separately from scripted follow-ups, using the same preceding turns for each follow-up sequence.
-3. **Compare quality and work together.** Record results per question and summarize repeated runs. Use the same timing method and workload size for both versions. Include failures and escalations rather than reporting only successful answers.
+3. **Compare quality and work together.** Record results per question and summarize repeated runs. Use the same timing method and workload size for both versions. Include failures and escalations rather than reporting only successful answers. For the travel example, check that citations point to the policy in force, that answers quote the same rates across repeated runs, and that the draft never appears as a citation.
 
-| What to compare | What to record | Where to find it |
-|---|---|---|
-| Answer quality | Correct policy, scope, and exceptions against the expected answer; whether escalation was appropriate | Your evaluation sheet, scored against the expected answers |
-| Grounding | Whether citations identify the intended authoritative source; relevant versus competing sources where visible | Citations in the agent's responses |
-| Retrieval work | Search calls and files examined where exposed by the available activity trace or telemetry | The agent's activity map or conversation transcript, where available |
-| Latency | Elapsed time to the completed answer, with the median and range across repeated runs | Your own timing method, applied the same way to both versions |
-| Usage | Available Copilot Credit consumption for equivalent workloads, with the aggregation level and reporting window recorded | Tenant consumption reporting through the Power Platform API, described below |
+Record these five measures for both versions:
+
+- **Answer quality.** Correct policy, scope, and exceptions against the expected answer, and whether escalation was appropriate. Score it in your evaluation sheet.
+- **Grounding.** Whether citations point to the intended authoritative source. Check the citations in the agent's responses.
+- **Retrieval work.** Search calls and files examined. Use the activity map or conversation transcript where available.
+- **Latency.** Time to the completed answer, with the median and range across repeated runs. Apply the same timing method to both versions.
+- **Usage.** Copilot Credit consumption for equivalent workloads, with the aggregation level and reporting window. Use tenant reporting through the Power Platform API, described below.
 
 Don't treat the number of citations as a count of retrieval calls, or infer token usage from document size. If a metric isn't exposed, mark it as unavailable. Collect user satisfaction separately through a pilot with the same questions or tasks.
 
