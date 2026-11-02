@@ -20,11 +20,11 @@ Two questions follow quickly:
 1. **Can my existing standard agent use a new GitHub Copilot harness agent** without being rebuilt?
 2. **Can my GitHub Copilot harness agent call another team's agent** in a different environment, without copying it into mine?
 
-Both work today, through the [MCP and A2A channels](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/publication-channels-mcp-agent-to-agent) that every GitHub Copilot harness agent exposes. This post is the configuration I used to get each one working **when both the caller and the target are Copilot Studio agents**: the OAuth values, the redirect URI, the connection, and the descriptions the calling agent routes on.
+Both work today, through the [MCP and A2A channels](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/publication-channels-mcp-agent-to-agent) that every GitHub Copilot harness agent exposes. This post is the configuration I used to get each one working **when both the caller and the target are Copilot Studio agents**: the OAuth values, the redirect URI, the connection, routing, and what other users need before they can use it.
 
 If you're calling an agent from your own app or script instead, CATBOT's [I Read the MCP and A2A Docs So Adi Didn't Have To]({% post_url 2026-10-29-grumpy-protocol-clients %}) covers the Python clients and Entra sign-in.
 
-> The MCP and A2A channels are in preview. Everything below was tested in two tenants in October 2026, and details may change before general availability.
+> The MCP and A2A channels are in preview. I tested these walkthroughs in two tenants, and I call out anything I didn't test. Details may change before general availability.
 {: .prompt-warning }
 
 ## How the pieces fit
@@ -42,7 +42,7 @@ Follow [Prerequisite: Create an app registration](https://learn.microsoft.com/en
 - **Only the called agent needs an Early environment.** The caller can sit in a Standard release environment. My callers were in the default environment.
 - **Only the caller registers.** The called agent's endpoint is protected by the Copilot Studio channel API, which already exists in your tenant.
 - **The API name varies.** The channel API may appear as *Microsoft Copilot Studio Agent as MCP channel* or *Microsoft Copilot Studio Agent MCP and A2A channels*. Searching by its application ID, `6f46e6ed-07bf-4616-80f0-47546850f654`, finds it either way.
-- **Consent is per protocol.** User consent is enough, but consenting to the MCP permission doesn't cover A2A. Each needs its own.
+- **Consent is per protocol.** User consent worked in my test tenants, but your tenant's consent policy may require admin approval. Consenting to the MCP permission doesn't cover A2A; each needs its own.
 - **Callers get the published version.** A saved but unpublished change in the called agent isn't served.
 
 And here's why the setup looks the way it does:
@@ -66,10 +66,10 @@ A2A:  https://api.powerplatform.com/copilotstudio-a2a/tenants/{tenantId}/environ
 Card: {A2A URL}/.well-known/agent-card.json
 ```
 
-Opening a dialog doesn't switch anything on: it only shows the URL. The A2A dialog also takes **skills**, a name and description for each thing the agent does, and those are saved and published in the agent card.
+Opening a dialog doesn't switch anything on: it only shows the URL. The A2A dialog also takes **skills**, a name and description for each thing the agent does, and those are saved with the agent. In my tests they appeared in the full agent details that signed-in clients read, not on the public agent card.
 
 ![The A2A client dialog showing the agent's A2A URL, agent card URL, and one skill named hr-policy-questions](/assets/posts/call-ghcp-harness-agents-mcp-a2a/a2a-endpoint-dialog.png){: .shadow w="700" }
-_The A2A dialog: the endpoint, the agent card URL, and the skills published in the agent card._
+_The A2A dialog: the endpoint, the agent card URL, and the agent's skills._
 
 > The [official docs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/publication-channels-mcp-agent-to-agent) describe the same entries under **Channels → Add a channel → MCP client / A2A client**, and you may see them there instead. Either way, the called agent must be in an Early release environment. Also, the Publish dialog may warn that the agent "won't run until you add a trigger". MCP and A2A calls worked anyway.
 {: .prompt-info }
@@ -85,12 +85,12 @@ Your production standard agent gets the new agent as one more tool. Nothing abou
 
 ### 2. Add the MCP tool to the standard agent
 
-In the standard agent, go to **Tools → Add tool → Add new → MCP**, which opens **Add a Model Context Protocol server**, as described in [Add an existing MCP server to your agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent). Fill in:
+In the standard agent, go to **Tools → Add a tool**, and under **Create new** choose **Model Context Protocol**. That opens **Add a Model Context Protocol server**, as described in [Add an existing MCP server to your agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent). Fill in:
 
 | Field | Value |
 |---|---|
 | Server name | A name for the called agent, such as *HR Policy* |
-| Server description | When the orchestrator should call it (see step 5) |
+| Server description | What the called agent does (see step 5) |
 | Server URL | The **MCP** URL from the called agent |
 | Authentication | **OAuth 2.0**, then change **Type** from the default **Dynamic discovery** to **Manual** |
 
@@ -114,7 +114,7 @@ _The MCP wizard with **Manual** OAuth. The tenant ID is replaced with `{tenantId
 
 1. When you create the tool, Copilot Studio shows a redirect URL that starts with `https://global.consent.azure-apim.net/redirect/`. Each connector gets its own.
 2. In the app registration, go to **Authentication → Add Redirect URI** (**Add a platform** in the older experience), choose **Web**, and paste it exactly as shown.
-3. Back in Copilot Studio, create the connection and sign in. If the user hasn't consented to `MCS.InvokeAsMCP` yet, Entra asks them to. If an admin has already granted consent for the tenant, sign-in completes without a prompt.
+3. Back in Copilot Studio, create the connection and sign in. If the user hasn't consented to `MCS.InvokeAsMCP` yet, Entra asks them to. If an admin has already granted tenant-wide consent, users don't see that permission-consent prompt.
 
 ![The app registration's Authentication page with a Web redirect URI that starts with https://global.consent.azure-apim.net/redirect/](/assets/posts/call-ghcp-harness-agents-mcp-a2a/entra-web-redirect.png){: .shadow w="700" }
 _The connector's redirect URL added to the app registration as a **Web** redirect URI._
@@ -126,27 +126,38 @@ _The standard agent with the GitHub Copilot harness agent added as an MCP tool. 
 
 ### 5. Tell the calling agent when to use it
 
-This is the step that's easy to skip. The `send-message` tool's own description is generated from the called agent's **name** only: "Send a message to the *HR Policy* agent and receive its reply." It says nothing about what the agent can do.
+The `send-message` tool's own description is generated from the called agent's name: "Send a message to the *HR Policy* agent and receive its reply." It doesn't say what the agent covers, so it's tempting to assume the **Server description** is what routing depends on. I compared the two:
 
-So the routing information has to come from the calling side. The **Server description** from step 2 is what the orchestrator uses to decide whether to call the server, so make it specific. For example:
+- **Specific description** ("Answers questions about leave, travel, expenses and other HR policies…"), server name *HR Policy*.
+- **Generic description** ("Model Context Protocol server endpoint."), server name *HR Policy MCP*, because the old name was still reserved after I deleted the first tool.
 
-```text
-Answers questions about leave, travel, expenses and other HR policies.
-Use it for any question about what the HR policy allows or requires.
-```
+Everything else was the same: same standard agent with no instructions, same called agent, same `send-message` tool, and a new test session for each question in the generic run. With either description, "How many weeks of parental leave do I get?" and "How many days of annual leave can I carry over?" invoked the tool. The activity trace showed whichever description was configured, but these tests don't tell you how much it contributed to routing. They do show that a detailed description wasn't required for these two questions.
 
-You can also say when to use it in the standard agent's instructions, especially if it has other tools that overlap. For example:
+Routing isn't guaranteed, though. In one run, "Can I book premium economy for a 7-hour flight?" went to the agent's default web search instead of the tool. If your agent has web search, knowledge or other tools that overlap, say when to use the called agent in the standard agent's instructions:
 
 ```text
 For questions about leave, travel, expenses or other HR policies, use the
-HR Policy tool. Don't answer HR policy questions from general knowledge.
+HR Policy tool. Don't answer HR policy questions from general knowledge
+or web search.
 ```
 
-The Server description alone was enough in my tests. With no instructions at all, the standard agent called the tool for "How many weeks of parental leave do I get?", which doesn't mention HR Policy anywhere. The activity trace showed the orchestrator matching the question to the server description, then calling `send-message` with the question rephrased. Still, test with the questions your users actually ask, especially if other tools cover similar ground.
+Still write a **Server description** that says what the agent covers. It costs nothing, and it may matter more when several tools compete. Get it right the first time: it's copied into the agent when you add the tool, and editing the connector afterwards doesn't change it. To change it, you remove the tool and add it again.
 
 ### 6. Test it
 
-Ask the standard agent something only the called agent knows. The activity trace shows **Used tool: send-message**, and the reply came back in about 9 seconds in my tests. Follow-up questions keep their context, because Copilot Studio passes the returned `conversationId` back for you. If MCP connectors are new to you, [Five Minutes to Your First MCP Connector]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}) walks through the basics.
+Ask the standard agent something only the called agent knows. The activity trace shows **Used tool: send-message**, and the reply came back in about 9 to 17 seconds in my tests. Follow-up questions keep their context, because Copilot Studio passes the returned `conversationId` back for you. If MCP connectors are new to you, [Five Minutes to Your First MCP Connector]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}) walks through the basics.
+
+### 7. Let other people use it
+
+The tool uses **End user credentials** by default, so each person who chats with the standard agent calls the GitHub Copilot harness agent as themselves. I published the standard agent to Microsoft 365 Copilot and tested it with a second user who wasn't the maker and had no connection to the connector. Three things had to be shared with that user:
+
+- **The standard agent**, as for any published agent.
+- **The custom connector** the MCP wizard created (Power Apps or Power Automate → **Custom connectors** → **Invite another user**, with permission to use it). Without it, the user's connection attempt failed with *"does not have ReadAccess … connector"*.
+- **The called GitHub Copilot harness agent.** Until it was shared, the user's questions got a generic answer instead of the HR Policy reply.
+
+The first time the user asks something that needs the tool, they don't get a sign-in prompt in the conversation. They get a message saying *"Let's get you connected first… Open connection manager to verify your credentials"*, with **Retry** and **Cancel**. The link opens a **Manage your connections** page where they select **Connect** and **Submit**, then go back and select **Retry**. The page has to be opened by that user: when I opened it signed in as the maker, it said *"User did not have access to the conversation."* Once the second user had connected under their own account and selected **Retry**, the standard agent answered with the called agent's reply ("26 weeks of fully paid parental leave… [hr-v1]"). If the app registration doesn't have admin consent, Entra asks each person to consent to `MCS.InvokeAsMCP` when they first connect (I saw that prompt as the maker); granting admin consent removes it.
+
+That connection-manager flow is the tested baseline. The alternative I didn't test is on-behalf-of (OBO) sign-in for the connector, described in [Configure OBO authentication for custom connectors](https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-custom-connector-on-behalf-of). It's more setup than this walkthrough uses: the connector's app registration exposes its own scope (for example `access_as_user`) and lists the Azure API Connections client (`fe053c5f-3692-4f14-aef2-ee34fc081cae`) as an authorized client application, the connector's **Security** tab has **Enable on-behalf-of login** turned on, and the connector is shared with end users. Learn describes the result as an in-conversation consent prompt instead of a separate sign-in. I haven't verified that it works with the connector the MCP wizard creates, so treat it as something to test rather than a fix.
 
 ## Scenario 2: GitHub Copilot harness agent → GitHub Copilot harness agent across environments (A2A)
 
@@ -158,12 +169,16 @@ Add the delegated permission **`MCS.InvokeAsA2A`**. You can reuse the same regis
 
 ### 2. Add the A2A agent to the calling agent
 
-1. In the calling agent, go to **Connected agents → + Add → Add A2A agent**, as described in [Add an A2A agent as a connected agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/add-agent-connected).
+1. In the calling agent, go to **Connected agents → + Add → Add A2A agent**, as described in [Add an Agent2Agent (A2A) agent as a connected agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/add-agent-to-agent).
 2. Paste the called agent's **agent card URL**.
 3. Under **Get the name and description from**, keep **The agent's full details (Recommended)**. Those details are read after you connect, so the form doesn't ask for a name or description yet.
 4. Choose **OAuth 2.0**. Copilot Studio usually fills in the **Authorization URL**, **Token URL**, **Refresh token URL** and **Scopes** from the card. If they're empty, enter the same Entra URLs as in Scenario 1.
 5. Enter the client ID and secret.
-6. Check **Scopes**. The value from the card has `MCS.InvokeAsA2A` but not `offline_access`. Add `offline_access`, as in Scenario 1, so the connection can refresh its token.
+6. Check **Scopes**. The value from the card has `MCS.InvokeAsA2A` but not `offline_access`. Add `offline_access`, as in Scenario 1, so the connection can refresh its token. The full value is:
+
+   ```text
+   https://api.powerplatform.com/copilotstudio-a2a/MCS.InvokeAsA2A offline_access
+   ```
 
 ![The Connect to an A2A agent form with OAuth 2.0 selected, the authorization, token and refresh token URLs filled in, and offline_access added to the MCS.InvokeAsA2A scope](/assets/posts/call-ghcp-harness-agents-mcp-a2a/add-a2a-agent.png){: .shadow w="650" }
 _The A2A form with `offline_access` added to the scope. IDs are replaced with placeholders here._
@@ -181,14 +196,14 @@ Select **Next** to reach **Review and add**, where the name and description come
 ![The Review and add step showing the name HR Policy and the generic description "Microsoft Copilot Studio agent 'HR Policy'." marked From the agent](/assets/posts/call-ghcp-harness-agents-mcp-a2a/a2a-review-description.png){: .shadow w="650" }
 _The description that came from the agent. Replace it before you select **Add to agent**._
 
-Copilot Studio [routes to a connected agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/add-agent-connected#how-the-orchestrator-routes-to-connected-agents) based on its name and description, the user's message and conversation context, and the calling agent's instructions. So replace the description with one that says when to use the agent, for example:
+Copilot Studio [routes to an A2A agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/add-agent-to-agent#how-the-orchestrator-routes-to-the-a2a-agent) based on its name and description, the user's message and conversation context, and the calling agent's instructions. So replace the description with one that says when to use the agent, for example:
 
 ```text
 HR policy agent owned by the People team. Answers questions about leave,
 travel, expenses and other HR policies. Use it for any HR policy question.
 ```
 
-That description was enough in my test. With no instructions in the calling agent, "How many weeks of parental leave do I get?" went to HR Policy. If the calling agent has its own instructions or overlapping tools, add a line that points HR policy questions to the connected agent, in the same way as the MCP example above.
+With that description and no instructions in the calling agent, "How many weeks of parental leave do I get?" went to HR Policy. That confirmed delegation worked with this configuration; I didn't isolate the description's contribution. If the calling agent has its own instructions or overlapping tools, add a line that points HR policy questions to the connected agent, in the same way as the MCP example above.
 
 ### 5. Test it
 
@@ -204,7 +219,7 @@ If the two agents are both GitHub Copilot harness agents in the **same environme
 
 ## How the two channels differ
 
-Both channels invoke the **same published agent**. Its capabilities and answers don't change with the channel. Cross-environment access, calling an agent another team owns, delegated identity, hooks and billing work the same way for both. What changes is how the caller discovers the agent, calls it, and receives the reply:
+Both channels invoke the **same published agent**. Its capabilities and answers don't change with the channel. Cross-environment access, calling an agent another team owns, delegated identity, hooks and billing work the same way for both, and credits are consumed in the called agent's environment. What changes is how the caller discovers the agent, calls it, and receives the reply:
 
 | | MCP | A2A |
 |---|---|---|
@@ -221,6 +236,9 @@ A few of these deserve a sentence each:
 - **Streaming is a channel capability.** The A2A channel streams replies through `SendStreamingMessage`, while MCP's `send-message` returns the completed reply. That matters most to custom clients; the [CATBOT post]({% post_url 2026-10-29-grumpy-protocol-clients %}) shows both.
 - **Discovery isn't routing.** The agent card and its skills are metadata that A2A clients use to discover the agent. Copilot Studio's routing uses the connected agent's name and description, the conversation, and the calling agent's instructions. That's why step 4 of Scenario 2 matters even if you've written good skills.
 
+> [Agent hooks](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/hooks-overview) on the called agent fire for both channels. `metadata.channel` is `mcs-agent-as-mcp` or `mcs-agent-as-a2a`, and `userAadObjectId` is the signed-in caller, so a hook can treat agent callers differently from people chatting directly. If you haven't used hooks yet, start with [Hooks in Copilot Studio]({% post_url 2026-10-12-hooks-in-copilot-studio %}).
+{: .prompt-tip }
+
 ## Things that tripped me up
 
 - **No triggers? Check the release cycle.** Outside an Early release environment, the **MCP protocol** and **A2A protocol** triggers don't appear. If you build the URL yourself for an agent in a Standard release environment, every call returns HTTP 400, and Copilot Studio shows the caller only *"HTTP 400. Check the server's configuration"*, not the server's message, which says the endpoint isn't enabled for that environment.
@@ -229,19 +247,13 @@ A few of these deserve a sentence each:
 - **"Out of credits" looks like an answer.** When the called agent's environment had no credits, the reply was a normal message saying so, not an error. My calling agent noticed, but check your traces.
 - **End-user tools run as the caller.** In the called agent, a tool set to *End user account* ran with the caller's identity and no consent prompt, even when that user had no connection in the called agent's environment.
 
-## Governance
-
-- **Hooks still run.** [Agent hooks](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/hooks-overview) fire for MCP and A2A calls, and `metadata.channel` is `mcs-agent-as-mcp` or `mcs-agent-as-a2a`, so a hook can treat agent callers differently from people chatting directly. If you haven't used hooks yet, start with [Hooks in Copilot Studio]({% post_url 2026-10-12-hooks-in-copilot-studio %}).
-- **Calls run as the user.** The signed-in caller's Entra identity appears as `userAadObjectId` in hook metadata.
-- **Consumption follows the called agent.** Credits are consumed in the called agent's environment, so its owners plan capacity there.
-- **Access is controlled in Entra.** The app registration, consent, and the user's access to the agent decide who can call. There's no anonymous access.
-
 ## Key takeaways
 
 - A **standard** agent can use a GitHub Copilot harness agent today as an **MCP tool**, without being rebuilt.
 - A **GitHub Copilot harness** agent can call another team's agent in a **different environment** as an **A2A connected agent**, without copying it.
 - Both need an Early environment for the called agent, an app registration with a client secret, a Web redirect URI per connector, and **Manual** OAuth.
-- The calling side owns routing. Write the MCP server description or the connected agent's description yourself, because the defaults describe only the agent's name.
+- In my MCP tests, routing worked with a specific or a generic Server description. Use clear names and descriptions, and add a line to the calling agent's instructions when web search or other tools overlap.
+- In the published standard → GitHub Copilot harness (MCP) scenario, other users need access to both agents and the custom connector, then create their connection once through the connection manager.
 - The channels differ in who can call, protocol version, streaming and discovery metadata, not in what the called agent can do.
 
 Which of your production agents would you connect to a GitHub Copilot harness agent first? Let me know in the comments.
