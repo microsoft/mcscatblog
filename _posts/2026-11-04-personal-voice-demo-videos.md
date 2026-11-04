@@ -156,7 +156,7 @@ Show every prompt fully sent, speed up the waits instead of cutting them.
 
 ### What I learned narrating six minutes in my own voice
 
-- **Leave the language tag out.** With no `<lang>` element, the service detects the language per sentence and keeps your own accent. Wrap the text in `<lang xml:lang="en-US">` and you instantly sound American. Use `<lang>` on purpose for foreign words: my narration says *phở bò tái* with a Vietnamese pronunciation inside an English sentence.
+- **Leave the language tag out.** With no `<lang>` element, the service detects the language per sentence and keeps your own accent. Wrap the text in `<lang xml:lang="en-US">` and you instantly sound American. Use `<lang>` on purpose for foreign words: my narration says *phở bò tái* (beef noodle soup with rare steak) with a Vietnamese pronunciation inside an English sentence.
 - **Names need help.** The model read my name as "FAI-lay" instead of "fi-LAI", and "my mom" came out as "mi mom". Dragon models don't support `<phoneme>`, but they do support `<sub alias="...">`, so for the next video I'm respelling the tricky words phonetically. Whatever you try, listen before you build.
 - **Write for the ear.** Short sentences, no symbols, no parentheses. The same rules as the [podcast script skill]({% post_url 2026-07-28-podcast-script-skill %}) apply here.
 - **Re-rendering is the superpower.** When I moved the live demo from Copilot Studio to Cowork, I edited a handful of script lines and rebuilt the whole video. No microphone, no retake.
@@ -215,7 +215,7 @@ _The waiting overlay: each step completes on a real server event, the jokes rota
 When the audio is ready, the overlay fades out and a real play button appears. The waveform is drawn from the decoded audio, and the progress follows the actual playback inside Cowork.
 
 ![The Voice Twin player in Cowork playing a Vietnamese voice note, two seconds in](/assets/posts/personal-voice-demo-videos/widget-playing.png){: .shadow }
-_A real click, real playback: my voice asking my mom for phở bò tái, with double bò viên._
+_A real click, real playback: my voice asking my mom for phở bò tái (beef noodle soup with rare steak), with double bò viên (double beef meatballs)._
 
 True story: I played that one to my mom. She didn't believe it was me. Apparently my Vietnamese has never been this good.
 
