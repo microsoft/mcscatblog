@@ -176,6 +176,8 @@ The idea: if my voice is just an API, I can make it a tool. One small [MCP serve
 > **Why Cowork and not a Copilot Studio agent?** The play button. Cowork renders [MCP Apps](https://github.com/modelcontextprotocol/ext-apps) widgets inside the conversation, and Copilot Studio agents don't render them yet: today Copilot Studio [supports MCP tools and resources](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agent-extend-action-mcp). Everything else in this setup already works there, the same MCP server and the same voice. For now, the only missing piece is the widget.
 {: .prompt-info }
 
+The whole setup has three pieces. The voice lives in Azure. A small MCP server wraps it in one tool. A Cowork plugin points at that server and renders the result as a widget.
+
 ![Architecture: Azure AI Speech Personal Voice, a Voice Twin MCP server with one tool, and a Copilot Cowork plugin with a widget](/assets/posts/personal-voice-demo-videos/architecture.png){: .shadow }
 _Three pieces: the voice lives in Azure, MCP turns it into a tool, Cowork renders it with a widget._
 
@@ -244,9 +246,9 @@ The plugin is a regular app package with an `agentConnectors` entry pointing at 
 A few things that cost me time:
 
 - **Name the plugin in the prompt.** I also had a Copilot Studio agent called Voice Twin. Without "Use the Voice Twin plugin", Cowork picked the agent and politely gave up.
-- **Re-enable it before a demo.** Custom plugins can come back disabled in a fresh browser session. Check **Agents & Plugins** first; my recorder also checks that the plugin answers off camera before it starts recording.
 - **Publish the frame size yourself.** Cowork keeps the widget hidden until it knows its height, so send the size without waiting for an animation frame.
 - **Protect the endpoint.** Anyone who can call this tool can speak as you. Use Entra authentication (`OAuthPluginVault`) and keep the speaker profile ID on the server.
+- **Re-enable it before a demo.** Custom plugins can come back disabled in a fresh browser session. Check **Agents & Plugins** first; my recorder also checks that the plugin answers off camera before it starts recording.
 
 ![Agents and Plugins page in Copilot Cowork with the Voice Twin plugin switched on](/assets/posts/personal-voice-demo-videos/cowork-plugins.png){: .shadow }
 _Voice Twin in Agents & Plugins. Check the switch before every demo._
