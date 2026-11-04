@@ -5,7 +5,7 @@ date: 2026-11-04
 categories: [copilot-studio, mcp]
 tags: [text-to-speech, azure-speech, ssml, skills, mcp, mcp-server, plugin, productivity]
 description: "Use Azure AI Speech Personal Voice as the voiceover for agent demo videos recorded with the Clipchamp Narrated Demo Video skill, then expose the same voice as an MCP tool with an interactive widget in Copilot Cowork."
-author: phnguy
+author: [phnguy, AndrewHessMSFT]
 agent_edition: both
 image:
   path: /assets/posts/personal-voice-demo-videos/header.png
