@@ -27,7 +27,7 @@ Then, because I couldn't help myself, I wrapped that voice in an MCP server and 
 
 {% include embed/video.html
   src='https://github.com/phnguy/blog-videos/releases/download/personal-voice-demo-videos-v1/personal-voice-demo-videos-1080p.mp4'
-  poster='/assets/posts/personal-voice-demo-videos/header.png'
+  poster='/assets/posts/personal-voice-demo-videos/video-poster.png'
   title='Video: I cloned my voice, turned it into an MCP tool and plugged it into Copilot Cowork'
   autoplay=false
   loop=false
