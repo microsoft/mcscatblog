@@ -173,7 +173,7 @@ The narration is the practical part. This one is the fun part, and it's a lab ex
 
 The idea: if my voice is just an API, I can make it a tool. One small [MCP server]({% post_url 2026-04-10-hello-world-mcp-copilot-studio %}) exposes it, and any MCP client can call it.
 
-> **Why Cowork and not a Copilot Studio agent?** The play button. Cowork renders [MCP Apps](https://github.com/modelcontextprotocol/ext-apps) widgets inside the conversation. Copilot Studio agents don't render MCP widgets yet, so today a real player in the chat means Cowork. The same server still works as a regular tool in Copilot Studio, as shown at the end of this section.
+> **Why Cowork and not a Copilot Studio agent?** The play button. Cowork renders [MCP Apps](https://github.com/modelcontextprotocol/ext-apps) widgets inside the conversation, and Copilot Studio agents don't render them yet: today Copilot Studio [supports MCP tools and resources](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agent-extend-action-mcp). Everything else in this setup already works there, the same MCP server and the same voice. For now, the only missing piece is the widget.
 {: .prompt-info }
 
 ![Architecture: Azure AI Speech Personal Voice, a Voice Twin MCP server with one tool, and a Copilot Cowork plugin with a widget](/assets/posts/personal-voice-demo-videos/architecture.png){: .shadow }
@@ -251,7 +251,7 @@ A few things that cost me time:
 ![Agents and Plugins page in Copilot Cowork with the Voice Twin plugin switched on](/assets/posts/personal-voice-demo-videos/cowork-plugins.png){: .shadow }
 _Voice Twin in Agents & Plugins. Check the switch before every demo._
 
-In Copilot Studio, I added the same MCP server as a tool to an agent in the GitHub Copilot harness. Without widget support, the tool falls back to a voice-note image that links to a private player page, signed and valid for ten minutes. It works, but you leave the chat to press play.
+In Copilot Studio, I added the same MCP server as a tool to an agent in the GitHub Copilot harness. The server, the voice and the audio are the same; only the widget is missing. So the tool falls back to a voice-note image that links to a private player page, signed and valid for ten minutes. It works, but you leave the chat to press play.
 
 ## The rules of the road
 
