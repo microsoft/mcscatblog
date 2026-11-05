@@ -3,6 +3,7 @@ layout: post
 agent_edition: github-copilot
 title: "Hooks in Copilot Studio: Give Your Agent More Than Instructions"
 date: 2026-10-12
+pin: true
 categories: [copilot-studio, automation]
 tags: [copilot-studio, github-copilot, hooks, workflows, governance, orchestration]
 description: "Learn how hooks in Copilot Studio extend agent behavior with event-driven workflows that add context, transform data, and check actions before execution."
