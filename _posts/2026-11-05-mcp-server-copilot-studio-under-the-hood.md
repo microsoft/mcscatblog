@@ -25,7 +25,7 @@ The demo is a phở kitchen. The agent reads the menu and places orders, includi
 ## Watch the walkthrough
 
 {% include embed/video.html
-  src='https://github.com/phnguy/blog-videos/releases/download/mcp-server-copilot-studio-v1/mcp-server-copilot-studio-1080p.mp4'
+  src='https://github.com/phnguy/blog-videos/releases/download/mcp-server-copilot-studio-v2/mcp-server-copilot-studio-1080p.mp4'
   poster='/assets/posts/mcp-server-copilot-studio-under-the-hood/video-poster.png'
   title='Video: from a local MCP server to a Copilot Studio agent, OAuth included, with the server log on screen'
   autoplay=false
@@ -133,7 +133,7 @@ devtunnel host -p 8765 --allow-anonymous
 Two things to know:
 
 - **Allow the tunnel hostname in the server.** The Python SDK rejects requests whose `Host` header isn't on its allow list, to protect local servers against DNS rebinding. Without `PUBLIC_HOST` in `allowed_hosts`, every call through the tunnel gets `421 Invalid Host header`.
-- **Use Streamable HTTP.** Copilot Studio [no longer supports the SSE transport](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#supported-transports).
+- **Use Streamable HTTP.** That's the name of the [MCP transport](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http), and it runs fine over HTTPS: the tunnel adds TLS in front, your server keeps speaking plain HTTP on `localhost`, and Copilot Studio calls the `https://` URL. Copilot Studio [no longer supports the SSE transport](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#supported-transports).
 
 A tunnel is fine for a demo, but once the server needs to stay up, move it to Azure instead. The server is a plain ASGI app, so an [Azure App Service](https://learn.microsoft.com/en-us/azure/app-service/overview) Linux web app (Python runtime, `uvicorn` or `gunicorn` as the start command) hosts it with a stable HTTPS endpoint and no tunnel to babysit. Keep `allowed_hosts` pointed at the App Service's `*.azurewebsites.net` hostname (or your custom domain) the same way you did for the tunnel.
 
@@ -279,7 +279,7 @@ _Track order appeared after a server restart. No connector edit, no new action._
 
 ## Checklist before you ship
 
-- **Streamable HTTP over HTTPS**, with the URL ending in `/mcp`.
+- **The Streamable HTTP transport, on an `https://` URL** that ends in `/mcp`.
 - **Clear tool names and docstrings**, and simple input schemas. They're your prompt.
 - **A unique server name.** It becomes the connector name in the environment.
 - **OAuth for anything that acts for a user.** Prefer **Dynamic (with discovery)** if your identity provider supports dynamic client registration, and **Manual** if it doesn't.
