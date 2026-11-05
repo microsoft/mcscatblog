@@ -135,6 +135,8 @@ Two things to know:
 - **Allow the tunnel hostname in the server.** The Python SDK rejects requests whose `Host` header isn't on its allow list, to protect local servers against DNS rebinding. Without `PUBLIC_HOST` in `allowed_hosts`, every call through the tunnel gets `421 Invalid Host header`.
 - **Use Streamable HTTP.** Copilot Studio [no longer supports the SSE transport](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent#supported-transports).
 
+A tunnel is fine for a demo, but once the server needs to stay up, move it to Azure instead. The server is a plain ASGI app, so an [Azure App Service](https://learn.microsoft.com/en-us/azure/app-service/overview) Linux web app (Python runtime, `uvicorn` or `gunicorn` as the start command) hosts it with a stable HTTPS endpoint and no tunnel to babysit. Keep `allowed_hosts` pointed at the App Service's `*.azurewebsites.net` hostname (or your custom domain) the same way you did for the tunnel.
+
 ## Step 3: Add it to an agent
 
 I recorded this in an agent built with the GitHub Copilot harness. The Standard harness has the same [MCP onboarding wizard](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent) with the same options.
