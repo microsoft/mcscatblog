@@ -47,6 +47,26 @@ How to contribute:
 
 Learn about writing new posts in Chirpy: [Writing a New Post](https://chirpy.cotes.page/posts/write-a-new-post/)
 
+## GitHub Actions maintenance
+
+Workflow actions are pinned to full commit SHAs, with release versions in comments.
+Verify replacement SHAs against the upstream action repository and retain these comments
+when updating actions. Pins prevent mutable action tags from changing the selected code;
+they do not freeze hosted runner images, downloaded tools, or nested action references.
+
+Dependabot checks GitHub Actions weekly and groups version updates into one pull request.
+The seven-day cooldown delays newly released versions until an eligible scheduled check;
+it does not delay security updates. GitHub Actions supports `default-days`, not the
+SemVer-specific cooldown options. See the [Dependabot options reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#cooldown).
+Updates still need review and merging, including compatibility checks for major upgrades.
+This configuration does not maintain Ruby gems or npm packages.
+
+The PR preview check builds Jekyll without production secrets. Dependabot PRs do not need
+production secrets, and preview comments run in a separate workflow. Production deployment
+also checks site links, updates Algolia, and deploys to GitHub Pages. Changes limited to
+`.github/**` and `README.md` do not trigger deployment automatically; after merging workflow
+updates, run **Build and Deploy** manually on `main` and verify it succeeds.
+
 ## Theme customizations (read before upgrading Chirpy)
 
 This site is built on the **upstream `jekyll-theme-chirpy` gem** (see `Gemfile`). The
