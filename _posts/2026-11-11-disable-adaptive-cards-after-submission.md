@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Disabling Adaptive Cards After Submission in Copilot Studio Agents"
-date: 2026-06-26
+date: 2026-11-11
 categories: [copilot-studio, tutorial]
 agent_edition: standard
 tags: [adaptive-cards, teams, webchat, universal-actions, user-experience, action-execute, bot-framework]
