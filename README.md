@@ -105,7 +105,7 @@ theme's `assets/feed.xml` when upgrading Chirpy.
 ### Agent harness edition pill
 
 Shows a small pill under the post title indicating which Copilot Studio build harness a
-post is about: the **Standard harness** or the **GitHub Copilot harness**. **Every post
+post is about: the **Standard harness** or the **Microsoft Copilot harness**. **Every post
 must set this field — the build fails otherwise** (enforced by
 `_plugins/validate-agent-edition.rb`). Set it in front matter:
 
@@ -114,10 +114,12 @@ agent_edition: standard   # one of: standard | github-copilot | both
 ```
 
 - `standard` — applies to Standard-harness agents (includes generative orchestration)
-- `github-copilot` — applies to GitHub Copilot (GHCP) harness agents; renders a "GHCP harness" pill
+- `github-copilot` — applies to Microsoft Copilot harness agents; renders a "Microsoft Copilot harness" pill
 - `both` — applies to both; renders a neutral "Both harnesses" pill
 - `classic` / `modern` — **deprecated aliases** for `standard` / `github-copilot`, still
   accepted so older drafts don't break; prefer the canonical values
+
+The front-matter value remains `github-copilot`; only the display name has changed.
 
 | File | What it is | Upgrade risk |
 | ---- | ---------- | ------------ |
