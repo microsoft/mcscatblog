@@ -87,22 +87,24 @@ Flag and correct non-canonical harness names to these canonical ones:
 | --- | --- | --- |
 | **Copilot Chat harness** | Customize Microsoft 365 Copilot with your organization's knowledge. | "Chat agent", "DA", "classic/old Copilot Studio" |
 | **Standard harness** | Rule-based conversational agents with predefined topics and flows. | "Basic orchestration", "Advanced", "Samba", "classic/old Copilot Studio" |
-| **GitHub Copilot harness** | Optimize your business processes with an agentic build experience. | "New Copilot Studio", "Dracarys" |
+| **Microsoft Copilot harness** | Optimize your business processes with an agentic build experience. | "GitHub Copilot harness", "GHCP harness", "New Copilot Studio", "Dracarys" |
 
 Additional checks:
 
 - Harnesses are build choices, not separate products.
 - Use the term "harness" consistently; avoid alternates such as "orchestrator".
 - Avoid scale labels such as Basic, Advanced, Premium, or Ultimate; they don't scale as new harnesses are added.
-- Context note (keep any cost/licensing phrasing factual and brief): as of 8/3, Copilot Studio supports building agents with a new GitHub Copilot harness (GA); agents built with it are billed on a usage basis and are not eligible for inclusion in Microsoft 365 Copilot licensing.
+- Context note (keep any cost/licensing phrasing factual and brief): as of 8/3, Copilot Studio supports building agents with a new Microsoft Copilot harness (GA); agents built with it are billed on a usage basis and are not eligible for inclusion in Microsoft 365 Copilot licensing.
 
 **Front-matter `agent_edition` taxonomy** (established by PR #352, "Retire classic/modern edition naming"). This field drives the under-title pill rendered in `_layouts/post.html` and validated by `_plugins/validate-agent-edition.rb`. Canonical values and what they render:
 
 - `standard` → "Standard harness" pill
-- `github-copilot` → "GHCP harness" pill
+- `github-copilot` → "Microsoft Copilot harness" pill
 - `both` → "Both harnesses" pill
 
 Deprecated aliases `classic` → `standard` and `modern` → `github-copilot` are still accepted but should be migrated. Review check: every post sets a valid `agent_edition`, and posts using `classic`/`modern` should be updated to the canonical value.
+
+The front-matter value remains `github-copilot`; use Microsoft Copilot harness in prose and display labels.
 
 ### Output the Review
 
