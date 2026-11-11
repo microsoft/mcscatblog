@@ -3,6 +3,8 @@ layout: post
 agent_edition: both
 title: "Where Are Your Copilot Credits Going? Build a Tenant-Wide View with the Power Platform API"
 date: 2026-08-25
+published: false
+pin: true
 categories: [copilot-studio, governance]
 tags: [copilot-studio, governance, billing, licensing, cost management, power-platform-api, dataverse]
 description: "Use the Power Platform API to retrieve daily Copilot Credit consumption per agent, persist it in Dataverse, and build tenant-wide dashboards."
