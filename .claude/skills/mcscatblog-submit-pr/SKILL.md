@@ -7,6 +7,10 @@ description: Commit current changes and create a pull request for review
 
 Commit the current changes on a feature branch and create a PR for review.
 
+## Backlog Tracking
+
+Use only the SharePoint **CAPE Patterns & Practices Backlog** list, never the former Loop backlog. Follow the [backlog source-of-truth rules](../mcscatblog-review-post/SKILL.md#backlog-source-of-truth) for the list URL, item matching, field names, and verified updates.
+
 ## Steps
 
 1. Run `git status` to see what's changed. If there are no changes, tell the user and stop.
@@ -20,7 +24,7 @@ Commit the current changes on a feature branch and create a PR for review.
    - Stage post files in `_posts/`
    - Stage related assets in `assets/posts/`
    - Stage author changes in `_data/authors.yml`
-   - Do NOT stage unrelated files, `.claude/` local files, or screenshots left in the repo root
+   - Do NOT stage unrelated files, unrelated `.claude/` local files, or screenshots left in the repo root
 
 4. Commit with a descriptive message. For new posts, include the post title. For edits, describe what changed.
 
@@ -42,10 +46,13 @@ Commit the current changes on a feature branch and create a PR for review.
 - [ ] Tags chosen for Chirpy "Further Reading" overlap
 ```
 
-7. Report the PR URL to the user.
+7. For an original article PR, resolve its existing SharePoint backlog item, set `GitHubPullRequest` to the PR URL and `Status` to `PR submitted`, and read the item back to verify both. If the item is missing or ambiguous, ask the user rather than creating a duplicate. For maintenance or date-only PRs on published posts, preserve the original article PR link and `Published` status.
+
+8. Report the PR URL and whether its SharePoint tracking is up to date. If access or a write fails, report that explicitly; do not consult Loop instead.
 
 ## Notes
 
 - Do NOT merge the PR. The PR is for review.
 - If the user provides a PR description or title, use it.
 - If the argument is "draft", create a draft PR with `--draft`.
+- Do not mark the backlog item `Published` at PR creation or merge alone. The publishing skill does that only after deployment and live-page verification.
