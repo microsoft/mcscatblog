@@ -29,6 +29,18 @@ This is the most important part of the review. A post with perfect grammar but b
 - **Internal links** using `post_url` to 2-3 related blog posts. Check `_posts/` for candidates with overlapping topics.
 - No credentials, secrets, or real environment URLs in code examples.
 
+### Microsoft Copilot harness and SDK Branding
+
+Read and apply the shared [branding guidance](../review-guidance/microsoft-copilot-harness-branding.md)
+at `.github/review-guidance/microsoft-copilot-harness-branding.md` for every
+review that discusses this harness or its SDK, including legacy names.
+
+- Use Microsoft Copilot harness by default, including first-party "powered by" and "built on" references. Use Microsoft Copilot SDK for SDK repository/documentation and access calls to action (B1).
+- Introduce each full name on first mention; later use Copilot harness, the harness when clear, or Copilot SDK (B2).
+- Keep harness lowercase and SDK uppercase. Flag legacy names, hyphenation, abbreviated Microsoft, stacked names, and invented acronyms (B3).
+- Inspect authored logos and graphics against the approved-logo, no-new-lockup, no-recoloring, and contrast guidance. Report unavailable visual checks as unverified, not as confirmed violations or passes (B4).
+- Check reader-facing metadata, article text, captions, alt text, and referenced graphics. Preserve working code identifiers, URLs, machine-readable values such as `agent_edition: github-copilot`, accurate historical quotations, and distinct product/SDK names as described in the guidance's review boundaries.
+
 ## Priority 3: Reader Experience
 
 - Screenshots appear **after** their explanation, not before. The reader should understand what they're about to see.
@@ -59,6 +71,8 @@ This is the most important part of the review. A post with perfect grammar but b
 
 - List the **top 5-7 issues** ranked by impact on reader experience.
 - For each issue: **quote** the problematic text, explain **why** it's a problem, suggest a fix.
+- Include all distinct branding violations, grouped by rule, even when they exceed the top 5-7 editorial issues. For each, include the file and line or image reference, exact text or visible element, linked B1-B4 rule and source slide, and concrete replacement or corrective action. List unverified visual checks separately with the action needed to resolve them.
+- Do not mark the post **ready to publish** while confirmed branding violations or required visual checks remain unresolved.
 - Do NOT score 14 categories. Do NOT provide percentage scores.
 - State whether the post is: **ready to publish**, **needs minor fixes**, or **needs structural revision**.
 
