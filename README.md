@@ -1,7 +1,7 @@
 # MCS CAT Blog
 
 ## What is the purpose of this blog?
-The Microsoft Copilot Studio (MCS) Customer Advisory Team (CAT) Blog is intended to be a **technical** notebook for sharing quick, practical patterns and snippets that are useful in customer scenarios but don’t fit into formal documentation or guidance. 
+The Microsoft Copilot Acceleration Team (CAT) Blog for Copilot Studio (MCS) is intended to be a **technical** notebook for sharing quick, practical patterns and snippets that are useful in customer scenarios but don’t fit into formal documentation or guidance. 
 The public site is https://microsoft.github.io/mcscatblog/.
 
 More specifically, this blog is meant to be:
@@ -58,19 +58,46 @@ will **not** receive upstream updates automatically.
 > each item below against the new gem version. Anything that overrides or copies a theme
 > file is the most likely thing to break.
 
-### Classic / Modern agent edition pill
+### Homepage layout
 
-Shows a small pill under the post title indicating whether a post is about a **Classic**
-or **Modern** Copilot Studio agent. **Every post must set this field — the build fails
-otherwise** (enforced by `_plugins/validate-agent-edition.rb`). Set it in front matter:
+The homepage shows pinned posts, then Latest, then the topic grid. The hero's
+**Browse by topic** link jumps directly to the grid. Set `home_latest_count` in
+`_config.yml` to adjust the preview size (currently 6); pinned posts are excluded
+from that count. **All posts** opens `/latest/`, a full chronological
+feed including pinned posts, with a **Back to home** button. `paginate` controls
+that feed's page size (currently 12), and `paginate_path` keeps its pagination
+under `/latest/`. The homepage has no pagination.
+Both pages use the `home` layout and shared post cards so Chirpy preserves
+linked header images instead of turning them into article lightbox links.
+
+### Full-text subscription feed
+
+Subscribe at https://microsoft.github.io/mcscatblog/feed.xml. The Atom feed includes
+the full article bodies of the five newest published posts, including code and
+images. Interactive embeds and media link back to the web article.
+
+`assets/feed.xml` overrides Chirpy's summary-only feed, and
+`_plugins/feed-content.rb` prepares article HTML with absolute links and image
+URLs, without executable scripts or page stylesheets. The feed skips the HTML
+compression layout to preserve code whitespace. Review the template against the
+theme's `assets/feed.xml` when upgrading Chirpy.
+
+### Agent harness edition pill
+
+Shows a small pill under the post title indicating which Copilot Studio build harness a
+post is about: the **Standard harness** or the **GitHub Copilot harness**. **Every post
+must set this field — the build fails otherwise** (enforced by
+`_plugins/validate-agent-edition.rb`). Set it in front matter:
 
 ```yaml
-agent_edition: classic   # one of: classic | modern | both
+agent_edition: standard   # one of: standard | github-copilot | both
 ```
 
-- `classic` — applies to classic agents
-- `modern` — applies to modern (rebuilt) agents
-- `both` — applies to both; renders a neutral "Classic & Modern" pill
+- `standard` — applies to Standard-harness agents (includes generative orchestration)
+- `github-copilot` — applies to GitHub Copilot (GHCP) harness agents; renders a "GHCP harness" pill
+- `both` — applies to both; renders a neutral "Both harnesses" pill
+- `classic` / `modern` — **deprecated aliases** for `standard` / `github-copilot`, still
+  accepted so older drafts don't break; prefer the canonical values
 
 | File | What it is | Upgrade risk |
 | ---- | ---------- | ------------ |

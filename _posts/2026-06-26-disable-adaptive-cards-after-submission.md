@@ -3,7 +3,7 @@ layout: post
 title: "Disabling Adaptive Cards After Submission in Copilot Studio Agents"
 date: 2026-06-26
 categories: [copilot-studio, tutorial]
-agent_edition: classic
+agent_edition: standard
 tags: [adaptive-cards, teams, webchat, universal-actions, user-experience, action-execute, bot-framework]
 description: "Two proven patterns to disable or replace Adaptive Cards after submission: one for custom web portals using WebChat, and one for Microsoft Teams using Universal Actions."
 author: mmonisha
@@ -127,7 +127,7 @@ sequenceDiagram
     participant User
     participant Teams
     participant Agent as Copilot Studio Agent
-    
+
     User->>Teams: Fills out card, clicks Submit
     Teams->>Agent: Sends invoke activity with verb
     Agent->>Agent: Processes data, branches on verb

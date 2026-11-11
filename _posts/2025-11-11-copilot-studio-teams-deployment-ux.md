@@ -1,10 +1,10 @@
 ---  
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Best Practices for Deploying Copilot Studio Agents in Microsoft Teams"
 date: 2025-11-14 17:30:00 +0100
-categories: [copilot-studio, teams, deployment]
-tags: [teams-integration, session-management, state-management, troubleshooting]
+categories: [channels]
+tags: [teams, teams-integration, session-management, state-management, troubleshooting]
 description: Essential techniques for managing session state, handling updates, and ensuring reliable performance when deploying Copilot Studio Agents to Microsoft Teams.
 author: raemone
 image:

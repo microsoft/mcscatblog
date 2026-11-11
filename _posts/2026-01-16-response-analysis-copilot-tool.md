@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Agentic Tooling: Making Agent Performance Transparent and Measurable"
 date: 2026-01-16
-categories: [generative-ai, custom-engine, blog, copilot-studio]
+categories: [agents-sdk]
 tags: [pro-code, tutorial, api-integration, planning, orchestration, performance-monitoring]
 description: "Build a tool for Copilot Studio agents that provides real-time performance metrics and agent execution insights during development using M 365 Agent SDK."
 author: kaul-vineet

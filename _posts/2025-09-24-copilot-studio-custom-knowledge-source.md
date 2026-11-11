@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Connecting to Custom Knowledge Sources in Copilot Studio"
 date: 2025-09-24
-categories: [copilot-studio, tutorial, knowledge]
+categories: [knowledge]
 tags: [custom-knowledge, search, orchestration, generative-answers]
 author: adilei
 ---

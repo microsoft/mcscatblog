@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Triggering Copilot Studio Agents with HTTP Calls"
 date: 2025-09-25
-categories: [copilot-studio, tutorial, api]
+categories: [automation]
 tags: [http, direct-line, power-automate, api-integration]
 author: roels
 ---

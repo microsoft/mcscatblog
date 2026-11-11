@@ -3,7 +3,7 @@ agent_edition: both
 layout: post
 title: "MCP Servers or Connectors in Copilot Studio? A Maker's Guide"
 date: 2026-02-13 12:00:00 +0100
-categories: [copilot-studio, mcp, connectors]
+categories: [automation]
 tags: [mcp, connectors, custom-connector, agent-365, copilot-studio, power-platform, decision-guide, enterprise]
 description: "A practical guide for Copilot Studio makers choosing between MCP servers and Power Platform connectors, covering both built-in options and custom builds."
 author: jpad5

@@ -1,0 +1,44 @@
+{% comment %}
+  Home masthead. Renders the publication identity + thesis and a small,
+  live catalog stat line. Shown only on the first paginator page.
+{% endcomment %}
+
+{% assign post_total = site.posts | size %}
+{% comment %} Count live topic collections = distinct post categories, minus utility ones. {% endcomment %}
+{% assign skip = "blog" | split: "," %}
+{% assign topic_total = 0 %}
+{% for pair in site.categories %}
+  {% unless skip contains pair[0] %}{% assign topic_total = topic_total | plus: 1 %}{% endunless %}
+{% endfor %}
+
+<section class="ce-hero" aria-label="Introduction">
+  <div class="ce-hero__main">
+    <p class="ce-kicker">// The Custom Engine · Copilot Studio CAT</p>
+
+    <h1 class="ce-hero__title">
+      Field notes for building <span class="ce-hero__accent">real</span> Copilot&nbsp;Studio agents.
+    </h1>
+
+    <p class="ce-hero__lede">
+      Deep technical dives, patterns, and hard-won gotchas from Microsoft's
+      Copilot Acceleration Team, helping the builders and architects who ship agents.
+    </p>
+
+    <div class="ce-hero__actions">
+      <a href="#collections" class="ce-btn ce-btn--primary">
+        <i class="fas fa-compass"></i> Browse by topic
+      </a>
+      <a href="#latest" class="ce-btn ce-btn--ghost">
+        <i class="fas fa-arrow-down-short-wide"></i> Latest posts
+      </a>
+    </div>
+
+    <p class="ce-hero__stats">
+      <span>{{ post_total }} deep dives</span>
+      <span class="ce-dot">·</span>
+      <span>{{ topic_total }} topics</span>
+      <span class="ce-dot">·</span>
+      <span>Updated weekly</span>
+    </p>
+  </div>
+</section>

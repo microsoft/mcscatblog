@@ -3,8 +3,10 @@
 source "https://rubygems.org"
 
 gem "jekyll-theme-chirpy", "~> 7.3", ">= 7.3.1"
+gem "nokogiri", "~> 1.18"
 
 gem "html-proofer", "~> 5.0", group: :test
+gem "minitest", "~> 5.0", group: :test
 
 group :jekyll_plugins do
   gem 'jekyll-target-blank'

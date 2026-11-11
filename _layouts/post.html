@@ -18,18 +18,21 @@ script_includes:
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
 
-    <!-- LOCAL OVERRIDE: Classic/Modern Copilot Studio edition pill.
+    <!-- LOCAL OVERRIDE: agent harness "edition" pill (Standard vs GitHub Copilot).
          See README "Theme customizations" before upgrading jekyll-theme-chirpy. -->
     {% if page.agent_edition %}
       {% assign _edition = page.agent_edition | downcase | strip %}
+      {% comment %} Normalize deprecated aliases to canonical harness values. {% endcomment %}
+      {% if _edition == 'classic' %}{% assign _edition = 'standard' %}{% endif %}
+      {% if _edition == 'modern' %}{% assign _edition = 'github-copilot' %}{% endif %}
       <p class="agent-edition mb-3" data-toc-skip>
         <span class="agent-edition-pill agent-edition--{{ _edition }}">
-          {% if _edition == 'classic' %}
-            <i class="fa-regular fa-clock fa-fw"></i>Classic agents
-          {% elsif _edition == 'modern' %}
-            <i class="fa-solid fa-wand-magic-sparkles fa-fw"></i>Modern agents
+          {% if _edition == 'standard' %}
+            <i class="fa-solid fa-sliders fa-fw"></i>Standard harness
+          {% elsif _edition == 'github-copilot' %}
+            <i class="fa-brands fa-github fa-fw"></i>GHCP harness
           {% elsif _edition == 'both' %}
-            <i class="fa-solid fa-layer-group fa-fw"></i>Modern &amp; Classic agents
+            <i class="fa-solid fa-layer-group fa-fw"></i>Both harnesses
           {% else %}
             <i class="fa-solid fa-tag fa-fw"></i>{{ page.agent_edition }}
           {% endif %}

@@ -1,0 +1,43 @@
+---
+layout: default
+---
+
+{% include lang.html %}
+
+{% if page.latest_feed %}
+  {% include latest-feed.html %}
+{% else %}
+
+{% comment %}
+  Latest is a short preview, excluding pinned and hidden posts.
+  The complete chronological feed and pagination live at /latest/.
+{% endcomment %}
+{% assign feed_posts = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
+{% assign posts = feed_posts | slice: 0, site.home_latest_count %}
+
+{% include home-hero.html %}
+{% include home-featured.html %}
+
+<section class="ce-latest" id="latest" aria-label="Latest posts">
+  <header class="ce-section-head">
+    <p class="ce-kicker">// Fresh off the bench</p>
+    <h2 class="ce-section-title">Latest</h2>
+    <a class="ce-section-link" href="{{ '/latest/' | relative_url }}">
+      All posts <i class="fas fa-angle-right"></i>
+    </a>
+  </header>
+
+  {% if posts.size > 0 %}
+  <div id="post-list" class="ce-feed">
+    {% for post in posts %}
+      {% include home-post-card.html post=post %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="ce-feed-empty">You've reached the end. <a href="{{ '/archives/' | relative_url }}">Browse the full archive</a> or <a href="{{ '/' | relative_url }}">head back to the top</a>.</p>
+  {% endif %}
+</section>
+
+{% include home-collections.html %}
+
+{% endif %}

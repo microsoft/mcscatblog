@@ -1,0 +1,52 @@
+# Display metadata for the "Collections" grid on the home page.
+#
+# The grid itself is GENERATED from the site's real post categories
+# (see _includes/home-collections.html) — this file only supplies the
+# title, icon, colour and blurb for each category slug. Any category
+# without an entry here still renders with a sensible fallback, so the
+# home page stays in sync with whatever categories posts actually use.
+orchestration:
+  title: Orchestration
+  icon: fa-diagram-project
+  color: "#9F63FF"
+  blurb: "Generative orchestration, multi-agent routing, and topic design."
+mcp:
+  title: "MCP & Tools"
+  icon: fa-plug
+  color: "#58B2FF"
+  blurb: "Model Context Protocol servers, tools, skills, and resources."
+authentication:
+  title: "Authentication & Identity"
+  icon: fa-shield-halved
+  color: "#FF6794"
+  blurb: "SSO, on-behalf-of, Entra ID, and consent flows."
+channels:
+  title: Channels
+  icon: fa-comments
+  color: "#35C2B1"
+  blurb: "WebChat, embedding, and Microsoft Teams."
+knowledge:
+  title: "Knowledge & Retrieval"
+  icon: fa-book-open
+  color: "#FFB347"
+  blurb: "Knowledge sources, retrieval, search, and structured-data patterns."
+automation:
+  title: "Automation & Integration"
+  icon: fa-network-wired
+  color: "#FF6FCF"
+  blurb: "Custom connectors, agent flows, RPA, and line-of-business integration."
+agents-sdk:
+  title: "Agents SDK"
+  icon: fa-code
+  color: "#7C8CFF"
+  blurb: "Pro-code custom engine agents with the M365 Agents SDK."
+alm:
+  title: "Governance & ALM"
+  icon: fa-scale-balanced
+  color: "#4FC66E"
+  blurb: "Lifecycle, governance, licensing, and shipping to production."
+testing:
+  title: "Testing & Evaluation"
+  icon: fa-flask
+  color: "#FF8A5B"
+  blurb: "Evals, batch testing, and scoring answer quality."

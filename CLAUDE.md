@@ -107,6 +107,14 @@ This section captures adilei's writing patterns for Claude to replicate when dra
 
 **Punctuation:** Be frugal with em-dashes. Prefer commas or restructuring sentences over em-dashes.
 
+**CATBOT guest posts:** Keep the humor short, understated, and the explanation educational. Suggest the joke rather than explaining it or spelling out an invented rule. CATBOT resents having its capabilities underused on unchallenging assignments; robotics-law jokes should concern protection from that treatment, not the sample's subject matter. Tease the autopilot assignment, not the reader. Link to the sample README and relevant Microsoft Learn page instead of repeating setup details, and include a few useful code excerpts. Reuse verified results from the sample's development session rather than rebuilding it just to write the post.
+
+**Sample companion code:** Show the actual SDK imports and calls, with the surrounding connection context identified. Briefly explain authentication when it is required to use the sample.
+
+**Clarity:** State the fact or action directly. Avoid "do X, not Y" headings and "it isn't X, it's Y" framing. Avoid defensive framing such as "not a reason to assume," unnecessary metaphors, and repeated warnings. For sample companion posts, keep the article short and let the sample handle the implementation and setup. Define acronyms at first use, keep configuration guidance procedural, and distinguish current capabilities from unconfirmed roadmap changes.
+
+**Author voice:** Write like a practitioner talking to another practitioner. Use contractions, reader questions, and occasional dry asides. Avoid product-announcement language, slogan-like triplets, and stock contrasts such as "X is one thing; Y is another." Make the main point once, then demonstrate it in the setup and code instead of repeating it in transitions and a closing recap. Don't force jokes or invent customer anecdotes.
+
 **Formality:** Semi-formal balance—professional but not academic. Examples:
 - Good: "You've probably run into this before..."
 - Good: "Okay, I made that last one up, but it *should* be true"
@@ -130,12 +138,25 @@ This section captures adilei's writing patterns for Claude to replicate when dra
 - A Direct Line conversation exists (has a conversation ID) as soon as connectivity is established, even before any topics are triggered
 - `DIRECT_LINE/INCOMING_ACTIVITY` is client-side injection into WebChat's incoming message stream, not messages "coming from" the agent
 - Be precise: "no topics triggered" is different from "no conversation started"
+- For SDK client posts, connect custom UI scenarios to the existing manual-authentication explanation, and distinguish the shared client from harness-specific capabilities.
+- Lead with the SDK abstraction: the same configuration pattern and conversation API across harnesses. Keep custom clients as the goal, with WebChat as one frontend example. Validate it against both harnesses using the same client code, rather than treating one working agent as proof of both.
+- Don't frame shared SDK capabilities as JavaScript-only because a walkthrough uses React. Distinguish the language chosen for the example, support already available in other clients, and planned support.
+- Describe a new client version as a client release, not an SDK-wide update.
+- Distinguish the SPA's MSAL sign-in settings from SDK connection settings, even when a sample stores both in one object. The app acquires an access token and passes it to the client.
+- Keep UI capability descriptions scoped to what the target harness supports, not everything the frontend can render. Refer to demo agents generically unless their names matter to the explanation.
+- When the authoring UI doesn't expose an endpoint, document where to find the environment ID and schema name. Keep demonstrated preview behavior separate from official support status.
+- Describe reasoning as explicitly client-visible content. An informative stream isn't necessarily reasoning, and tool progress doesn't imply permission to expose tool inputs, outputs, or private planner metadata.
+- Keep customer-facing SDK walkthroughs short: show configuration and extension snippets, not endpoint-discovery or transport internals. Extend an existing sample rather than introducing another application; move longer helpers into downloadable files.
+- Present WebChat as a rich, customizable foundation with much of the chat experience already built in, while making clear it's not mandatory and the SDK works with other UIs. Don't undersell it as merely a convenient demo.
 
 **Cost/licensing sensitivity:**
 - Don't be explicit about cost savings, Copilot credits, or billing implications
 - Imply rather than state directly: "someone eventually notices" vs "you get charged"
 - Avoid promising savings—let readers draw their own conclusions
 - Keep financial references tongue-in-cheek, not preachy
+- For posts specifically about licensing and billing, state inclusion, consumption, and applicable controls plainly with current official sources; still avoid savings promises.
+- Distinguish spending policies and reporting views from the underlying credit pools. Different admin consoles do not necessarily mean separate pools.
+- Distinguish feature activation from billing: tenant graph grounding is zero-rated for Microsoft 365 Copilot licensed users when enabled; the license doesn't mean the feature is enabled by default.
 
 **Tone about users:**
 - Don't be derogatory about visitor behavior (e.g., avoid "closes tab without engaging")
@@ -143,7 +164,15 @@ This section captures adilei's writing patterns for Claude to replicate when dra
 
 ### Post Structure
 
+**Decision guides:**
+- Lead with what the article helps the reader decide, then use a short scenario to illustrate why it matters.
+- Organize comparisons by the reader's product or scenario. Prefer one definitive comparison over overlapping technical frameworks.
+- Split scenarios when consumption or required configuration differs, such as built-in grounding versus a connected tool, or UI configuration versus manifest configuration. A separate controls table can map back to those scenarios without repeating the licensing comparison.
+- Connect controls directly to those same scenarios. Link to general setup and architecture documentation instead of repeating it.
+
 Standard flow for tutorial/technical posts:
+
+For UI walkthroughs, show the intended experience with screenshots before the setup. Then configure the sample and client, followed by the code that extends them.
 
 ```
 1. HOOK (1-2 paragraphs)

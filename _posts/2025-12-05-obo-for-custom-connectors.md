@@ -1,9 +1,9 @@
 ---
-agent_edition: classic
+agent_edition: standard
 layout: post
 title: "Seamless SSO with Custom Connectors (Yes It's Possible!)"
 date: 2025-12-05
-categories: [copilot-studio, authentication]
+categories: [authentication]
 tags: [manual-auth, sso, authentication, best-practices]
 description:  Avoiding the dreaded connection manager dialog for slick authenticated access to custom APIs and MCP servers.
 author: daveburman-msft
