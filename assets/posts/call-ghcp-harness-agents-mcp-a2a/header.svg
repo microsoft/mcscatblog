@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1456" height="816" viewBox="0 0 1456 816" role="img" font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
-<title>A GitHub Copilot harness agent called through the MCP and A2A channels</title>
-<desc>An existing standard agent calls the HR Policy agent, a GitHub Copilot harness agent, through its MCP endpoint. A GitHub Copilot harness agent in another environment calls it through its A2A endpoint. Both calls pass through Microsoft Entra ID as the signed-in user. An agent in the same environment connects directly as a connected agent.</desc>
+<title>A Microsoft Copilot harness agent called through the MCP and A2A channels</title>
+<desc>An existing standard agent calls the HR Policy agent, a Microsoft Copilot harness agent, through its MCP endpoint. A Microsoft Copilot harness agent in another environment calls it through its A2A endpoint. Both calls pass through Microsoft Entra ID as the signed-in user. An agent in the same environment connects directly as a connected agent.</desc>
 <defs>
   <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2563EB"/></marker>
   <marker id="arrow-violet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7C3AED"/></marker>
@@ -34,8 +34,8 @@
 <g filter="url(#shadow)">
   <rect x="80" y="470" width="380" height="150" rx="20" fill="#FFFFFF" stroke="#DDD6FE" stroke-width="2"/>
 </g>
-<rect x="104" y="496" width="230" height="30" rx="15" fill="#EDE9FE"/>
-<text x="219" y="517" text-anchor="middle" font-size="16" font-weight="600" fill="#6D28D9">GitHub Copilot harness</text>
+<rect x="104" y="496" width="248" height="30" rx="15" fill="#EDE9FE"/>
+<text x="228" y="517" text-anchor="middle" font-size="16" font-weight="600" fill="#6D28D9">Microsoft Copilot harness</text>
 <text x="104" y="564" font-size="28" font-weight="700" fill="#0F172A">Calling agent</text>
 <text x="104" y="596" font-size="18" fill="#475569">Another environment</text>
 
@@ -43,8 +43,8 @@
 <g filter="url(#shadow)">
   <rect x="780" y="176" width="400" height="464" rx="24" fill="#FFFFFF" stroke="#C4B5FD" stroke-width="2.5"/>
 </g>
-<rect x="808" y="206" width="230" height="30" rx="15" fill="#EDE9FE"/>
-<text x="923" y="227" text-anchor="middle" font-size="16" font-weight="600" fill="#6D28D9">GitHub Copilot harness</text>
+<rect x="808" y="206" width="248" height="30" rx="15" fill="#EDE9FE"/>
+<text x="932" y="227" text-anchor="middle" font-size="16" font-weight="600" fill="#6D28D9">Microsoft Copilot harness</text>
 <text x="808" y="296" font-size="32" font-weight="700" fill="#0F172A">HR Policy agent</text>
 <text x="808" y="336" font-size="18" fill="#475569">Published · Early environment</text>
 
