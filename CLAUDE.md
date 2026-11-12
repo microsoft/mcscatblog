@@ -174,6 +174,8 @@ Standard flow for tutorial/technical posts:
 
 For UI walkthroughs, show the intended experience with screenshots before the setup. Then configure the sample and client, followed by the code that extends them.
 
+Keep walkthrough screenshots inline with their captions; don't hide them in collapsible sections unless requested.
+
 ```
 1. HOOK (1-2 paragraphs)
    - Real-world problem or pain point

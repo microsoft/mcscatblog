@@ -2,7 +2,7 @@
 layout: post
 agent_edition: both
 title: "Call Microsoft Copilot Harness Agents from Other Copilot Studio Agents with MCP and A2A"
-date: 2026-11-11
+date: 2026-11-12
 categories: [copilot-studio, orchestration]
 tags: [mcp, a2a, a2a-protocol, multi-agent, connected-agents, orchestration, github-copilot, authentication]
 description: "Configure a standard agent to call a Microsoft Copilot harness agent (formerly GitHub Copilot harness) over MCP, and harness agents to call each other across environments over A2A, with OBO sign-in for other users."
@@ -160,13 +160,8 @@ First, add OBO to the app registration from step 1, as described in [Configure O
 2. **Authorized client applications → Add a client application.** Enter `fe053c5f-3692-4f14-aef2-ee34fc081cae` (Azure API Connections) and tick `access_as_user`. This lets Power Platform get a token for the connector on the user's behalf without a sign-in page.
 3. **API permissions → Grant admin consent** for `MCS.InvokeAsMCP`. The token swap happens in the background, so there's no moment to ask the user for that permission.
 
-<details markdown="1">
-<summary>Screenshot: the app registration's Expose an API page</summary>
-
 ![The app registration's Expose an API page showing the access_as_user scope, consentable by admins and users, and fe053c5f-3692-4f14-aef2-ee34fc081cae listed as an authorized client application](/assets/posts/call-ghcp-harness-agents-mcp-a2a/obo-expose-api.png){: .shadow w="700" }
 _The client ID is replaced with `{client-id}` here._
-
-</details>
 
 Then, in Power Apps, go to **Custom connectors**, select the pencil icon on the connector the MCP wizard created, open **2. Security**, select **Edit** under **OAuth 2.0**, and set:
 
@@ -185,13 +180,8 @@ Then, in Power Apps, go to **Custom connectors**, select the pencil icon on the 
 > The **Resource URL** is the channel API's identifier, `https://api.powerplatform.com/copilotstudio-mcp`. Plain `https://api.powerplatform.com` is a different API, the Power Platform API, and tokens issued for it aren't valid for the MCP endpoint.
 {: .prompt-warning }
 
-<details markdown="1">
-<summary>Screenshot: the connector's Security tab after the switch</summary>
-
 ![The connector's Security tab with Azure Active Directory as the identity provider, Service Principal support off, the client ID and tenant ID as placeholders, the default authorization URL, Resource URL https://api.powerplatform.com/copilotstudio-mcp and Enable on-behalf-of login set to true](/assets/posts/call-ghcp-harness-agents-mcp-a2a/obo-connector-security.png){: .shadow w="600" }
 _IDs are replaced with placeholders here._
-
-</details>
 
 Select **Update connector**. The redirect URL stayed the same in my test, so the app registration needed no new redirect URI. After the switch, create a new connection for the tool in the standard agent (**Tools** → the MCP tool → **Create new connection**) and select it. The switch applies to every agent that uses this connector, so do the same in each of them.
 
@@ -211,16 +201,11 @@ _The in-conversation consent card. There's no connection manager page._
 
 Selecting **Allow** created the user's connection, and the agent answered with the called agent's reply. Later questions used the same connection without another card.
 
-<details markdown="1">
-<summary>Screenshots: the answer after Allow, and a follow-up with no second card</summary>
-
 ![The IT Helpdesk agent answering "Mario, you're entitled to 26 weeks (6 months) of fully paid parental leave" with details from the HR policy](/assets/posts/call-ghcp-harness-agents-mcp-a2a/obo-answer-after-allow.png){: .shadow w="560" }
 _The answer after **Allow**. The details come from the called agent's HR handbook._
 
 ![A follow-up question about carrying over annual leave answered directly: up to 5 unused days, expiring March 31](/assets/posts/call-ghcp-harness-agents-mcp-a2a/obo-followup-no-prompt.png){: .shadow w="560" }
 _A follow-up question. No consent card this time._
-
-</details>
 
 > If you leave the connector on the generic OAuth settings, the tool still works, but each user gets *"Let's get you connected first… Open connection manager"*. They connect on the **Manage your connections** page, which they have to open themselves, then go back and select **Retry**.
 {: .prompt-info }
