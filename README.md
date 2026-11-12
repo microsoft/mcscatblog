@@ -47,6 +47,26 @@ How to contribute:
 
 Learn about writing new posts in Chirpy: [Writing a New Post](https://chirpy.cotes.page/posts/write-a-new-post/)
 
+## GitHub Actions maintenance
+
+Workflow actions are pinned to full commit SHAs, with release versions in comments.
+Verify replacement SHAs against the upstream action repository and retain these comments
+when updating actions. Pins prevent mutable action tags from changing the selected code;
+they do not freeze hosted runner images, downloaded tools, or nested action references.
+
+Dependabot checks GitHub Actions weekly and groups version updates into one pull request.
+The seven-day cooldown delays newly released versions until an eligible scheduled check;
+it does not delay security updates. GitHub Actions supports `default-days`, not the
+SemVer-specific cooldown options. See the [Dependabot options reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#cooldown).
+Updates still need review and merging, including compatibility checks for major upgrades.
+This configuration does not maintain Ruby gems or npm packages.
+
+The PR preview check builds Jekyll without production secrets. Dependabot PRs do not need
+production secrets, and preview comments run in a separate workflow. Production deployment
+also checks site links, updates Algolia, and deploys to GitHub Pages. Changes limited to
+`.github/**` and `README.md` do not trigger deployment automatically; after merging workflow
+updates, run **Build and Deploy** manually on `main` and verify it succeeds.
+
 ## Theme customizations (read before upgrading Chirpy)
 
 This site is built on the **upstream `jekyll-theme-chirpy` gem** (see `Gemfile`). The
@@ -70,10 +90,22 @@ under `/latest/`. The homepage has no pagination.
 Both pages use the `home` layout and shared post cards so Chirpy preserves
 linked header images instead of turning them into article lightbox links.
 
+### Full-text subscription feed
+
+Subscribe at https://microsoft.github.io/mcscatblog/feed.xml. The Atom feed includes
+the full article bodies of the five newest published posts, including code and
+images. Interactive embeds and media link back to the web article.
+
+`assets/feed.xml` overrides Chirpy's summary-only feed, and
+`_plugins/feed-content.rb` prepares article HTML with absolute links and image
+URLs, without executable scripts or page stylesheets. The feed skips the HTML
+compression layout to preserve code whitespace. Review the template against the
+theme's `assets/feed.xml` when upgrading Chirpy.
+
 ### Agent harness edition pill
 
 Shows a small pill under the post title indicating which Copilot Studio build harness a
-post is about: the **Standard harness** or the **GitHub Copilot harness**. **Every post
+post is about: the **Standard harness** or the **Microsoft Copilot harness**. **Every post
 must set this field — the build fails otherwise** (enforced by
 `_plugins/validate-agent-edition.rb`). Set it in front matter:
 
@@ -82,10 +114,12 @@ agent_edition: standard   # one of: standard | github-copilot | both
 ```
 
 - `standard` — applies to Standard-harness agents (includes generative orchestration)
-- `github-copilot` — applies to GitHub Copilot (GHCP) harness agents; renders a "GHCP harness" pill
+- `github-copilot` — applies to Microsoft Copilot harness agents; renders a "Microsoft Copilot harness" pill
 - `both` — applies to both; renders a neutral "Both harnesses" pill
 - `classic` / `modern` — **deprecated aliases** for `standard` / `github-copilot`, still
   accepted so older drafts don't break; prefer the canonical values
+
+The front-matter value remains `github-copilot`; only the display name has changed.
 
 | File | What it is | Upgrade risk |
 | ---- | ---------- | ------------ |

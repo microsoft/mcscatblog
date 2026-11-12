@@ -11,6 +11,10 @@ Scaffold a new blog post with everything ready to write.
 
 The argument should be a short description of the post topic, e.g. "Dataverse search for unauthenticated agents" or "WebChat middleware patterns". If not provided, ask.
 
+## Backlog Tracking
+
+The SharePoint **CAPE Patterns & Practices Backlog** list is the only editorial backlog. Do not search or update the former Loop backlog. Follow the [backlog source-of-truth rules](../mcscatblog-review-post/SKILL.md#backlog-source-of-truth) to find the existing idea by title and author, and retain its item ID for PR submission and publication. If the item is missing or ambiguous, ask the user rather than creating a duplicate. Do not mark it `Published` while drafting.
+
 ## Steps
 
 1. **Ask for details** (if not provided):
@@ -57,3 +61,4 @@ image:
 - Leave tags empty — they should be chosen during review to maximize Chirpy "Further Reading" overlap
 - Leave description empty — it should be written after the post content is finalized
 - Categories: always include `copilot-studio` as the first category
+- The scaffold date is provisional. When publishing a new article, update both its filename and front-matter date to the publication date, keeping the slug unchanged.
