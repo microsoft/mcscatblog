@@ -41,6 +41,8 @@ Do not search or update the former Microsoft Loop backlog, including as a fallba
 
 Read the review instructions at `.github/instructions/posts.instructions.md`. Review the post against priorities 1-5 defined there.
 
+For posts discussing the Microsoft Copilot harness or its SDK (including legacy names), also read `.github/review-guidance/microsoft-copilot-harness-branding.md`. Apply its B1-B4 rules and review boundaries to reader-facing text, metadata, and referenced graphics.
+
 ### Read as a Reader First
 
 Before checking anything technical, read the post top to bottom as a reader would. Ask yourself:
@@ -91,6 +93,7 @@ Flag and correct non-canonical harness names to these canonical ones:
 
 Additional checks:
 
+- Apply the shared branding guidance for harness versus SDK usage, full first mentions, capitalization, legacy names, and approved logo treatment. Preserve literal identifiers, historical context, and distinct product/SDK names as described in its review boundaries.
 - Harnesses are build choices, not separate products.
 - Use the term "harness" consistently; avoid alternates such as "orchestrator".
 - Avoid scale labels such as Basic, Advanced, Premium, or Ultimate; they don't scale as new harnesses are added.
@@ -110,6 +113,8 @@ The front-matter value remains `github-copilot`; use Microsoft Copilot harness i
 
 - List the **top 5-7 issues** ranked by impact.
 - For each: quote the text, explain the problem, suggest a fix.
+- Report all distinct branding violations even if they exceed the top 5-7 editorial issues. Group repeated instances and include affected file/line or image reference, exact text or visible element, linked B1-B4 rule and source slide from the shared guidance, and a concrete correction. List unverified visual checks separately with the action needed to resolve them.
+- Do not mark the post **ready to publish** while confirmed branding violations or required visual checks remain unresolved.
 - Do NOT score 14 categories or provide percentage scores.
 - State: **ready to publish**, **needs minor fixes**, or **needs structural revision**.
 
@@ -123,6 +128,7 @@ After presenting the review, ask the user which fixes to apply. Common fixes inc
 - Making YAML blocks collapsible
 - Grammar, spelling, terminology corrections
 - Correcting Copilot Studio product/harness terminology to canonical names (see Naming and Terminology)
+- Correcting branding violations using the cited guidance, including harness/SDK context, first mentions, capitalization, and authored graphics
 - Front matter corrections (dates, tags, categories)
 - Image resizing (use Python PIL)
 - Replacing emoji callouts with Chirpy prompt boxes
