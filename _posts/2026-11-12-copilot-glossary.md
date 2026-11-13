@@ -175,7 +175,7 @@ It is neither the [GitHub Copilot service](#github-copilot) which is a subscript
 
 Copilot Chat harness supports agents that extend Microsoft Copilot relying on its hosted models and orchestration. These are the agents historically described, and still documented, as [declarative agents](#declarative-agent).
 
-Despite the near-identical wording, it is distinct from the [Microsoft Copilot Chat](#microsoft-copilot-chat) which instead only identifies the chat interface within Microsoft Copilot, without the extensibility options.
+Despite the near-identical wording, it is distinct from the [Microsoft Copilot Chat](#copilot-chat) which instead only identifies the chat interface within Microsoft Copilot, without the extensibility options.
 
 ![Copilot Chat harness in Copilot Studio](/assets/posts/copilot-glossary/chatharness.png){: .shadow w="1512" h="532" }
 *Copilot Chat harness in Copilot Studio*
@@ -260,7 +260,7 @@ The agent is the configured assistant; the harness is what runs it, so this is a
 
 Custom engine agent is a broad term for an agent available in Microsoft Copilot that does not use Copilot's out-of-the-box orchestrator. Its developer supplies the agent engine and orchestration instead.
 
-I recommend avoiding this catch-all label when you can name the actual framework, harness, or hosting arrangement, because it says little about how the agent works. For example, a [Microsoft Copilot harness](#copilot-chat-harness) published in Microsoft Copilot would represent a custom engine agent, while a [Copilot Chat harness](#copilot-chat-harness) would not.
+I recommend avoiding this catch-all label when you can name the actual framework, harness, or hosting arrangement, because it says little about how the agent works. For example, a [Microsoft Copilot harness](#microsoft-copilot-harness) published in Microsoft Copilot would represent a custom engine agent, while a [Copilot Chat harness](#copilot-chat-harness) would not.
 
 
 ## Microsoft 365 Agents and Agent 365-sounding names
