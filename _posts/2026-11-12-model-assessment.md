@@ -9,7 +9,7 @@ description: "Compare a Copilot Studio agent across models with Model Assessment
 author: patilravikiran
 image:
   path: /assets/posts/model-assessment/header.png
-  alt: "Model Assessment: Before you switch models. Assess, compare, and investigate using agent history, quality and credit comparisons, and individual test results."
+  alt: "Model Assessment: Before you switch models. Assess, compare, and investigate using model history, quality and credit comparisons, and individual test results."
 published: true
 ---
 
