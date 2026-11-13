@@ -103,15 +103,21 @@ The broader phrase [Copilot plugins](#copilot-plugins) can refer to different ex
 *Plugins in Cowork*
 
 
-## Autopilot and Scout
+## Autopilot, Scout, and agent identities
 
 ### Autopilot
 
-**Autopilot** describes a category of persistent, proactive agents that pursue goals and carry out recurring work.
+**Autopilot** is the new name for the experience previously called **Microsoft Scout**. These names refer to the same experience, not a category and an example within it.
 
 ### Microsoft Scout
 
-**Microsoft Scout** is one of these autopilots, the first presented so far. It is a specific agent experience, not another name for the broader category.
+**Microsoft Scout** is the former name of **Autopilot**. You may still encounter it in older material.
+
+### Agent identities
+
+**Agent identities** is the current term for what was previously described as "autopilots." In Copilot Studio, an agent identity setting gives an agent a **Microsoft Entra ID identity**. With the required configuration and permissions, the agent can send email and be added to Microsoft Teams.
+
+An agent identity determines how an agent is identified and granted access; it is separate from the **Autopilot** experience formerly called Scout.
 
 
 ## GitHub Copilot-sounding names
