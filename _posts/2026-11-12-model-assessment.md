@@ -65,7 +65,6 @@ _The overview connects model changes with the latest assessment results across a
 The individual agent's **Model history** preserves earlier assessments,
 including run dates, results, and reported credits where available. You can
 revisit earlier assessments, not just the latest run.
-In this example, we compare the agent's results on GPT-5 Chat and GPT 5.6 Sol.
 
 ![Zava Kit Test Automation showing its model selector and assessed model history with dates, results, and reported credits.](/assets/posts/model-assessment/02-model-history.png){: .shadow w="540" h="720" }
 
@@ -79,12 +78,11 @@ results. Otherwise, an apparent model improvement might be a test change, and
 an apparent regression might have another explanation.
 
 > Changing the model through Model Assessment saves that choice to the source
-> agent. The Kit test path also publishes it, so use a development or test agent
-> rather than treating the comparison as an isolated simulation.
+> agent. The Kit test path also publishes it. Try model changes on an agent in a
+> development or test environment to avoid changing an agent that users rely on.
 {: .prompt-warning }
 
-An assessment isn't instantaneous. Its
-[progress panel](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#43-capture-a-baseline)
+An assessment isn't instantaneous. Its progress panel
 shows the work moving through **Initializing**, **Running evaluations** (or
 **Running Kit tests**), **Scoring results**, and **Generating AI analysis**.
 That makes it clear whether the agent is still answering test cases or the
@@ -99,8 +97,7 @@ _The progress panel shows the current assessment stage. The assessment keeps run
 Our example compares **GPT-5 Chat** with **GPT 5.6 Sol**, using completed
 Copilot Studio evaluation runs from October 28 and October 30, 2026.
 
-The
-[comparison workspace](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#46-compare-model-runs)
+The comparison workspace
 places the results alongside each other. A model recommendation is available
 for exactly two completed runs using the same test engine.
 
@@ -141,8 +138,9 @@ also doesn't establish that all other agent configuration stayed unchanged.
 
 The recommendation isn't simply another model's opinion. The
 [app computes the verdict and confidence in code](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#63-recommend-model-from-assessment-comparison).
+{% capture scoring_url %}{% post_url 2026-06-26-better-llm-scoring %}{% endcapture %}
 An AI prompt explains the reasons and trade-offs. As in
-[our evidence-backed LLM scoring pattern]({% post_url 2026-06-26-better-llm-scoring %}),
+[our evidence-backed LLM scoring pattern]({{ scoring_url | absolute_url }}),
 the explanation supports a decision whose rules can be inspected.
 
 ### Separate evaluation consumption from assessment analysis
@@ -154,20 +152,20 @@ assessment workflow.
 
 [Per-run credit reporting](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#52-copilot-credits)
 uses consumption returned by Copilot Studio evaluations for agents powered by
-the GitHub Copilot harness. Kit tests don't report Copilot Credits, and partial
+the Microsoft Copilot harness. Kit tests don't report Copilot Credits, and partial
 consumption is flagged.
 
 The assessment also uses AI prompts to analyze the results. In the
 AI-analysis runs I've observed, this processing consumed around
 **120–150 Copilot Credits per assessment**, excluding the agent's consumption
-when executing its test cases. This is an observed planning estimate,
-not a fixed charge for every run or a value measured from the two historical
-assessments shown here. It is separate from their reported answering and
+when executing its test cases. This is an observed planning estimate.
+It is separate from their reported answering and
 scoring figures.
 
+{% capture governance_url %}{% post_url 2026-08-07-copilot-harness-cost-governance %}{% endcapture %}
 None of these figures forecasts production savings. Broader controls are
 covered in
-[our consumption-governance article]({% post_url 2026-08-07-copilot-harness-cost-governance %}).
+[our consumption-governance article]({{ governance_url | absolute_url }}).
 
 ## Let the AI summary put the results in context
 
