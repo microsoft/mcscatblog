@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Inside GitHub Copilot harness transcripts</title>
+  <desc id="desc">A cat investigator follows a glowing trail through transcript pages containing reasoning, tool call, and turn completion events.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#091126"/>
+      <stop offset="0.55" stop-color="#152453"/>
+      <stop offset="1" stop-color="#392067"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#67e8f9" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#67e8f9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#cffafe" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0.24"/>
+    </linearGradient>
+    <linearGradient id="cat" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffcc80"/>
+      <stop offset="1" stop-color="#ed8a34"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#030712" flood-opacity="0.45"/>
+    </filter>
+    <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      .eyebrow { font: 700 24px "Segoe UI", Arial, sans-serif; letter-spacing: 4px; fill: #67e8f9; }
+      .badge { font: 700 18px "Segoe UI", Arial, sans-serif; letter-spacing: 3px; fill: #67e8f9; }
+      .headline { font: 750 72px "Segoe UI", Arial, sans-serif; fill: #f8fafc; }
+      .subhead { font: 400 30px "Segoe UI", Arial, sans-serif; fill: #c7d2fe; }
+      .chip { font: 500 22px "Segoe UI", Arial, sans-serif; fill: #c7d2fe; }
+      .event { font: 700 20px "Segoe UI", Arial, sans-serif; fill: #172554; }
+      .detail { font: 600 15px Consolas, "Courier New", monospace; fill: #64748b; }
+      .batch { font: 700 15px "Segoe UI", Arial, sans-serif; fill: #ffffff; }
+      .lensText { font: 700 19px Consolas, "Courier New", monospace; fill: #e0f2fe; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1305" cy="218" r="330" fill="url(#glow)" opacity="0.34"/>
+  <circle cx="520" cy="850" r="360" fill="#4f46e5" opacity="0.13"/>
+  <path d="M0 760 C340 670 520 820 820 735 C1110 650 1320 690 1600 565 V900 H0 Z" fill="#070d1d" opacity="0.72"/>
+
+  <g transform="translate(105 126)">
+    <rect width="258" height="44" rx="22" fill="#0891b2" opacity="0.2" stroke="#67e8f9" stroke-opacity="0.55"/>
+    <circle cx="27" cy="22" r="7" fill="#67e8f9"/>
+    <text x="49" y="29" class="badge">GHCP HARNESS</text>
+
+    <text x="0" y="132" class="headline">Inside the</text>
+    <text x="0" y="214" class="headline">transcript</text>
+    <text x="0" y="278" class="subhead">Follow the evidence behind every answer.</text>
+
+    <g transform="translate(0 337)">
+      <rect width="170" height="48" rx="24" fill="#22d3ee" fill-opacity="0.14" stroke="#22d3ee" stroke-opacity="0.6"/>
+      <circle cx="25" cy="24" r="8" fill="#22d3ee"/>
+      <text x="45" y="32" class="chip">Reasoning</text>
+      <rect x="184" width="130" height="48" rx="24" fill="#8b5cf6" fill-opacity="0.17" stroke="#a78bfa" stroke-opacity="0.65"/>
+      <circle cx="209" cy="24" r="8" fill="#a78bfa"/>
+      <text x="229" y="32" class="chip">Tools</text>
+      <rect x="328" width="124" height="48" rx="24" fill="#34d399" fill-opacity="0.14" stroke="#34d399" stroke-opacity="0.62"/>
+      <circle cx="353" cy="24" r="8" fill="#34d399"/>
+      <text x="373" y="32" class="chip">Turns</text>
+    </g>
+    <path d="M0 438 H430" stroke="#475569" stroke-width="2"/>
+    <text x="0" y="487" class="subhead" font-size="22">Find it  ·  merge it  ·  read it</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <g transform="translate(720 115) rotate(-7 285 280)">
+      <rect x="18" y="18" width="548" height="544" rx="30" fill="#0b1224" opacity="0.35"/>
+      <rect width="548" height="544" rx="30" fill="url(#paper)"/>
+      <rect width="548" height="78" rx="30" fill="#111c45"/>
+      <path d="M0 52 H548 V78 H0 Z" fill="#111c45"/>
+      <circle cx="35" cy="39" r="8" fill="#fb7185"/>
+      <circle cx="62" cy="39" r="8" fill="#fbbf24"/>
+      <circle cx="89" cy="39" r="8" fill="#34d399"/>
+      <text x="126" y="46" class="batch">CONVERSATION TRANSCRIPT</text>
+      <rect x="433" y="23" width="88" height="32" rx="16" fill="#7c3aed"/>
+      <text x="450" y="45" class="batch">BATCH 1</text>
+      <line x1="73" y1="122" x2="73" y2="452" stroke="#c7d2fe" stroke-width="6" stroke-linecap="round"/>
+      <g transform="translate(73 142)">
+        <circle r="18" fill="#22d3ee"/>
+        <path d="M-6 -1 L-1 5 L8 -7" fill="none" stroke="#083344" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="43" y="-2" class="event">ThinkingTrace</text>
+        <text x="43" y="25" class="detail">"I need to inspect the order..."</text>
+      </g>
+      <g transform="translate(73 239)">
+        <circle r="18" fill="#a78bfa"/>
+        <path d="M-7 -6 H7 V6 H-7 Z M-3 -10 V-6 M3 -10 V-6" fill="none" stroke="#2e1065" stroke-width="3" stroke-linecap="round"/>
+        <text x="43" y="-2" class="event">ToolCallTrace:Started</text>
+        <text x="43" y="25" class="detail">toolKind: "tool"  ·  call_01</text>
+      </g>
+      <g transform="translate(73 336)">
+        <circle r="18" fill="#38bdf8"/>
+        <path d="M-8 0 H8 M3 -5 L8 0 L3 5" fill="none" stroke="#082f49" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="43" y="-2" class="event">Status stream</text>
+        <text x="43" y="25" class="detail">Reading a file...</text>
+      </g>
+      <g transform="translate(73 433)">
+        <circle r="18" fill="#34d399"/>
+        <path d="M-7 0 L-2 6 L9 -7" fill="none" stroke="#052e16" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="43" y="-2" class="event">Tool completed</text>
+        <text x="43" y="25" class="detail">durationMs: 812  ·  result</text>
+      </g>
+      <path d="M404 505 H492" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
+      <text x="35" y="512" class="detail">Name + ConversationStartTime + BatchId</text>
+    </g>
+
+    <g transform="translate(1078 172) rotate(7 208 236)">
+      <rect x="15" y="15" width="412" height="462" rx="27" fill="#020617" opacity="0.32"/>
+      <rect width="412" height="462" rx="27" fill="#f8fafc"/>
+      <rect width="412" height="70" rx="27" fill="#25205b"/>
+      <path d="M0 47 H412 V70 H0 Z" fill="#25205b"/>
+      <text x="28" y="44" class="batch">CONTINUED</text>
+      <rect x="298" y="19" width="88" height="32" rx="16" fill="#0891b2"/>
+      <text x="315" y="41" class="batch">BATCH 2</text>
+      <line x1="64" y1="112" x2="64" y2="366" stroke="#c7d2fe" stroke-width="6" stroke-linecap="round"/>
+      <g transform="translate(64 139)">
+        <circle r="17" fill="#34d399"/>
+        <path d="M-7 0 L-2 6 L9 -7" fill="none" stroke="#052e16" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="40" y="7" class="event">Agent answer</text>
+      </g>
+      <g transform="translate(64 236)">
+        <circle r="17" fill="#2dd4bf"/>
+        <path d="M-7 0 H7 M0 -7 V7" fill="none" stroke="#042f2e" stroke-width="3" stroke-linecap="round"/>
+        <text x="40" y="7" class="event">turn.complete</text>
+      </g>
+      <g transform="translate(64 333)">
+        <circle r="17" fill="#fbbf24"/>
+        <path d="M0 -8 V2 M0 8 V9" fill="none" stroke="#422006" stroke-width="4" stroke-linecap="round"/>
+        <text x="40" y="-2" class="event">SessionInfo</text>
+        <text x="40" y="22" class="detail">outcome: "Resolved"</text>
+      </g>
+      <text x="28" y="419" class="detail">Merge before you diagnose.</text>
+    </g>
+  </g>
+
+  <path d="M720 610 C890 718 1090 730 1278 621" fill="none" stroke="#67e8f9" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 18" filter="url(#softGlow)"/>
+
+  <g transform="translate(1140 557)">
+    <circle cx="154" cy="120" r="105" fill="url(#lens)" stroke="#a5f3fc" stroke-width="12" filter="url(#shadow)"/>
+    <circle cx="154" cy="120" r="87" fill="#0f1d46" fill-opacity="0.76"/>
+    <text x="82" y="107" class="lensText">toolCallId</text>
+    <text x="103" y="138" class="lensText">call_01</text>
+    <path d="M226 198 L330 302" stroke="#a5f3fc" stroke-width="34" stroke-linecap="round"/>
+    <path d="M226 198 L330 302" stroke="#164e63" stroke-width="20" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(1270 669)" filter="url(#shadow)">
+    <path d="M30 76 L12 8 L78 45 Z" fill="url(#cat)" stroke="#7c2d12" stroke-width="4"/>
+    <path d="M160 76 L178 8 L112 45 Z" fill="url(#cat)" stroke="#7c2d12" stroke-width="4"/>
+    <ellipse cx="95" cy="104" rx="85" ry="76" fill="url(#cat)" stroke="#7c2d12" stroke-width="4"/>
+    <path d="M43 61 C65 40 126 39 149 63" fill="none" stroke="#9a4f20" stroke-width="8" stroke-linecap="round"/>
+    <path d="M69 53 L80 30 M95 49 V23 M121 54 L112 30" stroke="#9a4f20" stroke-width="7" stroke-linecap="round"/>
+    <ellipse cx="65" cy="95" rx="14" ry="19" fill="#172554"/>
+    <ellipse cx="125" cy="95" rx="14" ry="19" fill="#172554"/>
+    <circle cx="61" cy="89" r="5" fill="#ffffff"/>
+    <circle cx="121" cy="89" r="5" fill="#ffffff"/>
+    <path d="M89 116 Q95 122 101 116" fill="#7c2d12"/>
+    <path d="M95 122 Q81 136 70 125 M95 122 Q109 136 120 125" fill="none" stroke="#7c2d12" stroke-width="3" stroke-linecap="round"/>
+    <path d="M65 120 L10 110 M65 129 L4 134 M125 120 L180 110 M125 129 L186 134" stroke="#fed7aa" stroke-width="3" stroke-linecap="round"/>
+    <path d="M45 164 Q95 188 145 164 L154 232 H36 Z" fill="#1e3a8a"/>
+    <path d="M58 166 L95 205 L132 166" fill="#f8fafc"/>
+    <path d="M95 205 L81 231 H109 Z" fill="#7c3aed"/>
+  </g>
+
+</svg>
