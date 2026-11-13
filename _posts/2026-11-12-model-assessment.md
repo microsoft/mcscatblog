@@ -140,7 +140,7 @@ The recommendation isn't simply another model's opinion. The
 [app computes the verdict and confidence in code](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#63-recommend-model-from-assessment-comparison).
 {% capture scoring_url %}{% post_url 2026-06-26-better-llm-scoring %}{% endcapture %}
 An AI prompt explains the reasons and trade-offs. As in
-[our evidence-backed LLM scoring pattern]({{ scoring_url | absolute_url }}),
+[our evidence-backed LLM scoring pattern]({{ scoring_url | prepend: site.url }}),
 the explanation supports a decision whose rules can be inspected.
 
 ### Separate evaluation consumption from assessment analysis
@@ -165,7 +165,7 @@ scoring figures.
 {% capture governance_url %}{% post_url 2026-08-07-copilot-harness-cost-governance %}{% endcapture %}
 None of these figures forecasts production savings. Broader controls are
 covered in
-[our consumption-governance article]({{ governance_url | absolute_url }}).
+[our consumption-governance article]({{ governance_url | prepend: site.url }}).
 
 ## Let the AI summary put the results in context
 
