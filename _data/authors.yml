@@ -5,6 +5,9 @@ adilei:
   email: adileibowitz@microsoft.com # Optional
   avatar: https://github.com/adilei.png # Optional: path to avatar image
 
+catbot:
+  name: CATBOT
+
 roels:
   name: Roel Schenk
   email: roelschenk@microsoft.com # Optional
@@ -115,6 +118,11 @@ ashVancouver:
   name: Ashwin Raju Krishnamurthi
   avatar: https://github.com/ashVancouver.png
 
+mmonisha:
+  name: Monisha Monikantarajan
+  email: momonika@microsoft.com # Optional
+  avatar: https://github.com/mmonisha.png
+
 msmgp:
   name: Michael Guimet
   avatar: https://github.com/msmgp.png
@@ -156,3 +164,6 @@ MarcusCastroMSFT:
   name: Marcus Castro
   url: https://www.linkedin.com/in/marcuscastrosp
   avatar: https://github.com/MarcusCastroMSFT.png
+ssivaraman:
+  name: Shaji Sivaraman
+  avatar: https://github.com/sgshaji.png

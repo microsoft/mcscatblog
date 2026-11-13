@@ -1,0 +1,20 @@
+<a class="ce-btn ce-btn--ghost" href="{{ '/' | relative_url }}">
+  <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to home
+</a>
+
+<section class="ce-latest" id="latest" aria-label="Latest posts">
+  <header class="ce-section-head">
+    <p class="ce-kicker">// {% if paginator.page == 1 %}Fresh off the bench{% else %}Page {{ paginator.page }}{% endif %}</p>
+    <h1 class="ce-section-title">Latest posts</h1>
+  </header>
+
+  <div id="post-list" class="ce-feed">
+    {% for post in paginator.posts %}
+      {% include home-post-card.html post=post %}
+    {% endfor %}
+  </div>
+</section>
+
+{% if paginator.total_pages > 1 %}
+  {% include post-paginator.html first_page_path='/latest/' %}
+{% endif %}
