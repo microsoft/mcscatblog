@@ -16,58 +16,58 @@ Microsoft offers a growing range of AI tools, and it can take a little time to g
 
 The terminology here reflects what's in use as of November 16, 2026.
 
-## Microsoft 365 Copilot-sounding names
+## Microsoft Copilot-sounding names
 
-### Microsoft 365 Copilot
+### Microsoft Copilot
 {: #microsoft-365-copilot }
 
-Microsoft 365 Copilot is a product: Microsoft's AI experience for work across Microsoft 365 applications, organizational information, and agents. You can access it through the web, including its dedicated web app, Microsoft Teams, and mobile apps, with capabilities depending on licensing and configuration.
+Microsoft Copilot is a product: Microsoft's AI experience for work across Microsoft 365 applications, organizational information, and agents. You can access it through the web, including its dedicated web app, Microsoft Teams, and mobile apps, with capabilities depending on licensing and configuration.
 
 The [chat experience](#copilot-chat) is part of the product, while the [Copilot app](#copilot-app) is an interface through which you access it.
 
-![Microsoft 365 Copilot](/assets/posts/copilot-glossary/m365copilot.jpg){: .shadow w="1200" h="630" }
-*Microsoft 365 Copilot*
+![Microsoft Copilot](/assets/posts/copilot-glossary/m365copilot.jpg){: .shadow w="1200" h="630" }
+*Microsoft Copilot*
 
 ### Microsoft Copilot Chat
 {: #copilot-chat }
 
-"Microsoft Copilot Chat" often refers informally to the conversational experience inside Microsoft 365 Copilot: the actual chat, rather than the whole product. Although we tend to also use this name sometimes, my advice in general conversation is to say **the chat in Microsoft 365 Copilot** when that is what you mean, avoiding the ambiguity associated with names such as the superseded "Business Chat" naming.
+"Microsoft Copilot Chat" often refers informally to the conversational experience inside Microsoft Copilot: the actual chat, rather than the whole product. Although we tend to also use this name sometimes, my advice in general conversation is to say **the chat in Microsoft Copilot** when that is what you mean, avoiding the ambiguity associated with names such as the superseded "Business Chat" naming.
 
-[Microsoft 365 Copilot](#microsoft-365-copilot) is the whole product, including chat; the [Copilot Chat harness](#copilot-chat-harness) is a completely different concept, and it is the execution technology behind a particular agent experience (usually associated with Copilot Studio).
+[Microsoft Copilot](#microsoft-365-copilot) is the whole product, including chat; the [Copilot Chat harness](#copilot-chat-harness) is a completely different concept, and it is the execution technology behind a particular agent experience (usually associated with Copilot Studio).
 
-### Microsoft 365 Copilot app
+### Microsoft Copilot app
 {: #copilot-app }
 
-The Microsoft 365 Copilot app is the application name used for the productivity hub that brings together Copilot and work experiences. Current documentation calls it the **Microsoft Copilot app**, although older names can remain in documentation and interfaces.
+The Microsoft Copilot app is the application name used for the productivity hub that brings together Copilot and work experiences. Current documentation calls it the **Microsoft Copilot app**, although older names can remain in documentation and interfaces.
 
-The app is an access surface for [Microsoft 365 Copilot](#microsoft-365-copilot), not a separate name for the entire product and its licensing.
+The app is an access surface for [Microsoft Copilot](#microsoft-365-copilot), not a separate name for the entire product and its licensing.
 
-![Microsoft 365 Copilot app](/assets/posts/copilot-glossary/m365copilotapp.jpg){: .shadow w="1818" h="754" }
-*Microsoft 365 Copilot app*
+![Microsoft Copilot app](/assets/posts/copilot-glossary/m365copilotapp.jpg){: .shadow w="1818" h="754" }
+*Microsoft Copilot app*
 
 ### BizChat / Business Chat
 
-BizChat and Business Chat are former internal and now superseded names associated with the work-grounded conversational Copilot experience (the paid one). They remain useful when reading older material, but I recommend saying **the chat in Microsoft 365 Copilot** rather than carrying these names into new explanations.
+BizChat and Business Chat are former internal and now superseded names associated with the work-grounded conversational Copilot experience (the paid one). They remain useful when reading older material, but I recommend saying **the chat in Microsoft Copilot** rather than carrying these names into new explanations.
 
 ### Copilot Code
 {: #copilot-code }
 
-Copilot Code is **Code in Microsoft 365 Copilot**, a tab within the overall product. It provides coding capabilities for creating and editing code-based artifacts, such as interactive dashboards, apps, and other purpose-built solutions.
+Copilot Code is **Code in Microsoft Copilot**, a tab within the overall product. It provides coding capabilities for creating and editing code-based artifacts, such as interactive dashboards, apps, and other purpose-built solutions.
 
-It shares underlying technology with [GitHub Copilot](#github-copilot), but is a capability inside Microsoft 365 Copilot (that doesn't require separate GitHub accounts) rather than the GitHub development product.
+It shares underlying technology with [GitHub Copilot](#github-copilot), but is a capability inside Microsoft Copilot (that doesn't require separate GitHub accounts) rather than the GitHub development product.
 
-![Code in Microsoft 365 Copilot](/assets/posts/copilot-glossary/m365copilotcode.png){: .shadow w="378" h="217" }
-*Code in Microsoft 365 Copilot*
+![Code in Microsoft Copilot](/assets/posts/copilot-glossary/m365copilotcode.png){: .shadow w="378" h="217" }
+*Code in Microsoft Copilot*
 
 ### Agent Builder
 {: #agent-builder }
 
-Copilot Agent Builder is an agent-creation experience **within Microsoft 365 Copilot**. It lets you configure instructions, knowledge, and supported capabilities without implementing the agent's underlying engine.
+Copilot Agent Builder is an agent-creation experience **within Microsoft Copilot**. It lets you configure instructions, knowledge, and supported capabilities without implementing the agent's underlying engine.
 
-Unlike a [custom engine agent](#custom-engine-agent), an agent created this way relies on the same orchestration used by [Microsoft 365 Copilot](#microsoft-365-copilot).
+Unlike a [custom engine agent](#custom-engine-agent), an agent created this way relies on the same orchestration used by [Microsoft Copilot](#microsoft-365-copilot).
 
 ![Copilot Agent Builder](/assets/posts/copilot-glossary/agentbuilder.png){: .shadow w="1516" h="875" }
-*Agent Builder in Microsoft 365 Copilot*
+*Agent Builder in Microsoft Copilot*
 
 ### Copilot+ PC
 
@@ -165,7 +165,7 @@ Unlike the [CLI](#github-copilot-cli), it is a building block for software rathe
 
 Microsoft Copilot harness is the Copilot Studio harness for reasoning-heavy, multistep agents and workflows. Microsoft renamed it from GitHub Copilot harness on October 28, 2026, so the previous name remains visible in older material.
 
-It is neither the [GitHub Copilot service](#github-copilot) which is a subscription-based service for developers, nor the [GitHub Copilot SDK](#github-copilot-sdk) which is just the "engine" that powers this experience, nor the [Copilot Chat harness](#copilot-chat-harness) which is a different harness, precisely the one reusing the same orchestration as [Microsoft 365 Copilot](#microsoft-365-copilot).
+It is neither the [GitHub Copilot service](#github-copilot) which is a subscription-based service for developers, nor the [GitHub Copilot SDK](#github-copilot-sdk) which is just the "engine" that powers this experience, nor the [Copilot Chat harness](#copilot-chat-harness) which is a different harness, precisely the one reusing the same orchestration as [Microsoft Copilot](#microsoft-365-copilot).
 
 ![Microsoft Copilot harness in Copilot Studio](/assets/posts/copilot-glossary/mcharness.png){: .shadow w="1928" h="788" }
 *Microsoft Copilot harness in Copilot Studio*
@@ -173,9 +173,9 @@ It is neither the [GitHub Copilot service](#github-copilot) which is a subscript
 ### Copilot Chat harness
 {: #copilot-chat-harness }
 
-Copilot Chat harness supports agents that extend Microsoft 365 Copilot relying on its hosted models and orchestration. These are the agents historically described, and still documented, as [declarative agents](#declarative-agent).
+Copilot Chat harness supports agents that extend Microsoft Copilot relying on its hosted models and orchestration. These are the agents historically described, and still documented, as [declarative agents](#declarative-agent).
 
-Despite the near-identical wording, it is distinct from the [Microsoft Copilot Chat](#microsoft-copilot-chat) which instead only identifies the chat interface within Microsoft 365 Copilot, without the extensibility options.
+Despite the near-identical wording, it is distinct from the [Microsoft Copilot Chat](#microsoft-copilot-chat) which instead only identifies the chat interface within Microsoft Copilot, without the extensibility options.
 
 ![Copilot Chat harness in Copilot Studio](/assets/posts/copilot-glossary/chatharness.png){: .shadow w="1512" h="532" }
 *Copilot Chat harness in Copilot Studio*
@@ -258,9 +258,9 @@ The agent is the configured assistant; the harness is what runs it, so this is a
 ### Custom engine agent
 {: #custom-engine-agent }
 
-Custom engine agent is a broad term for an agent available in Microsoft 365 Copilot that does not use Copilot's out-of-the-box orchestrator. Its developer supplies the agent engine and orchestration instead.
+Custom engine agent is a broad term for an agent available in Microsoft Copilot that does not use Copilot's out-of-the-box orchestrator. Its developer supplies the agent engine and orchestration instead.
 
-I recommend avoiding this catch-all label when you can name the actual framework, harness, or hosting arrangement, because it says little about how the agent works. For example, a [Microsoft Copilot harness](#copilot-chat-harness) published in Microsoft 365 Copilot would represent a custom engine agent, while a [Copilot Chat harness](#copilot-chat-harness) would not.
+I recommend avoiding this catch-all label when you can name the actual framework, harness, or hosting arrangement, because it says little about how the agent works. For example, a [Microsoft Copilot harness](#copilot-chat-harness) published in Microsoft Copilot would represent a custom engine agent, while a [Copilot Chat harness](#copilot-chat-harness) would not.
 
 
 ## Microsoft 365 Agents and Agent 365-sounding names
@@ -354,7 +354,7 @@ They are not interchangeable with [Copilot Credits](#copilot-credits), which bel
 ### Copilot Credits
 {: #copilot-credits }
 
-Copilot Credits measure consumption for supported Microsoft Copilot and agent capabilities. The amount consumed depends on the operation and billing arrangement and can be used for a variety of Microsoft AI experiences like Microsoft 365 Copilot, Copilot Studio, Cowork, and more.
+Copilot Credits measure consumption for supported Microsoft Copilot and agent capabilities. The amount consumed depends on the operation and billing arrangement and can be used for a variety of Microsoft AI experiences like Microsoft Copilot, Copilot Studio, Cowork, and more.
 
 
 ## Foundry-sounding names
