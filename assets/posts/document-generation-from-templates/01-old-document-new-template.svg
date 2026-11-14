@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="644" viewBox="0 0 1200 644" role="img" font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+<title>An existing document beside the new, empty template</title>
+<desc>Illustrative layout. The existing document has the headings Role Title, Key Accountabilities, Selection Criteria and Qualifications. The new template has Role Title, Key Accountabilities, Delegated Authority and a block of notes for the author. Role Title is stated in the source, so its wording is copied. Delegated Authority is not stated in the source, so it is written as Not provided. The notes for the author are template-only text and are removed.</desc>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0.8 L9,5 L0,9.2 z" fill="#52514e"/></marker></defs>
+<rect x="0.8" y="0.8" width="1198.5" height="642.5" rx="16" fill="#fcfcfb" stroke="#e1e0d9" stroke-width="1.5"/>
+<text x="40.0" y="60.0" font-size="30" font-weight="600" fill="#0b0b0b" text-anchor="start">The same content has to move into a new structure</text>
+<text x="40.0" y="92.0" font-size="19" font-weight="400" fill="#52514e" text-anchor="start">Illustrative layout, not a real document.</text>
+<text x="40.0" y="150.0" font-size="13" font-weight="600" fill="#6f6d68" text-anchor="start" letter-spacing="0.9">EXISTING DOCUMENT</text>
+<text x="560.0" y="150.0" font-size="13" font-weight="600" fill="#6f6d68" text-anchor="start" letter-spacing="0.9">NEW TEMPLATE, EMPTY</text>
+<text x="990.0" y="150.0" font-size="13" font-weight="600" fill="#6f6d68" text-anchor="start" letter-spacing="0.9">WHAT HAS TO HAPPEN</text>
+<rect x="40.0" y="164.0" width="400.0" height="388.0" rx="6" fill="#ffffff" stroke="#c3c2b7" stroke-width="1.25"/>
+<rect x="560.0" y="164.0" width="400.0" height="388.0" rx="6" fill="#ffffff" stroke="#c3c2b7" stroke-width="1.25"/>
+<text x="68.0" y="206.0" font-size="22" font-weight="600" fill="#0b0b0b" text-anchor="start">Role Description</text>
+<text x="68.0" y="246.0" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Role Title</text>
+<text x="68.0" y="270.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">Project Officer</text>
+<text x="68.0" y="312.0" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Key Accountabilities</text>
+<circle cx="73.0" cy="334.0" r="3" fill="#c3c2b7"/>
+<rect x="86.0" y="329.0" width="300.0" height="10.0" rx="5" fill="#e1e0d9" stroke="none" stroke-width="1.0"/>
+<circle cx="73.0" cy="356.0" r="3" fill="#c3c2b7"/>
+<rect x="86.0" y="351.0" width="262.0" height="10.0" rx="5" fill="#e1e0d9" stroke="none" stroke-width="1.0"/>
+<circle cx="73.0" cy="378.0" r="3" fill="#c3c2b7"/>
+<rect x="86.0" y="373.0" width="226.0" height="10.0" rx="5" fill="#e1e0d9" stroke="none" stroke-width="1.0"/>
+<text x="68.0" y="420.0" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Selection Criteria</text>
+<circle cx="73.0" cy="442.0" r="3" fill="#c3c2b7"/>
+<rect x="86.0" y="437.0" width="286.0" height="10.0" rx="5" fill="#e1e0d9" stroke="none" stroke-width="1.0"/>
+<circle cx="73.0" cy="464.0" r="3" fill="#c3c2b7"/>
+<rect x="86.0" y="459.0" width="240.0" height="10.0" rx="5" fill="#e1e0d9" stroke="none" stroke-width="1.0"/>
+<text x="68.0" y="506.0" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Qualifications</text>
+<circle cx="73.0" cy="528.0" r="3" fill="#c3c2b7"/>
+<rect x="86.0" y="523.0" width="250.0" height="10.0" rx="5" fill="#e1e0d9" stroke="none" stroke-width="1.0"/>
+<text x="588.0" y="206.0" font-size="22" font-weight="600" fill="#0b0b0b" text-anchor="start">Role Description</text>
+<text x="588.0" y="246.0" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Role Title</text>
+<rect x="588.0" y="256.0" width="210.0" height="24.0" rx="3" fill="#fdf0b3" stroke="none" stroke-width="1.0"/>
+<text x="588.0" y="318.0" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Key Accountabilities</text>
+<rect x="588.0" y="328.0" width="344.0" height="46.0" rx="3" fill="#fdf0b3" stroke="none" stroke-width="1.0"/>
+<text x="588.0" y="412.0" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Delegated Authority</text>
+<rect x="588.0" y="422.0" width="210.0" height="24.0" rx="3" fill="#fdf0b3" stroke="none" stroke-width="1.0"/>
+<rect x="588.0" y="470.0" width="344.0" height="62.0" rx="4" fill="#f3f2ef" stroke="#c3c2b7" stroke-width="1"/>
+<text x="602.0" y="496.0" font-size="15" font-weight="600" fill="#52514e" text-anchor="start" font-style="italic">Notes for the author</text>
+<text x="602.0" y="518.0" font-size="15" font-weight="400" fill="#52514e" text-anchor="start" font-style="italic">Guidance on how to complete this form.</text>
+<line x1="456.0" y1="358.0" x2="542.0" y2="358.0" stroke="#52514e" stroke-width="2" stroke-linecap="round" marker-end="url(#arr)"/>
+<circle cx="960.0" cy="268.0" r="4" fill="#52514e"/>
+<line x1="960.0" y1="268.0" x2="982.0" y2="268.0" stroke="#52514e" stroke-width="1.5" stroke-linecap="round"/>
+<text x="990.0" y="262.0" font-size="16" font-weight="400" fill="#0b0b0b" text-anchor="start">Stated in the source.</text>
+<text x="990.0" y="283.0" font-size="16" font-weight="400" fill="#0b0b0b" text-anchor="start">Copy the wording.</text>
+<circle cx="960.0" cy="434.0" r="4" fill="#52514e"/>
+<line x1="960.0" y1="434.0" x2="982.0" y2="434.0" stroke="#52514e" stroke-width="1.5" stroke-linecap="round"/>
+<text x="990.0" y="420.0" font-size="16" font-weight="400" fill="#0b0b0b" text-anchor="start">Not stated in the source.</text>
+<text x="990.0" y="441.0" font-size="16" font-weight="400" fill="#0b0b0b" text-anchor="start">Write “Not provided”.</text>
+<circle cx="960.0" cy="501.0" r="4" fill="#52514e"/>
+<line x1="960.0" y1="501.0" x2="982.0" y2="501.0" stroke="#52514e" stroke-width="1.5" stroke-linecap="round"/>
+<text x="990.0" y="500.0" font-size="16" font-weight="400" fill="#0b0b0b" text-anchor="start">Template-only text.</text>
+<text x="990.0" y="521.0" font-size="16" font-weight="400" fill="#0b0b0b" text-anchor="start">Remove it.</text>
+<text x="40.0" y="596.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">Done means two things: a completed document, and a run report listing what was filled, what was not provided and what was removed.</text>
+</svg>

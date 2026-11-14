@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="621" viewBox="0 0 1200 621" role="img" font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+<title>How the workflow decides what is due and what is left</title>
+<desc>The workflow reads the current template version, lists the documents whose stamp differs from it, and calls the agent once for each document, one at a time. A document that is converted and verified is stamped with the template version. A document that fails or times out gets no stamp, and the loop moves on. After the loop the workflow lists the documents that still lack the current stamp. If none are left the run succeeds. If any are left the run is reported as failed and they are still due next time.</desc>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0.8 L9,5 L0,9.2 z" fill="#52514e"/></marker></defs>
+<rect x="0.8" y="0.8" width="1198.5" height="619.5" rx="16" fill="#fcfcfb" stroke="#e1e0d9" stroke-width="1.5"/>
+<text x="40.0" y="60.0" font-size="30" font-weight="600" fill="#0b0b0b" text-anchor="start">The stamp on each document is the memory</text>
+<text x="40.0" y="92.0" font-size="19" font-weight="400" fill="#52514e" text-anchor="start">Taken from the exported workflow definition. Documents are processed one at a time.</text>
+<rect x="40.0" y="136.0" width="340.0" height="159.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="58.0" y="165.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">WORKFLOW</text>
+<text x="58.0" y="196.0" font-size="20" font-weight="600" fill="#0b0b0b" text-anchor="start">Read the current template</text>
+<text x="58.0" y="222.0" font-size="20" font-weight="600" fill="#0b0b0b" text-anchor="start">version</text>
+<text x="58.0" y="250.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">The version is a column on the</text>
+<text x="58.0" y="273.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">template file.</text>
+<rect x="430.0" y="136.0" width="340.0" height="159.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="448.0" y="165.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">WORKFLOW</text>
+<text x="448.0" y="196.0" font-size="20" font-weight="600" fill="#0b0b0b" text-anchor="start">List what is due</text>
+<text x="448.0" y="224.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">Documents whose stamp differs from</text>
+<text x="448.0" y="247.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">the current version. Archive and</text>
+<text x="448.0" y="270.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">secondary-output folders are left out.</text>
+<rect x="820.0" y="136.0" width="340.0" height="159.0" rx="10" fill="#fdeee7" stroke="#eb6834" stroke-width="1.5"/>
+<text x="838.0" y="165.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">AGENT</text>
+<text x="838.0" y="196.0" font-size="20" font-weight="600" fill="#0b0b0b" text-anchor="start">Convert one document</text>
+<text x="838.0" y="224.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">The workflow calls the agent once for</text>
+<text x="838.0" y="247.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">each document, one at a time.</text>
+<line x1="387.0" y1="215.5" x2="421.0" y2="215.5" stroke="#52514e" stroke-width="1.75" stroke-linecap="round" marker-end="url(#arr)"/>
+<line x1="777.0" y1="215.5" x2="811.0" y2="215.5" stroke="#52514e" stroke-width="1.75" stroke-linecap="round" marker-end="url(#arr)"/>
+<line x1="990.0" y1="302.0" x2="990.0" y2="352.0" stroke="#52514e" stroke-width="1.75" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="820.0" y="361.0" width="340.0" height="103.0" rx="10" fill="#e7f6e7" stroke="#0ca30c" stroke-width="1.5"/>
+<circle cx="850.0" cy="391.0" r="12" fill="#0ca30c"/>
+<path d="M844,391.5 l4.5,4.5 l8,-9" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="874.0" y="397.0" font-size="19" font-weight="600" fill="#0b0b0b" text-anchor="start">Converted and verified</text>
+<text x="874.0" y="424.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">The agent stamps the document</text>
+<text x="874.0" y="447.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">with the template version.</text>
+<rect x="820.0" y="478.0" width="340.0" height="103.0" rx="10" fill="#fbeaea" stroke="#d03b3b" stroke-width="1.5"/>
+<circle cx="850.0" cy="508.0" r="12" fill="#d03b3b"/>
+<path d="M845,503.0 l10,10 M855,503.0 l-10,10" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="874.0" y="514.0" font-size="19" font-weight="600" fill="#0b0b0b" text-anchor="start">Failed or timed out</text>
+<text x="874.0" y="541.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">No stamp is written. The loop</text>
+<text x="874.0" y="564.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">moves on to the next document.</text>
+<rect x="430.0" y="393.0" width="340.0" height="156.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="448.0" y="422.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">WORKFLOW</text>
+<text x="448.0" y="453.0" font-size="20" font-weight="600" fill="#0b0b0b" text-anchor="start">Check the library again</text>
+<text x="448.0" y="481.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">After the loop, list the documents that</text>
+<text x="448.0" y="504.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">still lack the current stamp.</text>
+<rect x="40.0" y="393.0" width="340.0" height="156.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="58.0" y="422.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">WORKFLOW</text>
+<text x="58.0" y="453.0" font-size="20" font-weight="600" fill="#0b0b0b" text-anchor="start">Report the run</text>
+<text x="58.0" y="481.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">None left: the run succeeds. Any left:</text>
+<text x="58.0" y="504.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">the run is reported as failed, and those</text>
+<text x="58.0" y="527.0" font-size="17" font-weight="400" fill="#52514e" text-anchor="start">documents are still due next time.</text>
+<line x1="813.0" y1="471.0" x2="779.0" y2="471.0" stroke="#52514e" stroke-width="1.75" stroke-linecap="round" marker-end="url(#arr)"/>
+<line x1="423.0" y1="471.0" x2="389.0" y2="471.0" stroke="#52514e" stroke-width="1.75" stroke-linecap="round" marker-end="url(#arr)"/>
+</svg>

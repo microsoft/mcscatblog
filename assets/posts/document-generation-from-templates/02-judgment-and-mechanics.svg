@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="553" viewBox="0 0 1200 553" role="img" font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+<title>Two kinds of work in one conversion: judgment and mechanics</title>
+<desc>A pipeline of seven steps. Code discovers the template fields and extracts the source text. The agent maps source text to fields. Code fills the template. The agent chooses what template-only text to remove. Code removes it and validates the document, then saves and verifies the stored file. The agent decides which source text belongs under each field, what is missing, and what to remove. The code reads, edits and checks the file. Document bytes never pass through the conversation.</desc>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0.8 L9,5 L0,9.2 z" fill="#52514e"/></marker></defs>
+<rect x="0.8" y="0.8" width="1198.5" height="551.5" rx="16" fill="#fcfcfb" stroke="#e1e0d9" stroke-width="1.5"/>
+<text x="40.0" y="60.0" font-size="30" font-weight="600" fill="#0b0b0b" text-anchor="start">Two kinds of work in one conversion</text>
+<text x="40.0" y="92.0" font-size="19" font-weight="400" fill="#52514e" text-anchor="start">The agent decides. The code touches the file.</text>
+<rect x="40.0" y="136.0" width="141.1" height="116.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="54.0" y="161.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">CODE</text>
+<text x="54.0" y="190.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">Discover</text>
+<text x="54.0" y="213.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">template</text>
+<text x="54.0" y="236.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">fields</text>
+<line x1="185.1" y1="194.0" x2="198.1" y2="194.0" stroke="#52514e" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="203.1" y="136.0" width="141.1" height="116.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="217.1" y="161.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">CODE</text>
+<text x="217.1" y="190.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">Extract</text>
+<text x="217.1" y="213.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">source text</text>
+<line x1="348.3" y1="194.0" x2="361.3" y2="194.0" stroke="#52514e" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="366.3" y="136.0" width="141.1" height="116.0" rx="10" fill="#fdeee7" stroke="#eb6834" stroke-width="1.5"/>
+<text x="380.3" y="161.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">AGENT</text>
+<text x="380.3" y="190.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">Map source</text>
+<text x="380.3" y="213.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">text to fields</text>
+<line x1="511.4" y1="194.0" x2="524.4" y2="194.0" stroke="#52514e" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="529.4" y="136.0" width="141.1" height="116.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="543.4" y="161.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">CODE</text>
+<text x="543.4" y="190.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">Fill the</text>
+<text x="543.4" y="213.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">template</text>
+<line x1="674.6" y1="194.0" x2="687.6" y2="194.0" stroke="#52514e" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="692.6" y="136.0" width="141.1" height="116.0" rx="10" fill="#fdeee7" stroke="#eb6834" stroke-width="1.5"/>
+<text x="706.6" y="161.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">AGENT</text>
+<text x="706.6" y="190.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">Choose what</text>
+<text x="706.6" y="213.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">to remove</text>
+<line x1="837.7" y1="194.0" x2="850.7" y2="194.0" stroke="#52514e" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="855.7" y="136.0" width="141.1" height="116.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="869.7" y="161.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">CODE</text>
+<text x="869.7" y="190.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">Remove and</text>
+<text x="869.7" y="213.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">validate</text>
+<line x1="1000.9" y1="194.0" x2="1013.9" y2="194.0" stroke="#52514e" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="1018.9" y="136.0" width="141.1" height="116.0" rx="10" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="1032.9" y="161.0" font-size="13" font-weight="600" fill="#52514e" text-anchor="start" letter-spacing="0.9">CODE</text>
+<text x="1032.9" y="190.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">Save and</text>
+<text x="1032.9" y="213.0" font-size="18" font-weight="600" fill="#0b0b0b" text-anchor="start">verify</text>
+<rect x="40.0" y="298.0" width="548.0" height="177.0" rx="12" fill="#fdeee7" stroke="#eb6834" stroke-width="1.5"/>
+<text x="66.0" y="342.0" font-size="22" font-weight="600" fill="#0b0b0b" text-anchor="start">The agent decides</text>
+<circle cx="71.0" cy="374.0" r="4" fill="#eb6834"/>
+<text x="88.0" y="380.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">Which source text belongs under each template field</text>
+<circle cx="71.0" cy="407.0" r="4" fill="#eb6834"/>
+<text x="88.0" y="413.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">What the source does not state, written as “Not provided”</text>
+<circle cx="71.0" cy="440.0" r="4" fill="#eb6834"/>
+<text x="88.0" y="446.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">Which template-only text, such as author notes, to remove</text>
+<rect x="612.0" y="298.0" width="548.0" height="177.0" rx="12" fill="#e8f1fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="638.0" y="342.0" font-size="22" font-weight="600" fill="#0b0b0b" text-anchor="start">The code does</text>
+<circle cx="643.0" cy="374.0" r="4" fill="#2a78d6"/>
+<text x="660.0" y="380.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">Reads the template’s fields and the source text</text>
+<circle cx="643.0" cy="407.0" r="4" fill="#2a78d6"/>
+<text x="660.0" y="413.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">Edits the document file and keeps its formatting</text>
+<circle cx="643.0" cy="440.0" r="4" fill="#2a78d6"/>
+<text x="660.0" y="446.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">Checks the document and the size of the stored file</text>
+<text x="40.0" y="515.0" font-size="18" font-weight="400" fill="#52514e" text-anchor="start">Document bytes never pass through the conversation. The agent hands the code a field map, and the code edits the file.</text>
+</svg>
