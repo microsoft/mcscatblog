@@ -41,16 +41,17 @@ questions accurately. A model change is useful only if it improves those tasks
 without breaking others.
 
 Model Assessment works with both **Microsoft Copilot harness** and
-**Standard harness** agents, but the
-[test path depends on the harness](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#33-make-an-agent-eligible).
+**Standard harness** agents, with
+[two test paths](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#33-make-an-agent-eligible).
 
-For Microsoft Copilot harness agents, create evaluation test sets in
-**Copilot Studio evaluations**, include `MODELCHECK` in their names, and keep
-them active. These evaluations assess the saved draft.
+**Copilot Studio evaluations** support both harnesses. Create evaluation
+test sets, include `MODELCHECK` in their names, and keep them active.
+These evaluations assess the saved draft.
 
-For Standard harness agents, use **Copilot Agent Kit test automation**:
-configure a pipeline-enabled **Agent Configuration** and a Kit test set.
-Kit tests assess the published agent and support Standard harness agents only.
+**Copilot Agent Kit test automation** currently supports Standard harness
+agents only, as an alternative to Copilot Studio evaluations. Configure a
+pipeline-enabled **Agent Configuration** and a Kit test set. Kit tests assess
+the published agent.
 
 The [setup guide](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#2-prerequisites)
 covers the required roles, connections, flows, and capacity.
