@@ -40,11 +40,18 @@ the right troubleshooting guidance; for an onboarding agent, answering policy
 questions accurately. A model change is useful only if it improves those tasks
 without breaking others.
 
-Model Assessment supports
-[Copilot Studio evaluations and Copilot Agent Kit tests](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#1-overview).
-The evaluation path uses active test sets with `MODELCHECK` in their names and
-assesses the saved draft. The Kit path requires a pipeline-enabled Agent
-Configuration and a Kit test set, and assesses the published agent.
+Model Assessment works with both **Microsoft Copilot harness** and
+**Standard harness** agents, but the
+[test path depends on the harness](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#33-make-an-agent-eligible).
+
+For Microsoft Copilot harness agents, create evaluation test sets in
+**Copilot Studio evaluations**, include `MODELCHECK` in their names, and keep
+them active. These evaluations assess the saved draft.
+
+For Standard harness agents, use **Copilot Agent Kit test automation**:
+configure a pipeline-enabled **Agent Configuration** and a Kit test set.
+Kit tests assess the published agent and support Standard harness agents only.
+
 The [setup guide](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#2-prerequisites)
 covers the required roles, connections, flows, and capacity.
 
@@ -58,15 +65,15 @@ Kit**. Its overview brings the previous and current models together
 with each agent's latest assessment status, making it easier to spot agents
 that need investigation.
 
-![Model Assessment showing ZAVA agents with their previous and current models, assessment status, and latest results.](/assets/posts/model-assessment/01-zava-agents.png){: .shadow w="1258" h="527" }
+![Model Assessment filtered to Zava Kit Test Automation, showing GPT-6 Luna and GPT-6.1 Sol, assessment status, and latest results.](/assets/posts/model-assessment/01-zava-agents.png){: .shadow w="1258" h="257" }
 
-_The overview connects model changes with the latest assessment results across agents._
+_The overview connects a model change with the agent's latest assessment results._
 
 The individual agent's **Model history** preserves earlier assessments,
 including run dates, results, and reported credits where available. You can
 revisit earlier assessments, not just the latest run.
 
-![Zava Kit Test Automation showing its model selector and assessed model history with dates, results, and reported credits.](/assets/posts/model-assessment/02-model-history.png){: .shadow w="540" h="720" }
+![Zava Kit Test Automation showing GPT-6.1 Sol in the model selector and its latest model-history entry from GPT-6 Luna.](/assets/posts/model-assessment/02-model-history.png){: .shadow w="584" h="375" }
 
 _Assessment history keeps earlier model results available as the agent evolves._
 
@@ -88,14 +95,18 @@ shows the work moving through **Initializing**, **Running evaluations** (or
 That makes it clear whether the agent is still answering test cases or the
 assessment is preparing its analysis.
 
-![Assessment progress for Zava Kit Test Automation, showing initialization, running evaluations, scoring results, generating AI analysis, and completion.](/assets/posts/model-assessment/08-assessment-progress.png){: .shadow w="546" h="302" }
+![Assessment progress for Zava Kit Test Automation, showing initialization, running evaluations, scoring results, generating AI analysis, and completion.](/assets/posts/model-assessment/08-assessment-progress.png){: .shadow w="551" h="304" }
 
 _The progress panel shows the current assessment stage. The assessment keeps running if the panel is closed._
 
 ## Quality and consumption belong in the same discussion
 
-Our example compares **GPT-5 Chat** with **GPT 5.6 Sol**, using completed
-Copilot Studio evaluation runs from October 28 and October 30, 2026.
+Our example compares **GPT-6 Luna** with **GPT-6.1 Sol**, using completed
+Copilot Studio evaluation runs from November 16, 2026. Both are OpenAI models
+listed as generally available in the
+[Microsoft Copilot harness model guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/authoring-agent-model-availability#model-lifecycle-summary).
+This is a demonstration of assessing one agent on its tests, not a benchmark
+or a general ranking of the models.
 
 The comparison workspace
 places the results alongside each other. A model recommendation is available
@@ -103,27 +114,28 @@ for exactly two completed runs using the same test engine.
 
 Here's what these two runs show:
 
-| Observed result | GPT-5 Chat | GPT 5.6 Sol |
+| Observed result | GPT-6 Luna | GPT-6.1 Sol |
 | --- | --- | --- |
-| Run date | October 28, 2026 | October 30, 2026 |
-| Passed checks | 14 | 13 |
-| Failed checks | 4 | 5 |
+| Run date | November 16, 2026 | November 16, 2026 |
+| Passed checks | 14 | 12 |
+| Failed checks | 4 | 6 |
 | Errors / excluded | 0 / 0 | 0 / 0 |
 | Run assessment badge | Critical | Critical |
-| Shared-check pass rate | 77.8% | 72.2% |
-| Reported evaluation credits (estimated) | 64.61 | 169.32 |
-| Answering / scoring credits | 51.51 / 13.10 | 155.45 / 13.87 |
+| Shared-check pass rate | 77.8% | 66.7% |
+| Reported evaluation credits (estimated) | 77.68 | 71.13 (partial) |
+| Answering / scoring credits | 64.87 / 12.81 | 58.29 / 12.84 |
 
-GPT-5 Chat passed one more check while consuming fewer reported credits.
-The app recommends **GPT-5 Chat, Medium confidence**, reporting **61.8% fewer
-Copilot Credits per check** for this comparison.
+For these runs, GPT-6 Luna passed two more checks. The app recommends
+**GPT-6 Luna, Medium confidence**, based on the quality difference in the
+shared checks: two passed with Luna and failed with Sol, with none showing
+the reverse.
 
-The interesting part isn't just the lower credit total. GPT 5.6 Sol didn't
-pass a check that GPT-5 Chat failed, so these results offer no compensating
-quality gain for its higher consumption. Under the app's rules, quality is
-close enough here for credits to break the tie.
+The credit figures need a separate reading. Sol's reported total is marked
+**partial**, so its smaller number doesn't establish that it was cheaper
+overall. Don't turn incomplete consumption data into a savings claim.
+Here, the useful next step is to investigate the two changed checks.
 
-![Side-by-side GPT-5 Chat and GPT 5.6 Sol results with the GPT-5 Chat recommendation, Medium confidence, 18 shared checks, and reported credit trade-off.](/assets/posts/model-assessment/03-model-comparison.png){: .shadow w="1120" h="820" }
+![Side-by-side GPT-6 Luna and GPT-6.1 Sol results with a Luna recommendation, Medium confidence, 18 shared checks, and a partial-credit flag for Sol.](/assets/posts/model-assessment/03-model-comparison.png){: .shadow w="1104" h="804" }
 
 _The recommendation names a preferred model for this comparison and explains its confidence and trade-offs. Both runs still show Critical assessment badges._
 
@@ -133,8 +145,8 @@ a Pass or Fail in both runs; missing, error, and excluded results aren't
 treated as comparable passes.
 
 Eighteen shared checks explain the Medium confidence: useful evidence for
-these tasks, but not a general ranking of the models. This historical pair
-also doesn't establish that all other agent configuration stayed unchanged.
+these tasks, but not enough to skip reproducing important differences
+before a production decision.
 
 The recommendation isn't simply another model's opinion. The
 [app computes the verdict and confidence in code](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#63-recommend-model-from-assessment-comparison).
@@ -147,7 +159,8 @@ the explanation supports a decision whose rules can be inspected.
 
 The figures in the table combine two reported evaluation components:
 **answering**, where the agent responds to the test cases, and **scoring**,
-where those answers are evaluated. They aren't an all-in total for the
+where those answers are evaluated. Sol's figures are incomplete, as the
+partial flag indicates. Neither column is an all-in total for the
 assessment workflow.
 
 [Per-run credit reporting](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#52-copilot-credits)
@@ -183,16 +196,19 @@ those findings in perspective.
 For Zava Kit Test Automation, the summaries draw attention to a useful
 contrast: Dataverse tool-use tasks are a strength, while several explanations
 about testing and the agent's capabilities continue to fail classification
-checks. The GPT 5.6 Sol summary also highlights the response-quality regression
-when listing tests in a specific test set.
+checks. The GPT-6.1 Sol summary also highlights the response-quality
+regression when listing tests in a specific test set and a failed keyword
+check for starting a test run.
 
-![Per-run AI summaries for GPT-5 Chat and GPT 5.6 Sol, showing overall assessments, strengths, and concerns for Zava Kit Test Automation.](/assets/posts/model-assessment/07-ai-summary.png){: .shadow w="1120" h="820" }
+![Per-run AI summaries for GPT-6 Luna and GPT-6.1 Sol, showing strengths, classification concerns, and two regressed checks for Zava Kit Test Automation.](/assets/posts/model-assessment/07-ai-summary.png){: .shadow w="1104" h="804" }
 
-_The per-run AI summaries explain the strengths and concerns behind the totals, including persistent classification failures and a response-quality regression._
+_The generated summaries surface strengths and concerns to investigate, including persistent classification failures and the two changed checks._
 
-That is a more useful starting point than "five checks failed." The maker
+That is a more useful starting point than "six checks failed." The maker
 can see where the agent remains dependable and which kind of answer deserves
-a closer look.
+a closer look. Still, verify the generated wording against the recorded
+results. Here, Luna's summary says **Warning**, while its run card records
+**Critical**. The generated prose doesn't override that run status.
 
 There's a distinction worth keeping in mind: the recommendation compares the
 selected pair, while each run's summary explains its own assessment and
@@ -206,18 +222,24 @@ For that, we need the individual checks.
 
 The response-quality concern in the summary leads to a concrete example.
 In **Test runs**, results are grouped by test set, with each metric shown
-side by side. The **Regressed** view isolates one request:
+side by side. The **Regressed** view shows two changed checks. Start with
+this request:
 
 > Show the tests in the Customer Support Case Agent test set.
 
-Its **Response Quality** check passed for GPT-5 Chat and failed for GPT 5.6 Sol.
+Its **Response Quality** check passed for GPT-6 Luna and failed for GPT-6.1 Sol.
 The full comparison shows **Tool and Capability Use** passing in both runs.
 That distinction changes the investigation. The evidence points to a
 response-quality problem, not a demonstrated failure to use the tool.
 
-![Regressed filter isolating the Customer Support Case Agent test-set request: Response Quality passes for GPT-5 Chat and fails for GPT 5.6 Sol.](/assets/posts/model-assessment/05-regressed-check.png){: .shadow w="1120" h="460" }
+The other changed check is **Required Information Coverage** for "Start a
+test run." A keyword-check failure doesn't by itself prove that the agent
+failed to start a run; inspect the expected wording and the response before
+making that diagnosis.
 
-_One selected-run difference explains the extra failure. The row also retains the reported credits for that test case._
+![Regressed view showing Response Quality and Required Information Coverage changing from Pass on GPT-6 Luna to Fail on GPT-6.1 Sol.](/assets/posts/model-assessment/05-regressed-check.png){: .shadow w="1104" h="582" }
+
+_Two selected-run differences explain the extra failures. The rows retain the reported credits for each test case._
 
 The failed check identifies where to investigate. Review the test's expected
 outcome and evaluation criteria, then rerun the scenario under controlled
@@ -231,13 +253,13 @@ a result worth reproducing.
 The **Test runs** view also shows reported **Copilot Credits per test case**,
 alongside its graded results and test-set subtotals.
 
-For the same request, the reported consumption is **7.94 credits** for
-GPT-5 Chat and **19.47 credits** for GPT 5.6 Sol. These figures belong to the
-test case, not a separate charge for each metric row. In this example, the
-higher consumption accompanied a failed response-quality check, rather than
-a better evaluated answer.
+For the test-listing request, the reported consumption is **10.85 credits**
+for GPT-6 Luna and **13.46 credits** for GPT-6.1 Sol. These figures belong to
+the test case, not a separate charge for each metric row. Read them alongside
+the Response Quality result, and retain the warning that Sol's run-level
+consumption is partial. They don't establish a complete cost comparison.
 
-![Side-by-side evaluation results for Zava Kit Test Automation, including reported Copilot Credits per test case and test-set subtotals.](/assets/posts/model-assessment/04-test-results.png){: .shadow w="1120" h="820" }
+![Side-by-side evaluation results for Zava Kit Test Automation, including reported Copilot Credits per test case and test-set subtotals.](/assets/posts/model-assessment/04-test-results.png){: .shadow w="1104" h="804" }
 
 _Test-case consumption adds detail to the run totals: makers can compare the credits used for a task with the quality of its results._
 
@@ -246,12 +268,12 @@ _Test-case consumption adds detail to the run totals: makers can compare the cre
 There's another important detail in the comparison: **both runs are Critical**.
 
 The **Needs attention** view explains why the preferred model isn't the end
-of the investigation. Alongside the response-quality regression, four
+of the investigation. Alongside the two changed checks, four
 Business Classification checks fail in both runs. They concern interpreting
 test-run results, running a test set, describing the agent's capabilities, and
 explaining test types.
 
-![Needs attention filter showing the single response-quality regression alongside Business Classification checks that remain failing across both models.](/assets/posts/model-assessment/06-needs-attention.png){: .shadow w="1120" h="820" }
+![Needs attention filter for GPT-6 Luna and GPT-6.1 Sol showing regressed checks and Business Classification checks that fail in both runs.](/assets/posts/model-assessment/06-needs-attention.png){: .shadow w="1104" h="804" }
 
 _Needs attention exposes the wider failure pattern. A Pass-to-Fail change and a Fail-to-Fail result call for different investigations._
 
@@ -260,7 +282,7 @@ preferred? **Critical** describes the run's failure status. Both runs exceed
 the failed-check threshold in the documented
 [run-status rules](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#51-regression-status).
 
-Choosing GPT-5 Chat doesn't resolve those four failures. Their classification
+Choosing GPT-6 Luna doesn't resolve those four failures. Their classification
 criteria and expected labels still need to be checked against the saved
 evidence. The agent might need a correction, the evaluation might need a
 correction, or both might need work.
@@ -274,10 +296,11 @@ configuration review a useful starting point.
 
 ## Bring evidence to the model decision
 
-For this example, I'd favor GPT-5 Chat for the tested tasks and keep the
-classification failures on the follow-up list. The recommendation helps make
-the choice; the unresolved results keep that choice from being mistaken for
-a clean bill of health.
+For this example, I'd keep GPT-6 Luna as the candidate to investigate further
+for these tasks, reproduce the two changed checks, and review the persistent
+classification failures. I'd also resolve the partial consumption reporting
+before making a cost-based decision. The recommendation helps prioritize
+that work; it isn't a clean bill of health.
 
 The
 [PDF export](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/MODEL_ASSESSMENT.md#48-review-test-results-and-export)
