@@ -21,8 +21,9 @@ As frontier labs introduce new models, the choices available in Copilot Studio
 keep changing. Follow the guidance in
 [Manage the AI model lifecycle for Copilot Studio agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/plan-agent-model-lifecycle)
 to review those changes regularly and determine whether your agents need a
-model migration. Model Assessment helps you prepare by comparing candidate
-models against your agent's existing test baseline before you migrate.
+model migration. Model Assessment helps you prepare for a migration by testing
+how your agent performs with a different model and comparing the results with
+its current model.
 
 A different model might write a better explanation but miss a detail in a
 tool-backed answer. It might pass the same tests while consuming more credits.
