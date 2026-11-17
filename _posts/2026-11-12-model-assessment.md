@@ -16,6 +16,14 @@ published: true
 Changing an agent's model takes a few clicks. Knowing whether the change is
 worth keeping takes more work.
 
+Managing an agent's model lifecycle isn't a "set it and forget it" task.
+As frontier labs introduce new models, the choices available in Copilot Studio
+keep changing. Follow the guidance in
+[Manage the AI model lifecycle for Copilot Studio agents](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/plan-agent-model-lifecycle)
+to review those changes regularly and determine whether your agents need a
+model migration. Model Assessment helps you prepare by comparing candidate
+models against your agent's existing test baseline before you migrate.
+
 A different model might write a better explanation but miss a detail in a
 tool-backed answer. It might pass the same tests while consuming more credits.
 A few good conversations won't tell you which trade-off you're making.
