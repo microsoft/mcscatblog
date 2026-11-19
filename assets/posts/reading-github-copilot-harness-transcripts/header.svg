@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">Inside GitHub Copilot harness transcripts</title>
-  <desc id="desc">A cat investigator follows a glowing trail through transcript pages containing reasoning, tool call, and turn completion events.</desc>
+  <title id="title">Inside Microsoft Copilot harness transcripts</title>
+  <desc id="desc">A cat investigator follows a glowing trail through Microsoft Copilot harness transcript pages containing reasoning, tool call, and turn completion events.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#091126"/>
@@ -35,7 +35,7 @@
     </filter>
     <style>
       .eyebrow { font: 700 24px "Segoe UI", Arial, sans-serif; letter-spacing: 4px; fill: #67e8f9; }
-      .badge { font: 700 18px "Segoe UI", Arial, sans-serif; letter-spacing: 3px; fill: #67e8f9; }
+      .badge { font: 700 18px "Segoe UI", Arial, sans-serif; letter-spacing: 0.8px; fill: #67e8f9; }
       .headline { font: 750 72px "Segoe UI", Arial, sans-serif; fill: #f8fafc; }
       .subhead { font: 400 30px "Segoe UI", Arial, sans-serif; fill: #c7d2fe; }
       .chip { font: 500 22px "Segoe UI", Arial, sans-serif; fill: #c7d2fe; }
@@ -52,9 +52,9 @@
   <path d="M0 760 C340 670 520 820 820 735 C1110 650 1320 690 1600 565 V900 H0 Z" fill="#070d1d" opacity="0.72"/>
 
   <g transform="translate(105 126)">
-    <rect width="258" height="44" rx="22" fill="#0891b2" opacity="0.2" stroke="#67e8f9" stroke-opacity="0.55"/>
+    <rect width="340" height="44" rx="22" fill="#0891b2" opacity="0.2" stroke="#67e8f9" stroke-opacity="0.55"/>
     <circle cx="27" cy="22" r="7" fill="#67e8f9"/>
-    <text x="49" y="29" class="badge">GHCP HARNESS</text>
+    <text x="49" y="29" class="badge">Microsoft Copilot harness</text>
 
     <text x="0" y="132" class="headline">Inside the</text>
     <text x="0" y="214" class="headline">transcript</text>
