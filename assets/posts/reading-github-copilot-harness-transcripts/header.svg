@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">Inside Microsoft Copilot harness transcripts</title>
-  <desc id="desc">A cat investigator follows a glowing trail through Microsoft Copilot harness transcript pages containing reasoning, tool call, and turn completion events.</desc>
+  <desc id="desc">A CAT investigator follows recorded reasoning, tool calls, results, and turn completion in a Microsoft Copilot harness transcript.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#091126"/>
@@ -58,7 +58,7 @@
 
     <text x="0" y="132" class="headline">Inside the</text>
     <text x="0" y="214" class="headline">transcript</text>
-    <text x="0" y="278" class="subhead">Follow the evidence behind every answer.</text>
+    <text x="0" y="278" class="subhead">Follow the recorded events.</text>
 
     <g transform="translate(0 337)">
       <rect width="170" height="48" rx="24" fill="#22d3ee" fill-opacity="0.14" stroke="#22d3ee" stroke-opacity="0.6"/>
@@ -72,7 +72,7 @@
       <text x="373" y="32" class="chip">Turns</text>
     </g>
     <path d="M0 438 H430" stroke="#475569" stroke-width="2"/>
-    <text x="0" y="487" class="subhead" font-size="22">Find it  ·  merge it  ·  read it</text>
+    <text x="0" y="487" class="chip">Connect tool calls to results.</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -86,7 +86,7 @@
       <circle cx="89" cy="39" r="8" fill="#34d399"/>
       <text x="126" y="46" class="batch">CONVERSATION TRANSCRIPT</text>
       <rect x="433" y="23" width="88" height="32" rx="16" fill="#7c3aed"/>
-      <text x="450" y="45" class="batch">BATCH 1</text>
+      <text x="477" y="45" text-anchor="middle" class="batch">TRACE</text>
       <line x1="73" y1="122" x2="73" y2="452" stroke="#c7d2fe" stroke-width="6" stroke-linecap="round"/>
       <g transform="translate(73 142)">
         <circle r="18" fill="#22d3ee"/>
@@ -113,7 +113,7 @@
         <text x="43" y="25" class="detail">durationMs: 812  ·  result</text>
       </g>
       <path d="M404 505 H492" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
-      <text x="35" y="512" class="detail">Name + ConversationStartTime + BatchId</text>
+      <text x="35" y="512" class="detail">ThinkingTrace + toolCallId + result</text>
     </g>
 
     <g transform="translate(1078 172) rotate(7 208 236)">
@@ -121,9 +121,9 @@
       <rect width="412" height="462" rx="27" fill="#f8fafc"/>
       <rect width="412" height="70" rx="27" fill="#25205b"/>
       <path d="M0 47 H412 V70 H0 Z" fill="#25205b"/>
-      <text x="28" y="44" class="batch">CONTINUED</text>
+      <text x="28" y="44" class="batch">TURN SUMMARY</text>
       <rect x="298" y="19" width="88" height="32" rx="16" fill="#0891b2"/>
-      <text x="315" y="41" class="batch">BATCH 2</text>
+      <text x="342" y="41" text-anchor="middle" class="batch">RESULT</text>
       <line x1="64" y1="112" x2="64" y2="366" stroke="#c7d2fe" stroke-width="6" stroke-linecap="round"/>
       <g transform="translate(64 139)">
         <circle r="17" fill="#34d399"/>
@@ -141,7 +141,7 @@
         <text x="40" y="-2" class="event">SessionInfo</text>
         <text x="40" y="22" class="detail">outcome: "Resolved"</text>
       </g>
-      <text x="28" y="419" class="detail">Merge before you diagnose.</text>
+      <text x="28" y="390" class="detail">Follow the tool-call IDs.</text>
     </g>
   </g>
 

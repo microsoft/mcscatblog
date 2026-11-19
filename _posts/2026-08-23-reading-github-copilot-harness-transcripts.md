@@ -5,11 +5,11 @@ title: "Inside Microsoft Copilot harness Transcripts: Reasoning, Tools, and Turn
 date: 2026-08-23 09:00:00 +0530
 categories: [orchestration]
 tags: [copilot-studio, orchestration, agent-development, dataverse, debugging, troubleshooting, skills]
-description: "Read Microsoft Copilot harness transcript events, correlate tool calls, and merge available records, starting with the built-in history and Kit tools."
+description: "Understand Microsoft Copilot harness transcripts: read recorded reasoning, follow tool calls and results, and interpret how a turn progresses."
 author: patilravikiran
 image:
   path: /assets/posts/reading-github-copilot-harness-transcripts/header.svg
-  alt: "A CAT investigator traces reasoning, tool calls, results, and turn completion across split Microsoft Copilot harness transcript pages."
+  alt: "A CAT investigator follows recorded reasoning, tool calls, results, and turn completion in a Microsoft Copilot harness transcript."
 mermaid: true
 ---
 
@@ -17,7 +17,7 @@ A user tells you the agent gave them the wrong answer yesterday. You ask the sam
 
 Reproducing the question is useful, but it doesn't tell you what happened in that earlier exchange. Which tool did the agent pick? What came back? Did it stop because something failed, or because it needed the user's permission?
 
-Agents powered by the [Microsoft Copilot harness](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/overview) use a different set of transcript events. Rather than following topic routing, you trace reasoning, tool selection, and execution results. This post explains how to find those events, reassemble the conversation, and interpret what happened.
+Agents powered by the [Microsoft Copilot harness](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/overview) use a different set of transcript events. These events let you read the recorded reasoning text, see which tools the agent called, and inspect what those tools returned. This post explains how to find those events and interpret what happened.
 
 ## Start with the tools, not the JSON
 
