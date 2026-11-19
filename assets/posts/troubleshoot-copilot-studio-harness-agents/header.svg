@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Monitoring Microsoft Copilot harness agents across five layers</title>
+  <desc id="description">Service health, access and capacity, environment and dependencies, agent behavior, and fleet adoption. Admins and makers share evidence and assign the next action.</desc>
+  <rect width="1200" height="630" fill="#101c30"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="64" y="76" fill="#8bd9f1" font-size="20" letter-spacing="3">AN ADMIN AND MAKER PLAYBOOK</text>
+    <text x="64" y="132" fill="#ffffff" font-size="42" font-weight="700">Is it the platform or the agent?</text>
+    <text x="64" y="172" fill="#c6d3e3" font-size="23">Monitoring Microsoft Copilot harness agents in Copilot Studio</text>
+    <text x="875" y="224" fill="#c6d3e3" font-size="18">PRIMARY OWNER</text>
+    <g font-size="24" font-weight="600">
+      <rect x="64" y="242" width="1072" height="58" rx="10" fill="#183c57"/>
+      <text x="90" y="280" fill="#8bd9f1">01</text>
+      <text x="156" y="280" fill="#ffffff">Service health</text>
+      <text x="875" y="280" fill="#c6d3e3" font-size="21">Admin</text>
+      <rect x="64" y="312" width="1072" height="58" rx="10" fill="#20445c"/>
+      <text x="90" y="350" fill="#8bd9f1">02</text>
+      <text x="156" y="350" fill="#ffffff">Access and capacity</text>
+      <text x="875" y="350" fill="#c6d3e3" font-size="21">Admin</text>
+      <rect x="64" y="382" width="1072" height="58" rx="10" fill="#284665"/>
+      <text x="90" y="420" fill="#8bd9f1">03</text>
+      <text x="156" y="420" fill="#ffffff">Environment and dependencies</text>
+      <text x="875" y="420" fill="#c6d3e3" font-size="21">Admin + maker</text>
+      <rect x="64" y="452" width="1072" height="58" rx="10" fill="#3c3e69"/>
+      <text x="90" y="490" fill="#cabaff">04</text>
+      <text x="156" y="490" fill="#ffffff">Agent behavior</text>
+      <text x="875" y="490" fill="#ddd5f7" font-size="21">Maker</text>
+      <rect x="64" y="522" width="1072" height="58" rx="10" fill="#34445f"/>
+      <text x="90" y="560" fill="#8bd9f1">05</text>
+      <text x="156" y="560" fill="#ffffff">Fleet and adoption</text>
+      <text x="875" y="560" fill="#c6d3e3" font-size="21">Admin + owners</text>
+    </g>
+  </g>
+</svg>
