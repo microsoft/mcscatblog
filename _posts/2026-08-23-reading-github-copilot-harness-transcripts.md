@@ -30,7 +30,7 @@ The [Copilot Studio Kit overview]({% post_url 2026-03-06-copilot-studio-kit %}) 
 
 Raw JSON is the next step when you need to investigate a particular payload, correlate parent and child conversations, or write your own analysis. You don't need to start there.
 
-> **Check availability before looking in Dataverse.** As of November 2026, the [transcript access guidance](https://learn.microsoft.com/microsoft-copilot-studio/admin-transcript-controls) says conversation transcripts aren't written to the Dataverse transcript table for Microsoft Copilot agents. The Dataverse examples below describe harness records inspected in August 2026, not a promise that a new conversation will create one today. Use Preview history for conversations available there. The Kit and the manual steps below can work with records you already have; neither can retrieve a record that wasn't stored.
+> **Check availability before looking in Dataverse.** As of November 2026, the [transcript access guidance](https://learn.microsoft.com/microsoft-copilot-studio/admin-transcript-controls) lists Microsoft Copilot agents among the exclusions from Dataverse transcript recording. In a live check on November 19, I nevertheless found records with the trace events described here and conversation timestamps as recent as November 18 in one development environment. That's an observation about those available records, not a guarantee of recording support for every agent or environment. Check the current guidance and your environment's settings, and use Preview history for conversations available there. Neither the Kit nor a manual export can retrieve a record that wasn't stored.
 {: .prompt-warning }
 
 ## What to look for in an available transcript
@@ -41,7 +41,7 @@ An agent on the Copilot harness can choose [knowledge](https://learn.microsoft.c
 
 Look for `ToolCallTrace` and `ThinkingTrace` in both `name` and `valueType`. They identify the event family covered here. `DynamicPlan` events call for the topic-and-plan analysis described in the earlier post. A message-only or mixed transcript needs closer inspection; one missing marker doesn't establish which harness produced it.
 
-> The event shapes below are observations from August 2026 transcripts, cross-checked against the Kit parser. Treat them as parsing examples, not a guaranteed public schema. Keep the raw JSON so you can investigate unfamiliar fields or events.
+> The event shapes below come from available development-environment transcripts, cross-checked against the Kit parser. A November 2026 recheck covered 1,895 distinct records with conversation start dates from July through November, including authoring tests and other traffic. Not every record contained harness events. Treat these as parsing examples, not a guaranteed public schema. Keep the raw JSON so you can investigate unfamiliar fields or events.
 {: .prompt-warning }
 
 ## Finding the record
@@ -94,7 +94,7 @@ Check speaker attribution in those child records too. The numeric role alone can
 
 ### Separate authoring tests from autonomous runs
 
-For available records, the documented way to identify authoring test conversations is [`ConversationInfo.isDesignMode`](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). A value of `true` identifies a test-pane conversation. Keep records where the flag is missing in an unknown group rather than silently treating them as production.
+For available records, the documented way to identify authoring test conversations is [`ConversationInfo.isDesignMode`](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). A value of `true` identifies a test-pane conversation. Merge the batches before checking it: some split rows in my sample had no `ConversationInfo` of their own. Keep conversations where the flag is still missing in an unknown group rather than silently treating them as production.
 
 Keep that separate from the channel. The sample included `pva-studio` and `pva-autonomous`, as well as `msteams` and `directline`. An autonomous run can be production activity: **don't exclude it just because its channel is `pva-autonomous`**. For a production-usage report, separate confirmed authoring tests from other traffic, then decide whether autonomous runs belong in the metric you're measuring.
 
@@ -107,7 +107,7 @@ Start with the activity envelope. These fields let you find the diagnostic event
 | `type` | `message` for user and agent turns, `trace` or `event` for everything diagnostic |
 | `name` / `valueType` | The event marker. Some events populate only one of the two, so always check both |
 | `value` | The payload, and where nearly all diagnostic detail lives |
-| `timestamp` | Epoch seconds in the inspected Dataverse records; use `timestampMs` when present for finer timing, and handle ISO strings in other exports |
+| `timestamp` | The inspected records included epoch seconds and ISO strings; prefer `timestampMs` when present for finer timing, otherwise parse the supplied format |
 | `channelId` | Real values include `pva-studio`, `pva-autonomous`, `pva-published-engine-direct`, `directline`, `msteams`, and other channel-specific names |
 | `replyToId` | Ties a trace event back to the message that triggered it |
 | `from.role` | Commonly `0` for the agent and `1` for the user in these records; check the speaker pattern before relying on numeric roles |
@@ -116,7 +116,7 @@ The `name` and `valueType` split is easy to miss. In the inspected records, the 
 
 ### Check who is speaking
 
-The Kit's parser handles a connected-agent pattern where both sides use `role: 1`. In that pattern, the user message has a `from.aadObjectId`, while the agent message doesn't. Here's an illustrative, sanitized pair; the identifiers and message text are placeholders:
+The Kit's parser handles a connected-agent pattern where both sides use `role: 1`. In that pattern, the user message has a `from.aadObjectId`, while the agent message doesn't. I found the same pattern in two child conversations after matching them to the parent agent tool calls' results. Here's an illustrative, sanitized pair; the identifiers and message text are placeholders:
 
 ```json
 [
@@ -162,7 +162,7 @@ Treat that as the common case rather than a contract. Reasoning can arrive in se
 
 `ThinkingTrace` carries the reasoning text that the [activity trace](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/authoring-activity-trace) surfaces, in a `thinkingText` field.
 
-The text does not arrive in one piece. It streams as delta fragments, then a cumulative snapshot equal to those fragments combined, and a later segment can follow in the same turn. To read it correctly, buffer the deltas, recognize the snapshot rather than appending it a second time, and flush any incomplete buffer before the next tool call so the reasoning does not drift out of order.
+In the streaming examples I checked, the text arrived as delta fragments, followed by a cumulative snapshot equal to those fragments combined. A later segment can follow in the same turn. To read that pattern correctly, buffer the deltas, recognize the snapshot rather than appending it a second time, and flush any incomplete buffer before the next tool call so the reasoning does not drift out of order.
 
 Reasoning is narrative rather than a timed operation, so it reads best as inline text next to the steps it preceded. It is also not a complete record of every internal model operation. It is the trace the product exposes for debugging, and its granularity varies.
 
@@ -207,7 +207,7 @@ Here, the HTTP status and connector message are visible without opening a separa
 
 `SessionInfo` is a useful first stop when you're triaging several sessions. Start with `startTimeUtc`, `endTimeUtc`, `turnCount`, `type`, `outcome`, and `outcomeReason`. The inspected records also included fields such as `impliedSuccess`, `csatScore`, and `lastUserIntentId`; don't assume every record has them.
 
-Keep **session type** and **session outcome** in separate columns, as described in the [`SessionInfo` reference](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). The August sample contained `Engaged` and `Unengaged` types, and outcomes including `Resolved`, `Abandoned`, `HandOff`, and the literal string `None`.
+Keep **session type** and **session outcome** in separate columns, as described in the [`SessionInfo` reference](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). Across the mixed transcript sample, I found `Engaged` and `Unengaged` types, and outcomes including `Resolved`, `Abandoned`, `HandOff`, and the literal string `None`. In records containing the trace family covered here, this check found `Resolved` and `None`; the `Abandoned` and `HandOff` observations came from other records in the sample.
 
 Case-insensitive comparison handles `engaged` versus `Engaged`, but not differently named values. For reporting, the following labels normalize capitalization without combining distinct outcomes:
 
