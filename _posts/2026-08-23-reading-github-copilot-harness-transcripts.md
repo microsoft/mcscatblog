@@ -23,21 +23,19 @@ Agents powered by the [Microsoft Copilot harness](https://learn.microsoft.com/mi
 
 For a conversation available in **Preview**, start with [**Preview > History**](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/preview-history). Select the conversation, or use **Find by ID**, and turn **End user preview** off to see the activity trace for each message. You can review past interactions there; the trace isn't limited to the conversation currently running.
 
-The [Copilot Studio Kit overview]({% post_url 2026-03-06-copilot-studio-kit %}) introduces another useful starting point. Two tools are worth distinguishing:
+The [Copilot Agent Kit overview]({{ site.url }}{% post_url 2026-03-06-copilot-studio-kit %}) introduces another useful starting point. Two tools are worth distinguishing:
 
-- **[Agent Debugger](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/main/AGENT_DEBUGGER.md)** is the closer fit for investigating one recorded conversation. Its [published harness parser](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/mcp-apps/copilot-agent-kit/src/agent-debugger/utils/transcript/parse-generative-transcript.ts) handles `ThinkingTrace`, tool-call starts, completions and failures, and connected-agent markers.
-- **[Conversation Analyzer](https://learn.microsoft.com/microsoft-copilot-studio/guidance/kit-conversation-analyzer)** is for message-level questions: sentiment, personal data, or a custom analysis prompt. The Code App formatter I checked keeps messages, not reasoning or tool traces. It labels numeric role `0` as the agent and other roles as the user, so connected-agent messages with role `1` on both sides can be misattributed. Check speaker labels and batch completeness before using the results.
-
-Check that your installed Debugger version includes that parser support. Dataverse mode also needs access to the records, including child records; offline snapshot mode can't fetch a connected agent's transcript from Dataverse.
+- **[Agent Debugger](https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/kit-agent-debugger)** helps you inspect a recorded conversation's execution path, reasoning, tool arguments, and results when those details are available in the transcript.
+- **[Conversation Analyzer](https://learn.microsoft.com/microsoft-copilot-studio/guidance/kit-conversation-analyzer)** is for message-level questions such as sentiment, personal data, or a custom analysis prompt, rather than reasoning and tool traces. Check speaker labels and batch completeness, especially for connected-agent conversations.
 
 Raw JSON is the next step when you need to investigate a particular payload, correlate parent and child conversations, or write your own analysis. You don't need to start there.
 
-> **Check availability before looking in Dataverse.** The [transcript access guidance](https://learn.microsoft.com/microsoft-copilot-studio/admin-transcript-controls) lists Microsoft Copilot agents among the exclusions from Dataverse transcript recording. Check the current guidance and your environment's recording settings; use Preview history where available. The [sample note below](#about-these-examples) explains the records I could inspect. Neither the Kit nor a manual export can retrieve a record that wasn't stored.
+> **Check availability before looking in Dataverse.** The [transcript access guidance](https://learn.microsoft.com/microsoft-copilot-studio/admin-transcript-controls) lists Microsoft Copilot agents among the exclusions from Dataverse transcript recording. Check the current guidance and your environment's recording settings; use Preview history where available. Neither the Kit nor a manual export can retrieve a record that wasn't stored.
 {: .prompt-warning }
 
 ## What to look for in an available transcript
 
-[Open the Hood]({% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}) covers topic and routing events such as `IntentRecognition`, `DialogRedirect`, and `nodeTraceData`. Here the useful questions are what the agent was reasoning about, which capability it selected, what arguments it supplied, what came back, and whether the turn finished.
+[Open the Hood]({{ site.url }}{% post_url 2026-03-19-open-the-hood-copilot-studio-transcripts %}) covers topic and routing events such as `IntentRecognition`, `DialogRedirect`, and `nodeTraceData`. Here the useful questions are what the agent was reasoning about, which capability it selected, what arguments it supplied, what came back, and whether the turn finished.
 
 An agent on the Copilot harness can choose [knowledge](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/knowledge-copilot-studio) and [tools](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/tools-overview), activate [skills](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/skills-overview), and adapt to the results. Follow that sequence rather than expecting an authored topic path.
 
@@ -45,13 +43,13 @@ Look for `ToolCallTrace` and `ThinkingTrace` in both `name` and `valueType`. The
 
 ## Finding the record
 
-Ask the user to type `/debug conversationid` in the chat. That returns a GUID, and it is by far the fastest route to a specific conversation (see [How to Get Your Conversation ID]({% post_url 2026-01-24-conversationid-users %})). Declarative agents use plain `/debug` instead.
+Ask the user to type `/debug conversationid` in the chat. That returns a GUID, and it is by far the fastest route to a specific conversation (see [How to Get Your Conversation ID]({{ site.url }}{% post_url 2026-01-24-conversationid-users %})). Declarative agents use plain `/debug` instead.
 
-For an existing Dataverse record, open [Power Apps](https://make.powerapps.com/) in the right environment, then **Tables > All**, search for **ConversationTranscript**, and select **Export > Export data**. When the export is ready, select **Download exported data**. The [Power Apps transcript instructions](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#view-and-export-conversation-transcripts-from-the-power-apps-portal) walk through those steps. Treat the exported content as sensitive conversation data.
+You can export available transcripts using the **Export data** functionality in Power Apps. Follow the [transcript export instructions](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-transcripts-powerapps#view-and-export-conversation-transcripts-from-the-power-apps-portal), and treat the exported content as sensitive conversation data.
 
 You need the **Bot Transcript Viewer** role to view transcripts in Power Apps; **Environment maker** alone doesn't grant access. Check the environment's [recording and download settings](https://learn.microsoft.com/microsoft-copilot-studio/admin-transcript-controls#configure-transcript-recording-and-download), retention, and the harness availability limitation above before treating a missing row as a timing issue.
 
-The [`conversationtranscript`](https://learn.microsoft.com/power-apps/developer/data-platform/reference/entities/conversationtranscript) columns that matter are `Name`, which holds the conversation ID joined to the agent ID, `Content`, which holds the activity JSON, `Metadata`, which carries `BotId`, `BotName`, and `BatchId`, and `ConversationStartTime`. Use the conversation ID to locate matching `Name` values in the export.
+The [`conversationtranscript`](https://learn.microsoft.com/power-apps/developer/data-platform/reference/entities/conversationtranscript) columns that matter are `Name`, which holds the conversation ID joined to the agent ID, `Content`, which holds the activity JSON, `Metadata`, which carries agent details and `BatchId`, and `ConversationStartTime`. Use the conversation ID to locate matching `Name` values in the export. The examples below use `AgentId` for the agent identifier; its literal key in `Metadata` is `BotId`.
 
 For conversations eligible for Dataverse recording, the [documented save behavior](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#understand-conversation-transcripts) is a record after 30 minutes of inactivity. For agents published to the Telephony channel, the timeout is three minutes after an *End Conversation* event. Those timings don't override recording settings or make an unsupported conversation appear.
 
@@ -62,12 +60,12 @@ Before interpreting a record, check whether you have the whole conversation. Row
 - After 30 minutes of inactivity, resumed activity is written to a new row with the same `Name` and a new `ConversationStartTime`.
 - `Content` is capped at 1 MB. When one session exceeds that limit, the platform splits it across rows with the same `Name` and `ConversationStartTime` but different `BatchId` values.
 
-In the harness transcripts I inspected, file operations and skill execution produced long streams of status events. One session could span several batches.
+File operations and skill execution can produce long streams of status events, so one session can span several batches.
 
 Merge before you analyze anything. Group by `Name`, order the sessions by `ConversationStartTime`, then order each session's batches by `BatchId`:
 
 ```text
-Name = {ConversationId}_{BotId}
+Name = {ConversationId}_{AgentId}
   ├── ConversationStartTime T1
   │   ├── BatchId 0   ← activities part 1
   │   ├── BatchId 1   ← activities part 2
@@ -78,24 +76,30 @@ Name = {ConversationId}_{BotId}
 
 Read just one batch and you can mistake a missing piece for a failed operation.
 
-> **Do not parse `Name` by splitting on `_`.** That works only when the conversation ID is a plain GUID. Teams and Direct Line conversation IDs contain underscores of their own, so values like `19:…@thread.v2_{BotId}` are normal and a naive split misidentifies the agent. Match on the whole value, or split from the right using the known `BotId`.
+> **Do not parse `Name` by splitting on `_`.** That works only when the conversation ID is a plain GUID. Teams and Direct Line conversation IDs contain underscores of their own, so values like `19:…@thread.v2_{AgentId}` are normal and a naive split misidentifies the agent. Match on the whole value, or split from the right using the known `AgentId`.
 {: .prompt-warning }
 
 ### Connected agents write their own rows
 
-In the connected-agent examples I checked, the delegated conversation had separate transcript rows, with `Name` values containing the parent conversation ID plus a child segment. The parent recorded the handoff and result, not the child's complete activity history.
+A connected agent can have separate transcript rows, with `Name` values containing the parent conversation ID plus a child segment. The parent records the handoff and result, not the child's complete activity history.
+
+Read the child row's `Name` as:
+
+```text
+Name = {ChildConversationIdAsStored}_{AgentId}
+```
+
+For the connected-agent pattern described here, `ChildConversationIdAsStored` begins with `{ParentConversationId}_{ChildConversationId}`. The child ID is returned as `conversation_id` in the correlated agent tool call's result. Match that prefix and preserve any remaining conversation segments rather than assuming a fixed number of underscore-separated parts.
 
 You can spot that delegation in the parent transcript through `ConnectedAgentInitializeTraceData` and `ConnectedAgentCompletedTraceData`. Those markers confirm that a connected agent was invoked, but the child's reasoning and tool calls still live in the child transcript row.
 
-That has a practical consequence during triage. Pull the parent row alone and the delegated work looks like a gap: the parent hands off, some time passes, and an answer comes back with nothing in between to explain it. The reasoning and tool calls that produced that answer are sitting in a row you have not fetched. When a conversation involves connected agents, search for rows whose `Name` starts with the parent conversation ID, then verify the child identifiers against the delegation events or the agent tool call's result. The Kit's [connected-agent service](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/main/mcp-apps/copilot-agent-kit/src/agent-debugger/services/connected-agent-service.ts) shows how those links are resolved.
+That has a practical consequence during triage. Pull the parent row alone and the delegated work looks like a gap: the parent hands off, some time passes, and an answer comes back with nothing in between to explain it. The reasoning and tool calls that produced that answer are sitting in a row you have not fetched. When a conversation involves connected agents, search for rows whose `Name` starts with the parent conversation ID, then verify the child identifiers against the delegation events or the agent tool call's result.
 
 Check speaker attribution in those child records too. The numeric role alone can be misleading, as the example below shows.
 
-### Separate authoring tests from autonomous runs
+### Identify test-pane conversations
 
-For available records, the documented way to identify authoring test conversations is [`ConversationInfo.isDesignMode`](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). A value of `true` identifies a test-pane conversation. Merge the batches before checking it: some split rows in my sample had no `ConversationInfo` of their own. Keep conversations where the flag is still missing in an unknown group rather than silently treating them as production.
-
-Keep that separate from the channel. The sample included `pva-studio` and `pva-autonomous`, as well as `msteams` and `directline`. An autonomous run can be production activity: **don't exclude it just because its channel is `pva-autonomous`**. For a production-usage report, separate confirmed authoring tests from other traffic, then decide whether autonomous runs belong in the metric you're measuring.
+Use [`ConversationInfo.isDesignMode`](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types) to distinguish test-pane conversations (`true`) from non-test-pane traffic (`false`). Merge batches before checking the flag, and keep a missing value as **unknown**, not production. The channel alone doesn't establish test status; `pva-autonomous` can carry production activity.
 
 ## Key fields to focus on
 
@@ -106,16 +110,16 @@ Start with the activity envelope. These fields let you find the diagnostic event
 | `type` | `message` for user and agent turns, `trace` or `event` for everything diagnostic |
 | `name` / `valueType` | The event marker. Some events populate only one of the two, so always check both |
 | `value` | The payload, and where nearly all diagnostic detail lives |
-| `timestamp` | The inspected records included epoch seconds and ISO strings; prefer `timestampMs` when present for finer timing, otherwise parse the supplied format |
+| `timestamp` | Can be epoch seconds or an ISO string; prefer `timestampMs` when present for finer timing, otherwise parse the supplied format |
 | `channelId` | Real values include `pva-studio`, `pva-autonomous`, `pva-published-engine-direct`, `directline`, `msteams`, and other channel-specific names |
 | `replyToId` | Ties a trace event back to the message that triggered it |
 | `from.role` | Commonly `0` for the agent and `1` for the user in these records; check the speaker pattern before relying on numeric roles |
 
-The `name` and `valueType` split is easy to miss. In the inspected records, the `ToolCallTrace` family and `ThinkingTrace` populated `name`, while `SessionInfo` and `ConversationInfo` populated `valueType`. A scan that checks only one field misses events recorded in the other.
+The `name` and `valueType` split is easy to miss. Look for the `ToolCallTrace` family and `ThinkingTrace` in `name`, and `SessionInfo` and `ConversationInfo` in `valueType`. A scan that checks only one field misses events recorded in the other.
 
 ### Check who is speaking
 
-The Kit's parser handles a connected-agent pattern where both sides use `role: 1`. In that pattern, the user message has a `from.aadObjectId`, while the agent message doesn't. I found the same pattern in two child conversations after matching them to the parent agent tool calls' results. Here's an illustrative, sanitized pair; the identifiers and message text are placeholders:
+Connected-agent transcripts can use `role: 1` for both sides. One pattern distinguishes them by `from.aadObjectId`: the user message has it, while the agent message doesn't. Here's an illustrative, sanitized pair; the identifiers and message text are placeholders:
 
 ```json
 [
@@ -131,7 +135,7 @@ The Kit's parser handles a connected-agent pattern where both sides use `role: 1
 
 In this example, the identity field helps distinguish the user from the agent even though the numeric roles match. It doesn't mean every message without `aadObjectId` is an agent message: anonymous users or channels that omit identity can leave it out too.
 
-The parser checks for `role: 0` messages to choose the usual numeric convention; otherwise it uses the identity field to distinguish `role: 1` messages. That's a heuristic. For your own analysis, first merge all batches, honor explicit string roles such as `user` and `bot` where present, and compare sender IDs with known conversation context. If identity is missing on both sides, present on both, or inconsistent, preserve the sender fields and label the speaker **unknown** rather than guessing. You don't need to resolve or publish the person's identity to group messages by speaker.
+Treat the identity-field distinction as a heuristic, not a role contract. First merge all batches, honor explicit string roles such as `user` and `bot` where present, and compare sender IDs with known conversation context. If identity is missing on both sides, present on both, or inconsistent, preserve the sender fields and label the speaker **unknown** rather than guessing. You don't need to resolve or publish the person's identity to group messages by speaker.
 
 ## Anatomy of a turn
 
@@ -161,7 +165,7 @@ The diagram is a reading guide, not a fixed sequence. Reasoning can arrive in se
 
 `ThinkingTrace` carries the reasoning text that the [activity trace](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/authoring-activity-trace) surfaces, in a `thinkingText` field.
 
-In the streaming examples I checked, the text arrived as delta fragments, followed by a cumulative snapshot equal to those fragments combined. A later segment can follow in the same turn. To read that pattern correctly, buffer the deltas, recognize the snapshot rather than appending it a second time, and flush any incomplete buffer before the next tool call so the reasoning does not drift out of order.
+The text can arrive as delta fragments, followed by a cumulative snapshot equal to those fragments combined. A later segment can follow in the same turn. To read that pattern correctly, buffer the deltas, recognize the snapshot rather than appending it a second time, and flush any incomplete buffer before the next tool call so the reasoning does not drift out of order.
 
 Reasoning is narrative rather than a timed operation, so it reads best as inline text next to the steps it preceded. It is also not a complete record of every internal model operation. It is the trace the product exposes for debugging, and its granularity varies.
 
@@ -183,7 +187,7 @@ The generic `ToolCallTrace` carries incremental `status` strings such as `Runnin
 | `unfilledParameters` | Inputs still missing |
 | `hiddenFilledParameters` | Runtime supplied values not shown as user inputs |
 
-Skills need special handling. The Kit parser recognizes a loaded skill by `toolName: "skill"` and uses `toolDisplayName` for its name. Don't rely on `toolKind` being present, or group every skill under the generic name `skill`.
+Skills need special handling. Recognize a loaded skill by `toolName: "skill"` and use `toolDisplayName` for its name. Don't rely on `toolKind` being present, or group every skill under the generic name `skill`.
 
 `ToolCallTrace:Completed` closes a call successfully, carrying the same `toolCallId`, a `durationMs`, and a `result` that may be text or JSON. The `result` is where the step's observation lives.
 
@@ -198,15 +202,15 @@ Here, the HTTP status and connector message are visible without opening a separa
 
 ### `turn.complete` and `turn.awaitConsent`
 
-`turn.complete` marks the end of the harness work for a turn. Its payload is empty, so the marker itself is the whole signal. In the inspected examples it followed the agent's reply, but it wasn't emitted on every turn. Treat it as positive confirmation that a turn closed, never as a required boundary, and do not read its absence as a failure.
+`turn.complete` marks the end of the harness work for a turn. Its payload is empty, so the marker itself is the whole signal. It can follow the agent's reply, but isn't present on every turn. Treat it as positive confirmation that a turn closed, never as a required boundary, and do not read its absence as a failure.
 
 `turn.awaitConsent` appears when a tool needs the user to authorize it, for example a connector action that surfaces a consent card. Its payload carries `requestId`, `toolName`, and the `connectors` awaiting authorization. A turn sitting on this event is waiting on the user rather than the agent, which is worth knowing before you go hunting for a performance problem that does not exist.
 
 ### `SessionInfo`
 
-`SessionInfo` is a useful first stop when you're triaging several sessions. Start with `startTimeUtc`, `endTimeUtc`, `turnCount`, `type`, `outcome`, and `outcomeReason`. The inspected records also included fields such as `impliedSuccess`, `csatScore`, and `lastUserIntentId`; don't assume every record has them.
+`SessionInfo` is a useful first stop when you're triaging several sessions. Start with `startTimeUtc`, `endTimeUtc`, `turnCount`, `type`, `outcome`, and `outcomeReason`. Additional fields can include `impliedSuccess`, `csatScore`, and `lastUserIntentId`; don't assume every record has them.
 
-Keep **session type** and **session outcome** in separate columns, as described in the [`SessionInfo` reference](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). Across the mixed transcript sample, I found `Engaged` and `Unengaged` types, and outcomes including `Resolved`, `Abandoned`, `HandOff`, and the literal string `None`. In records containing the trace family covered here, this check found `Resolved` and `None`; the `Abandoned` and `HandOff` observations came from other records in the sample.
+Keep **session type** and **session outcome** in separate columns, as described in the [`SessionInfo` reference](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). Types include `Engaged` and `Unengaged`. Outcome spellings vary across transcript families, so keep values such as `Resolved`, `Abandoned`, `HandOff`, and the literal string `None` distinct rather than assuming every family uses the same set.
 
 Case-insensitive comparison handles `engaged` versus `Engaged`, but not differently named values. For reporting, the following labels normalize capitalization without combining distinct outcomes:
 
@@ -252,13 +256,9 @@ A few habits keep this from going wrong.
 
 Merge split rows before counting anything, because a missing completion can be a completion that landed in the next row. Match `name` and `valueType` on every scan. Correlate tool calls by `toolCallId` rather than by adjacency. Read `SessionInfo` first when triaging in bulk, and use `outcomeReason` to help distinguish failures from ordinary handoffs.
 
-Be careful about inferring order from the diagram. A call with no reasoning in front of it isn't evidence that the agent skipped a step. A completion can also be present without its start in the records you retrieved; the Kit parser handles that case rather than discarding it.
+Be careful about inferring order from the diagram. A call with no reasoning in front of it isn't evidence that the agent skipped a step. A completion can also be present without its start in the records you retrieved; retain it rather than discarding it.
 
 And treat the absence of a lifecycle marker as weak evidence. Completions trail their triggers, `turn.complete` is optional, and reasoning appears only where the product chose to expose it. A recorded completion is useful evidence of what the platform reported, not proof that the user's goal was met. Missing or redacted content needs context too.
-
-### About these examples
-
-On November 19, 2026, I rechecked 1,895 distinct records from one development environment, with conversation start dates from July through November. The sample included authoring tests and other traffic; not every record contained harness events. Records with the trace events covered here had conversation timestamps through November 18. Their availability isn't a guarantee of recording support in other environments. The event shapes are observations cross-checked against the Kit parser, not a public schema contract. Keep the raw JSON when building your own parser.
 
 ## Wrapping up
 
