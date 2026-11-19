@@ -25,12 +25,14 @@ For a conversation available in **Preview**, start with [**Preview > History**](
 
 The [Copilot Studio Kit overview]({% post_url 2026-03-06-copilot-studio-kit %}) introduces another useful starting point. Two tools are worth distinguishing:
 
-- **[Agent Debugger](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/main/AGENT_DEBUGGER.md)** is the closer fit for investigating an individual recorded conversation. The Kit's [published harness parser](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/mcp-apps/copilot-agent-kit/src/agent-debugger/utils/transcript/parse-generative-transcript.ts) handles `ThinkingTrace`, tool-call starts, completions and failures, and connected-agent markers. That confirms event-level support in that implementation, not in every older installed Kit version. Dataverse mode needs access to the records, including child records. Offline snapshot mode can't fetch a connected agent's transcript from Dataverse.
-- **[Conversation Analyzer](https://learn.microsoft.com/microsoft-copilot-studio/guidance/kit-conversation-analyzer)** applies sentiment, personal-data, or custom prompts to conversations. Use it for message-level questions. In the Code App implementation I checked, its input formatter keeps `message` activities, not reasoning or tool traces, and labels numeric role `0` as the agent and other roles as the user. That supports analysis of ordinary message text, but can misattribute connected-agent messages where both sides use role `1`. Check speaker labels and batch completeness in your installed version before trusting those results.
+- **[Agent Debugger](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/main/AGENT_DEBUGGER.md)** is the closer fit for investigating one recorded conversation. Its [published harness parser](https://github.com/microsoft/Power-CAT-Copilot-Studio-Kit/blob/db22736e71bf6acb813e2e9dd2491e489a8c0f92/mcp-apps/copilot-agent-kit/src/agent-debugger/utils/transcript/parse-generative-transcript.ts) handles `ThinkingTrace`, tool-call starts, completions and failures, and connected-agent markers.
+- **[Conversation Analyzer](https://learn.microsoft.com/microsoft-copilot-studio/guidance/kit-conversation-analyzer)** is for message-level questions: sentiment, personal data, or a custom analysis prompt. The Code App formatter I checked keeps messages, not reasoning or tool traces. It labels numeric role `0` as the agent and other roles as the user, so connected-agent messages with role `1` on both sides can be misattributed. Check speaker labels and batch completeness before using the results.
+
+Check that your installed Debugger version includes that parser support. Dataverse mode also needs access to the records, including child records; offline snapshot mode can't fetch a connected agent's transcript from Dataverse.
 
 Raw JSON is the next step when you need to investigate a particular payload, correlate parent and child conversations, or write your own analysis. You don't need to start there.
 
-> **Check availability before looking in Dataverse.** As of November 2026, the [transcript access guidance](https://learn.microsoft.com/microsoft-copilot-studio/admin-transcript-controls) lists Microsoft Copilot agents among the exclusions from Dataverse transcript recording. In a live check on November 19, I nevertheless found records with the trace events described here and conversation timestamps as recent as November 18 in one development environment. That's an observation about those available records, not a guarantee of recording support for every agent or environment. Check the current guidance and your environment's settings, and use Preview history for conversations available there. Neither the Kit nor a manual export can retrieve a record that wasn't stored.
+> **Check availability before looking in Dataverse.** The [transcript access guidance](https://learn.microsoft.com/microsoft-copilot-studio/admin-transcript-controls) lists Microsoft Copilot agents among the exclusions from Dataverse transcript recording. Check the current guidance and your environment's recording settings; use Preview history where available. The [sample note below](#about-these-examples) explains the records I could inspect. Neither the Kit nor a manual export can retrieve a record that wasn't stored.
 {: .prompt-warning }
 
 ## What to look for in an available transcript
@@ -40,9 +42,6 @@ Raw JSON is the next step when you need to investigate a particular payload, cor
 An agent on the Copilot harness can choose [knowledge](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/knowledge-copilot-studio) and [tools](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/tools-overview), activate [skills](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/skills-overview), and adapt to the results. Follow that sequence rather than expecting an authored topic path.
 
 Look for `ToolCallTrace` and `ThinkingTrace` in both `name` and `valueType`. They identify the event family covered here. `DynamicPlan` events call for the topic-and-plan analysis described in the earlier post. A message-only or mixed transcript needs closer inspection; one missing marker doesn't establish which harness produced it.
-
-> The event shapes below come from available development-environment transcripts, cross-checked against the Kit parser. A November 2026 recheck covered 1,895 distinct records with conversation start dates from July through November, including authoring tests and other traffic. Not every record contained harness events. Treat these as parsing examples, not a guaranteed public schema. Keep the raw JSON so you can investigate unfamiliar fields or events.
-{: .prompt-warning }
 
 ## Finding the record
 
@@ -132,7 +131,7 @@ The Kit's parser handles a connected-agent pattern where both sides use `role: 1
 
 In this example, the identity field helps distinguish the user from the agent even though the numeric roles match. It doesn't mean every message without `aadObjectId` is an agent message: anonymous users or channels that omit identity can leave it out too.
 
-Treat this as a heuristic, not a role contract. The parser checks for `role: 0` messages to choose the usual numeric convention; otherwise it uses the identity field to distinguish `role: 1` messages. For your own analysis, first merge all batches, honor explicit string roles such as `user` and `bot` where present, and compare sender IDs with known conversation context. If identity is missing on both sides, present on both, or inconsistent, preserve the sender fields and label the speaker **unknown** rather than guessing. You don't need to resolve or publish the person's identity to group messages by speaker.
+The parser checks for `role: 0` messages to choose the usual numeric convention; otherwise it uses the identity field to distinguish `role: 1` messages. That's a heuristic. For your own analysis, first merge all batches, honor explicit string roles such as `user` and `bot` where present, and compare sender IDs with known conversation context. If identity is missing on both sides, present on both, or inconsistent, preserve the sender fields and label the speaker **unknown** rather than guessing. You don't need to resolve or publish the person's identity to group messages by speaker.
 
 ## Anatomy of a turn
 
@@ -154,7 +153,7 @@ sequenceDiagram
     H->>H: turn.complete
 ```
 
-Treat that as the common case rather than a contract. Reasoning can arrive in several chunks rather than once. In the inspected turns, calls could also fire back to back with nothing between them, immediately after a failure, or as the very first event of a turn. Some tool calls include an intermediate status stream. A skill can produce a great many sandbox events, and a completion can land in a later split row.
+The diagram is a reading guide, not a fixed sequence. Reasoning can arrive in several chunks, and calls can fire back to back, immediately after a failure, or at the very start of a turn. Some calls include an intermediate status stream. A skill can produce a great many sandbox events, and a completion can land in a later split row.
 
 ## The events that matter
 
@@ -257,8 +256,12 @@ Be careful about inferring order from the diagram. A call with no reasoning in f
 
 And treat the absence of a lifecycle marker as weak evidence. Completions trail their triggers, `turn.complete` is optional, and reasoning appears only where the product chose to expose it. A recorded completion is useful evidence of what the platform reported, not proof that the user's goal was met. Missing or redacted content needs context too.
 
+### About these examples
+
+On November 19, 2026, I rechecked 1,895 distinct records from one development environment, with conversation start dates from July through November. The sample included authoring tests and other traffic; not every record contained harness events. Records with the trace events covered here had conversation timestamps through November 18. Their availability isn't a guarantee of recording support in other environments. The event shapes are observations cross-checked against the Kit parser, not a public schema contract. Keep the raw JSON when building your own parser.
+
 ## Wrapping up
 
 Start with Preview history or Agent Debugger when the conversation is available there. When you need to go deeper into a Copilot harness transcript, get all the records first, check who is speaking, then follow the tool-call IDs through arguments and results. That is usually more useful than reading thousands of status lines from top to bottom.
 
-Next time an agent surprises you, the messages will only tell you what it said. What will the reasoning behind them tell you?
+Before calling a gap a failure, check for another batch, a child conversation, or a pending consent request. Those are different things to fix, even when the chat looks the same.
