@@ -207,9 +207,9 @@ Here, the HTTP status and connector message are visible without opening a separa
 
 `SessionInfo` is a useful first stop when you're triaging several sessions. Start with `startTimeUtc`, `endTimeUtc`, `turnCount`, `type`, `outcome`, and `outcomeReason`. The inspected records also included fields such as `impliedSuccess`, `csatScore`, and `lastUserIntentId`; don't assume every record has them.
 
-Keep **session type** and **session outcome** in separate columns. The [transcript reference](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types) lists `unengaged` and `engaged` as types, and `Escalated`, `Resolved`, and `Abandon` as outcomes. The August sample also contained `Engaged` and `Unengaged` types, and outcomes including `Abandoned`, `HandOff`, and the literal string `None`.
+Keep **session type** and **session outcome** in separate columns, as described in the [`SessionInfo` reference](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). The August sample contained `Engaged` and `Unengaged` types, and outcomes including `Resolved`, `Abandoned`, `HandOff`, and the literal string `None`.
 
-Case-insensitive comparison handles `engaged` versus `Engaged`. It does **not** make `Abandon` equal to `Abandoned`. If you're grouping these values for a report, use explicit mappings:
+Case-insensitive comparison handles `engaged` versus `Engaged`, but not differently named values. For reporting, the following labels normalize capitalization without combining distinct outcomes:
 
 | Field | Raw value, matched case-insensitively | Reporting label |
 | --- | --- | --- |
@@ -217,7 +217,7 @@ Case-insensitive comparison handles `engaged` versus `Engaged`. It does **not** 
 | `type` | `unengaged` | `unengaged` |
 | `outcome` | `Resolved` | `resolved` |
 | `outcome` | `Escalated` | `escalated` |
-| `outcome` | `Abandon` or `Abandoned` | `abandoned` |
+| `outcome` | `Abandoned` | `abandoned` |
 | `outcome` | `HandOff` | `handoff`, kept separate from `escalated` |
 | `outcome` | Literal string `None` | `none`, kept separate from a missing field |
 | Either | Missing or unfamiliar value | `unknown`, with the original value retained |
