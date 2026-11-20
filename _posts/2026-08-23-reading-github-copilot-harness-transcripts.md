@@ -123,13 +123,23 @@ Connected-agent transcripts can use `role: 1` for both sides. One pattern distin
 
 ```json
 [
-  { "type": "message",
-    "from": { "role": 1, "id": "speaker-a",
-              "aadObjectId": "11111111-1111-1111-1111-111111111111" },
-    "text": "Check the order status." },
-  { "type": "message",
-    "from": { "role": 1, "id": "speaker-b" },
-    "text": "The order has shipped." }
+  {
+    "type": "message",
+    "from": {
+      "role": 1,
+      "id": "speaker-a",
+      "aadObjectId": "11111111-1111-1111-1111-111111111111"
+    },
+    "text": "Check the order status."
+  },
+  {
+    "type": "message",
+    "from": {
+      "role": 1,
+      "id": "speaker-b"
+    },
+    "text": "The order has shipped."
+  }
 ]
 ```
 
@@ -195,7 +205,15 @@ Skills need special handling. Recognize a loaded skill by `toolName: "skill"` an
 
 ```text
 list_records_with_organization failed: Connector returned 403:
-{"error":{"code":"0x80072560","message":"The user is not a member of the organization."}}
+```
+
+```json
+{
+  "error": {
+    "code": "0x80072560",
+    "message": "The user is not a member of the organization."
+  }
+}
 ```
 
 Here, the HTTP status and connector message are visible without opening a separate error field. Other failures may put the useful detail in `errorMessage`.
@@ -220,9 +238,8 @@ The companion `outcomeReason` explains why a session ended and is usually more u
 
 This illustrative turn leaves out the status stream and uses invented messages and identifiers:
 
-<details>
-<summary>View the example transcript</summary>
-<pre><code class="language-json">[
+```json
+[
   {
     "type": "message",
     "from": {
@@ -275,8 +292,8 @@ This illustrative turn leaves out the status stream and uses invented messages a
     "name": "turn.complete",
     "value": {}
   }
-]</code></pre>
-</details>
+]
+```
 
 Read it as a loop rather than a script. Reasoning sets up a call, the call returns an observation, and the observation either produces an answer or feeds the next round of reasoning.
 
