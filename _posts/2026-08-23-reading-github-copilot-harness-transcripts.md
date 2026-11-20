@@ -212,20 +212,7 @@ Here, the HTTP status and connector message are visible without opening a separa
 
 Keep **session type** and **session outcome** in separate columns, as described in the [`SessionInfo` reference](https://learn.microsoft.com/microsoft-copilot-studio/analytics-transcripts-powerapps#common-activity-value-types). Types include `Engaged` and `Unengaged`. Outcome spellings vary across transcript families, so keep values such as `Resolved`, `Abandoned`, `HandOff`, and the literal string `None` distinct rather than assuming every family uses the same set.
 
-Case-insensitive comparison handles `engaged` versus `Engaged`, but not differently named values. For reporting, the following labels normalize capitalization without combining distinct outcomes:
-
-| Field | Raw value, matched case-insensitively | Reporting label |
-| --- | --- | --- |
-| `type` | `engaged` | `engaged` |
-| `type` | `unengaged` | `unengaged` |
-| `outcome` | `Resolved` | `resolved` |
-| `outcome` | `Escalated` | `escalated` |
-| `outcome` | `Abandoned` | `abandoned` |
-| `outcome` | `HandOff` | `handoff`, kept separate from `escalated` |
-| `outcome` | Literal string `None` | `none`, kept separate from a missing field |
-| Either | Missing or unfamiliar value | `unknown`, with the original value retained |
-
-These are reporting labels for the documented and observed spellings, not replacement values to write back into the transcript. Store the raw value alongside the label. In particular, don't silently turn `HandOff` into `Escalated`, or treat `None` as proof that the conversation succeeded.
+Preserve the original values. Case-insensitive matching can handle capitalization differences, but don't combine differently named outcomes. Keep `HandOff` distinct from `Escalated`, and literal `None` distinct from a missing value. Retain unfamiliar values rather than guessing their meaning, and don't treat `None` as proof that the conversation succeeded.
 
 The companion `outcomeReason` explains why a session ended and is usually more useful than the outcome by itself. Example values include `NoError`, `UserExit`, `Resolved`, `UserError`, `SystemError`, `AgentTransferConfiguredByAuthor`, `AgentTransferRequestedByUser`, and `AgentTransferFromQuestionMaxAttempts`.
 
@@ -233,20 +220,63 @@ The companion `outcomeReason` explains why a session ended and is usually more u
 
 This illustrative turn leaves out the status stream and uses invented messages and identifiers:
 
-```json
-[
-  { "type": "message", "from": { "role": 1 }, "text": "Any open orders for Contoso?" },
-  { "type": "trace", "name": "ThinkingTrace",
-    "value": { "thinkingText": "I need to look up open orders for this account." } },
-  { "type": "trace", "name": "ToolCallTrace:Started",
-    "value": { "toolCallId": "call_01", "toolName": "list_records",
-               "toolKind": "tool", "filledParameters": { "table": "orders" } } },
-  { "type": "trace", "name": "ToolCallTrace:Completed",
-    "value": { "toolCallId": "call_01", "durationMs": 812, "result": "{\"count\":3}" } },
-  { "type": "message", "from": { "role": 0 }, "text": "Contoso has 3 open orders." },
-  { "type": "trace", "name": "turn.complete", "value": {} }
-]
-```
+<details>
+<summary>View the example transcript</summary>
+<pre><code class="language-json">[
+  {
+    "type": "message",
+    "from": {
+      "role": 1
+    },
+    "text": "Any open orders for Contoso?"
+  },
+
+  {
+    "type": "trace",
+    "name": "ThinkingTrace",
+    "value": {
+      "thinkingText": "I need to look up open orders for this account."
+    }
+  },
+
+  {
+    "type": "trace",
+    "name": "ToolCallTrace:Started",
+    "value": {
+      "toolCallId": "call_01",
+      "toolName": "list_records",
+      "toolKind": "tool",
+      "filledParameters": {
+        "table": "orders"
+      }
+    }
+  },
+
+  {
+    "type": "trace",
+    "name": "ToolCallTrace:Completed",
+    "value": {
+      "toolCallId": "call_01",
+      "durationMs": 812,
+      "result": "{\"count\":3}"
+    }
+  },
+
+  {
+    "type": "message",
+    "from": {
+      "role": 0
+    },
+    "text": "Contoso has 3 open orders."
+  },
+
+  {
+    "type": "trace",
+    "name": "turn.complete",
+    "value": {}
+  }
+]</code></pre>
+</details>
 
 Read it as a loop rather than a script. Reasoning sets up a call, the call returns an observation, and the observation either produces an answer or feeds the next round of reasoning.
 
