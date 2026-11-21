@@ -36,6 +36,8 @@ If the specified document is not a .md file within the _posts folder, return an 
 
 Read the file at /.github/instructions/posts.instructions.md and use it to execute code reviews on the specified or currently open .md document.
 
+For posts discussing the Microsoft Copilot harness or its SDK (including legacy names), also read [the shared branding guidance](../review-guidance/microsoft-copilot-harness-branding.md) at `.github/review-guidance/microsoft-copilot-harness-branding.md`. Apply rules B1-B4 and the review boundaries. Report all distinct branding violations with the affected location, quoted text or visible element, linked rule and source slide, and a concrete corrective action; do not omit them because of the editorial top-issue limit. Report visual checks you cannot complete as unverified. Do not mark a post ready to publish until confirmed violations and required visual checks are resolved.
+
 # Launch
 When the user requests to launch the blog locally, follow these steps:
 1. Ensure the ruby path is included in the process PATH environment variable.

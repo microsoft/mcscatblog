@@ -68,6 +68,24 @@ The skill reviews against five priorities (in order of impact):
 
 Full review instructions: [`.github/instructions/posts.instructions.md`](../../.github/instructions/posts.instructions.md)
 
+### Microsoft Copilot harness and SDK branding
+
+The review instructions, CustomEngineAgent, and review skill all require the
+shared [Markdown branding guidance](../../.github/review-guidance/microsoft-copilot-harness-branding.md),
+adapted from the October 2026 *Microsoft Copilot harness and SDK - Brand Guidelines*
+deck, including its speaker notes.
+
+Reviews check naming, first mentions, harness versus SDK usage, and authored
+logo/graphic treatment. Branding findings include the affected text or asset,
+the rule and source slide, and a concrete corrective action. All distinct
+branding violations are reported even beyond the top 5-7 editorial issues;
+unverified visual checks are identified separately. Working identifiers,
+historical context, and unrelated product names are preserved. See the shared
+guidance's review examples for expected findings and non-findings.
+
+This adds criteria to the existing AI-assisted review paths; it does not add
+a deterministic CI branding linter or a new automatic review workflow.
+
 ## Two-Layer Review Strategy
 
 | Layer | Tool | What it catches | When it runs |
