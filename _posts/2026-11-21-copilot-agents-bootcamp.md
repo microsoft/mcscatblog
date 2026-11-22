@@ -16,7 +16,7 @@ People often ask us some version of the same question: "Our people are working i
 
 That question shaped the [Copilot & Agents Bootcamp](https://microsoft.github.io/mcs-labs/events/architecture-bootcamp/) I helped present in Atlanta last week, November 10-12, along with fellow AI Architects from the Copilot Acceleration Team (CAT) and colleagues from the Copilot Agents and Platform Ecosystem (CAPE) team. Three days, 17 modules, 11 hands-on labs, and a lot of great discussions!
 
-You don't need a plane ticket to get the content. Every module, slide deck, and lab is online, so you can work through it at your own pace or use it to deliver sessions inside your own organization. This post walks through what has changed recently, the story the bootcamp tells, the full agenda, and how to get CAT involved if you want help applying the learnings.
+In-person bootcamps are something that the CAT and CAPE teams deliver to the customers we are most deeply engaged with in various locations. But you don't need a plane ticket to benefit from the content. Every module, slide deck, and lab is online, so you can work through it at your own pace or use it to deliver sessions inside your own organization. This post walks through what has changed recently, the story the bootcamp tells, the full agenda, and how to get CAT involved if you want help sharing or applying the learnings.
 
 ## From Architecture Bootcamp to Copilot & Agents Bootcamp
 
