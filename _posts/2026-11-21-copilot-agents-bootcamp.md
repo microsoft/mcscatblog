@@ -14,7 +14,7 @@ image:
 
 People often ask us some version of the same question: "Our people are working in Copilot Chat, Cowork, and agents. A few people are sharing prompts and skills, and a few makers are building agents. How do we help more people in the organization understand the breadth of capabilities in the Copilot ecosystem and make it something the whole organization can rely on?"
 
-That question shaped the [Copilot & Agents Bootcamp](https://microsoft.github.io/mcs-labs/events/architecture-bootcamp/) I helped present last week in Atlanta along with fellow AI Architects from the Copilot Acceleration Team (CAT) and colleagues from the Copilot Agents and Platform Ecosystem (CAPE). Three days, 17 modules, 11 hands-on labs, and a lot of great discussions!
+That question shaped the [Copilot & Agents Bootcamp](https://microsoft.github.io/mcs-labs/events/architecture-bootcamp/) I helped present in Atlanta last week, November 10-12, along with fellow AI Architects from the Copilot Acceleration Team (CAT) and colleagues from the Copilot Agents and Platform Ecosystem (CAPE) team. Three days, 17 modules, 11 hands-on labs, and a lot of great discussions!
 
 You don't need a plane ticket to get the content. Every module, slide deck, and lab is online, so you can work through it at your own pace or use it to deliver sessions inside your own organization. This post walks through what has changed recently, the story the bootcamp tells, the full agenda, and how to get CAT involved if you want help applying the learnings.
 
