@@ -31,12 +31,14 @@ The comparison below uses the **September 2026** [Copilot Credits Licensing Guid
 | **Declarative agent built with [Agent Builder](https://learn.microsoft.com/microsoft-365-copilot/extensibility/agent-builder)** | Select supported knowledge sources in Agent Builder, such as SharePoint or Copilot connectors. The agent uses Copilot's built-in grounding; no separate Work IQ connection is required. | Included for eligible Microsoft 365 Copilot licensed users in Microsoft channels, subject to documented conditions and fair usage. |
 | **Declarative agent built with [Microsoft 365 Agents Toolkit](https://learn.microsoft.com/microsoft-365-copilot/extensibility/declarative-agent-tool-comparison) (pro-code)** | Declare the Microsoft 365 capabilities the agent needs in its [manifest](https://learn.microsoft.com/microsoft-365/copilot/extensibility/declarative-agent-manifest-1.8), such as SharePoint, email, or Teams messages. This configures its grounding; no separate Work IQ API or tool connection is required. | Included for eligible Microsoft 365 Copilot licensed users in Microsoft channels, subject to documented conditions and fair usage. |
 | **Cowork** | A user starts a task that draws on their work context. Work IQ is built in; no separate connection is required. | Consumes Copilot Credits. Requires a Microsoft 365 Copilot license **and** usage-based billing enabled. |
-| **Copilot Studio, Standard harness** | The unified Work IQ integration isn't supported. | Not applicable. |
+| **Copilot Studio, Standard harness with a custom MCP connection** | Work IQ isn't built in. Connect the unified endpoint through the [custom MCP walkthrough]({% post_url 2026-09-25-connect-work-iq-mcp-standard-harness %}). | Work IQ calls consume Copilot Credits, even for Microsoft 365 Copilot licensed users. This custom connection isn't included in that license. |
 | **Copilot Studio, GitHub Copilot harness** | Add the unified Work IQ MCP tool. The agent invokes it when needed for a task. | Consumes Copilot Credits, including for users with a Microsoft 365 Copilot license. |
 | **Custom client or own solution** | Your application calls a Work IQ API to use work context in its own experience. | Consumes Copilot Credits. A Microsoft 365 Copilot license isn't required; [usage-based billing must be enabled for the user](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/enable-work-iq#prerequisites). |
 {: #work-iq-scenarios .work-iq-comparison }
 
 The declarative-agent rows describe usage by eligible Microsoft 365 Copilot licensed users. For users without that license, an agent that accesses SharePoint or Copilot connector data consumes Copilot Credits when usage-based billing is enabled. These charges are for using the declarative agent, not for a separate Work IQ API call. This applies to agents built with either Agent Builder or Agents Toolkit. See the [declarative-agent licensing guidance](https://learn.microsoft.com/microsoft-365/copilot/extensibility/cost-considerations#declarative-agents) and [supported users for each authoring tool](https://learn.microsoft.com/microsoft-365/copilot/extensibility/declarative-agent-tool-comparison#tool-requirements-and-access).
+
+The Standard-harness custom MCP connection calls the Work IQ API, rather than using Microsoft 365 Copilot's included grounding. [Work IQ API access and pricing](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/#access-and-pricing) makes this distinction explicit: custom-agent calls are subject to usage-based billing even for licensed users.
 
 <style>
   .content table.work-iq-comparison {
@@ -58,6 +60,7 @@ For the metered scenarios in the comparison, these are the controls to configure
 
 | Applies to | Admin center | Controls |
 | --- | --- | --- |
+| **Copilot Studio, Standard harness with a custom Work IQ MCP connection** | [**PPAC**](https://learn.microsoft.com/microsoft-copilot-studio/requirements-messages-management) and [**MAC**](https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-manage-copilot-credits) | Manage the Standard agent's Copilot Studio capacity in PPAC. Separately configure the users' Work IQ spending policy in MAC for the custom connection's API calls. |
 | **Copilot Studio, GitHub Copilot harness with Work IQ** | [**PPAC**](https://learn.microsoft.com/power-platform/admin/manage-usage-github-copilot-harness) and [**MAC**](https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-manage-copilot-credits) | Use PPAC to manage the agent's environment capacity and limits. Use MAC to configure the required Work IQ spending policy for its users. |
 | **Custom client or own solution calling Work IQ APIs** | [**MAC**](https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-manage-copilot-credits) | The calling user's **Work IQ spending policy**: user/group scope, billing method, policy and per-user spending limits, and threshold alerts. |
 | **Cowork** | [**MAC**](https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-admin-governance) | A spending policy that selects **Cowork**, scoped to the intended users/groups, with a billing method, spending limits, and alerts. |
@@ -78,7 +81,7 @@ Follow the [spending-policy setup guide](https://learn.microsoft.com/microsoft-3
 3. Select a billing method and set the policy's monthly spending limit and optional per-user limit. A Global or Billing administrator manages the billing method.
 4. Configure threshold alerts and assign someone to review them. Review any other policies covering the same users.
 
-This Work IQ policy applies to custom applications and to the Copilot Studio MCP integration. The [Studio setup guide](https://learn.microsoft.com/microsoft-copilot-studio/add-work-iq) explicitly requires a separate spending policy for Work IQ usage.
+This Work IQ policy applies to custom applications and to Copilot Studio Work IQ MCP calls, including the Standard-harness custom connection. The [packaged integration's setup guide](https://learn.microsoft.com/microsoft-copilot-studio/add-work-iq) also explicitly requires a separate spending policy for Work IQ usage.
 
 Spending policies set limits; they don't reserve a portion of your credits. Prepaid credits or pay-as-you-go provide the funding.
 
@@ -106,19 +109,21 @@ If different teams manage the two admin centers, share the agent name, environme
 
 ### How do I add Work IQ in Copilot Studio?
 
-In Copilot Studio, the [unified Work IQ integration (preview)](https://learn.microsoft.com/microsoft-copilot-studio/add-work-iq) is available only in the **GitHub Copilot harness**.
+The [packaged Work IQ integration (preview)](https://learn.microsoft.com/microsoft-copilot-studio/add-work-iq) is available in the **GitHub Copilot harness**. For the Standard harness, use the [custom MCP connection walkthrough]({% post_url 2026-09-25-connect-work-iq-mcp-standard-harness %}) instead.
 
-In your agent, go to **Tools > Add tool > Model Context Protocol**, choose **Work IQ (preview)**, and create or select a Work IQ connection. Follow the linked setup guide for the connection procedure and prerequisites.
+For the packaged integration, go to **Tools > Add tool > Model Context Protocol**, choose **Work IQ (preview)**, and create or select a Work IQ connection. Follow the linked setup guide for the connection procedure and prerequisites.
 
 Use the agent's instructions to describe when it should consult Work IQ, then test with a prompt that needs context from email, meetings, chats, or files. Adding the tool makes it available, rather than requiring a call on every message.
 
 ### What about the Standard harness?
 
-The Standard harness doesn't support the unified Work IQ integration. Two things can make this confusing.
+Work IQ isn't built in to the Standard harness, but you can connect the unified endpoint through a **custom MCP connection** with delegated Microsoft Entra authentication. Follow [Connect Work IQ MCP to a Copilot Studio Standard-Harness Agent]({% post_url 2026-09-25-connect-work-iq-mcp-standard-harness %}) for the app registration, OAuth settings, and end-user connection.
+
+**Work IQ calls through this custom connection incur usage-based billing even for Microsoft 365 Copilot licensed users.** They aren't the Work IQ grounding included in Microsoft 365 Copilot; see the [licensing comparison](#start-with-the-scenario).
 
 [**Tenant graph grounding with semantic search**](https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio#tenant-graph-grounding-with-semantic-search) appeared as a Work IQ-related toggle on the agent's **Generative AI** page. It improves knowledge retrieval and was always separate from the unified Work IQ integration. When enabled, its usage is zero-rated for Microsoft 365 Copilot licensed users, meaning no Copilot Credits are charged. Usage by users without those licenses consumes credits under the [Copilot Studio billing rates](https://learn.microsoft.com/microsoft-copilot-studio/requirements-messages-management#copilot-credits-billing-rates).
 
-Some individual MCP tools available in the Standard harness also still mention Work IQ in their descriptions. Those descriptions refer to individual tools, not support for the unified Work IQ integration. These individual tools are likely to be deprecated in the future.
+Individual workload-specific MCP tools can also mention Work IQ in their descriptions. Those are separate from connecting the unified Work IQ endpoint through the custom MCP pattern.
 
 ### Isn't this just adding a knowledge source?
 

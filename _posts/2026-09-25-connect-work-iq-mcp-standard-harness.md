@@ -15,7 +15,7 @@ image:
 
 Your agent already runs in Copilot Studio's **standard harness**, and you want it to answer questions that span a user's emails, meetings, files, and chats. Rather than wiring those sources together individually, you can connect the unified Work IQ endpoint as a new **Model Context Protocol (MCP)** tool.
 
-This walkthrough demonstrates an end-to-end validated connection to the unified Work IQ MCP endpoint from a Copilot Studio standard-harness agent using Microsoft Entra OAuth. The setup was verified through a successful **`ask`** execution, not just sign-in or tool discovery. We'll walk through the app registration, manual OAuth configuration, and end-user connection that make it work. No CLI plugin or local MCP process is involved.
+Work IQ isn't built in to the standard harness. This walkthrough uses the [Copilot Studio MCP onboarding wizard](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent) to create a custom connection with Microsoft Entra OAuth, then configures on-behalf-of sign-in for users.
 
 This article focuses on the unified endpoint:
 
@@ -25,10 +25,7 @@ https://workiq.svc.cloud.microsoft/mcp
 
 It is **not** a walkthrough for the separate Work IQ Mail, Calendar, or Teams MCP connectors.
 
-> **Standard-harness connection:** Microsoft documents two generic MCP onboarding routes: the [Copilot Studio MCP onboarding wizard](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent) and [creating a custom MCP connector in Power Apps](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent#option-2-create-a-custom-mcp-connector-in-power-apps). This walkthrough uses the wizard with Microsoft Entra OAuth to connect the **unified Work IQ endpoint**, validated end to end through a successful `ask` call.
-{: .prompt-info }
-
-> **Important:** Using the unified Work IQ MCP endpoint from a standard-harness agent incurs usage-based billing. Connecting through a custom MCP tool doesn't make Work IQ usage free. Review [Work IQ: How It's Used, Licensed, and Controlled]({% post_url 2026-08-24-work-iq-context-layer-you-already-have %}) for licensing, billing, and spending controls before enabling the connection.
+> **Important:** Work IQ calls through this custom MCP connection aren't included in a Microsoft 365 Copilot license; they incur usage-based billing even for licensed users. This is separate from the Work IQ grounding included in Microsoft 365 Copilot. Review the [licensing comparison]({% post_url 2026-08-24-work-iq-context-layer-you-already-have %}#start-with-the-scenario) and configure spending controls before enabling the connection.
 {: .prompt-warning }
 
 ## The connection we are configuring
@@ -43,7 +40,7 @@ There are three parts:
 
 The MCP server URL and the OAuth URLs serve different purposes. Copilot Studio calls the MCP endpoint for tools, while Microsoft Entra handles sign-in and token issuance.
 
-Work IQ's [`ask` tool](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/mcp/tool-reference) accepts natural-language questions about work context and returns a response to the agent. That's the tool we'll use here; the walkthrough doesn't claim validation of every operation the unified server exposes.
+Work IQ's [`ask` tool](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/mcp/tool-reference) accepts natural-language questions about work context and returns a response to the agent. That's the tool we'll use here.
 
 ## Prerequisites
 
@@ -55,8 +52,6 @@ Before creating the connection, arrange:
 - [Work IQ enabled for the tenant](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/enable-work-iq), with the applicable user entitlement, billing assignment, and administrator policies.
 - [Power Platform data policies](https://learn.microsoft.com/microsoft-copilot-studio/admin-data-loss-prevention) that permit the MCP connector and its intended data use.
 - A test user with access to non-sensitive Microsoft 365 content.
-
-The [Foundry quickstart](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/mcp/quickstart/foundry) documents the Work IQ OAuth values used here. Its Microsoft 365 Copilot license prerequisite is client-specific; confirm the requirements for your intended experience with your administrator.
 
 If your existing agent uses classic orchestration, review the behavior implications before enabling generative orchestration. Use a development copy for this exercise.
 
@@ -183,14 +178,11 @@ Replace `{tenant-id}` below with the **Directory (tenant) ID** recorded in Step 
 | Refresh URL | `https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token` |
 | Scopes | `api://workiq.svc.cloud.microsoft/WorkIQAgent.Ask offline_access` |
 
-The scopes field should contain this exact shape, with a space separating the two entries:
+The [Copilot Studio MCP wizard](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent#manual) requires space-separated scopes:
 
 ```text
 api://workiq.svc.cloud.microsoft/WorkIQAgent.Ask offline_access
 ```
-
-> **Use a space, not a comma.** The Foundry quickstart displays a comma-separated value for its interface, but the [Copilot Studio MCP wizard](https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-existing-server-to-agent#manual) documents a **space-separated** scope list.
-{: .prompt-tip }
 
 The two scopes have distinct purposes:
 
@@ -220,7 +212,7 @@ Before creating the authenticated connection:
 5. Save the changes. If a Web platform already exists, add the URI to that platform.
 6. Return to Copilot Studio and select **Next**.
 
-**Do not use the MCP server URL as the redirect URI.** Do not copy a localhost callback from a CLI tutorial or a redirect URI from a Foundry connection. The callback must be the one generated for this Copilot Studio connector.
+**Do not use the MCP server URL as the redirect URI.** Use the callback generated for this Copilot Studio connector.
 
 This is a common source of OAuth failures: the client ID and scopes can be correct, but Entra will reject sign-in if the redirect URI does not match. See Microsoft's [redirect URI guidance](https://learn.microsoft.com/entra/identity-platform/reply-url) for matching requirements.
 
@@ -247,9 +239,9 @@ Back in Copilot Studio:
 
 For an assistant answering questions about **each caller's** work, configure **User authentication**, rather than **Agent author authentication**, in the tool's authentication settings.
 
-That distinction is essential. A maker's connection is not a substitute for each user's delegated identity. Also, signing in to the chat experience and authorizing a downstream tool are separate concerns; do not assume one automatically completes the other.
+The wizard creates a connector with a generic OAuth 2 identity provider. At this stage, each user signs in through a separate connection-manager page. To reuse the user's existing sign-in instead, configure on-behalf-of authentication below.
 
-Check [tool user-authentication guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-enduser-authentication) for your publishing channel, including applicable Teams single sign-on (SSO) requirements.
+Check [tool user-authentication guidance](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-enduser-authentication) for your publishing channel.
 
 <details markdown="1">
 <summary>Screenshot: connection ready to add</summary>
@@ -258,6 +250,40 @@ Check [tool user-authentication guidance](https://learn.microsoft.com/en-us/micr
 _Select the authenticated connection and add the MCP server to the agent. This screen isn't the user-authentication setting._
 
 </details>
+
+### Switch the generated connector to on-behalf-of sign-in
+
+**On-behalf-of (OBO)** authentication lets the connector obtain a Work IQ token for the signed-in user. The user selects **Allow** in the conversation rather than signing in again on a separate page. Follow the [custom-connector OBO configuration](https://learn.microsoft.com/microsoft-copilot-studio/advanced-custom-connector-on-behalf-of) using the same app registration and the Work IQ values below.
+
+First, expose a scope on the **connector app registration** from Step 1:
+
+1. Open **Expose an API > Add a scope**. Accept the default Application ID URI, `api://{client-id}`, where `{client-id}` is your connector app's Application (client) ID.
+2. Name the scope **`access_as_user`**, set **Who can consent** to **Admins and users**, and keep its state **Enabled**. Supply the admin and user consent display names and descriptions explaining that Azure API Connections can obtain tokens on the user's behalf, then select **Add scope**.
+3. Under **Expose an API > Authorized client applications**, select **Add a client application**.
+4. Enter **`fe053c5f-3692-4f14-aef2-ee34fc081cae`** (Azure API Connections), select the **`access_as_user`** scope, and select **Add application**. This client preauthorization is required for the OBO experience.
+5. Under **API permissions**, confirm that an administrator has granted tenant-wide consent for the Work IQ delegated permission **`WorkIQAgent.Ask`** from Step 3. The background token exchange cannot ask the user for this permission.
+
+The exposed `access_as_user` scope lets Azure API Connections obtain a token for your connector. It does **not** replace the downstream `WorkIQAgent.Ask` permission. If Azure API Connections isn't provisioned in your tenant, have an administrator follow the [service-principal provisioning steps](https://learn.microsoft.com/power-apps/maker/canvas-apps/add-manage-connections#step-1-provision-microsofts-azure-api-connections-service-principal-in-your-microsoft-entra-tenant).
+
+Next, open [Power Apps](https://make.powerapps.com/) in the **same environment** as the agent. Go to **Custom connectors**, edit the connector created by the MCP wizard, and open **Security > OAuth 2.0 > Edit**. Set:
+
+| Field | Value |
+| --- | --- |
+| Identity Provider | **Microsoft Entra ID** (shown as **Azure Active Directory** in some layouts) |
+| Enable Service Principal support | **Off** |
+| Client ID | The connector app registration's **Application (client) ID** |
+| Client secret | Reenter the secret **value**; changing the identity provider clears it |
+| Authorization URL | `https://login.microsoftonline.com` |
+| Tenant ID | Your **Directory (tenant) ID** |
+| Resource URL | `api://workiq.svc.cloud.microsoft` |
+| Enable on-behalf-of login | **true** |
+| Scope | `api://workiq.svc.cloud.microsoft/WorkIQAgent.Ask offline_access` |
+
+The **Resource URL** identifies the Work IQ API; it isn't the MCP transport URL ending in `/mcp` or your connector's `api://{client-id}` URI. Keep the Work IQ resource and delegated permission, not the MCP-channel resource or `MCS.InvokeAsMCP` permission used when calling another Copilot Studio agent.
+
+Select **Update connector**. Compare the resulting **Redirect URL** with the Web redirect URI registered in Step 6 and add it if it changed. Back in Copilot Studio, open **Tools > your Work IQ MCP tool > Create new connection**, create a **new** connection, and select it. If other agents use this connector, update their connections too.
+
+[Share the custom connector](https://learn.microsoft.com/connectors/custom-connectors/share) with end users using **Can view**, and ensure they can access the agent and its environment. Our [custom-connector OBO guide]({% post_url 2025-12-05-obo-for-custom-connectors %}) explains why testing with a non-maker matters: a maker's working connection doesn't verify client preauthorization or other users' access.
 
 ## Step 8: Start with the ask tool
 
@@ -293,10 +319,12 @@ Start with a question in the test pane:
 
 > Use Work IQ to review my inbox and summarize the action items that need my attention.
 
-If the agent asks you to connect, select **Open connection manager**, authenticate the required Work IQ connection, return to the conversation, and select **Retry**. This is the end-user connection, even if you've already created a maker connection.
+With the original manual OAuth connection, select **Open connection manager**, authenticate the required Work IQ connection, return to the conversation, and select **Retry**. The screenshot below shows that separate sign-in experience, before the OBO configuration.
 
 ![Agent test pane asking the user to open connection manager and retry after connecting](/assets/posts/connect-work-iq-mcp-standard-harness/agent-connection-mgr.png){: .shadow w="627" }
-_Complete the user's Work IQ connection, then retry the request._
+_The original manual OAuth flow requires a separate end-user connection-manager sign-in._
+
+After configuring OBO in Step 7, test with another authorized user in the intended publishing channel. The expected experience is an in-conversation **Allow** prompt that creates the user's connection without a separate sign-in page. If it still opens connection manager, check the API Hub client preauthorization, the new connection, and the user's connector and environment access.
 
 Then try a question about known test content:
 
@@ -310,24 +338,16 @@ Check three separate milestones:
 | MCP discovery succeeds | The server's tools, including `ask`, appear in Copilot Studio. |
 | Tool execution succeeds | The activity trace shows a successful Work IQ call and the response reflects accessible Microsoft 365 data. |
 
-The setup shown here completed all three milestones. In the captured test, the agent asked Work IQ to identify inbox action items, and the activity trace shows **`ask` Completed**. The private inbox response is cropped out below.
+The captured manual OAuth test shows **`ask` Completed** for the inbox request, with the private response cropped out. Use the same milestones to verify your new OBO connection.
 
 ![Copilot Studio test activity showing Work IQ initialized and the ask tool completed with an inbox-summary question](/assets/posts/connect-work-iq-mcp-standard-harness/workiq-end-to-end-test.png){: .shadow w="1000" }
 _The completed ask activity confirms tool execution through the configured connection; private response content is omitted._
-
-Before rolling out your agent, test with a second authorized user and in the intended publishing channel. Those checks verify your users' access and channel authentication behavior; they aren't implied by this test-pane result.
 
 ## Troubleshooting the OAuth connection
 
 | Symptom | What to investigate |
 | --- | --- |
-| Work IQ is missing from the API permission picker | Ask an administrator to check whether the Work IQ service principal is provisioned. |
-| Redirect URI mismatch, such as `AADSTS50011` | Compare the actual callback URL with the Web redirect URI on the app identified by the configured client ID. |
-| Invalid client or secret error | Check the client ID, tenant, secret expiry, and that you entered the secret value rather than its ID. |
-| Invalid scope error | Check the `api://workiq.svc.cloud.microsoft/` prefix, the exact permission name, and space separation before `offline_access`. |
-| Administrator approval required | Check that WorkIQAgent.Ask delegated permission has tenant admin consent and that other tenant requirements are satisfied. |
-| Sign-in succeeds but discovery or calls fail | Inspect the returned MCP/authentication error, tenant policy, entitlement, and connection state. |
-| A request is unauthorized or forbidden | Investigate the actual error details: token audience/scope, user access, consent, and service policy are separate possible causes. |
+| Sign-in succeeds but discovery or calls fail | Inspect the returned error, Work IQ token audience, user access, spending policy, and service policy. |
 | Calls fail after initially working | Check revoked consent, Conditional Access, connection state, refresh configuration, and client-secret expiry. |
 | The wrong person's work context appears | Review whether the tool uses agent-author credentials instead of the caller's user-authenticated connection. |
 | Power Platform blocks the tool | Review connector data policies with the environment administrator; do not work around the block with shared credentials. |
