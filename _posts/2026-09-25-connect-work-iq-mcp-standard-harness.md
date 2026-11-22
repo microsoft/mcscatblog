@@ -265,6 +265,14 @@ First, expose a scope on the **connector app registration** from Step 1:
 
 The exposed `access_as_user` scope lets Azure API Connections obtain a token for your connector. It does **not** replace the downstream `WorkIQAgent.Ask` permission. If Azure API Connections isn't provisioned in your tenant, have an administrator follow the [service-principal provisioning steps](https://learn.microsoft.com/power-apps/maker/canvas-apps/add-manage-connections#step-1-provision-microsofts-azure-api-connections-service-principal-in-your-microsoft-entra-tenant).
 
+<details markdown="1">
+<summary>Screenshot: exposed scope and authorized API Hub client</summary>
+
+![Microsoft Entra Expose an API page showing the enabled access_as_user scope, consent for admins and users, and Azure API Connections under authorized client applications](/assets/posts/connect-work-iq-mcp-standard-harness/obo-expose-api.png){: .shadow w="1000" }
+_Expose access_as_user on the connector app and authorize Azure API Connections to use it._
+
+</details>
+
 Next, open [Power Apps](https://make.powerapps.com/) in the **same environment** as the agent. Go to **Custom connectors**, edit the connector created by the MCP wizard, and open **Security > OAuth 2.0 > Edit**. Set:
 
 | Field | Value |
@@ -280,6 +288,14 @@ Next, open [Power Apps](https://make.powerapps.com/) in the **same environment**
 | Scope | `api://workiq.svc.cloud.microsoft/WorkIQAgent.Ask offline_access` |
 
 The **Resource URL** identifies the Work IQ API; it isn't the MCP transport URL ending in `/mcp` or your connector's `api://{client-id}` URI. Keep the Work IQ resource and delegated permission, not the MCP-channel resource or `MCS.InvokeAsMCP` permission used when calling another Copilot Studio agent.
+
+<details markdown="1">
+<summary>Screenshot: connector security settings for OBO</summary>
+
+![Power Apps connector Security tab showing Azure Active Directory as the identity provider, the Work IQ resource and delegated scope, and on-behalf-of login set to true](/assets/posts/connect-work-iq-mcp-standard-harness/obo-connector-security.png){: .shadow w="750" }
+_Use the Work IQ resource and enable on-behalf-of login. The secret is masked and shows a validation indicator; reenter a valid secret before updating the connector. The tenant ID is redacted._
+
+</details>
 
 Select **Update connector**. Compare the resulting **Redirect URL** with the Web redirect URI registered in Step 6 and add it if it changed. Back in Copilot Studio, open **Tools > your Work IQ MCP tool > Create new connection**, create a **new** connection, and select it. If other agents use this connector, update their connections too.
 
