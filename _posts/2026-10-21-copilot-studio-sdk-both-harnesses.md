@@ -1,7 +1,7 @@
 ---
 agent_edition: both
 layout: post
-title: "One SDK Client for Both Copilot Studio Harnesses (Preview)"
+title: "One SDK Client for Both Copilot Studio Harnesses"
 date: 2026-10-21
 categories: [copilot-studio, agents-sdk]
 tags: [m365-agents-sdk, webchat, streaming, authentication, sso, reasoning, github-copilot]
@@ -17,14 +17,9 @@ In [You Probably Don't Need Manual Authentication]({% post_url 2025-11-18-you-do
 
 But what if your agent uses the GitHub Copilot harness?
 
-The new version of the Copilot Studio client adds support for the GitHub Copilot harness. **You use the same client for both.** Pass in the environment ID and agent schema name, and keep using the same conversation methods.
+The stable `1.10.1` release of the JavaScript Copilot Studio client includes connectivity for the GitHub Copilot harness. **You use the same client for both.** Give it the environment ID and schema name of a published agent, and use the same conversation methods. The client handles [endpoint discovery](https://github.com/microsoft/Agents-for-js/blob/v1.10/packages/agents-copilotstudio-client/README.md#using-the-default-class) for you; you don't need to configure or call the discovery endpoint, or choose a harness-specific URL.
 
-This is already in the [JavaScript](https://github.com/microsoft/Agents-for-js) and [.NET](https://github.com/microsoft/Agents-for-net/tree/main/src/libraries/Client/Microsoft.Agents.CopilotStudio.Client) clients, with Python support planned. I'll use JavaScript here because we're extending a React sample.
-
-> **Preview, October 2026:** I'm using JavaScript client `1.10.0-beta.8.g158a2c07ad` here. The [official integration overview](https://learn.microsoft.com/en-us/microsoft-365/agents-sdk/integrate-with-mcs) still lists GitHub Copilot-harness agents as not officially supported, so treat this as a preview example.
->
-> The endpoints for this client are still rolling out across regions, so start testing in an [early release environment](https://learn.microsoft.com/en-us/power-platform/admin/early-release).
-{: .prompt-info }
+The same endpoint-discovery capability is also available in the [.NET](https://github.com/microsoft/Agents-for-net/releases/tag/v1.9.205) and [Python](https://github.com/microsoft/Agents-for-python/releases/tag/v1.9.0) clients. I'll use JavaScript here because we're extending a React sample.
 
 ## Here's the WebChat Experience
 
@@ -49,18 +44,17 @@ You'll need Node.js 22. Grab the sample and update its dependencies:
 ```bash
 git clone https://github.com/microsoft/Agents.git
 cd Agents
-git checkout 1544bcae38f8865b1f095ffcf8df51561e302065
 cd samples/nodejs/copilotstudio-webchat-react
 
 npm install --save-exact \
-  @microsoft/agents-copilotstudio-client@1.10.0-beta.8.g158a2c07ad \
-  @microsoft/agents-activity@1.10.0-beta.8.g158a2c07ad \
+  @microsoft/agents-copilotstudio-client@1.10.1 \
+  @microsoft/agents-activity@1.10.1 \
   botframework-webchat@4.19.2 \
   botframework-webchat-fluent-theme@4.19.2 \
   rxjs@7.8.2
 ```
 
-I've pinned the sample revision and package versions so we're starting from the same code. Keep WebChat and its Fluent theme on matching versions. Check the [JavaScript client release notes](https://github.com/microsoft/Agents-for-js/releases) for when this support lands in a stable release.
+The package versions are pinned so the SDK and WebChat dependencies stay consistent. Keep WebChat and its Fluent theme on matching versions. The [1.10 release notes](https://github.com/microsoft/Agents-for-js/releases/tag/v1.10) describe the endpoint discovery used to connect published agents by environment ID and schema name.
 
 ## Point It at Your Agent
 
@@ -110,9 +104,11 @@ export class SampleConnectionSettings extends ConnectionSettings {
 
 Use `PowerPlatformCloud.Prod` and leave `directConnectUrl` unset.
 
+You can still set `directConnectUrl` instead of using endpoint discovery, but the URL is specific to the agent and harness you're connecting to; it isn't shared by both harnesses. See the [JavaScript client README](https://github.com/microsoft/Agents-for-js/blob/v1.10/packages/agents-copilotstudio-client/README.md#using-the-default-class) for the direct URL option.
+
 Run `npm start`, open **`http://localhost:3000`**, and sign in. You should be able to chat with your agent.
 
-> I checked the JavaScript client against a published agent on each harness in the same environment, using the same app registration. I changed only `schemaName`. Both returned streamed activities and replied to a greeting and follow-up in the same conversation.
+> Rechecked on November 23, 2026 with stable JavaScript client `1.10.1`: I used a published agent on each harness in the same environment, with the same app registration and client code. I changed only `schemaName`. Both returned streamed activities and replied to a greeting and follow-up in the same conversation. The React sample and downloadable helpers also build with these package versions.
 {: .prompt-info }
 
 ## What About Reasoning and Tool Calls?
