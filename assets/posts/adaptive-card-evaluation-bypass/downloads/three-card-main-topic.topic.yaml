@@ -1,0 +1,394 @@
+kind: AdaptiveDialog
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: fullName
+    description: The participant's full name.
+    entity: StringPrebuiltEntity
+    shouldPromptUser: false
+
+  - kind: AutomaticTaskInput
+    propertyName: email
+    description: The participant's email address.
+    entity: EmailPrebuiltEntity
+    shouldPromptUser: false
+
+  - kind: AutomaticTaskInput
+    propertyName: visitDate
+    description: The requested visit date.
+    entity: DateTimePrebuiltEntity
+    shouldPromptUser: false
+
+  - kind: AutomaticTaskInput
+    propertyName: partySize
+    description: The number of people attending.
+    entity: NumberPrebuiltEntity
+    shouldPromptUser: false
+
+  - kind: AutomaticTaskInput
+    propertyName: consent
+    description: Whether the participant consents to follow-up.
+    entity: BooleanPrebuiltEntity
+    shouldPromptUser: false
+
+  - kind: AutomaticTaskInput
+    propertyName: contactMethod
+    description: Preferred contact method, Email, SMS, or Phone.
+    entity: StringPrebuiltEntity
+    shouldPromptUser: false
+
+modelDescription: |-
+  Run the staged three-card demo.
+  In evaluation mode, extract supplied values so each card can be replaced in sequence by the text-only child.
+
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    triggerQueries:
+      - run the three card demo
+      - start the adaptive card demo
+      - run the three card evaluation demo
+
+  actions:
+    - kind: SetVariable
+      id: setEvaluationMode
+      variable: init:Topic.Evaluation
+      value: =true
+
+    - kind: SendActivity
+      id: runOperationOne
+      activity: Operation 1 completed.
+
+    - kind: ConditionGroup
+      id: chooseCardOnePath
+      conditions:
+        - id: bypassCardOne
+          condition: =Topic.Evaluation
+          actions:
+            - kind: SetVariable
+              id: buildCardOneInputDataEnvelope
+              variable: Topic.ParticipantDetailsEnvelope
+              value: |-
+                =Table(
+                  { Key: "fullName", Label: "the participant's full name", Type: "Text", Value: Topic.fullName },
+                  { Key: "email", Label: "the participant's email address", Type: "Email", Value: Topic.email }
+                )
+
+            - kind: BeginDialog
+              id: bypassAdaptiveCardOne
+              dialog: YOUR_SCHEMA_NAME.topic.CardBypassTopic
+              input:
+                binding:
+                  DataEnvelope: =Topic.ParticipantDetailsEnvelope
+              output:
+                binding:
+                  CompletedDataEnvelope: Topic.ParticipantDetailsEnvelope
+
+            - kind: SetVariable
+              id: mapFullName
+              variable: Topic.fullName
+              value: =LookUp(Topic.ParticipantDetailsEnvelope, Key = "fullName", Value)
+
+            - kind: SetVariable
+              id: mapEmail
+              variable: Topic.email
+              value: =LookUp(Topic.ParticipantDetailsEnvelope, Key = "email", Value)
+
+      elseActions:
+        - kind: AdaptiveCardPrompt
+          id: participantCard
+          displayName: Card 1 - Participant
+          card: |-
+            {
+              "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+              "type": "AdaptiveCard",
+              "version": "1.5",
+              "body": [
+                {
+                  "type": "TextBlock",
+                  "text": "Card 1: Participant",
+                  "weight": "Bolder"
+                },
+                {
+                  "type": "Input.Text",
+                  "id": "fullName",
+                  "label": "Full name",
+                  "isRequired": true,
+                  "errorMessage": "Enter the participant's full name."
+                },
+                {
+                  "type": "Input.Text",
+                  "id": "email",
+                  "label": "Email address",
+                  "style": "Email",
+                  "isRequired": true,
+                  "errorMessage": "Enter a valid email address."
+                }
+              ],
+              "actions": [
+                {
+                  "type": "Action.Submit",
+                  "title": "Continue"
+                }
+              ]
+            }
+          output:
+            binding:
+              fullName: Topic.fullName
+              email: Topic.email
+          outputType:
+            properties:
+              fullName: String
+              email: String
+
+    - kind: SendActivity
+      id: displayCardOneValues
+      activity: "Card 1 fields available: name={Topic.fullName}; email={Topic.email}"
+
+    - kind: SendActivity
+      id: runOperationTwo
+      activity: Operation 2 completed.
+
+    - kind: ConditionGroup
+      id: chooseCardTwoPath
+      conditions:
+        - id: bypassCardTwo
+          condition: =Topic.Evaluation
+          actions:
+            - kind: SetVariable
+              id: buildCardTwoInputDataEnvelope
+              variable: Topic.ScheduleDetailsEnvelope
+              value: |-
+                =Table(
+                  { Key: "visitDate", Label: "the visit date", Type: "Date", Value: If(IsBlank(Topic.visitDate), Blank(), Text(Topic.visitDate, "yyyy-MM-dd")) },
+                  { Key: "partySize", Label: "the party size", Type: "Number", Value: If(IsBlank(Topic.partySize), Blank(), Text(Topic.partySize)) }
+                )
+
+            - kind: BeginDialog
+              id: bypassAdaptiveCardTwo
+              dialog: YOUR_SCHEMA_NAME.topic.CardBypassTopic
+              input:
+                binding:
+                  DataEnvelope: =Topic.ScheduleDetailsEnvelope
+              output:
+                binding:
+                  CompletedDataEnvelope: Topic.ScheduleDetailsEnvelope
+
+            - kind: SetVariable
+              id: mapVisitDate
+              variable: Topic.visitDate
+              value: =IfError(DateTimeValue(LookUp(Topic.ScheduleDetailsEnvelope, Key = "visitDate", Value)), Blank())
+
+            - kind: SetVariable
+              id: mapPartySize
+              variable: Topic.partySize
+              value: =IfError(Value(LookUp(Topic.ScheduleDetailsEnvelope, Key = "partySize", Value)), Blank())
+
+      elseActions:
+        - kind: AdaptiveCardPrompt
+          id: scheduleCard
+          displayName: Card 2 - Schedule
+          card: |-
+            {
+              "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+              "type": "AdaptiveCard",
+              "version": "1.5",
+              "body": [
+                {
+                  "type": "TextBlock",
+                  "text": "Card 2: Schedule",
+                  "weight": "Bolder"
+                },
+                {
+                  "type": "Input.Date",
+                  "id": "visitDate",
+                  "label": "Visit date",
+                  "isRequired": true,
+                  "errorMessage": "Select a visit date."
+                },
+                {
+                  "type": "Input.Number",
+                  "id": "partySize",
+                  "label": "Party size",
+                  "min": 1,
+                  "max": 20,
+                  "isRequired": true,
+                  "errorMessage": "Enter a party size from 1 to 20."
+                }
+              ],
+              "actions": [
+                {
+                  "type": "Action.Submit",
+                  "title": "Continue"
+                }
+              ]
+            }
+          output:
+            binding:
+              visitDate: Topic.VisitDateCard
+              partySize: Topic.partySize
+          outputType:
+            properties:
+              visitDate: Date
+              partySize: Number
+
+        - kind: SetVariable
+          id: normalizeInteractiveVisitDate
+          variable: Topic.visitDate
+          value: =IfError(DateTimeValue(Topic.VisitDateCard), Blank())
+
+    - kind: SendActivity
+      id: displayCardTwoValues
+      activity: "Card 2 fields available: visit date={Topic.visitDate}; party size={Topic.partySize}"
+
+    - kind: SendActivity
+      id: runOperationThree
+      activity: Operation 3 completed.
+
+    - kind: ConditionGroup
+      id: chooseCardThreePath
+      conditions:
+        - id: bypassCardThree
+          condition: =Topic.Evaluation
+          actions:
+            - kind: SetVariable
+              id: buildCardThreeInputDataEnvelope
+              variable: Topic.ContactPreferencesEnvelope
+              value: |-
+                =Table(
+                  { Key: "consent", Label: "whether the participant consents to follow-up", Type: "Boolean", Value: If(IsBlank(Topic.consent), Blank(), Text(Topic.consent)) },
+                  { Key: "contactMethod", Label: "the preferred contact method (Email, SMS, or Phone)", Type: "Choice", Value: Topic.contactMethod }
+                )
+
+            - kind: BeginDialog
+              id: bypassAdaptiveCardThree
+              dialog: YOUR_SCHEMA_NAME.topic.CardBypassTopic
+              input:
+                binding:
+                  DataEnvelope: =Topic.ContactPreferencesEnvelope
+              output:
+                binding:
+                  CompletedDataEnvelope: Topic.ContactPreferencesEnvelope
+
+            - kind: SetVariable
+              id: mapConsent
+              variable: Topic.consent
+              value: |-
+                =With(
+                  { consentText: LookUp(Topic.ContactPreferencesEnvelope, Key = "consent", Value) },
+                  If(IsBlank(consentText), Blank(), Lower(consentText) = "true")
+                )
+
+            - kind: SetVariable
+              id: mapContactMethod
+              variable: Topic.contactMethod
+              value: =LookUp(Topic.ContactPreferencesEnvelope, Key = "contactMethod", Value)
+
+      elseActions:
+        - kind: AdaptiveCardPrompt
+          id: preferencesCard
+          displayName: Card 3 - Preferences
+          card: |-
+            {
+              "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+              "type": "AdaptiveCard",
+              "version": "1.5",
+              "body": [
+                {
+                  "type": "TextBlock",
+                  "text": "Card 3: Preferences",
+                  "weight": "Bolder"
+                },
+                {
+                  "type": "Input.Toggle",
+                  "id": "consent",
+                  "title": "I consent to follow-up",
+                  "valueOn": "true",
+                  "valueOff": "false"
+                },
+                {
+                  "type": "Input.ChoiceSet",
+                  "id": "contactMethod",
+                  "label": "Preferred contact method",
+                  "isRequired": true,
+                  "errorMessage": "Choose a contact method.",
+                  "choices": [
+                    {
+                      "title": "Email",
+                      "value": "Email"
+                    },
+                    {
+                      "title": "SMS",
+                      "value": "SMS"
+                    },
+                    {
+                      "title": "Phone",
+                      "value": "Phone"
+                    }
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "type": "Action.Submit",
+                  "title": "Submit"
+                }
+              ]
+            }
+          output:
+            binding:
+              consent: Topic.consent
+              contactMethod: Topic.contactMethod
+          outputType:
+            properties:
+              consent: Boolean
+              contactMethod: String
+
+    - kind: SendActivity
+      id: displayCardThreeValues
+      activity: "Card 3 fields available: consent={Topic.consent}; contact method={Topic.contactMethod}"
+
+    - kind: SendActivity
+      id: sendDemoSuccess
+      activity: |-
+        SUCCESS: all three staged card checkpoints completed.
+        Participant: {Topic.fullName} ({Topic.email})
+        Schedule: {Topic.visitDate}, party of {Topic.partySize}
+        Preferences: consent={Topic.consent}, contact={Topic.contactMethod}
+
+    - kind: CancelAllDialogs
+      id: endDemo
+
+inputType:
+  properties:
+    fullName:
+      displayName: Full name
+      description: Participant full name.
+      type: String
+
+    email:
+      displayName: Email
+      description: Participant email.
+      type: String
+
+    visitDate:
+      displayName: Visit date
+      description: Requested visit date.
+      type: DateTime
+
+    partySize:
+      displayName: Party size
+      description: Number of attendees.
+      type: Number
+
+    consent:
+      displayName: Consent
+      description: Consent to follow-up.
+      type: Boolean
+
+    contactMethod:
+      displayName: Contact method
+      description: Email, SMS, or Phone.
+      type: String
+
+outputType: {}
