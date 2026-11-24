@@ -13,15 +13,15 @@ image:
   no_bg: true
 ---
 
-[Work IQ](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/) is Microsoft's workplace intelligence layer for agents. It helps agents understand work across email, meetings, chats, files, and connected business systems, using information the user has permission to access.
+[Work IQ](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/) is Microsoft's workplace intelligence layer for agents. It is included natively in Microsoft 365 Copilot's grounding, while Copilot Studio agents use it only when the relevant Work IQ tool is added.
 
-Work IQ can be built into a Microsoft 365 Copilot experience, used as a tool by an agent, or called through an API by a custom application. The name is the same, but the licensing and billing controls depend on how you use it.
+You can also add Work IQ explicitly as a tool through the unified Work IQ MCP server, or call it through an API from a custom application. Those options use the same workplace context, but they are different execution paths. The licensing and billing controls depend on which path you use.
 
 This guide answers three practical questions: how do you use Work IQ, when does it consume Copilot Credits, and where do you control that usage?
 
 ## Start with the scenario
 
-Microsoft 365 Copilot uses Work IQ for **grounding**: using work information to inform its answers. Declarative agents customize that Copilot experience through instructions, knowledge, and actions. In Copilot Studio, you choose a **harness**, the agent's build and execution experience, and connect Work IQ as a tool through **Model Context Protocol (MCP)**.
+Microsoft 365 Copilot uses Work IQ for **grounding**: using work information to inform its answers. Declarative agents (DAs) customize that Copilot experience through instructions, knowledge, and actions. In Copilot Studio, you choose a **harness**, the agent's build and execution experience, and can connect Work IQ explicitly as a tool through **Model Context Protocol (MCP)**.
 
 The comparison below uses the **September 2026** [Copilot Credits Licensing Guide](https://aka.ms/CopilotCredits/LicensingGuide) and [Copilot Studio Licensing Guide](https://go.microsoft.com/fwlink/?linkid=2320995). Metered usage means usage billed in Copilot Credits.
 
@@ -120,11 +120,13 @@ The Standard harness doesn't support the unified Work IQ integration. Two things
 
 Some individual MCP tools available in the Standard harness also still mention Work IQ in their descriptions. Those descriptions refer to individual tools, not support for the unified Work IQ integration. These individual tools are likely to be deprecated in the future.
 
-### Isn't this just adding a knowledge source?
+### Native grounding or the Work IQ MCP tool?
 
-A [knowledge source](https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio) retrieves relevant content from selected sources, and the Copilot Studio agent uses that content to generate its response. Work IQ's conversational [`ask` tool](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/mcp/tool-reference) reasons across the signed-in user's work context in mail, meetings, chats, and files, then returns a generated response to the agent.
+A DA running in a Microsoft 365 Copilot experience can use Work IQ natively as part of its grounding. In other words, the DA can retrieve relevant content from the user's permitted work sources and use that context to generate a response. Adding the unified Work IQ MCP server is different: it gives the agent an explicit Work IQ tool, including the conversational [`ask` tool](https://learn.microsoft.com/microsoft-365/copilot/extensibility/work-iq/mcp/tool-reference), which reasons across the signed-in user's work context and returns a processed response to the agent.
 
-The same agent can use both. A meeting-preparation agent could consult a knowledge source for the approved briefing format and Work IQ for the user's recent work context. Use [instructions to describe when to use tools and knowledge]({% post_url 2025-11-11-influence-orchestration-knowledge %}).
+Consider a simple calendar question: **"List my meetings from today."** A calendar knowledge path could return every matching calendar entry, including metadata such as attendees and meeting URLs. Work IQ can process that same context and return a more useful summary, such as: **"Today you have a 9AM standup, an 11AM review with Dana, and a 2PM customer call."** The first path retrieves calendar data; the second applies additional processing and context to the answer.
+
+The same DA can use both approaches. For example, a meeting-preparation agent could use native grounding or a knowledge source for an approved briefing format, then call Work IQ through MCP when it needs a concise summary of the user's recent work context. Use [instructions to describe when to use tools and knowledge]({% post_url 2025-11-11-influence-orchestration-knowledge %}).
 
 ## Putting it into practice
 
