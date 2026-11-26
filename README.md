@@ -110,12 +110,13 @@ must set this field — the build fails otherwise** (enforced by
 `_plugins/validate-agent-edition.rb`). Set it in front matter:
 
 ```yaml
-agent_edition: standard   # one of: standard | github-copilot | both
+agent_edition: standard   # one of: standard | github-copilot | both | declarative-agent
 ```
 
 - `standard` — applies to Standard-harness agents (includes generative orchestration)
 - `github-copilot` — applies to Microsoft Copilot harness agents; renders a "Microsoft Copilot harness" pill
 - `both` — applies to both; renders a neutral "Both harnesses" pill
+- `declarative-agent` — applies to Microsoft 365 Copilot declarative agents rather than a Copilot Studio harness; renders a "Declarative agent (Microsoft 365 Copilot)" pill
 - `classic` / `modern` — **deprecated aliases** for `standard` / `github-copilot`, still
   accepted so older drafts don't break; prefer the canonical values
 

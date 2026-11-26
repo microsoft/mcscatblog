@@ -907,6 +907,13 @@ html[data-bs-theme="dark"] {
   border-color: rgba(20, 184, 166, 0.45);
 }
 
+/* Declarative agent (Microsoft 365 Copilot, not a Copilot Studio harness): blue */
+.agent-edition--declarative-agent {
+  color: #0f6cbd;
+  background-color: rgba(15, 108, 189, 0.10);
+  border-color: rgba(15, 108, 189, 0.40);
+}
+
 /* Dark mode (Chirpy toggle) */
 html[data-bs-theme="dark"] {
   .agent-edition--standard {
@@ -925,6 +932,12 @@ html[data-bs-theme="dark"] {
     color: #5eead4;
     background-color: rgba(20, 184, 166, 0.18);
     border-color: rgba(20, 184, 166, 0.50);
+  }
+
+  .agent-edition--declarative-agent {
+    color: #7ab8f5;
+    background-color: rgba(15, 108, 189, 0.20);
+    border-color: rgba(15, 108, 189, 0.50);
   }
 }
 
@@ -947,6 +960,12 @@ html[data-bs-theme="dark"] {
       color: #5eead4;
       background-color: rgba(20, 184, 166, 0.18);
       border-color: rgba(20, 184, 166, 0.50);
+    }
+
+    .agent-edition--declarative-agent {
+      color: #7ab8f5;
+      background-color: rgba(15, 108, 189, 0.20);
+      border-color: rgba(15, 108, 189, 0.50);
     }
   }
 }

@@ -33,6 +33,8 @@ script_includes:
             <i class="fa-brands fa-github fa-fw"></i>Microsoft Copilot harness
           {% elsif _edition == 'both' %}
             <i class="fa-solid fa-layer-group fa-fw"></i>Both harnesses
+          {% elsif _edition == 'declarative-agent' %}
+            <i class="fa-solid fa-robot fa-fw"></i>Declarative agent (Microsoft 365 Copilot)
           {% else %}
             <i class="fa-solid fa-tag fa-fw"></i>{{ page.agent_edition }}
           {% endif %}
