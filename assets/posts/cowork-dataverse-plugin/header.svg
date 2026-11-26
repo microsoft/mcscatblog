@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+  <title id="title">One Cowork plugin, two Dataverse environments</title>
+  <desc id="desc">Account lookup routes to East and West. The selected city update routes to West only.</desc>
+  <rect width="1200" height="480" rx="24" fill="#102e35"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="76" y="79" font-size="26" letter-spacing="3" fill="#9bdace">COPILOT COWORK  /  DATAVERSE</text>
+    <text x="76" y="160" font-size="56" font-weight="700" fill="#fff">Which account should change?</text>
+    <path d="M373 315h87q22 0 22-22v-39q0-22 22-22h114m-136 73v69q0 22 22 22h114" fill="none" stroke="#8fcabf" stroke-width="5"/>
+    <rect x="76" y="264" width="297" height="102" rx="16" fill="#24535a"/>
+    <text x="104" y="326" font-size="31" font-weight="600" fill="#fff">Account lookup</text>
+    <rect x="620" y="195" width="495" height="77" rx="14" fill="#23484e"/>
+    <text x="651" y="245" font-size="31" fill="#fff">East</text>
+    <text x="806" y="245" font-size="26" fill="#c9e5df">Denver</text>
+    <rect x="620" y="355" width="495" height="77" rx="14" fill="#d2f2d9"/>
+    <text x="651" y="405" font-size="31" font-weight="600" fill="#123b39">West</text>
+    <text x="806" y="405" font-size="26" fill="#123b39">Salem → Portland</text>
+  </g>
+</svg>
