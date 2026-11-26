@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.29/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.29",
+  "version": "1.0.0",
+  "id": "03ea1237-ee74-49cc-8b0d-a0e68be40aa0",
+  "name": { "short": "Account Records", "full": "Account Records for Copilot Cowork" },
+  "description": {
+    "short": "Find accounts across two sandboxes and preview a change in either one.",
+    "full": "Look up accounts in East and West. Preview one account creation or city update, approve it, and verify the stored row in the selected environment."
+  },
+  "developer": {
+    "name": "Example Publisher",
+    "websiteUrl": "https://example.com",
+    "privacyUrl": "https://example.com/privacy",
+    "termsOfUseUrl": "https://example.com/terms"
+  },
+  "icons": { "color": "color.png", "outline": "outline.png" },
+  "accentColor": "#145B59",
+  "agentSkills": [{ "folder": "./skills/account-records" }],
+  "agentConnectors": [{ "id": "shared_dataverse", "displayName": "Dataverse (multi-org)" }]
+}
